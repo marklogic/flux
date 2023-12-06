@@ -1,0 +1,33 @@
+plugins {
+  id "application"
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+dependencies {
+  implementation project(":new-tool-api")
+  implementation "org.jcommander:jcommander:1.83"
+  implementation "com.marklogic:marklogic-spark-connector:2.1.0"
+
+  implementation "com.databricks:spark-xml_2.12:0.17.0"
+
+  // TODO We'll have to see if we always include this for reading from S3; it adds a lot of dependencies to the final
+  // zip file.
+  implementation "org.apache.hadoop:hadoop-aws:3.3.6"
+  implementation "org.apache.hadoop:hadoop-client:3.3.6"
+
+  testImplementation "com.marklogic:marklogic-junit5:1.4.0"
+
+  testImplementation "org.postgresql:postgresql:42.6.0"
+}
+
+application {
+  mainClass = "com.marklogic.newtool.Main"
+}
+
+startScripts {
+  unixStartScriptGenerator.template = resources.text.fromFile('start-script.txt')
+}

@@ -1,0 +1,19 @@
+<ex:Citations xmlns:ex="org:example">
+  <ex:Citation>
+    <ex:ID>1</ex:ID>
+    <ax:Article xmlns:ax="org:example:author">
+      <ax:AuthorList>
+        <ax:Author authorAttribute="hey" ex:otherAttribute="there">
+          <ax:LastName>Golby</ax:LastName>
+          <ax:BooleanValue>true</ax:BooleanValue>
+          <ex:LuckyNumber>1</ex:LuckyNumber>
+        </ax:Author>
+        <ax:Author authorAttribute="hey" ex:otherAttribute="there">
+          <ax:LastName>Bernadzki</ax:LastName>
+          <ax:BooleanValue>false</ax:BooleanValue>
+          <ex:LuckyNumber>2</ex:LuckyNumber>
+        </ax:Author>
+      </ax:AuthorList>
+    </ax:Article>
+  </ex:Citation>
+</ex:Citations>

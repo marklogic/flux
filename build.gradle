@@ -1,0 +1,24 @@
+subprojects {
+  apply plugin: "java-library"
+
+  group = "com.marklogic"
+  version = "0.1-SNAPSHOT"
+
+  java {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+  }
+
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+
+  test {
+    useJUnitPlatform()
+    testLogging {
+      events 'started', 'passed', 'skipped', 'failed'
+      exceptionFormat 'full'
+    }
+  }
+}

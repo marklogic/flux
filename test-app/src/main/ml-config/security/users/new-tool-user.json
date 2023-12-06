@@ -1,0 +1,7 @@
+{
+  "user-name": "new-tool-user",
+  "password": "password",
+  "role": [
+    "new-tool-role"
+  ]
+}
