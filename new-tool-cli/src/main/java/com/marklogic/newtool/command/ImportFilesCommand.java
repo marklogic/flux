@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.marklogic.newtool.S3Util;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.SparkSession;
@@ -8,6 +9,7 @@ import org.apache.spark.sql.SparkSession;
 import java.util.ArrayList;
 import java.util.List;
 
+@Parameters(commandDescription = "Import files with a type defined by '--format'")
 public class ImportFilesCommand extends AbstractImportCommand {
 
     @Parameter(names = "--format")

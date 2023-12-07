@@ -22,18 +22,23 @@ public class UsageFormatter extends DefaultUsageFormatter implements IUsageForma
     }};
 
     private JCommander commander;
+    private final String referenceCommandName;
 
     public UsageFormatter(JCommander commander) {
+        this(commander, "import_jdbc");
+    }
+
+    public UsageFormatter(JCommander commander, String referenceCommandName) {
         super(commander);
         this.commander = commander;
+        this.referenceCommandName = referenceCommandName;
     }
 
     // This is what we'd override to provide the common parameters
     // Ideally, we can call this with a list of the sorted params
     @Override
     public void appendAllParametersDetails(StringBuilder out, int indentCount, String indent, List<ParameterDescription> sortedParameters) {
-        // Grab a command that's known to extend CommandSupport, which has the common params in it
-        JCommander readRows = commander.getCommands().get("export_jdbc");
+        JCommander readRows = commander.getCommands().get(referenceCommandName);
         List<ParameterDescription> commonParams = readRows.getFields().values().stream()
             .filter(param -> COMMON_PARAMETER_NAMES.contains(param.getLongestName()))
             .collect(Collectors.toList());

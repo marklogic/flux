@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Main {
 
+    private static final String PROGRAM_NAME = "./bin/new-tool";
+
     public static void main(List<String> args) {
         main(args.toArray(new String[]{}));
     }
@@ -15,8 +17,8 @@ public class Main {
     public static void main(String[] args) {
         JCommander.Builder builder = JCommander
             .newBuilder()
-            // TODO Only want to do this when it's running as application zip
-            .programName("./bin/mc")
+            .programName(PROGRAM_NAME)
+            .addCommand("help", new HelpCommand(PROGRAM_NAME))
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("export_files", new ExportFilesCommand())
@@ -33,15 +35,20 @@ public class Main {
             commander.usage();
         } else {
             JCommander parsedCommander = commander.getCommands().get(parsedCommand);
-            Command command = (Command) parsedCommander.getObjects().get(0);
-
-            // Perhaps SparkSubmit could be used here instead?
-            SparkSession session = SparkSession.builder()
-                .master("local[*]")
-                .config("spark.sql.session.timeZone", "UTC")
-                .getOrCreate();
-
-            command.execute(session);
+            Object objectCommand = parsedCommander.getObjects().get(0);
+            if (objectCommand instanceof HelpCommand) {
+                // Command will be the last arg
+                String commandName = args[args.length - 1];
+                ((HelpCommand) objectCommand).viewUsage(commander, commandName);
+            } else {
+                Command command = (Command) objectCommand;
+                // TODO Allow for user to customize these inputs.
+                SparkSession session = SparkSession.builder()
+                    .master("local[*]")
+                    .config("spark.sql.session.timeZone", "UTC")
+                    .getOrCreate();
+                command.execute(session);
+            }
         }
     }
 }
