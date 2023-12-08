@@ -24,7 +24,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
     private List<String> dropColumnNames = new ArrayList<>();
 
     @Override
-    public void execute(SparkSession session) {
+    public Optional<List<Row>> execute(SparkSession session) {
         Dataset<Row> dataset = session.read()
             .jdbc(jdbcParams.getUrl(), jdbcParams.getTable(), jdbcParams.toProperties());
 
@@ -72,7 +72,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
         }
 
         Dataset<Row> d2 = dataset;
-        write(() -> d2);
+        return write(() -> d2);
     }
 
     public void setJdbcParams(JdbcParams jdbcParams) {

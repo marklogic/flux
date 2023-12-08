@@ -10,6 +10,7 @@ import org.apache.spark.sql.SparkSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ExportFilesCommand extends AbstractExportCommand {
 
@@ -26,7 +27,7 @@ public class ExportFilesCommand extends AbstractExportCommand {
     private SaveMode mode = SaveMode.Append;
 
     @Override
-    public void execute(SparkSession session) {
+    public Optional<List<Row>> execute(SparkSession session) {
         S3Util.configureAWSCredentialsIfS3Path(session, Arrays.asList(this.path));
 
         DataFrameWriter<Row> writer = read(session).write();
@@ -37,6 +38,7 @@ public class ExportFilesCommand extends AbstractExportCommand {
             writer.partitionBy(partitionBy.toArray(new String[0]));
         }
         writer.mode(mode).save(path);
+        return Optional.empty();
     }
 
     public void setFormat(String format) {

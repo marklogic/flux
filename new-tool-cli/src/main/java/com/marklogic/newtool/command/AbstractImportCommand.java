@@ -6,6 +6,8 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -34,15 +36,16 @@ abstract class AbstractImportCommand extends AbstractCommand {
     @Parameter(names = "--save-mode")
     private SaveMode saveMode = SaveMode.Append;
 
-    @Parameter(names = "--debug", description = "Set to true to log the dataset instead of writing it")
-    private boolean debug = false;
+    @Parameter(names = "--preview", description = "Set to true to log the dataset instead of writing it.")
+    private boolean preview;
 
-    protected final void write(Supplier<Dataset<Row>> datasetSupplier) {
+    protected final Optional<List<Row>> write(Supplier<Dataset<Row>> datasetSupplier) {
         long start = System.currentTimeMillis();
 
         Dataset<Row> dataset = datasetSupplier.get();
-        if (debug) {
-            dataset.collectAsList().forEach(row -> logger.info(row.prettyJson()));
+        List<Row> rows = null;
+        if (preview) {
+            rows = dataset.collectAsList();
         } else {
             dataset
                 .repartition(partitions)
@@ -59,7 +62,8 @@ abstract class AbstractImportCommand extends AbstractCommand {
                 .save();
         }
 
-        logger.info("Completed, time: " + (System.currentTimeMillis() - start));
+        logger.info("Completed, duration in ms: " + (System.currentTimeMillis() - start));
+        return rows != null ? Optional.of(rows) : Optional.empty();
     }
 
     public void setPartitions(Integer partitions) {

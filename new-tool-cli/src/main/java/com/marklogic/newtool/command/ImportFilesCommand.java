@@ -4,10 +4,12 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.marklogic.newtool.S3Util;
 import org.apache.spark.sql.DataFrameReader;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Parameters(commandDescription = "Import files with a type defined by '--format'")
 public class ImportFilesCommand extends AbstractImportCommand {
@@ -22,10 +24,10 @@ public class ImportFilesCommand extends AbstractImportCommand {
     private String schema;
 
     @Override
-    public void execute(SparkSession session) {
+    public Optional<List<Row>> execute(SparkSession session) {
         S3Util.configureAWSCredentialsIfS3Path(session, this.paths);
 
-        write(() -> {
+        return write(() -> {
             DataFrameReader reader = session.read()
                 .format(format)
                 .options(getCustomReadOptions());

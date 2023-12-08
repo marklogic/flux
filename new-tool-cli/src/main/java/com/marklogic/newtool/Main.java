@@ -2,25 +2,28 @@ package com.marklogic.newtool;
 
 import com.beust.jcommander.JCommander;
 import com.marklogic.newtool.command.*;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
 
     private static final String PROGRAM_NAME = "./bin/new-tool";
 
-    public static void main(List<String> args) {
-        main(args.toArray(new String[]{}));
+    public static void main(String[] args) {
+        run(args);
     }
 
-    public static void main(String[] args) {
+    public static Optional<List<Row>> run(String... args) {
         JCommander.Builder builder = JCommander
             .newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("help", new HelpCommand(PROGRAM_NAME))
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
+            .addCommand("import_json", new ImportJsonCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("custom", new ExecuteCustomCommand())
@@ -47,8 +50,9 @@ public class Main {
                     .master("local[*]")
                     .config("spark.sql.session.timeZone", "UTC")
                     .getOrCreate();
-                command.execute(session);
+                return command.execute(session);
             }
         }
+        return Optional.empty();
     }
 }

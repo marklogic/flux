@@ -25,7 +25,7 @@ public class ImportJdbcTest extends AbstractTest {
             "inner join film_actor fa on f.film_id = fa.film_id\n" +
             "where f.film_id < 11";
 
-        Main.main(buildArgs(query,
+        run(buildArgs(query,
             "--group-by", "film_id",
             "--aggregate", "actor_ids=actor_id",
             "--drop", "language_id", "last_update",
@@ -52,7 +52,7 @@ public class ImportJdbcTest extends AbstractTest {
             "        inner join public.payment p on c.customer_id = p.customer_id\n" +
             "        where c.customer_id = 1";
 
-        Main.main(buildArgs(query,
+        run(buildArgs(query,
             "--group-by", "customer_id",
             "--aggregate", "payments=payment_id;amount;payment_date",
 
@@ -85,7 +85,7 @@ public class ImportJdbcTest extends AbstractTest {
             "inner join public.payment p on p.customer_id = p.customer_id\n" +
             "where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506";
 
-        Main.main(buildArgs(query,
+        run(buildArgs(query,
             "--group-by", "customer_id",
             "--aggregate", "payments=payment_id;amount",
             "--aggregate", "rentals=rental_id;rental_date",

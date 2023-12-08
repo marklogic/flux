@@ -3,7 +3,9 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientBuilder;
 import com.marklogic.junit5.AbstractMarkLogicTest;
-import com.marklogic.newtool.Main;
+import org.apache.spark.sql.Row;
+
+import java.util.List;
 
 public abstract class AbstractTest extends AbstractMarkLogicTest {
 
@@ -28,8 +30,12 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
             "{xdmp.documentDelete(uri)}";
     }
 
-    protected final void run(String... args) {
-        Main.main(args);
+    protected final void logRows(List<Row> rows) {
+        rows.forEach(row -> logger.info(row.prettyJson()));
+    }
+
+    protected final List<Row> run(String... args) {
+        return Main.run(args).get();
     }
 
 }

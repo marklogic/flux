@@ -6,16 +6,16 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ExecuteCustomCommandTest {
+public class ExecuteCustomCommandTest extends AbstractTest {
 
     @Test
     void test() {
-        Main.main(new String[]{
+        run(
             "custom",
             "--class-name", "com.marklogic.newtool.TestCustomCommand",
             "-Pparam1=value1",
             "-Pparam2=value2"
-        });
+        );
 
         Map<String, String> params = TestCustomCommand.getDynamicParameters();
         assertEquals("value1", params.get("param1"));
