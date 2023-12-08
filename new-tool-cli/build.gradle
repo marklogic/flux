@@ -14,6 +14,9 @@ dependencies {
 
   implementation "com.databricks:spark-xml_2.12:0.17.0"
 
+  // Requires for using Avro as a data source, does not meaningfully add to the size of the shadow jar.
+  implementation "org.apache.spark:spark-avro_2.12:3.4.1"
+
   // TODO We'll have to see if we always include this for reading from S3; it adds a lot of dependencies to the final
   // zip file.
   implementation "org.apache.hadoop:hadoop-aws:3.3.6"

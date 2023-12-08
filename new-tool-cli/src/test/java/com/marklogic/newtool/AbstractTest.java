@@ -34,8 +34,15 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         rows.forEach(row -> logger.info(row.prettyJson()));
     }
 
-    protected final List<Row> run(String... args) {
-        return Main.run(args).get();
+    protected final List<Row> preview(String... args) {
+        String[] finalArgs = new String[args.length + 1];
+        System.arraycopy(args, 0, finalArgs, 0, args.length);
+        finalArgs[args.length] = "--preview";
+        return Main.run(finalArgs).get();
+    }
+
+    protected final void run(String... args) {
+        Main.main(args);
     }
 
 }

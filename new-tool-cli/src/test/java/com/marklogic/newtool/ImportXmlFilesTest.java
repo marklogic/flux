@@ -11,25 +11,23 @@ public class ImportXmlFilesTest extends AbstractTest {
 
     @Test
     void noNamespace() {
-        List<Row> rows = run(
+        List<Row> rows = preview(
             "import_files",
             "--format", "xml",
             "--path", "src/test/resources/xml-files/books-no-namespace.xml",
             "-R:rowTag=book",
-            "-R:ignoreSurroundingSpaces=true",
-            "--preview"
+            "-R:ignoreSurroundingSpaces=true"
         );
         assertEquals(12, rows.size());
     }
 
     @Test
     void withNamespace() {
-        List<Row> rows = run(
+        List<Row> rows = preview(
             "import_files",
             "--format", "xml",
             "--path", "src/test/resources/xml-files/citations-with-namespace.xml",
-            "-R:rowTag=ex:Citation",
-            "--preview"
+            "-R:rowTag=ex:Citation"
         );
         assertEquals(1, rows.size());
     }

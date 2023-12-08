@@ -24,6 +24,8 @@ public class Main {
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("import_json", new ImportJsonCommand())
+            .addCommand("import_avro", new ImportAvroCommand())
+            .addCommand("export_avro", new ExportAvroCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("custom", new ExecuteCustomCommand())
