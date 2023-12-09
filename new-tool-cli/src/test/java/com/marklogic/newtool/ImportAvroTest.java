@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ExportAvroTest extends AbstractTest {
+public class ImportAvroTest extends AbstractTest {
 
     @Test
     void test(@TempDir Path tempDir) {

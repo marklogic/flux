@@ -17,7 +17,11 @@ public class ExportJdbcCommand extends AbstractExportCommand {
 
     @Override
     public Optional<List<Row>> execute(SparkSession session) {
-        read(session).write()
+        session.read()
+            .format(MARKLOGIC_CONNECTOR)
+            .options(getReadParams().makeOptions())
+            .load()
+            .write()
             .mode(SaveMode.Overwrite)
             .jdbc(jdbcParams.getUrl(), jdbcParams.getTable(), jdbcParams.toProperties());
         return Optional.empty();

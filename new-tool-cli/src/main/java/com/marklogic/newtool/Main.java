@@ -26,8 +26,8 @@ public class Main {
             .addCommand("import_json", new ImportJsonCommand())
             .addCommand("import_avro", new ImportAvroCommand())
             .addCommand("export_avro", new ExportAvroCommand())
-            .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
+            .addCommand("export_orc", new ExportOrcCommand())
             .addCommand("custom", new ExecuteCustomCommand())
             .addCommand("reprocess", new ReprocessCommand());
 
