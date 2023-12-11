@@ -1,10 +1,9 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
-import com.marklogic.spark.Options;
+import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,23 +17,8 @@ abstract class AbstractImportCommand extends AbstractCommand {
     @Parameter(names = "--partitions", description = "number of Spark partitions, which becomes number of DMSDK threads")
     private Integer partitions = 4;
 
-    @Parameter(names = "--collections", description = "Comma-delimited")
-    private String collections;
-
-    @Parameter(names = "--permissions")
-    private String permissions = "new-tool-role,read,new-tool-role,update";
-
-    @Parameter(names = "--uri-template")
-    private String uriTemplate;
-
-    @Parameter(names = "--uri-prefix")
-    private String uriPrefix;
-
-    @Parameter(names = "--uri-suffix")
-    private String uriSuffix;
-
-    @Parameter(names = "--save-mode")
-    private SaveMode saveMode = SaveMode.Append;
+    @ParametersDelegate
+    private WriteParams writeParams = new WriteParams();
 
     @Parameter(names = "--preview", description = "Set to true to log the dataset instead of writing it.")
     private boolean preview;
@@ -51,14 +35,10 @@ abstract class AbstractImportCommand extends AbstractCommand {
                 .repartition(partitions)
                 .write()
                 .format(MARKLOGIC_CONNECTOR)
-                .options(makeWriteOptions(
-                    Options.WRITE_PERMISSIONS, permissions,
-                    Options.WRITE_URI_PREFIX, uriPrefix,
-                    Options.WRITE_URI_SUFFIX, uriSuffix,
-                    Options.WRITE_URI_TEMPLATE, uriTemplate,
-                    Options.WRITE_COLLECTIONS, collections
-                ))
-                .mode(saveMode)
+                .options(getConnectionParams().makeOptions())
+                .options(writeParams.makeOptions())
+                .options(getCustomWriteOptions())
+                .mode(writeParams.getSaveMode())
                 .save();
         }
 
@@ -66,31 +46,11 @@ abstract class AbstractImportCommand extends AbstractCommand {
         return rows != null ? Optional.of(rows) : Optional.empty();
     }
 
-    public void setPartitions(Integer partitions) {
-        this.partitions = partitions;
+    public WriteParams getWriteParams() {
+        return writeParams;
     }
 
-    public void setCollections(String collections) {
-        this.collections = collections;
-    }
-
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
-    }
-
-    public void setUriTemplate(String uriTemplate) {
-        this.uriTemplate = uriTemplate;
-    }
-
-    public void setSaveMode(SaveMode saveMode) {
-        this.saveMode = saveMode;
-    }
-
-    public void setUriPrefix(String uriPrefix) {
-        this.uriPrefix = uriPrefix;
-    }
-
-    public void setUriSuffix(String uriSuffix) {
-        this.uriSuffix = uriSuffix;
+    public void setWriteParams(WriteParams writeParams) {
+        this.writeParams = writeParams;
     }
 }

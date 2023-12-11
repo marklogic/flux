@@ -5,6 +5,7 @@ import com.beust.jcommander.IUsageFormatter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterDescription;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,14 +13,16 @@ import java.util.stream.Collectors;
 
 public class UsageFormatter extends DefaultUsageFormatter implements IUsageFormatter {
 
-    private final static Set<String> COMMON_PARAMETER_NAMES = new HashSet() {{
-        add("--host");
-        add("--port");
-        add("--username");
-        add("--password");
-        add("-R:");
-        add("-W:");
-    }};
+    private final static Set<String> COMMON_PARAMETER_NAMES = new HashSet();
+
+    static {
+        COMMON_PARAMETER_NAMES.add("--host");
+        COMMON_PARAMETER_NAMES.add("--port");
+        COMMON_PARAMETER_NAMES.add("--username");
+        COMMON_PARAMETER_NAMES.add("--password");
+        COMMON_PARAMETER_NAMES.add("-R:");
+        COMMON_PARAMETER_NAMES.add("-W:");
+    }
 
     private JCommander commander;
     private final String referenceCommandName;
@@ -41,6 +44,7 @@ public class UsageFormatter extends DefaultUsageFormatter implements IUsageForma
         JCommander readRows = commander.getCommands().get(referenceCommandName);
         List<ParameterDescription> commonParams = readRows.getFields().values().stream()
             .filter(param -> COMMON_PARAMETER_NAMES.contains(param.getLongestName()))
+            .sorted(Comparator.comparingInt(pd -> pd.getParameter().order()))
             .collect(Collectors.toList());
         super.appendAllParametersDetails(out, indentCount, indent, commonParams);
 

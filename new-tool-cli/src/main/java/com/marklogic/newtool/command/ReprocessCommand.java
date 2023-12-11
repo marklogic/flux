@@ -1,10 +1,8 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
-import com.marklogic.spark.Options;
+import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 
 import java.util.HashMap;
@@ -12,132 +10,71 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * So the purpose of this command would really be - we want to read via something to MarkLogic and then process it
+ * too. Which may require two different connections. I think we'd want dynamic params for overriding the "write"
+ * connection, which otherwise defaults to the regular connection params.
+ */
 public class ReprocessCommand extends AbstractCommand {
 
-    @Parameter(names = "--read-invoke")
-    private String readInvoke;
+    @ParametersDelegate
+    private ReadParams readParams = new ReadParams();
 
-    @Parameter(names = "--read-javascript")
-    private String readJavascript;
+    @ParametersDelegate
+    private WriteParams writeParams = new WriteParams();
 
-    @Parameter(names = "--read-xquery")
-    private String readXQuery;
-
-    @Parameter(names = "--read-partitions-invoke")
-    private String readPartitionsInvoke;
-
-    @Parameter(names = "--read-partitions-javascript")
-    private String readPartitionsJavascript;
-
-    @Parameter(names = "--read-partitions-xquery")
-    private String readPartitionsXQuery;
-
-    @DynamicParameter(names = "-RV:", description = "Variables to pass to custom code for reading rows")
-    private Map<String, String> readVars = new HashMap<>();
-
-    @Parameter(names = "--write-invoke")
-    private String writeInvoke;
-
-    @Parameter(names = "--write-javascript")
-    private String writeJavascript;
-
-    @Parameter(names = "--write-xquery")
-    private String writeXQuery;
-
-    @Parameter(names = "--write-external-variable-name")
-    private String writeExternalVariableName;
-
-    @Parameter(names = "--write-external-variable-delimiter")
-    private String writeExternalVariableDelimiter;
-
-    @DynamicParameter(names = "-WV:", description = "Variables to pass to custom code for processing rows")
-    private Map<String, String> writeVars = new HashMap<>();
-
+    @DynamicParameter(names = "-WC:", description = "Overrides the connection parameters used for writing to MarkLogic; " +
+        "can omit 'spark.marklogic.client.' for brevity; e.g. -WC:host=otherhost.")
+    private Map<String, String> writeConnectionParams = new HashMap<>();
 
     @Override
     public Optional<List<Row>> execute(SparkSession session) {
-        Map<String, String> readOptions = makeReadOptions(
-            Options.READ_INVOKE, readInvoke,
-            Options.READ_JAVASCRIPT, readJavascript,
-            Options.READ_XQUERY, readXQuery,
-            Options.READ_PARTITIONS_INVOKE, readPartitionsInvoke,
-            Options.READ_PARTITIONS_JAVASCRIPT, readPartitionsJavascript,
-            Options.READ_PARTITIONS_XQUERY, readPartitionsXQuery
-        );
-        readVars.forEach((key, value) -> readOptions.put(Options.READ_VARS_PREFIX + key, value));
-
-        Map<String, String> writeOptions = makeWriteOptions(
-            Options.WRITE_INVOKE, writeInvoke,
-            Options.WRITE_JAVASCRIPT, writeJavascript,
-            Options.WRITE_XQUERY, writeXQuery,
-            Options.WRITE_EXTERNAL_VARIABLE_NAME, writeExternalVariableName,
-            Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, writeExternalVariableDelimiter
-        );
-        writeVars.forEach((key, value) -> writeOptions.put(Options.WRITE_VARS_PREFIX + key, value));
+        Map<String, String> writeConnectionOptions = getConnectionParams().makeOptions();
+        writeConnectionParams.forEach((key, value) -> {
+            String optionName = key;
+            if (!key.startsWith("spark.marklogic.client")) {
+                optionName = "spark.marklogic.client." + key;
+            }
+            writeConnectionOptions.put(optionName, value);
+        });
 
         session.read()
             .format(MARKLOGIC_CONNECTOR)
-            .options(readOptions)
+            .options(getConnectionParams().makeOptions())
+            .options(readParams.makeOptions())
             .load()
             .write()
             .format(MARKLOGIC_CONNECTOR)
-            .options(writeOptions)
-            .mode(SaveMode.Append)
+            .options(writeConnectionParams)
+            .options(writeParams.makeOptions())
+            .mode(writeParams.getSaveMode())
             .save();
 
         // TODO Can support preview here too.
         return Optional.empty();
     }
 
-    public void setReadInvoke(String readInvoke) {
-        this.readInvoke = readInvoke;
+    public ReadParams getReadParams() {
+        return readParams;
     }
 
-    public void setReadJavascript(String readJavascript) {
-        this.readJavascript = readJavascript;
+    public void setReadParams(ReadParams readParams) {
+        this.readParams = readParams;
     }
 
-    public void setReadXQuery(String readXQuery) {
-        this.readXQuery = readXQuery;
+    public WriteParams getWriteParams() {
+        return writeParams;
     }
 
-    public void setReadPartitionsInvoke(String readPartitionsInvoke) {
-        this.readPartitionsInvoke = readPartitionsInvoke;
+    public void setWriteParams(WriteParams writeParams) {
+        this.writeParams = writeParams;
     }
 
-    public void setReadPartitionsJavascript(String readPartitionsJavascript) {
-        this.readPartitionsJavascript = readPartitionsJavascript;
+    public Map<String, String> getWriteConnectionParams() {
+        return writeConnectionParams;
     }
 
-    public void setReadPartitionsXQuery(String readPartitionsXQuery) {
-        this.readPartitionsXQuery = readPartitionsXQuery;
-    }
-
-    public void setReadVars(Map<String, String> readVars) {
-        this.readVars = readVars;
-    }
-
-    public void setWriteInvoke(String writeInvoke) {
-        this.writeInvoke = writeInvoke;
-    }
-
-    public void setWriteJavascript(String writeJavascript) {
-        this.writeJavascript = writeJavascript;
-    }
-
-    public void setWriteXQuery(String writeXQuery) {
-        this.writeXQuery = writeXQuery;
-    }
-
-    public void setWriteExternalVariableName(String writeExternalVariableName) {
-        this.writeExternalVariableName = writeExternalVariableName;
-    }
-
-    public void setWriteExternalVariableDelimiter(String writeExternalVariableDelimiter) {
-        this.writeExternalVariableDelimiter = writeExternalVariableDelimiter;
-    }
-
-    public void setWriteVars(Map<String, String> writeVars) {
-        this.writeVars = writeVars;
+    public void setWriteConnectionParams(Map<String, String> writeConnectionParams) {
+        this.writeConnectionParams = writeConnectionParams;
     }
 }

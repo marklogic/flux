@@ -14,6 +14,8 @@ import java.util.Map;
  * Could provide a way to configure hadoopConfiguration for things like this:
  * session.sparkContext().hadoopConfiguration().set("fs.s3a.access.key", creds.getAWSAccessKeyId());
  * session.sparkContext().hadoopConfiguration().set("fs.s3a.secret.key", creds.getAWSSecretKey());
+ * <p>
+ * TODO Should support an options file, where any other options override what's in the file.
  */
 abstract class AbstractCommand implements Command {
 
@@ -24,32 +26,14 @@ abstract class AbstractCommand implements Command {
     @ParametersDelegate
     private ConnectionParams connectionParams = new ConnectionParams();
 
-    @DynamicParameter(names = "-R:", description = "Custom options to pass to the reader", hidden = true)
+    @DynamicParameter(names = "-R:", description = "Custom options to pass to the reader", hidden = true, order = Integer.MAX_VALUE - 1)
     private Map<String, String> customReadOptions = new HashMap<>();
 
-    @DynamicParameter(names = "-W:", description = "Custom options to pass to the writer", hidden = true)
+    @DynamicParameter(names = "-W:", description = "Custom options to pass to the writer", hidden = true, order = Integer.MAX_VALUE)
     private Map<String, String> customWriteOptions = new HashMap<>();
 
-    protected final Map<String, String> makeReadOptions(String... namesAndValues) {
+    protected final Map<String, String> makeWriteOptions() {
         Map<String, String> options = connectionParams.makeOptions();
-        for (int i = 0; i < namesAndValues.length; i += 2) {
-            String value = namesAndValues[i + 1];
-            if (value != null && value.trim().length() > 0) {
-                options.put(namesAndValues[i], value.trim());
-            }
-        }
-        customReadOptions.forEach((key, value) -> options.put(key, value));
-        return options;
-    }
-
-    protected final Map<String, String> makeWriteOptions(String... namesAndValues) {
-        Map<String, String> options = connectionParams.makeOptions();
-        for (int i = 0; i < namesAndValues.length; i += 2) {
-            String value = namesAndValues[i + 1];
-            if (value != null && value.trim().length() > 0) {
-                options.put(namesAndValues[i], value.trim());
-            }
-        }
         customWriteOptions.forEach((key, value) -> options.put(key, value));
         return options;
     }

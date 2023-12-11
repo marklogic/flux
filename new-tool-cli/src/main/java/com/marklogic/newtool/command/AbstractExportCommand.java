@@ -21,8 +21,9 @@ public abstract class AbstractExportCommand extends AbstractCommand {
     protected final Dataset<Row> read(SparkSession session) {
         return session.read()
             .format(MARKLOGIC_CONNECTOR)
-            .options(makeReadOptions())
+            .options(getConnectionParams().makeOptions())
             .options(readParams.makeOptions())
+            .options(getCustomReadOptions())
             .load();
     }
 

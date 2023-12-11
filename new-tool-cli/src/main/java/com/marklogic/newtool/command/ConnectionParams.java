@@ -7,16 +7,18 @@ import java.util.Map;
 
 public class ConnectionParams {
 
-    @Parameter(names = {"-h", "--host"}, description = "The MarkLogic host to connect to", hidden = true)
+    @Parameter(names = {"-h", "--host"}, description = "The MarkLogic host to connect to", hidden = true, order = 0)
     private String host = "localhost";
 
-    @Parameter(names = "--port", description = "Port of a MarkLogic app server to connect to", hidden = true)
+    @Parameter(names = "--port", description = "Port of a MarkLogic app server to connect to", hidden = true, order = 1)
     private Integer port = 8003;
 
-    @Parameter(names = "--username", description = "Username when using 'digest' or 'basic' authentication", hidden = true)
+    @Parameter(names = "--username", description = "Username when using 'digest' or 'basic' authentication",
+        hidden = true, order = 2)
     private String username = "new-tool-user";
 
-    @Parameter(names = "--password", description = "Password when using 'digest' or 'basic' authentication", hidden = true)
+    @Parameter(names = "--password", description = "Password when using 'digest' or 'basic' authentication",
+        hidden = true, password = true, order = 3)
     private String password = "password";
 
     public Map<String, String> makeOptions() {
