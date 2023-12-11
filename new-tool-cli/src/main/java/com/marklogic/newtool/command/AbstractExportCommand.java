@@ -1,29 +1,23 @@
 package com.marklogic.newtool.command;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 
 /**
- * Idea is that "export" = read from MarkLogic using Optic and then do something with the results.
+ * Base class for anything that reads from MarkLogic and exports it elsewhere.
  */
 public abstract class AbstractExportCommand extends AbstractCommand {
 
     @ParametersDelegate
     private ReadParams readParams = new ReadParams();
 
-    @Parameter(names = "--mode")
-    private SaveMode mode = SaveMode.Append;
-
-    protected final Dataset<Row> read(SparkSession session) {
-        return session.read()
-            .format(MARKLOGIC_CONNECTOR)
-            .options(getConnectionParams().makeOptions())
+    @Override
+    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        return reader.format(MARKLOGIC_CONNECTOR)
             .options(readParams.makeOptions())
-            .options(getCustomReadOptions())
             .load();
     }
 
@@ -33,13 +27,5 @@ public abstract class AbstractExportCommand extends AbstractCommand {
 
     public void setReadParams(ReadParams readParams) {
         this.readParams = readParams;
-    }
-
-    public SaveMode getMode() {
-        return mode;
-    }
-
-    public void setMode(SaveMode mode) {
-        this.mode = mode;
     }
 }

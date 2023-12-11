@@ -20,6 +20,7 @@ public class UsageFormatter extends DefaultUsageFormatter implements IUsageForma
         COMMON_PARAMETER_NAMES.add("--port");
         COMMON_PARAMETER_NAMES.add("--username");
         COMMON_PARAMETER_NAMES.add("--password");
+        COMMON_PARAMETER_NAMES.add("--optionsFile");
         COMMON_PARAMETER_NAMES.add("-R:");
         COMMON_PARAMETER_NAMES.add("-W:");
     }

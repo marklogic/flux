@@ -18,9 +18,6 @@ public class ReadParams {
     @Parameter(names = "--query", description = "the Optic DSL query")
     private String query;
 
-    @Parameter(names = "--partitions", description = "Number of partitions to create when executing the Optic query")
-    private int partitions = 1;
-
     @Parameter(names = "--batchSize")
     private int batchSize;
 
@@ -51,7 +48,9 @@ public class ReadParams {
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         options.put(Options.READ_OPTIC_QUERY, query);
-        options.put(Options.READ_NUM_PARTITIONS, partitions + "");
+        // TODO What's the right way to populate this, given that AbstractCommand has this?
+        // Maybe AbstractCommand shouldn't have it?
+        //options.put(Options.READ_NUM_PARTITIONS, readParam + "");
         options.put(Options.READ_BATCH_SIZE, batchSize + "");
         options.put(Options.READ_PUSH_DOWN_AGGREGATES, pushDownAggregates + "");
         options.put(Options.READ_INVOKE, readInvoke);
@@ -70,14 +69,6 @@ public class ReadParams {
 
     public void setQuery(String query) {
         this.query = query;
-    }
-
-    public int getPartitions() {
-        return partitions;
-    }
-
-    public void setPartitions(int partitions) {
-        this.partitions = partitions;
     }
 
     public int getBatchSize() {

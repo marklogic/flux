@@ -21,15 +21,14 @@ public class Main {
             .newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("help", new HelpCommand(PROGRAM_NAME))
-            .addCommand("import_files", new ImportFilesCommand())
+            .addCommand("import_avro", new ImportAvroCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("import_json", new ImportJsonCommand())
-            .addCommand("import_avro", new ImportAvroCommand())
             .addCommand("export_avro", new ExportAvroCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("export_orc", new ExportOrcCommand())
             .addCommand("custom", new ExecuteCustomCommand())
-            .addCommand("reprocess", new ReprocessCommand());
+            .addCommand("reprocess", new ProcessContentCommand());
 
         JCommander commander = builder.build();
         commander.setUsageFormatter(new UsageFormatter(commander));

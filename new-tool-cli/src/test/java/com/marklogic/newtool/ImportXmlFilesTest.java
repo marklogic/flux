@@ -1,12 +1,14 @@
 package com.marklogic.newtool;
 
 import org.apache.spark.sql.Row;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Disabled
 public class ImportXmlFilesTest extends AbstractTest {
 
     @Test

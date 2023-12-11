@@ -30,7 +30,7 @@ public class ImportJdbcTest extends AbstractTest {
             "--aggregate", "actor_ids=actor_id",
             "--drop", "language_id", "last_update",
 
-            "--uri-template", "/film/{film_id}.json",
+            "--uriTemplate", "/film/{film_id}.json",
             "--collections", "film,person,organization"
         ));
 
@@ -53,10 +53,10 @@ public class ImportJdbcTest extends AbstractTest {
             "        where c.customer_id = 1";
 
         run(buildArgs(query,
-            "--group-by", "customer_id",
+            "--groupBy", "customer_id",
             "--aggregate", "payments=payment_id;amount;payment_date",
 
-            "--uri-template", "/customer/{customer_id}.json",
+            "--uriTemplate", "/customer/{customer_id}.json",
             "--collections", "customer"
         ));
 
@@ -90,7 +90,7 @@ public class ImportJdbcTest extends AbstractTest {
             "--aggregate", "payments=payment_id;amount",
             "--aggregate", "rentals=rental_id;rental_date",
 
-            "--uri-template", "/customer/{customer_id}.json",
+            "--uriTemplate", "/customer/{customer_id}.json",
             "--collections", "customer"
         ));
 
@@ -105,12 +105,12 @@ public class ImportJdbcTest extends AbstractTest {
     private String[] buildArgs(String query, String... args) {
         final String[] commonArgs = new String[]{
             "import_jdbc",
-            "--jdbc-url", "jdbc:postgresql://localhost/dvdrental",
-            "--jdbc-driver", "org.postgresql.Driver",
-            "--jdbc-user", "postgres",
-            "--jdbc-password", "postgres",
+            "--jdbcUrl", "jdbc:postgresql://localhost/dvdrental",
+            "--jdbcDriver", "org.postgresql.Driver",
+            "--jdbcUser", "postgres",
+            "--jdbcPassword", "postgres",
             // See https://stackoverflow.com/a/39129546 for info on an aliased query as a table.
-            "--jdbc-table", "(" + query + ") my_query",
+            "--jdbcTable", "(" + query + ") my_query",
         };
         final String[] target = new String[commonArgs.length + args.length];
         System.arraycopy(commonArgs, 0, target, 0, commonArgs.length);

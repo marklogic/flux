@@ -11,7 +11,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
     @ParametersDelegate
     private JdbcParams jdbcParams = new JdbcParams();
 
-    @Parameter(names = "--group-by", description = "the column to group by")
+    @Parameter(names = "--groupBy", description = "the column to group by")
     private String groupBy;
 
     @Parameter(
@@ -24,7 +24,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
     private List<String> dropColumnNames = new ArrayList<>();
 
     @Override
-    public Optional<List<Row>> execute(SparkSession session) {
+    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         Dataset<Row> dataset = session.read()
             .jdbc(jdbcParams.getUrl(), jdbcParams.getTable(), jdbcParams.toProperties());
 
@@ -71,8 +71,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
             dataset = dataset.drop(dropColumnNames.toArray(new String[]{}));
         }
 
-        Dataset<Row> d2 = dataset;
-        return write(() -> d2);
+        return dataset;
     }
 
     public void setJdbcParams(JdbcParams jdbcParams) {

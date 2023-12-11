@@ -13,12 +13,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Parameters(commandDescription = "Execute a custom command via its fully-qualified class name.")
-public class ExecuteCustomCommand extends AbstractCommand {
+// TODO Do we extend AbstractCommand with this? Do we need custom read/write options?
+public class ExecuteCustomCommand implements Command {
 
     @Parameter(names = "--class-name", description = "fully-qualified class name of custom command class to execute")
     private String className;
 
-    @DynamicParameter(names = "-P", description = "Parameters to pass to the custom command class")
+    @DynamicParameter(names = "-P:", description = "Parameters to pass to the custom command class")
     private Map<String, String> params = new HashMap<>();
 
     @Override

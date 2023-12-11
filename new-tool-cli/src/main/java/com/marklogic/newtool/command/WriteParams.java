@@ -3,7 +3,6 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.marklogic.spark.Options;
-import org.apache.spark.sql.SaveMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +41,6 @@ public class WriteParams {
 
     @DynamicParameter(names = "-WV:", description = "Variables to pass to custom code for processing rows")
     private Map<String, String> writeExternalVariables = new HashMap<>();
-
-    @Parameter(names = "--saveMode")
-    private SaveMode saveMode = SaveMode.Append;
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
@@ -100,14 +96,6 @@ public class WriteParams {
 
     public void setUriSuffix(String uriSuffix) {
         this.uriSuffix = uriSuffix;
-    }
-
-    public SaveMode getSaveMode() {
-        return saveMode;
-    }
-
-    public void setSaveMode(SaveMode saveMode) {
-        this.saveMode = saveMode;
     }
 
     public String getWriteInvoke() {

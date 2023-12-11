@@ -9,19 +9,19 @@ import java.util.Properties;
  */
 public class JdbcParams {
 
-    @Parameter(names = "--jdbc-url", required = true)
+    @Parameter(names = "--jdbcUrl", required = true)
     private String url;
 
-    @Parameter(names = "--jdbc-table", required = true)
+    @Parameter(names = "--jdbcTable", required = true)
     private String table;
 
-    @Parameter(names = "--jdbc-driver", required = true)
+    @Parameter(names = "--jdbcDriver", required = true)
     private String driver;
 
-    @Parameter(names = "--jdbc-user")
+    @Parameter(names = "--jdbcUser")
     private String user;
 
-    @Parameter(names = "--jdbc-password")
+    @Parameter(names = "--jdbcPassword")
     private String password = "";
 
     public Properties toProperties() {

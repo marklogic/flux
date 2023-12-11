@@ -22,15 +22,15 @@ public class HelpTest extends AbstractTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
-        run("help", "import_files");
+        run("help", "import_avro");
 
         outputStream.flush();
         System.setOut(stdout);
         String output = new String(outputStream.toByteArray());
         assertTrue(output.contains("Common Options:"));
-        assertTrue(output.contains("import_files"));
+        assertTrue(output.contains("import_avro"));
         assertFalse(output.contains("import_jdbc"));
-        
+
         System.out.println(output);
     }
 }

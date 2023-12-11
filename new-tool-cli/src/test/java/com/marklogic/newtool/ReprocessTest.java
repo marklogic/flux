@@ -13,8 +13,8 @@ public class ReprocessTest extends AbstractTest {
     void javascript() {
         run(
             "reprocess",
-            "--read-javascript", "cts.uris(null, [], cts.trueQuery())",
-            "--write-javascript", "var URI; console.log('URI', URI);"
+            "--readJavascript", "cts.uris(null, [], cts.trueQuery())",
+            "--writeJavascript", "var URI; console.log('URI', URI);"
         );
     }
 
@@ -22,10 +22,10 @@ public class ReprocessTest extends AbstractTest {
     void readAndWriteVars() {
         run(
             "reprocess",
-            "--read-javascript", "Sequence.from([VAR1, VAR2])",
+            "--readJavascript", "Sequence.from([VAR1, VAR2])",
             "-RV:VAR1=hey",
             "-RV:VAR2=you",
-            "--write-invoke", "/writeDocs.sjs",
+            "--writeInvoke", "/writeDocs.sjs",
             "-WV:THE_VALUE=the-value"
         );
 

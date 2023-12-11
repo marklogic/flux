@@ -13,8 +13,8 @@ public class ExecuteCustomCommandTest extends AbstractTest {
         run(
             "custom",
             "--class-name", "com.marklogic.newtool.TestCustomCommand",
-            "-Pparam1=value1",
-            "-Pparam2=value2"
+            "-P:param1=value1",
+            "-P:param2=value2"
         );
 
         Map<String, String> params = TestCustomCommand.getDynamicParameters();
