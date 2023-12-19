@@ -1,7 +1,10 @@
 package com.marklogic.newtool;
 
 import com.beust.jcommander.JCommander;
-import com.marklogic.newtool.command.*;
+import com.marklogic.newtool.command.Command;
+import com.marklogic.newtool.command.ExportJdbcCommand;
+import com.marklogic.newtool.command.HelpCommand;
+import com.marklogic.newtool.command.ImportJdbcCommand;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
@@ -21,14 +24,8 @@ public class Main {
             .newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("help", new HelpCommand(PROGRAM_NAME))
-            .addCommand("import_avro", new ImportAvroCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
-            .addCommand("import_json", new ImportJsonCommand())
-            .addCommand("export_avro", new ExportAvroCommand())
-            .addCommand("export_jdbc", new ExportJdbcCommand())
-            .addCommand("export_orc", new ExportOrcCommand())
-            .addCommand("custom", new ExecuteCustomCommand())
-            .addCommand("reprocess", new ProcessContentCommand());
+            .addCommand("export_jdbc", new ExportJdbcCommand());
 
         JCommander commander = builder.build();
         commander.setUsageFormatter(new UsageFormatter(commander));

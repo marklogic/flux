@@ -1,8 +1,0 @@
-repositories {
-  mavenCentral()
-  mavenLocal()
-}
-
-dependencies {
-  api "org.apache.spark:spark-sql_2.12:3.4.1"
-}

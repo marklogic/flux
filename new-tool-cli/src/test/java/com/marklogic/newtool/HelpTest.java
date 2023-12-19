@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class HelpTest extends AbstractTest {
 
     @Test
-    void test() {
+    void viewUsage() {
         run();
     }
 
@@ -22,14 +22,14 @@ public class HelpTest extends AbstractTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
-        run("help", "import_avro");
+        run("help", "import_jdbc");
 
         outputStream.flush();
         System.setOut(stdout);
         String output = new String(outputStream.toByteArray());
         assertTrue(output.contains("Common Options:"));
-        assertTrue(output.contains("import_avro"));
-        assertFalse(output.contains("import_jdbc"));
+        assertTrue(output.contains("import_jdbc"));
+        assertFalse(output.contains("export_jdbc"));
 
         System.out.println(output);
     }

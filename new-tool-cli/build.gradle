@@ -8,18 +8,9 @@ repositories {
 }
 
 dependencies {
-  implementation project(":new-tool-api")
+  implementation "org.apache.spark:spark-sql_2.12:3.4.1"
   implementation "org.jcommander:jcommander:1.83"
-  implementation "com.marklogic:marklogic-spark-connector:2.1.0"
-
-  // For flattening YAML to properties. Doesn't bring in anything that our Spark connector doesn't already bring in.
-  implementation "org.springframework.vault:spring-vault-core:2.3.4"
-  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2"
-
-  implementation "com.databricks:spark-xml_2.12:0.17.0"
-
-  // Requires for using Avro as a data source, does not meaningfully add to the size of the shadow jar.
-  implementation "org.apache.spark:spark-avro_2.12:3.4.1"
+  implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 
   // TODO We'll have to see if we always include this for reading from S3; it adds a lot of dependencies to the final
   // zip file.
@@ -36,5 +27,5 @@ application {
 }
 
 startScripts {
-  unixStartScriptGenerator.template = resources.text.fromFile('start-script.txt')
+  unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
 }

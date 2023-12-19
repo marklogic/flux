@@ -6,7 +6,10 @@ import org.apache.spark.sql.*;
 
 import java.util.*;
 
-public class ImportJdbcCommand extends AbstractImportCommand {
+public class ImportJdbcCommand extends AbstractCommand {
+
+    @ParametersDelegate
+    private WriteParams writeParams = new WriteParams();
 
     @ParametersDelegate
     private JdbcParams jdbcParams = new JdbcParams();
@@ -16,7 +19,7 @@ public class ImportJdbcCommand extends AbstractImportCommand {
 
     @Parameter(
         names = "--aggregate",
-        description = "Each value is expected to be of the form alias=column1,column2,etc; requires the use of --group-by"
+        description = "Each value is expected to be of the form alias=column1,column2,etc; requires the use of --groupBy"
     )
     private List<String> aggregationExpressions = new ArrayList<>();
 
@@ -74,11 +77,11 @@ public class ImportJdbcCommand extends AbstractImportCommand {
         return dataset;
     }
 
-    public void setJdbcParams(JdbcParams jdbcParams) {
-        this.jdbcParams = jdbcParams;
-    }
-
-    public void setGroupBy(String groupBy) {
-        this.groupBy = groupBy;
+    @Override
+    protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
+        writer.format(MARKLOGIC_CONNECTOR)
+            .options(writeParams.makeOptions())
+            .mode(SaveMode.Append)
+            .save();
     }
 }

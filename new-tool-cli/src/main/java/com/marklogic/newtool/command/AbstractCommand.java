@@ -58,12 +58,11 @@ public abstract class AbstractCommand implements Command {
                 dataset = dataset.repartition(partitions);
             }
             if (preview) {
-                // TODO Log N rows?
                 return Optional.of(dataset.collectAsList());
             }
             DataFrameWriter<Row> writer = dataset.write()
                 .options(makeCommonWriteOptions());
-            writeDataset(session, writer);
+            applyWriter(session, writer);
             return Optional.empty();
         } finally {
             if (logger.isInfoEnabled()) {
@@ -74,10 +73,7 @@ public abstract class AbstractCommand implements Command {
 
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);
 
-    // TODO Keeping this void for now until there's a use case for returning something.
-    // Only use case right now is for preview, which is handled before this is invoked.
-    // Not certain about this name yet - perhaps applyWriter would be better?
-    protected abstract void writeDataset(SparkSession session, DataFrameWriter<Row> writer);
+    protected abstract void applyWriter(SparkSession session, DataFrameWriter<Row> writer);
 
     private Map<String, String> makeCommonReadOptions() {
         Map<String, String> options = connectionParams.makeOptions();

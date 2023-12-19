@@ -1,8 +1,20 @@
 version: '3.8'
 
-name: marklogic_new_tool
+name: new_tool
 
 services:
+
+  marklogic:
+    image: "marklogicdb/marklogic-db:11.1.0-centos-1.1.0"
+    platform: linux/amd64
+    environment:
+      - MARKLOGIC_INIT=true
+      - MARKLOGIC_ADMIN_USERNAME=admin
+      - MARKLOGIC_ADMIN_PASSWORD=admin
+    volumes:
+      - ./docker/marklogic/logs:/var/opt/MarkLogic/Logs
+    ports:
+      - 8000-8003:8000-8003
 
   postgres:
     image: postgres:latest
@@ -26,15 +38,3 @@ services:
       - 15432:80
     depends_on:
       - postgres
-
-  marklogic:
-    image: "marklogicdb/marklogic-db:11.1.0-centos-1.1.0"
-    platform: linux/amd64
-    environment:
-      - MARKLOGIC_INIT=true
-      - MARKLOGIC_ADMIN_USERNAME=admin
-      - MARKLOGIC_ADMIN_PASSWORD=admin
-    volumes:
-      - ./docker/marklogic/logs:/var/opt/MarkLogic/Logs
-    ports:
-      - 8000-8003:8000-8003
