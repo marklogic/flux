@@ -80,6 +80,7 @@ public class ImportJdbcCommand extends AbstractCommand {
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format(MARKLOGIC_CONNECTOR)
+            .options(getConnectionParams().makeOptions())
             .options(writeParams.makeOptions())
             .mode(SaveMode.Append)
             .save();

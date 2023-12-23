@@ -20,6 +20,7 @@ public class ExportJdbcCommand extends AbstractCommand {
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
+            .options(getConnectionParams().makeOptions())
             .options(readParams.makeOptions())
             .load();
     }
