@@ -22,7 +22,8 @@ docker exec -it new_tool-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrent
 docker exec -it new_tool-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
 ```
 
-The Docker file includes a pgadmin instance. If you wish to login to this, do so with "postgres@pgadmin.com" and 
+The Docker file includes a pgadmin instance which can be accessed at <http://localhost:15432/>. 
+If you wish to login to this, do so with "postgres@pgadmin.com" and 
 a password of "postgres". For logging into Postgres itself, use "postgres" as the username and password.
 
 ## Publishing the 2.2-SNAPSHOT Spark connector
