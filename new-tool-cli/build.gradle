@@ -28,4 +28,11 @@ application {
 
 startScripts {
   unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
+  applicationName = "nt"
 }
+
+tasks.register("buildTool", Copy) {
+  from layout.buildDirectory.dir("install/new-tool-cli")
+  into "../nt"
+}
+buildTool.dependsOn installDist

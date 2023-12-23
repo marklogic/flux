@@ -4,7 +4,5 @@ build
 bin
 out
 .DS_Store
-data-integrator
 gradle-local.properties
-
-new-tool-cli/data/h2-sample-db.mv.db
+nt
