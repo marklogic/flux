@@ -19,6 +19,14 @@ You can run NT without any params to get usage:
 
     ./nt/bin/nt
 
+## Import from files
+
+Run the following command to import 4 files from the given directory as new documents in MarkLogic:
+
+```
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" --uriReplace ".*/mixed-files,'/test'"
+```
+
 ## Export to RDBMS
 
 You can use `export_jdbc` to export rows selected via Optic to an RDBMS. The below example will find 15 rows in the 

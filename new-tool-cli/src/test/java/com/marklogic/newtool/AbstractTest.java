@@ -34,11 +34,12 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         rows.forEach(row -> logger.info(row.prettyJson()));
     }
 
+    // TODO Add test for this, and change it to return a Dataset instead of a List which may be too large for memory.
     protected final List<Row> preview(String... args) {
         String[] finalArgs = new String[args.length + 1];
         System.arraycopy(args, 0, finalArgs, 0, args.length);
         finalArgs[args.length] = "--preview";
-        return Main.run(finalArgs).get();
+        return new Main(finalArgs).run().get();
     }
 
     protected final void run(String... args) {
