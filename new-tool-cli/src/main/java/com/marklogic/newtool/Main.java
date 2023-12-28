@@ -2,10 +2,8 @@ package com.marklogic.newtool;
 
 import com.beust.jcommander.JCommander;
 import com.marklogic.newtool.command.*;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.List;
 import java.util.Optional;
 
 public class Main {
@@ -26,7 +24,7 @@ public class Main {
         this.selectedCommand = getSelectedCommand(commander, args);
     }
 
-    public Optional<List<Row>> run() {
+    public void run() {
         if (selectedCommand == null) {
             commander.usage();
         } else if (selectedCommand instanceof HelpCommand) {
@@ -40,9 +38,11 @@ public class Main {
                 .master("local[*]")
                 .config("spark.sql.session.timeZone", "UTC")
                 .getOrCreate();
-            return command.execute(session);
+            Optional<Preview> preview = command.execute(session);
+            if (preview.isPresent()) {
+                preview.get().showPreview();
+            }
         }
-        return Optional.empty();
     }
 
     private JCommander buildCommander() {

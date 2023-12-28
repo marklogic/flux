@@ -6,6 +6,7 @@ import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,14 @@ public abstract class AbstractCommand implements Command {
     @Parameter(names = "--partitions", description = "number of Spark partitions")
     private Integer partitions;
 
-    @Parameter(names = "--preview", description = "Set to true to return the dataset instead of writing it.")
-    private boolean preview;
+    @Parameter(names = "--preview", description = "Show up to the first N rows of data read by the command.")
+    private Integer preview;
+
+    @Parameter(names = "--previewDrop", description = "Specify one or more columns to drop when using --preview.", variableArity = true)
+    private List<String> previewColumnsToDrop = new ArrayList<>();
 
     @Override
-    public Optional<List<Row>> execute(SparkSession session) {
+    public Optional<Preview> execute(SparkSession session) {
         long start = System.currentTimeMillis();
         try {
             DataFrameReader reader = session.read();
@@ -33,8 +37,8 @@ public abstract class AbstractCommand implements Command {
             if (partitions != null) {
                 dataset = dataset.repartition(partitions);
             }
-            if (preview) {
-                return Optional.of(dataset.collectAsList());
+            if (preview != null) {
+                return Optional.of(new Preview(dataset, preview, previewColumnsToDrop));
             }
             DataFrameWriter<Row> writer = dataset.write();
             applyWriter(session, writer);

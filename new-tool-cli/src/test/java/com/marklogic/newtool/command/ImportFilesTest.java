@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportFilesTest extends AbstractTest {
@@ -26,6 +27,28 @@ class ImportFilesTest extends AbstractTest {
         );
 
         verifyFourDocsWereWritten();
+    }
+
+    /**
+     * preview = show the first N rows from the reader, and don't invoke the writer.
+     */
+    @Test
+    void preview() {
+        String stdout = runAndReturnStdout(() -> run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files",
+            "--preview", "2",
+            "--previewDrop", "content", "modificationTime"
+        ));
+
+        String message = "Unexpected output to stdout: " + stdout;
+        assertTrue(stdout.contains("RECORD 0"), message);
+        assertTrue(stdout.contains("RECORD 1"), message);
+        assertFalse(stdout.contains("RECORD 2"), message);
+        assertTrue(stdout.contains("path"), message);
+        assertTrue(stdout.contains("length"), message);
+        assertFalse(stdout.contains("content"), message);
+        assertFalse(stdout.contains("modificationTime"), message);
     }
 
     /**
