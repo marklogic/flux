@@ -24,7 +24,9 @@ You can run NT without any params to get usage:
 Run the following command to import 4 files from the given directory as new documents in MarkLogic:
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" --uriReplace ".*/mixed-files,'/test'"
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+  --clientUri "new-tool-user:password@localhost:8000" \
+  --uriReplace ".*/mixed-files,'/test'"
 ```
 
 ## Export to RDBMS
@@ -33,7 +35,9 @@ You can use `export_jdbc` to export rows selected via Optic to an RDBMS. The bel
 Medical/Authors view in MarkLogic and write them to a new table named `Author` in Postgres.
 
 ```
-./nt/bin/nt export_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author --jdbcDriver "org.postgresql.Driver" --jdbcUser "postgres" --jdbcPassword "postgres" --query "op.fromView ('Medical', 'Authors')" 
+./nt/bin/nt export_jdbc --clientUri "new-tool-user:password@localhost:8003" \
+  --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author --jdbcDriver "org.postgresql.Driver" \
+  --jdbcUser "postgres" --jdbcPassword "postgres" --query "op.fromView ('Medical', 'Authors')" 
 ```
 
 The Postgres instance running in Docker now has an "Author" table in the "postgres" database. You can manually inspect
@@ -46,7 +50,10 @@ the root of this repository.
 Run the following to import the rows from the "Author" table, writing them as JSON documents:
 
 ```
-./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author --jdbcDriver "org.postgresql.Driver" --jdbcUser "postgres" --jdbcPassword "postgres" --uriPrefix "/author/" --uriSuffix ".json" --collections jdbc-author
+./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author \
+  --jdbcDriver "org.postgresql.Driver" --jdbcUser "postgres" --jdbcPassword "postgres" \
+  --clientUri "new-tool-user:password@localhost:8003" \
+  --uriPrefix "/author/" --uriSuffix ".json" --collections jdbc-author
 ```
 
 In qconsole, you can filter on "/author/" for the URI to see the 15 author documents.
