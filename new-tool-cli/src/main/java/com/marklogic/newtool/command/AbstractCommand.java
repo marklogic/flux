@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public abstract class AbstractCommand implements Command {
 
-    protected final static String MARKLOGIC_CONNECTOR = "com.marklogic.spark";
+    protected final static String MARKLOGIC_CONNECTOR = "marklogic";
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -21,10 +21,9 @@ public abstract class AbstractCommand implements Command {
     @Parameter(names = "--partitions", description = "number of Spark partitions")
     private Integer partitions;
 
-    @Parameter(names = "--preview", description = "Set to true to log the dataset instead of writing it.")
+    @Parameter(names = "--preview", description = "Set to true to return the dataset instead of writing it.")
     private boolean preview;
 
-    // TODO Apply optionsFile here.
     @Override
     public Optional<List<Row>> execute(SparkSession session) {
         long start = System.currentTimeMillis();

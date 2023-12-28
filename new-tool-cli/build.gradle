@@ -18,12 +18,15 @@ dependencies {
   implementation "org.apache.hadoop:hadoop-client:3.3.6"
 
   testImplementation "com.marklogic:marklogic-junit5:1.4.0"
-
   testImplementation "org.postgresql:postgresql:42.6.0"
 }
 
 application {
   mainClass = "com.marklogic.newtool.Main"
+  // Removes warnings due to Spark performing "illegal reflective access".
+  applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
+                               '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+                               '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED']
 }
 
 startScripts {

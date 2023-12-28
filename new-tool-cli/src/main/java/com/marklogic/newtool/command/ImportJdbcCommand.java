@@ -9,7 +9,7 @@ import java.util.*;
 public class ImportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate
-    private WriteParams writeParams = new WriteParams();
+    private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
 
     @ParametersDelegate
     private JdbcParams jdbcParams = new JdbcParams();
@@ -81,7 +81,7 @@ public class ImportJdbcCommand extends AbstractCommand {
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(writeParams.makeOptions())
+            .options(writeDocumentParams.makeOptions())
             .mode(SaveMode.Append)
             .save();
     }

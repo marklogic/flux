@@ -1,0 +1,6 @@
+--path
+src/test/resources/mixed-files/hello*
+--collections
+files
+--uriReplace
+.*/mixed-files,''
