@@ -1,11 +1,16 @@
 package com.marklogic.newtool;
 
 import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.DatabaseClientBuilder;
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
 import org.apache.spark.sql.Row;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
+
+import static org.springframework.test.util.AssertionErrors.fail;
 
 public abstract class AbstractTest extends AbstractMarkLogicTest {
 
@@ -14,11 +19,13 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     @Override
     protected DatabaseClient getDatabaseClient() {
         if (databaseClient == null) {
-            // Lame, should get host from some properties file.
-            databaseClient = new DatabaseClientBuilder()
-                .withHost("localhost").withPort(8003)
-                .withDigestAuth("new-tool-admin", "password")
-                .build();
+            Properties props = new Properties();
+            try {
+                props.load(new ClassPathResource("test.properties").getInputStream());
+            } catch (IOException e) {
+                fail("Unable to read from test.properties: " + e.getMessage());
+            }
+            databaseClient = DatabaseClientFactory.newClient(propertyName -> props.get(propertyName));
         }
         return databaseClient;
     }
@@ -40,6 +47,11 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         System.arraycopy(args, 0, finalArgs, 0, args.length);
         finalArgs[args.length] = "--preview";
         return new Main(finalArgs).run().get();
+    }
+
+    protected final String makeClientUri() {
+        // new-tool-user is expected to have the minimum set of privileges for running all the tests.
+        return String.format("%s:%s@%s:%d", "new-tool-user", "password", databaseClient.getHost(), databaseClient.getPort());
     }
 
     protected final void run(String... args) {

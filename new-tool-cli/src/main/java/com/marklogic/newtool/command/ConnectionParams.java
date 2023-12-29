@@ -1,64 +1,45 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.spark.Options;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionParams {
 
-    @Parameter(names = {"-h", "--host"}, description = "The MarkLogic host to connect to", hidden = true, order = 0)
+    @Parameter(names = {"--clientUri"},
+        hidden = true,
+        description = "Defines a connection string as user:password@host:port; only usable when using digest or basic authentication.",
+        order = 0)
+    private String clientUri;
+
+    @Parameter(names = {"-h", "--host"}, description = "The MarkLogic host to connect to", hidden = true, order = 1)
     private String host = "localhost";
 
-    @Parameter(names = "--port", description = "Port of a MarkLogic app server to connect to", hidden = true, order = 1)
-    private Integer port = 8003;
+    @Parameter(names = "--port", description = "Port of a MarkLogic REST API app server to connect to", hidden = true, order = 2)
+    private Integer port;
 
     @Parameter(names = "--username", description = "Username when using 'digest' or 'basic' authentication",
-        hidden = true, order = 2)
-    private String username = "new-tool-user";
+        hidden = true, order = 3)
+    private String username;
 
     @Parameter(names = "--password", description = "Password when using 'digest' or 'basic' authentication",
-        hidden = true, password = true, order = 3)
-    private String password = "password";
+        hidden = true, password = true, order = 4)
+    private String password;
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
-        options.put("spark.marklogic.client.host", getHost());
-        options.put("spark.marklogic.client.port", getPort() + "");
-        options.put("spark.marklogic.client.username", getUsername());
-        options.put("spark.marklogic.client.password", getPassword());
+        if (clientUri != null && !clientUri.isEmpty()) {
+            options.put(Options.CLIENT_URI, clientUri);
+        } else {
+            options.put(Options.CLIENT_HOST, host);
+            if (port != null) {
+                options.put(Options.CLIENT_PORT, port.toString());
+            }
+            options.put(Options.CLIENT_USERNAME, username);
+            options.put(Options.CLIENT_PASSWORD, password);
+        }
         return options;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

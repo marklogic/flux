@@ -20,6 +20,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
+            "--clientUri", makeClientUri(),
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''"
         );
@@ -35,6 +36,8 @@ class ImportFilesTest extends AbstractTest {
         File optionsFile = new File(tempDir.toFile(), "options.txt");
         String options = "--path\n" +
             "src/test/resources/mixed-files\n" +
+            "--clientUri\n" +
+            makeClientUri() + "\n" +
             "--uriReplace\n" +
             ".*/mixed-files,''";
         FileCopyUtils.copy(options.getBytes(), optionsFile);

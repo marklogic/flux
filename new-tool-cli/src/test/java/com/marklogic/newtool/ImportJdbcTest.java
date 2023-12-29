@@ -105,6 +105,7 @@ public class ImportJdbcTest extends AbstractTest {
     private String[] buildArgs(String query, String... args) {
         final String[] commonArgs = new String[]{
             "import_jdbc",
+            "--clientUri", makeClientUri(),
             "--jdbcUrl", "jdbc:postgresql://localhost/dvdrental",
             "--jdbcDriver", "org.postgresql.Driver",
             "--jdbcUser", "postgres",
@@ -115,7 +116,6 @@ public class ImportJdbcTest extends AbstractTest {
         final String[] target = new String[commonArgs.length + args.length];
         System.arraycopy(commonArgs, 0, target, 0, commonArgs.length);
         System.arraycopy(args, 0, target, commonArgs.length, args.length);
-//        System.out.println(Arrays.asList(target));
         return target;
     }
 }
