@@ -9,6 +9,7 @@ import java.util.Optional;
 public class Main {
 
     private static final String PROGRAM_NAME = "./bin/new-tool";
+    private static final int COLUMN_SIZE = 200;
 
     private final String[] args;
     private final JCommander commander;
@@ -28,9 +29,8 @@ public class Main {
         if (selectedCommand == null) {
             commander.usage();
         } else if (selectedCommand instanceof HelpCommand) {
-            // Command will be the last arg
             String commandName = args[args.length - 1];
-            ((HelpCommand) selectedCommand).viewUsage(commander, commandName);
+            ((HelpCommand) selectedCommand).printUsageForCommand(commander, commandName);
         } else {
             Command command = (Command) selectedCommand;
             // TODO Allow for user to customize these inputs.
@@ -48,13 +48,14 @@ public class Main {
     private JCommander buildCommander() {
         JCommander commander = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
-            .addCommand("help", new HelpCommand(PROGRAM_NAME))
+            .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
+            .columnSize(COLUMN_SIZE)
             .build();
 
-        commander.setUsageFormatter(new UsageFormatter(commander));
+        commander.setUsageFormatter(new SummaryUsageFormatter(commander));
         return commander;
     }
 

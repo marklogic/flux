@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Parameters(commandDescription = "Read local, HDFS, and S3 files and write documents in MarkLogic.")
 public class ImportFilesCommand extends AbstractCommand {
 
     public enum DocumentType {
