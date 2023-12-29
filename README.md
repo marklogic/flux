@@ -29,6 +29,13 @@ Run the following command to import 4 files from the given directory as new docu
   --uriReplace ".*/mixed-files,'/test'"
 ```
 
+You can also preview the data that was read via the `--preview` argument, and you can drop potentially verbose columns
+via `--previewDrop`:
+
+```
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" --preview 10 --previewDrop content
+```
+
 ## Export to RDBMS
 
 You can use `export_jdbc` to export rows selected via Optic to an RDBMS. The below example will find 15 rows in the 

@@ -6,8 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HelpTest extends AbstractTest {
 
@@ -17,20 +16,11 @@ public class HelpTest extends AbstractTest {
     }
 
     @Test
-    void helpForSingleCommand() throws IOException {
-        PrintStream stdout = System.out;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        run("help", "import_jdbc");
-
-        outputStream.flush();
-        System.setOut(stdout);
-        String output = new String(outputStream.toByteArray());
-        assertTrue(output.contains("Common Options:"));
-        assertTrue(output.contains("import_jdbc"));
-        assertFalse(output.contains("export_jdbc"));
-
-        System.out.println(output);
+    void helpForSingleCommand() {
+        String stdout = runAndReturnStdout(() -> run("help", "import_jdbc"));
+        assertTrue(stdout.contains("Common Options:"));
+        assertTrue(stdout.contains("import_jdbc"));
+        assertFalse(stdout.contains("export_jdbc"));
+        System.out.println(stdout);
     }
 }

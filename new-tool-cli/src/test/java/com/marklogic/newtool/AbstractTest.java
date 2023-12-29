@@ -3,11 +3,11 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
-import org.apache.spark.sql.Row;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintStream;
 import java.util.Properties;
 
 import static org.springframework.test.util.AssertionErrors.fail;
@@ -37,18 +37,6 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
             "{xdmp.documentDelete(uri)}";
     }
 
-    protected final void logRows(List<Row> rows) {
-        rows.forEach(row -> logger.info(row.prettyJson()));
-    }
-
-    // TODO Add test for this, and change it to return a Dataset instead of a List which may be too large for memory.
-    protected final List<Row> preview(String... args) {
-        String[] finalArgs = new String[args.length + 1];
-        System.arraycopy(args, 0, finalArgs, 0, args.length);
-        finalArgs[args.length] = "--preview";
-        return new Main(finalArgs).run().get();
-    }
-
     protected final String makeClientUri() {
         // new-tool-user is expected to have the minimum set of privileges for running all the tests.
         return String.format("%s:%s@%s:%d", "new-tool-user", "password", databaseClient.getHost(), databaseClient.getPort());
@@ -58,4 +46,23 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         Main.main(args);
     }
 
+    /**
+     * Handy method for running anything and returning everything written to stdout.
+     */
+    protected final String runAndReturnStdout(Runnable r) {
+        PrintStream originalStdout = System.out;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(outputStream));
+            r.run();
+            try {
+                outputStream.flush();
+            } catch (IOException e) {
+                fail("Unable to flush output stream: " + e.getMessage());
+            }
+            return new String(outputStream.toByteArray());
+        } finally {
+            System.setOut(originalStdout);
+        }
+    }
 }
