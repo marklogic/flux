@@ -28,7 +28,6 @@ public class ImportFilesCommand extends AbstractCommand {
     @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
     private DocumentType documentType;
 
-    // TODO Support other generic options at https://spark.apache.org/docs/latest/sql-data-sources-generic-options.html
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         if (logger.isInfoEnabled()) {

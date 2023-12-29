@@ -1,5 +1,8 @@
 plugins {
+  id 'net.saliman.properties' version '1.5.2'
   id "application"
+  id "jacoco"
+  id "org.sonarqube" version "4.4.1.3373"
 }
 
 repositories {
@@ -12,8 +15,6 @@ dependencies {
   implementation "org.jcommander:jcommander:1.83"
   implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 
-  // TODO We'll have to see if we always include this for reading from S3; it adds a lot of dependencies to the final
-  // zip file.
   implementation "org.apache.hadoop:hadoop-aws:3.3.6"
   implementation "org.apache.hadoop:hadoop-client:3.3.6"
 
@@ -39,3 +40,21 @@ tasks.register("buildTool", Copy) {
   into "../nt"
 }
 buildTool.dependsOn installDist
+
+test {
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.required = true
+  }
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "spark-etl"
+    property "sonar.host.url", "http://localhost:9000"
+  }
+}

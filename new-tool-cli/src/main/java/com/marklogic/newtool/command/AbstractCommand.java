@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public abstract class AbstractCommand implements Command {
 
-    protected final static String MARKLOGIC_CONNECTOR = "marklogic";
+    protected static final String MARKLOGIC_CONNECTOR = "marklogic";
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -45,7 +45,7 @@ public abstract class AbstractCommand implements Command {
             return Optional.empty();
         } finally {
             if (logger.isInfoEnabled()) {
-                logger.info("Completed, duration in ms: " + (System.currentTimeMillis() - start));
+                logger.info("Completed, duration in ms: {}", System.currentTimeMillis() - start);
             }
         }
     }

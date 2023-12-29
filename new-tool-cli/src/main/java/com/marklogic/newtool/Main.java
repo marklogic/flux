@@ -46,7 +46,7 @@ public class Main {
     }
 
     private JCommander buildCommander() {
-        JCommander commander = JCommander.newBuilder()
+        JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_files", new ImportFilesCommand())
@@ -54,9 +54,8 @@ public class Main {
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .columnSize(COLUMN_SIZE)
             .build();
-
-        commander.setUsageFormatter(new SummaryUsageFormatter(commander));
-        return commander;
+        jc.setUsageFormatter(new SummaryUsageFormatter(jc));
+        return jc;
     }
 
     private Object getSelectedCommand(JCommander commander, String... args) {

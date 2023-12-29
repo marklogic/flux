@@ -18,7 +18,7 @@ public class Preview {
     }
 
     public void showPreview() {
-        Dataset datasetPreview = dataset;
+        Dataset<Row> datasetPreview = dataset;
         if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
             datasetPreview = datasetPreview.drop(columnsToDrop.toArray(new String[]{}));
         }

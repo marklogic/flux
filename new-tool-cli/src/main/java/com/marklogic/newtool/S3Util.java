@@ -6,7 +6,7 @@ import org.apache.spark.sql.SparkSession;
 
 import java.util.List;
 
-public class S3Util {
+public abstract class S3Util {
 
     public static void configureAWSCredentialsIfS3Path(SparkSession session, List<String> paths) {
         if (paths.stream().anyMatch(path -> path.startsWith("s3") && !path.startsWith("s3n"))) {
@@ -21,5 +21,8 @@ public class S3Util {
             session.sparkContext().hadoopConfiguration().set("fs.s3n.awsAccessKeyId", creds.getAWSAccessKeyId());
             session.sparkContext().hadoopConfiguration().set("fs.s3n.awsSecretAccessKey", creds.getAWSSecretKey());
         }
+    }
+
+    private S3Util() {
     }
 }
