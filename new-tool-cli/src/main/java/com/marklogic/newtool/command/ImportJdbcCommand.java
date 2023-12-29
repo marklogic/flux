@@ -1,11 +1,13 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.*;
 
 import java.util.*;
 
+@Parameters(commandDescription = "Read rows via JDBC and write documents in MarkLogic.")
 public class ImportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate

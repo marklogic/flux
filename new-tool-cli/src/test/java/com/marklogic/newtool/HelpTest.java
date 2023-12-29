@@ -2,25 +2,39 @@ package com.marklogic.newtool;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HelpTest extends AbstractTest {
+class HelpTest extends AbstractTest {
 
     @Test
-    void viewUsage() {
-        run();
+    void summaryUsage() {
+        String stdout = runAndReturnStdout(() -> run());
+        assertTrue(stdout.contains("View details for the named command."),
+            "Summary usage is expected to show each command its description, but no parameters.");
+        assertFalse(stdout.contains("-host"), "No parameters should be shown with summary usage.");
     }
 
     @Test
     void helpForSingleCommand() {
-        String stdout = runAndReturnStdout(() -> run("help", "import_jdbc"));
-        assertTrue(stdout.contains("Common Options:"));
-        assertTrue(stdout.contains("import_jdbc"));
-        assertFalse(stdout.contains("export_jdbc"));
-        System.out.println(stdout);
+        String stdout = runAndReturnStdout(() -> run("help", "import_files"));
+        assertTrue(stdout.contains("Usage: import_files [options]"));
+        assertFalse(stdout.contains("import_jdbc"), "Only the given command should be shown.");
+        assertTrue(stdout.contains("-host"));
+        assertTrue(stdout.contains("--path"));
+    }
+
+    @Test
+    void helpForInvalidCommand() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+            () -> run("help", "not_a_real_command"));
+
+        assertEquals("Unrecognized command name: not_a_real_command", ex.getMessage());
+    }
+
+    @Test
+    void noCommand() {
+        String stdout = runAndReturnStdout(() -> run("help"));
+        assertTrue(stdout.contains("Usage: help"), "If 'help' is run with no command, then the usage for the " +
+            "'help' command should be shown.");
     }
 }

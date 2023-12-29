@@ -15,9 +15,13 @@ directory are what a user would see after downloading the NT zip file and extrac
 longer than they'd be in the real world - in the real world, the user is likely just running e.g. 
 `./bin/(name of tool)`.
 
-You can run NT without any params to get usage:
+You can run NT without any params to see a summary of the available commands:
 
     ./nt/bin/nt
+
+You can also use the `help` command to see detailed usage for a specific command:
+
+    ./nt/bin/nt help import_files
 
 ## Import from files
 
