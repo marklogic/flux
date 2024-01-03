@@ -34,38 +34,10 @@ public class ImportJdbcCommand extends AbstractCommand {
             .jdbc(jdbcParams.getUrl(), jdbcParams.getTable(), jdbcParams.toProperties());
 
         if (groupBy != null) {
-            Map<String, List<String>> aggregationMap = new LinkedHashMap<>();
-            if (aggregationExpressions != null) {
-                aggregationExpressions.forEach(expr -> {
-                    String[] parts = expr.split("=");
-                    aggregationMap.put(parts[0], Arrays.asList(parts[1].split(";")));
-                });
-            }
+            Map<String, List<String>> aggregationMap = makeAggregationMap();
             List<Column> columns = new ArrayList<>();
-
-            Set<String> aggregatedColumnNames = new HashSet<>();
-            aggregationMap.values().forEach(columnNames -> aggregatedColumnNames.addAll(columnNames));
-
-            // Add all the columns that aren't in any aggregations. The assumption is that every row will have the
-            // same value for each of these columns, so we only need the first value.
-            for (String name : dataset.schema().names()) {
-                if (!aggregatedColumnNames.contains(name) && !groupBy.equals(name)) {
-                    columns.add(functions.first(name).alias(name));
-                }
-            }
-
-            for (String alias : aggregationMap.keySet()) {
-                List<String> columnNames = aggregationMap.get(alias);
-                if (columnNames.size() == 1) {
-                    columns.add(functions.collect_list(functions.concat(new Column(columnNames.get(0)))).alias(alias));
-                } else {
-                    Column[] cols = columnNames.stream().map(name -> functions.col(name)).toArray(Column[]::new);
-                    // array_distinct removes duplicate objects that can result from 2+ joins existing in the query.
-                    // See https://www.sparkreference.com/reference/array_distinct/ for performance considerations.
-                    columns.add(functions.array_distinct(functions.collect_list(functions.struct(cols))).alias(alias));
-                }
-            }
-
+            addColumnsNotInAggregation(dataset, columns, aggregationMap);
+            addAggregationColumns(columns, aggregationMap);
             dataset = dataset.groupBy(groupBy).agg(
                 columns.get(0),
                 columns.subList(1, columns.size()).toArray(new Column[]{})
@@ -77,6 +49,45 @@ public class ImportJdbcCommand extends AbstractCommand {
         }
 
         return dataset;
+    }
+
+    private Map<String, List<String>> makeAggregationMap() {
+        Map<String, List<String>> aggregationMap = new LinkedHashMap<>();
+        if (aggregationExpressions != null) {
+            aggregationExpressions.forEach(expr -> {
+                String[] parts = expr.split("=");
+                aggregationMap.put(parts[0], Arrays.asList(parts[1].split(";")));
+            });
+        }
+        return aggregationMap;
+    }
+
+    private void addColumnsNotInAggregation(Dataset<Row> dataset, List<Column> columns, Map<String, List<String>> aggregationMap) {
+        Set<String> aggregatedColumnNames = new HashSet<>();
+        aggregationMap.values().forEach(aggregatedColumnNames::addAll);
+
+        // Add all the columns that aren't in any aggregations. The assumption is that every row will have the
+        // same value for each of these columns, so we only need the first value.
+        for (String name : dataset.schema().names()) {
+            if (!aggregatedColumnNames.contains(name) && !groupBy.equals(name)) {
+                columns.add(functions.first(name).alias(name));
+            }
+        }
+    }
+
+    private void addAggregationColumns(List<Column> columns, Map<String, List<String>> aggregationMap) {
+        for (Map.Entry<String, List<String>> entry : aggregationMap.entrySet()) {
+            final String alias = entry.getKey();
+            final List<String> columnNames = entry.getValue();
+            if (columnNames.size() == 1) {
+                columns.add(functions.collect_list(functions.concat(new Column(columnNames.get(0)))).alias(alias));
+            } else {
+                Column[] cols = columnNames.stream().map(functions::col).toArray(Column[]::new);
+                // array_distinct removes duplicate objects that can result from 2+ joins existing in the query.
+                // See https://www.sparkreference.com/reference/array_distinct/ for performance considerations.
+                columns.add(functions.array_distinct(functions.collect_list(functions.struct(cols))).alias(alias));
+            }
+        }
     }
 
     @Override

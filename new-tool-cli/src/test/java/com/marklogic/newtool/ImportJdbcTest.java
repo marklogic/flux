@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class ImportJdbcTest extends AbstractTest {
+class ImportJdbcTest extends AbstractTest {
 
     /**
      * Demonstrates "simple" joins on language/category that just pull in a single value.
