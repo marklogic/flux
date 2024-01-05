@@ -3,6 +3,7 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.S3Util;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
@@ -41,6 +42,7 @@ public class ImportFilesCommand extends AbstractCommand {
         if (logger.isInfoEnabled()) {
             logger.info("Importing files from: {}", paths);
         }
+        S3Util.configureAWSCredentialsIfS3Path(session, paths);
         String format = (compression != null) ? "marklogic" : "binaryFile";
         return reader.format(format)
             .options(makeReadOptions())

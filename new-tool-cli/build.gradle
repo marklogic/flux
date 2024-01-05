@@ -30,16 +30,20 @@ application {
                                '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED']
 }
 
+// Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.
 startScripts {
   unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
   applicationName = "nt"
 }
 
+tasks.register("deleteTool", Delete) {
+  delete "../nt"
+}
 tasks.register("buildTool", Copy) {
   from layout.buildDirectory.dir("install/new-tool-cli")
   into "../nt"
 }
-buildTool.dependsOn installDist
+buildTool.dependsOn installDist, deleteTool
 
 test {
   finalizedBy jacocoTestReport
