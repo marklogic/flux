@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportFilesTest extends AbstractTest {
 
+    String[] uris = new String[] {"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
+
     @Test
     void test() {
         run(
@@ -26,7 +28,7 @@ class ImportFilesTest extends AbstractTest {
             "--uriReplace", ".*/mixed-files,''"
         );
 
-        verifyFourDocsWereWritten();
+        verifyDocsWereWritten(uris);
     }
 
     /**
@@ -58,7 +60,7 @@ class ImportFilesTest extends AbstractTest {
     void fileOptions(@TempDir Path tempDir) throws IOException {
         File optionsFile = new File(tempDir.toFile(), "options.txt");
         String options = "--path\n" +
-            "src/test/resources/mixed-files\n" +
+            "src/test/resources/mixed-files/hello*\n" +
             "--clientUri\n" +
             makeClientUri() + "\n" +
             "--uriReplace\n" +
@@ -71,13 +73,53 @@ class ImportFilesTest extends AbstractTest {
             "--collections", "files"
         );
 
-        verifyFourDocsWereWritten();
+        verifyDocsWereWritten(uris);
     }
 
-    private void verifyFourDocsWereWritten() {
-        List<String> uris = getUrisInCollection("files", 4);
-        Stream.of("/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz").forEach(uri -> {
-            assertTrue(uris.contains(uri), String.format("Did not find %s in %s", uri, uris));
-        });
+    @Test
+    void zipTest() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--clientUri", makeClientUri(),
+            "--collections", "files",
+            "--uriReplace", ".*/mixed-files,''",
+            "--compression", "zip"
+        );
+
+        verifyDocsWereWritten("/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
+    }
+
+    @Test
+    void zipCaseSensitivityTest() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--clientUri", makeClientUri(),
+            "--collections", "files",
+            "--uriReplace", ".*/mixed-files,''",
+            "--compression", "ZIp"
+        );
+
+        verifyDocsWereWritten("/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
+    }
+
+    @Test
+    void gzipTest() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/hello2.txt.gz",
+            "--clientUri", makeClientUri(),
+            "--collections", "files",
+            "--uriReplace", ".*/mixed-files,''",
+            "--compression", "gzip"
+        );
+
+        verifyDocsWereWritten("/hello2.txt");
+    }
+
+    private void verifyDocsWereWritten(String... values) {
+        List<String> uris = getUrisInCollection("files", values.length);
+        Stream.of(values).forEach(uri -> assertTrue(uris.contains(uri), String.format("Did not find %s in %s", uri, uris)));
     }
 }
