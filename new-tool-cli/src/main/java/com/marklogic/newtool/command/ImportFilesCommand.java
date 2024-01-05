@@ -19,8 +19,16 @@ public class ImportFilesCommand extends AbstractCommand {
         XML
     }
 
+    public enum CompressionType {
+        ZIP,
+        GZIP
+    }
+
     @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
+
+    @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+    private CompressionType compression;
 
     @ParametersDelegate
     private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
@@ -33,7 +41,9 @@ public class ImportFilesCommand extends AbstractCommand {
         if (logger.isInfoEnabled()) {
             logger.info("Importing files from: {}", paths);
         }
-        return reader.format("binaryFile")
+        String format = (compression != null) ? "marklogic" : "binaryFile";
+        return reader.format(format)
+            .options(makeReadOptions())
             .load(paths.toArray(new String[]{}));
     }
 
@@ -50,6 +60,14 @@ public class ImportFilesCommand extends AbstractCommand {
         options.putAll(writeDocumentParams.makeOptions());
         if (documentType != null) {
             options.put(Options.WRITE_FILES_DOCUMENT_TYPE, documentType.name());
+        }
+        return options;
+    }
+
+    protected Map<String, String> makeReadOptions() {
+        Map<String, String> options = getConnectionParams().makeOptions();
+        if (compression != null) {
+            options.put(Options.READ_FILES_COMPRESSION, compression.name());
         }
         return options;
     }
