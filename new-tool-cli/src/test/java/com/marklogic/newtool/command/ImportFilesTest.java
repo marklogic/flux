@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command;
 
 import com.marklogic.newtool.AbstractTest;
+import org.apache.spark.SparkException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
@@ -11,8 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportFilesTest extends AbstractTest {
 
@@ -116,6 +116,28 @@ class ImportFilesTest extends AbstractTest {
         );
 
         verifyDocsWereWritten("/hello2.txt");
+    }
+
+    @Test
+    void badGzipTest() {
+        try {
+            run(
+                "import_files",
+                "--path", "src/test/resources/mixed-files/goodbye.zip",
+                "--clientUri", makeClientUri(),
+                "--collections", "files",
+                "--uriReplace", ".*/mixed-files,''",
+                "--compression", "gzip"
+            );
+        } catch (Exception e) {
+            if (e instanceof SparkException) {
+                assertTrue(e.getCause().getMessage().contains("Unable to read gzip file"));
+                return;
+            } else {
+                fail("An unexpected exception was thrown.");
+            }
+        }
+        fail("The test end in the catch block.");
     }
 
     private void verifyDocsWereWritten(String... values) {
