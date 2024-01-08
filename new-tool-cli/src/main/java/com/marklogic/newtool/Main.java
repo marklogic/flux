@@ -3,10 +3,14 @@ package com.marklogic.newtool;
 import com.beust.jcommander.JCommander;
 import com.marklogic.newtool.command.*;
 import org.apache.spark.sql.SparkSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     private static final String PROGRAM_NAME = "./bin/new-tool";
     private static final int COLUMN_SIZE = 200;
@@ -33,16 +37,23 @@ public class Main {
             ((HelpCommand) selectedCommand).printUsageForCommand(commander, commandName);
         } else {
             Command command = (Command) selectedCommand;
-            // TODO Allow for user to customize these inputs.
-            SparkSession session = SparkSession.builder()
-                .master("local[*]")
-                .config("spark.sql.session.timeZone", "UTC")
-                .getOrCreate();
+            SparkSession session = buildSparkSession();
+            if (logger.isInfoEnabled()) {
+                logger.info("Spark master URL: {}", session.sparkContext().master());
+            }
             Optional<Preview> preview = command.execute(session);
             if (preview.isPresent()) {
                 preview.get().showPreview();
             }
         }
+    }
+
+    protected SparkSession buildSparkSession() {
+        // Will make these hardcoded strings configurable soon.
+        return SparkSession.builder()
+            .master("local[*]")
+            .config("spark.sql.session.timeZone", "UTC")
+            .getOrCreate();
     }
 
     private JCommander buildCommander() {

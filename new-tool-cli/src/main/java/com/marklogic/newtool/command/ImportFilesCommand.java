@@ -43,7 +43,7 @@ public class ImportFilesCommand extends AbstractCommand {
             logger.info("Importing files from: {}", paths);
         }
         S3Util.configureAWSCredentialsIfS3Path(session, paths);
-        String format = (compression != null) ? "marklogic" : "binaryFile";
+        String format = (compression != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
         return reader.format(format)
             .options(makeReadOptions())
             .load(paths.toArray(new String[]{}));
