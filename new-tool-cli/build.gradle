@@ -3,11 +3,17 @@ plugins {
   id "application"
   id "jacoco"
   id "org.sonarqube" version "4.4.1.3373"
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
   mavenCentral()
   mavenLocal()
+}
+
+configurations {
+  // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
+  shadowDependencies
 }
 
 dependencies {
@@ -20,6 +26,9 @@ dependencies {
 
   testImplementation "com.marklogic:marklogic-junit5:1.4.0"
   testImplementation "org.postgresql:postgresql:42.6.0"
+
+  shadowDependencies "org.jcommander:jcommander:1.83"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 }
 
 application {
@@ -61,4 +70,9 @@ sonar {
     property "sonar.projectKey", "spark-etl"
     property "sonar.host.url", "http://localhost:9000"
   }
+}
+
+// See https://imperceptiblethoughts.com/shadow/configuration/dependencies/#embedding-jar-files-inside-your-shadow-jar . 
+shadowJar {
+  configurations = [project.configurations.shadowDependencies]
 }
