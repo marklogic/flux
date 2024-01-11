@@ -3,7 +3,6 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.S3Util;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
@@ -37,12 +36,15 @@ public class ImportFilesCommand extends AbstractCommand {
     @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
     private DocumentType documentType;
 
+    @ParametersDelegate
+    private S3Params s3Params = new S3Params();
+
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         if (logger.isInfoEnabled()) {
             logger.info("Importing files from: {}", paths);
         }
-        S3Util.configureAWSCredentialsIfS3Path(session, paths);
+        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         String format = (compression != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
         return reader.format(format)
             .options(makeReadOptions())

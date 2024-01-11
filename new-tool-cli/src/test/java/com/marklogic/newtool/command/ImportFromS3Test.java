@@ -22,7 +22,8 @@ class ImportFromS3Test extends AbstractTest {
             "import_files",
             "--path", path,
             "--preview", "10",
-            "--previewDrop", "content", "modificationTime"
+            "--previewDrop", "content", "modificationTime",
+            "--s3AddCredentials"
         ));
 
         assertNotNull(stdout);
