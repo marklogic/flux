@@ -1,13 +1,10 @@
 package com.marklogic.newtool.command;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractCommand implements Command {
@@ -17,16 +14,10 @@ public abstract class AbstractCommand implements Command {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ParametersDelegate
+    private CommonParams commonParams = new CommonParams();
+
+    @ParametersDelegate
     private ConnectionParams connectionParams = new ConnectionParams();
-
-    @Parameter(names = "--partitions", description = "number of Spark partitions")
-    private Integer partitions;
-
-    @Parameter(names = "--preview", description = "Show up to the first N rows of data read by the command.")
-    private Integer preview;
-
-    @Parameter(names = "--previewDrop", description = "Specify one or more columns to drop when using --preview.", variableArity = true)
-    private List<String> previewColumnsToDrop = new ArrayList<>();
 
     @Override
     public Optional<Preview> execute(SparkSession session) {
@@ -34,11 +25,9 @@ public abstract class AbstractCommand implements Command {
         try {
             DataFrameReader reader = session.read();
             Dataset<Row> dataset = loadDataset(session, reader);
-            if (partitions != null) {
-                dataset = dataset.repartition(partitions);
-            }
-            if (preview != null) {
-                return Optional.of(new Preview(dataset, preview, previewColumnsToDrop));
+            dataset = commonParams.applyParams(dataset);
+            if (commonParams.isPreviewRequested()) {
+                return Optional.of(commonParams.makePreview(dataset));
             }
             DataFrameWriter<Row> writer = dataset.write();
             applyWriter(session, writer);

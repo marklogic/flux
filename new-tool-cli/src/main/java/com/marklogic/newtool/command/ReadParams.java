@@ -23,11 +23,17 @@ public class ReadParams {
     @Parameter(names = "--pushDownAggregates")
     private boolean pushDownAggregates = true;
 
+    @Parameter(names = "--numPartitions")
+    private Integer numPartitions;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         options.put(Options.READ_OPTIC_QUERY, query);
         options.put(Options.READ_BATCH_SIZE, batchSize + "");
         options.put(Options.READ_PUSH_DOWN_AGGREGATES, pushDownAggregates + "");
+        if (numPartitions != null) {
+            options.put(Options.READ_NUM_PARTITIONS, Integer.toString(numPartitions));
+        }
         return options;
     }
 }
