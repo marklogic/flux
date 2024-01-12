@@ -135,3 +135,39 @@ $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.Submit \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
 import_files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
 ```
+
+### Testing with AWS EMR
+
+[AWS EMR](https://docs.aws.amazon.com/emr/) supports running spark-submit in AWS. 
+
+This is not intended to be a reference on how to use EMR. Instead, the following are recommended while creating a 
+cluster:
+
+1. Before creating a cluster, build the assembly jar as described above and upload it to an S3 bucket in the same
+AWS region as where you'll be creating an EMR cluster.
+2. In the "Create a cluster" form, keep "Publish cluster-specific logs to Amazon S3" checked, as otherwise you won't 
+have access to logs written by your EMR step.
+3. In the "IAM Roles" section while creating a cluster, it is recommended to create a new EMR service role and 
+a new EC2 instance profile for EMR. 
+4. For the EC2 instance profile, ensure that it has access to any S3 buckets you will be using, including the bucket
+that you uploaded the assembly jar to. 
+
+Once your cluster is created, you'll add a "Step" in order to run spark-submit:
+
+1. Choose "Spark application" for the type of job.
+2. For "JAR location", select the assembly jar that you uploaded to S3.
+3. For "Spark-submit options", enter `--class com.marklogic.newtool.Submit`.
+4. For "Arguments", enter the CLI command all the args you would normally enter when using the CLI.
+
+If your CLI command will be accessing S3, you most likely should not include `--s3AddCredentials`. The EMR EC2 instance
+will already have access to the S3 buckets per the "EC2 instance profile" you configured while creating your cluster. 
+
+Additionally, if your CLI command is accessing an S3 bucket in a region other than the one that EMR is running in, 
+you can add `--s3Endpoint s3.us-east-1.amazon.com` as an argument, replacing "us-east-1" with the region that the
+S3 buckets is in.
+
+After adding your step, it will run. It typically takes about 30s for the step to run, and it may take a minute or so
+for links to the logs to show up. It is very easy for a step to fail due to a security issue with accessing an S3 
+bucket, whether it's the bucket containing the assembly jar or an S3 path in your CLI command. You may want to 
+temporarily make the buckets you're accessing open to the public for reading.
+
