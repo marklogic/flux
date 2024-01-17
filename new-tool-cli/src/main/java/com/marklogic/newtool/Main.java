@@ -60,6 +60,7 @@ public class Main {
         JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
+            .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
