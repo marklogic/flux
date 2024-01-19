@@ -51,15 +51,13 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
      */
     protected final String runAndReturnStdout(Runnable r) {
         PrintStream originalStdout = System.out;
+        System.out.flush();
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            System.setOut(new PrintStream(outputStream));
+            PrintStream printStream = new PrintStream(outputStream);
+            System.setOut(printStream);
             r.run();
-            try {
-                outputStream.flush();
-            } catch (IOException e) {
-                fail("Unable to flush output stream: " + e.getMessage());
-            }
+            System.out.flush();
             return new String(outputStream.toByteArray());
         } finally {
             System.setOut(originalStdout);
