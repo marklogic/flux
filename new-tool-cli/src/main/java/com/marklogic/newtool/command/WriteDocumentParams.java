@@ -3,7 +3,6 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.marklogic.spark.Options;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class WriteDocumentParams {
@@ -13,7 +12,7 @@ public class WriteDocumentParams {
     private boolean abortOnFailure = true;
 
     @Parameter(names = "--batchSize")
-    private int batchSize = 100;
+    private Integer batchSize = 100;
 
     @Parameter(names = "--collections", description = "Comma-delimited")
     private String collections;
@@ -25,7 +24,7 @@ public class WriteDocumentParams {
     private String temporalCollection;
 
     @Parameter(names = "--threadCount")
-    private int threadCount = 4;
+    private Integer threadCount = 4;
 
     @Parameter(names = "--transform")
     private String transform;
@@ -49,20 +48,20 @@ public class WriteDocumentParams {
     private String uriTemplate;
 
     public Map<String, String> makeOptions() {
-        Map<String, String> map = new HashMap<>();
-        map.put(Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure));
-        map.put(Options.WRITE_BATCH_SIZE, Integer.toString(batchSize));
-        map.put(Options.WRITE_COLLECTIONS, collections);
-        map.put(Options.WRITE_PERMISSIONS, permissions);
-        map.put(Options.WRITE_TEMPORAL_COLLECTION, temporalCollection);
-        map.put(Options.WRITE_THREAD_COUNT, Integer.toString(threadCount));
-        map.put(Options.WRITE_TRANSFORM_NAME, transform);
-        map.put(Options.WRITE_TRANSFORM_PARAMS, transformParams);
-        map.put(Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter);
-        map.put(Options.WRITE_URI_PREFIX, uriPrefix);
-        map.put(Options.WRITE_URI_REPLACE, uriReplace);
-        map.put(Options.WRITE_URI_SUFFIX, uriSuffix);
-        map.put(Options.WRITE_URI_TEMPLATE, uriTemplate);
-        return map;
+        return OptionsUtil.makeOptions(
+            Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
+            Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
+            Options.WRITE_COLLECTIONS, collections,
+            Options.WRITE_PERMISSIONS, permissions,
+            Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
+            Options.WRITE_THREAD_COUNT, threadCount != null ? threadCount.toString() : null,
+            Options.WRITE_TRANSFORM_NAME, transform,
+            Options.WRITE_TRANSFORM_PARAMS, transformParams,
+            Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
+            Options.WRITE_URI_PREFIX, uriPrefix,
+            Options.WRITE_URI_REPLACE, uriReplace,
+            Options.WRITE_URI_SUFFIX, uriSuffix,
+            Options.WRITE_URI_TEMPLATE, uriTemplate
+        );
     }
 }
