@@ -25,7 +25,11 @@ public class ImportDelimitedFilesCommand extends AbstractCommand {
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
-    @DynamicParameter(names = "-P", description = "Specify any Spark CSV option defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html as -PoptionName=optionValue; e.g. -PquoteAll=true.")
+    @DynamicParameter(
+        names = "-P",
+        description = "Specify any Spark CSV option defined at " +
+            "https://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
+    )
     private Map<String, String> csvParams = new HashMap<>();
 
     @Override
