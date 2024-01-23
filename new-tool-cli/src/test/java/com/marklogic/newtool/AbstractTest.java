@@ -16,6 +16,8 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     private static DatabaseClient databaseClient;
 
+    protected static final String DEFAULT_PERMISSIONS = "new-tool-role,read,new-tool-role,update";
+
     @Override
     protected DatabaseClient getDatabaseClient() {
         if (databaseClient == null) {

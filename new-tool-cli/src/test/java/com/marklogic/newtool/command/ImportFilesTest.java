@@ -24,6 +24,7 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''"
         );
@@ -70,6 +71,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "@" + optionsFile.getAbsolutePath(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files"
         );
 
@@ -82,6 +84,7 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''",
             "--compression", "zip"
@@ -96,6 +99,7 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''",
             "--compression", "ZIp"
@@ -111,6 +115,7 @@ class ImportFilesTest extends AbstractTest {
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--clientUri", makeClientUri(),
             "--collections", "files",
+            "--permissions", DEFAULT_PERMISSIONS,
             "--uriReplace", ".*/mixed-files,''",
             "--compression", "gzip"
         );

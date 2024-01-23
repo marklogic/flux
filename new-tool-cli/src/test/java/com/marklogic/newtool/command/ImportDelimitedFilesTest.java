@@ -16,6 +16,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import_delimited_files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
             "--uriTemplate", "/delimited/{number}.json"
         );
@@ -33,6 +34,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Psep=;",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
             "--uriTemplate", "/delimited/{number}.json"
         );
@@ -50,6 +52,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/no-header.csv",
             "-Pheader=false",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-header",
             "--uriTemplate", "/no-header/{_c0}.json"
         );
@@ -71,6 +74,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "-PinferSchema=false",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-schema-inference",
             "--uriTemplate", "/delimited/{number}.json"
         );

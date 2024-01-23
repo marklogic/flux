@@ -29,6 +29,7 @@ class LimitTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", COLLECTION,
             "--limit", Integer.toString(limit)
         );

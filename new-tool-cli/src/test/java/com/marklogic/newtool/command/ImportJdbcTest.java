@@ -20,6 +20,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/customer/{customer_id}.json",
             "--collections", "customer"
         );
@@ -35,6 +36,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/customer/{customer_id}.json",
             "--collections", "customer"
         );

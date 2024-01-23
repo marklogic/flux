@@ -18,7 +18,7 @@ public class WriteDocumentParams {
     private String collections;
 
     @Parameter(names = "--permissions")
-    private String permissions = "new-tool-role,read,new-tool-role,update";
+    private String permissions;
 
     @Parameter(names = "--temporalCollection")
     private String temporalCollection;

@@ -31,6 +31,7 @@ Run the following command to import 4 files from the given directory as new docu
 ```
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --clientUri "new-tool-user:password@localhost:8000" \
+  --permissions "new-tool-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'"
 ```
 
@@ -65,6 +66,7 @@ Run the following to import the rows from the "Author" table, writing them as JS
 ./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" --jdbcDriver "org.postgresql.Driver" \
   --query "select * from author" \
   --clientUri "new-tool-user:password@localhost:8003" \
+  --permissions "new-tool-role,read,new-tool-role,update" \
   --uriPrefix "/author/" --uriSuffix ".json" --collections jdbc-author
 ```
 
