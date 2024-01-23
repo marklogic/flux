@@ -13,7 +13,7 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     private static final String PROGRAM_NAME = "./bin/new-tool";
-    private static final int COLUMN_SIZE = 200;
+    private static final int COLUMN_SIZE = 120;
 
     private final String[] args;
     private final JCommander commander;

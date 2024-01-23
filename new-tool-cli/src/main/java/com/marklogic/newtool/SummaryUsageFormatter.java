@@ -24,14 +24,16 @@ class SummaryUsageFormatter extends DefaultUsageFormatter {
     public void appendCommands(StringBuilder out, int indentCount, int descriptionIndent, String indent) {
         out.append(indent + "  Commands:\n");
         final int longestNameLength = getLengthOfLongestCommandName();
+        final int descriptionNewlineIndent = indentCount + descriptionIndent + longestNameLength;
         for (Map.Entry<JCommander.ProgramName, JCommander> commands : commander.getRawCommands().entrySet()) {
             Object arg = commands.getValue().getObjects().get(0);
             Parameters p = arg.getClass().getAnnotation(Parameters.class);
             if (p == null || !p.hidden()) {
                 JCommander.ProgramName programName = commands.getKey();
                 String displayName = StringUtils.rightPad(programName.getDisplayName(), longestNameLength);
-                String description = indent + s(4) + displayName + s(6) + getCommandDescription(programName.getName());
-                wrapDescription(out, indentCount + descriptionIndent, description);
+                String commandDescription = getCommandDescription(programName.getName());
+                String description = s(indentCount) + displayName + s(descriptionIndent) + commandDescription;
+                wrapDescription(out, descriptionNewlineIndent, description);
                 out.append("\n");
             }
         }

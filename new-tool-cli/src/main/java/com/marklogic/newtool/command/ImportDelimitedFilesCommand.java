@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
-    "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html , with each row being written " +
+    "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
     "to MarkLogic.")
 public class ImportDelimitedFilesCommand extends AbstractCommand {
 
