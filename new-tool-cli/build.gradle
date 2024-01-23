@@ -25,6 +25,9 @@ dependencies {
   implementation "org.apache.hadoop:hadoop-client:3.3.6"
 
   testImplementation "com.marklogic:marklogic-junit5:1.4.0"
+
+  // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
+  testImplementation "org.springframework:spring-jdbc:5.3.31"
   testImplementation "org.postgresql:postgresql:42.6.0"
 
   shadowDependencies "org.jcommander:jcommander:1.83"
@@ -72,7 +75,7 @@ sonar {
   }
 }
 
-// See https://imperceptiblethoughts.com/shadow/configuration/dependencies/#embedding-jar-files-inside-your-shadow-jar . 
+// See https://imperceptiblethoughts.com/shadow/configuration/dependencies/#embedding-jar-files-inside-your-shadow-jar .
 shadowJar {
   configurations = [project.configurations.shadowDependencies]
 }
