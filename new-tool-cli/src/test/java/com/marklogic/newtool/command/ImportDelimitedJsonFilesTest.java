@@ -14,6 +14,7 @@ class ImportDelimitedJsonFilesTest extends AbstractTest {
             "import_json_lines_files",
             "--path", "src/test/resources/delimited-files/line-delimited-json",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
             "--uriTemplate", "/delimited/{lastName}.json"
         );
@@ -31,6 +32,7 @@ class ImportDelimitedJsonFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/custom-delimiter-json",
             "-PlineSep=:\n",
             "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "custom-delimited-test",
             "--uriTemplate", "/custom/delimited/{firstName}.json"
         );
