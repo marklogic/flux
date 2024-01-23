@@ -48,8 +48,8 @@ Medical/Authors view in MarkLogic and write them to a new table named `Author` i
 
 ```
 ./nt/bin/nt export_jdbc --clientUri "new-tool-user:password@localhost:8003" \
-  --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author --jdbcDriver "org.postgresql.Driver" \
-  --jdbcUser "postgres" --jdbcPassword "postgres" --query "op.fromView ('Medical', 'Authors')" 
+  --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" --jdbcDriver "org.postgresql.Driver" \
+  --query "op.fromView ('Medical', 'Authors')" --table Author 
 ```
 
 The Postgres instance running in Docker now has an "Author" table in the "postgres" database. You can manually inspect
@@ -62,8 +62,8 @@ the root of this repository.
 Run the following to import the rows from the "Author" table, writing them as JSON documents:
 
 ```
-./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres" --jdbcTable Author \
-  --jdbcDriver "org.postgresql.Driver" --jdbcUser "postgres" --jdbcPassword "postgres" \
+./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" --jdbcDriver "org.postgresql.Driver" \
+  --query "select * from author" \
   --clientUri "new-tool-user:password@localhost:8003" \
   --uriPrefix "/author/" --uriSuffix ".json" --collections jdbc-author
 ```

@@ -10,16 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportJdbcTest extends AbstractTest {
 
-    private static final String POSTGRES_PASSWORD = "postgres";
-
     @Test
     void tenCustomers() {
         run(
             "import_jdbc",
-            "--jdbcUrl", "jdbc:postgresql://localhost/dvdrental",
-            "--jdbcUser", "postgres",
-            "--jdbcPassword", POSTGRES_PASSWORD,
-            "--jdbcDriver", "org.postgresql.Driver",
+            "--jdbcUrl", PostgresUtil.URL,
+            "--jdbcUser", PostgresUtil.USER,
+            "--jdbcPassword", PostgresUtil.PASSWORD,
+            "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--clientUri", makeClientUri(),
             "--uriTemplate", "/customer/{customer_id}.json",
@@ -33,8 +31,8 @@ class ImportJdbcTest extends AbstractTest {
     void tenCustomersWithUserAndPasswordInUrl() {
         run(
             "import_jdbc",
-            "--jdbcUrl", "jdbc:postgresql://localhost/dvdrental?user=postgres&password=" + POSTGRES_PASSWORD,
-            "--jdbcDriver", "org.postgresql.Driver",
+            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
+            "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--clientUri", makeClientUri(),
             "--uriTemplate", "/customer/{customer_id}.json",
