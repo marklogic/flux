@@ -3,7 +3,6 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.marklogic.spark.Options;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,7 +17,7 @@ public class ReadParams {
     private String query;
 
     @Parameter(names = "--batchSize")
-    private int batchSize;
+    private Integer batchSize;
 
     @Parameter(names = "--pushDownAggregates")
     private boolean pushDownAggregates = true;
@@ -27,13 +26,11 @@ public class ReadParams {
     private Integer numPartitions;
 
     public Map<String, String> makeOptions() {
-        Map<String, String> options = new HashMap<>();
-        options.put(Options.READ_OPTIC_QUERY, query);
-        options.put(Options.READ_BATCH_SIZE, batchSize + "");
-        options.put(Options.READ_PUSH_DOWN_AGGREGATES, pushDownAggregates + "");
-        if (numPartitions != null) {
-            options.put(Options.READ_NUM_PARTITIONS, Integer.toString(numPartitions));
-        }
-        return options;
+        return OptionsUtil.makeOptions(
+            Options.READ_OPTIC_QUERY, query,
+            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
+            Options.READ_PUSH_DOWN_AGGREGATES, pushDownAggregates + "",
+            Options.READ_NUM_PARTITIONS, numPartitions != null ? numPartitions.toString() : null
+        );
     }
 }

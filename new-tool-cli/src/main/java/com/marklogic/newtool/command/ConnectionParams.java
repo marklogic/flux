@@ -3,7 +3,6 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.marklogic.spark.Options;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionParams {
@@ -26,17 +25,14 @@ public class ConnectionParams {
     private String password;
 
     public Map<String, String> makeOptions() {
-        Map<String, String> options = new HashMap<>();
         if (clientUri != null && !clientUri.isEmpty()) {
-            options.put(Options.CLIENT_URI, clientUri);
-        } else {
-            options.put(Options.CLIENT_HOST, host);
-            if (port != null) {
-                options.put(Options.CLIENT_PORT, port.toString());
-            }
-            options.put(Options.CLIENT_USERNAME, username);
-            options.put(Options.CLIENT_PASSWORD, password);
+            return OptionsUtil.makeOptions(Options.CLIENT_URI, clientUri);
         }
-        return options;
+        return OptionsUtil.makeOptions(
+            Options.CLIENT_HOST, host,
+            Options.CLIENT_PORT, port != null ? port.toString() : null,
+            Options.CLIENT_USERNAME, username,
+            Options.CLIENT_PASSWORD, password
+        );
     }
 }
