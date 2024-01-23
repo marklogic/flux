@@ -1,5 +1,6 @@
 package com.marklogic.newtool;
 
+import com.beust.jcommander.IDefaultProvider;
 import com.beust.jcommander.JCommander;
 import com.marklogic.newtool.command.*;
 import org.apache.spark.sql.SparkSession;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class Main {
 
@@ -18,6 +20,8 @@ public class Main {
     private final String[] args;
     private final JCommander commander;
     private final Object selectedCommand;
+    private final Settings settings;
+    private IDefaultProvider defaultValueProvider;
 
     public static void main(String[] args) {
         new Main(args).run();
@@ -25,6 +29,8 @@ public class Main {
 
     public Main(String... args) {
         this.args = args;
+        this.settings = new Settings();
+        this.initializeSettings();
         this.commander = buildCommander();
         this.selectedCommand = getSelectedCommand(commander, args);
     }
@@ -57,8 +63,23 @@ public class Main {
             .getOrCreate();
     }
 
+    private void initializeSettings() {
+        JCommander jc = buildCommander();
+        jc.parse(this.args);
+        if (settings.getProviderClass() != null) {
+            Function<String, String> userFunction;
+            try {
+                userFunction = (Function<String, String>) Class.forName(settings.getProviderClass()).getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            this.defaultValueProvider = optionName -> userFunction.apply(optionName);
+        }
+    }
+
     private JCommander buildCommander() {
         JCommander jc = JCommander.newBuilder()
+            .addObject(this.settings)
             .programName(PROGRAM_NAME)
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
@@ -73,6 +94,9 @@ public class Main {
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
+        if (this.defaultValueProvider != null) {
+            jc.setDefaultProvider(this.defaultValueProvider);
+        }
         return jc;
     }
 

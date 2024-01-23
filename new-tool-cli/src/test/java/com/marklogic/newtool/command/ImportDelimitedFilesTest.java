@@ -13,11 +13,12 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void defaultSettings() {
         run(
+            "--provider", "com.marklogic.newtool.MyDefaultProvider",
             "import_delimited_files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--clientUri", makeClientUri(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "delimited-test",
+            "--collections", "delimited-test234",
             "--uriTemplate", "/delimited/{number}.json"
         );
 
