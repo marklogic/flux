@@ -24,7 +24,11 @@ public class ImportDelimitedJsonFilesCommand extends AbstractCommand {
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
-    @DynamicParameter(names = "-P", description = "Specify any Spark JSON option defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html ")
+    @DynamicParameter(
+        names = "-P",
+        description = "Specify any Spark JSON option defined at " +
+            "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
+    )
     private Map<String, String> jsonParams = new HashMap<>();
 
     @Override

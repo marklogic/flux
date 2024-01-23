@@ -20,8 +20,11 @@ public class JdbcParams {
     @Parameter(names = "--jdbcPassword", description = "The password to user for authentication, if not specified in the JDBC URL.")
     private String password;
 
-    @DynamicParameter(names = "-P", description = "Specify any Spark JDBC option defined at " +
-        "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html as -PoptionName=optionValue; e.g. -Pfetchsize=100.")
+    @DynamicParameter(
+        names = "-P",
+        description = "Specify any Spark JDBC option defined at " +
+            "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. -Pfetchsize=100."
+    )
     private Map<String, String> dynamicParams = new HashMap<>();
 
     public Map<String, String> makeOptions() {
