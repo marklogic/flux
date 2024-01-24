@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<people>
+    <person>
+        <name>Person-1</name>
+        <age>31</age>
+    </person>
+    <person>
+        <name>Person-2</name>
+        <age>32</age>
+    </person>
+    <person>
+        <name>Person-3</name>
+        <age>33</age>
+    </person>
+</people>

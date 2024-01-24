@@ -65,6 +65,7 @@ public class Main {
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("import_json_lines_files", new ImportDelimitedJsonFilesCommand())
+            .addCommand("import_aggregate_xml_files", new ImportXmlCommand())
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
