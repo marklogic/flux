@@ -29,6 +29,7 @@ dependencies {
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:5.3.31"
   testImplementation "org.postgresql:postgresql:42.6.0"
+  implementation("org.apache.spark:spark-avro_2.12:3.4.1")
 
   shadowDependencies "org.jcommander:jcommander:1.83"
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
