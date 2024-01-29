@@ -66,6 +66,7 @@ public class Main {
             .addCommand("import_jdbc", new ImportJdbcCommand())
             .addCommand("import_json_lines_files", new ImportDelimitedJsonFilesCommand())
             .addCommand("import_parquet_files", new ImportParquetFilesCommand())
+            .addCommand("import_avro_files", new ImportAvroFilesCommand())
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
