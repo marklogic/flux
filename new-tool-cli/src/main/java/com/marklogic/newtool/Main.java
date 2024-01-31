@@ -52,6 +52,7 @@ public class Main {
         // Will make these hardcoded strings configurable soon.
         return SparkSession.builder()
             .master("local[*]")
+            .config("spark.ui.showConsoleProgress", "true")
             .config("spark.sql.session.timeZone", "UTC")
             .getOrCreate();
     }
@@ -59,6 +60,7 @@ public class Main {
     private JCommander buildCommander() {
         JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
+            .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
