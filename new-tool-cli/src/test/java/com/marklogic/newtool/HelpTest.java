@@ -16,9 +16,9 @@ class HelpTest extends AbstractTest {
         assertFalse(stdout.contains("-host"), "No parameters should be shown with summary usage; stdout: " + stdout);
 
         assertTrue(
-            stdout.contains("Read delimited text files from local, HDFS, and S3 locations using Spark's support \n"),
-            "Each command description is expected to wrap at 120 characters. This test may break if/when new commands " +
-                "commands are introduced with long names, or if the import_delimited_files description changes. If " +
+            stdout.contains("Read delimited text files from local, HDFS, and S3 locations using Spark's \n"),
+            "Each command description is expected to wrap at 120 characters. This test may break when new commands " +
+                "are introduced with long names, or if the import_delimited_files description changes. If " +
                 "so, just update this assertion to capture the description text that occurs before the first newline " +
                 "symbol. stdout: " + stdout
         );

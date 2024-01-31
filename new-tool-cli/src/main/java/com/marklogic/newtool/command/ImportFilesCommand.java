@@ -63,7 +63,7 @@ public class ImportFilesCommand extends AbstractCommand {
         Map<String, String> options = getConnectionParams().makeOptions();
         options.putAll(writeDocumentParams.makeOptions());
         if (documentType != null) {
-            options.put(Options.WRITE_FILES_DOCUMENT_TYPE, documentType.name());
+            options.put(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType.name());
         }
         return options;
     }

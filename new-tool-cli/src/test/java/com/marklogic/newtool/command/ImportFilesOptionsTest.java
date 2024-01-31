@@ -39,7 +39,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_ABORT_ON_FAILURE, "false",
             Options.WRITE_BATCH_SIZE, "50",
             Options.WRITE_COLLECTIONS, "collection1",
-            Options.WRITE_FILES_DOCUMENT_TYPE, "XML",
+            Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, "XML",
             Options.WRITE_PERMISSIONS, "role1,read,role2,update",
             Options.WRITE_TEMPORAL_COLLECTION, "temporal1",
             Options.WRITE_THREAD_COUNT, "17",
