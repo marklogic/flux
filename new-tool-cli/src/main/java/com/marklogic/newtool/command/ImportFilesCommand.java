@@ -36,6 +36,12 @@ public class ImportFilesCommand extends AbstractCommand {
     @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
     private DocumentType documentType;
 
+    @Parameter(names = "--filter", description = "Uses a glob filter when selecting files to process.")
+    private String filter;
+
+    @Parameter(names = "--recursiveFileLookup", description = "When 'true' (the default) the command searches subdirectories recursively.")
+    private String recursiveFileLookup = "true";
+
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
@@ -73,6 +79,10 @@ public class ImportFilesCommand extends AbstractCommand {
         if (compression != null) {
             options.put(Options.READ_FILES_COMPRESSION, compression.name());
         }
+        if (filter != null) {
+            options.put("pathGlobFilter", filter);
+        }
+        options.put("recursiveFileLookup", recursiveFileLookup);
         return options;
     }
 }

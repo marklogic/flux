@@ -11,8 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportFilesTest extends AbstractTest {
 
@@ -29,7 +28,7 @@ class ImportFilesTest extends AbstractTest {
             "--uriReplace", ".*/mixed-files,''"
         );
 
-        verifyDocsWereWritten(uris);
+        verifyDocsWereWritten(uris.length, uris);
     }
 
     /**
@@ -75,7 +74,7 @@ class ImportFilesTest extends AbstractTest {
             "--collections", "files"
         );
 
-        verifyDocsWereWritten(uris);
+        verifyDocsWereWritten(uris.length, uris);
     }
 
     @Test
@@ -90,7 +89,7 @@ class ImportFilesTest extends AbstractTest {
             "--compression", "zip"
         );
 
-        verifyDocsWereWritten("/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
+        verifyDocsWereWritten(3, "/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
     }
 
     @Test
@@ -105,7 +104,7 @@ class ImportFilesTest extends AbstractTest {
             "--compression", "ZIp"
         );
 
-        verifyDocsWereWritten("/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
+        verifyDocsWereWritten(3,"/goodbye.zip/goodbye.json", "/goodbye.zip/goodbye.txt", "/goodbye.zip/goodbye.xml");
     }
 
     @Test
@@ -120,11 +119,59 @@ class ImportFilesTest extends AbstractTest {
             "--compression", "gzip"
         );
 
-        verifyDocsWereWritten("/hello2.txt");
+        verifyDocsWereWritten(1, "/hello2.txt");
     }
 
-    private void verifyDocsWereWritten(String... values) {
+    @Test
+    void fileOptionsFilter() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--uriReplace", ".*/mixed-files,''",
+            "--filter", "*.json"
+        );
+
+        verifyDocsWereWritten(1,"/hello.json");
+    }
+
+    @Test
+    void fileOptionsRecursiveFileLookupDefault() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--filter", "*.json",
+            "--recursiveFileLookup", "true",
+            "--uriReplace", ".*/mixed-files,''"
+        );
+
+        assertCollectionSize("files", 2);
+    }
+
+    @Test
+    void fileOptionsRecursiveFileLookupFalse() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--filter", "*.json",
+            "--recursiveFileLookup", "false",
+            "--uriReplace", ".*/mixed-files,''"
+        );
+
+        assertCollectionSize("files", 1);
+    }
+
+    private void verifyDocsWereWritten(int expectedUriCount, String... values) {
         List<String> uris = getUrisInCollection("files", values.length);
+        assertEquals(expectedUriCount, uris.size());
         Stream.of(values).forEach(uri -> assertTrue(uris.contains(uri), String.format("Did not find %s in %s", uri, uris)));
     }
 }
