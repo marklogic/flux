@@ -22,9 +22,15 @@ public class CommonParams {
     @Parameter(names = "--previewDrop", description = "Specify one or more columns to drop when using --preview.", variableArity = true)
     private List<String> previewColumnsToDrop = new ArrayList<>();
 
+    @Parameter(names = "--repartition", description = "Specify the number of partitions / workers to be used for writing data.")
+    private Integer repartition;
+
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit != null) {
             dataset = dataset.limit(limit);
+        }
+        if (repartition != null && repartition > 0) {
+            dataset = dataset.repartition(repartition);
         }
         return dataset;
     }
