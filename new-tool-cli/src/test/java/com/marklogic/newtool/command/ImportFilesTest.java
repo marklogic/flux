@@ -146,7 +146,6 @@ class ImportFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--filter", "*.json",
-            "--recursiveFileLookup", "true",
             "--uriReplace", ".*/mixed-files,''"
         );
 
