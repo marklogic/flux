@@ -3,6 +3,8 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
+import org.apache.spark.sql.SparkSession;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,15 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     private static DatabaseClient databaseClient;
 
     protected static final String DEFAULT_PERMISSIONS = "new-tool-role,read,new-tool-role,update";
+
+    private SparkSession sparkSession;
+
+    @AfterEach
+    public void closeSparkSession() {
+        if (sparkSession != null) {
+            sparkSession.close();
+        }
+    }
 
     @Override
     protected DatabaseClient getDatabaseClient() {
@@ -64,5 +75,18 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         } finally {
             System.setOut(originalStdout);
         }
+    }
+
+    /**
+     * Useful for when testing the results of a command can be easily done by using our Spark connector.
+     *
+     * @return
+     */
+    protected SparkSession newSparkSession() {
+        sparkSession = SparkSession.builder()
+            .master("local[*]")
+            .config("spark.sql.session.timeZone", "UTC")
+            .getOrCreate();
+        return sparkSession;
     }
 }

@@ -19,11 +19,6 @@ public class ImportFilesCommand extends AbstractCommand {
         XML
     }
 
-    public enum CompressionType {
-        ZIP,
-        GZIP
-    }
-
     @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
 
