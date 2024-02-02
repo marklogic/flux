@@ -33,6 +33,9 @@ public class ImportAggregateXmlCommand extends AbstractCommand {
     @Parameter(required = false, names = "--uriNamespace",
         description = "Specifies namespace where the input data resides.")
     private String uriNamespace;
+
+    @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+    private CompressionType compression;
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
@@ -60,6 +63,9 @@ public class ImportAggregateXmlCommand extends AbstractCommand {
         options.put(Options.READ_AGGREGATES_XML_NAMESPACE, namespace);
         options.put(Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement);
         options.put(Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace);
+        if (compression != null) {
+            options.put(Options.READ_FILES_COMPRESSION, compression.name());
+        }
         return options;
     }
 
