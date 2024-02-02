@@ -1,0 +1,14 @@
+<people xmlns="org:example">
+  <person>
+    <name>Person-1</name>
+    <company>company-1</company>
+  </person>
+  <person>
+    <name>Person-2</name>
+    <company>company-2</company>
+  </person>
+  <person>
+    <name>Person-3</name>
+    <company>company-3</company>
+  </person>
+</people>
