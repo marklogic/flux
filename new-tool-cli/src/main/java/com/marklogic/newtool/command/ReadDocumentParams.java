@@ -36,6 +36,9 @@ public class ReadDocumentParams {
     @Parameter(names = "--transformParamsDelimiter", description = "Delimiter for transform parameters; defaults to a comma.")
     private String transformParamsDelimiter;
 
+    @Parameter(names = "--batchSize", description = "Number of documents to retrieve in each call to MarkLogic.")
+    private Integer batchSize = 500;
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
@@ -45,7 +48,8 @@ public class ReadDocumentParams {
             Options.READ_DOCUMENTS_DIRECTORY, directory,
             Options.READ_DOCUMENTS_TRANSFORM, transform,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS, transformParams,
-            Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter
+            Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
+            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null
         );
     }
 }

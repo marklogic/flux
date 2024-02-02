@@ -26,7 +26,10 @@ class ExportFilesTest extends AbstractTest {
             "export_files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--clientUri", makeClientUri(),
-            "--collections", "author"
+            "--collections", "author",
+            // Including this simply to verify that it doesn't cause an error. Its impact is only going to be seen
+            // in performance tests.
+            "--batchSize", "5"
         );
 
         File dir = tempDir.toFile();
