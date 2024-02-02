@@ -13,7 +13,7 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ImportXmlAggregateTest extends AbstractTest {
+class ImportXmlAggregateTest extends AbstractTest {
 
     @Test
     void shouldThrowExceptionWithoutElement() {
@@ -27,7 +27,7 @@ public class ImportXmlAggregateTest extends AbstractTest {
                 "--uriTemplate", "/xml/test.txt"
             );
         } catch(Exception ex) {
-            assertEquals(ex.getMessage(), "The following option is required: [--element]",
+            assertEquals("The following option is required: [--element]", ex.getMessage(),
                 "Should throw an exception since element parameter is required.");
         }
     }

@@ -2,16 +2,12 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.spark.Options;
-import org.apache.spark.sql.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read local, HDFS, and S3 files and write documents in MarkLogic.")
-public class ImportFilesCommand extends AbstractCommand {
+public class ImportFilesCommand extends AbstractImportFilesCommand {
 
     public enum DocumentType {
         JSON,
@@ -19,66 +15,31 @@ public class ImportFilesCommand extends AbstractCommand {
         XML
     }
 
-    @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
-    private List<String> paths = new ArrayList<>();
-
     @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
     private CompressionType compression;
-
-    @ParametersDelegate
-    private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
 
     @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
     private DocumentType documentType;
 
-    @Parameter(names = "--filter", description = "Uses a glob filter when selecting files to process.")
-    private String filter;
-
-    @Parameter(names = "--recursiveFileLookup", arity = 1, description = "When true, the command searches subdirectories recursively.")
-    private Boolean recursiveFileLookup = true;
-
-    @ParametersDelegate
-    private S3Params s3Params = new S3Params();
-
     @Override
-    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        if (logger.isInfoEnabled()) {
-            logger.info("Importing files from: {}", paths);
-        }
-        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
-        String format = (compression != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
-        return reader.format(format)
-            .options(makeReadOptions())
-            .load(paths.toArray(new String[]{}));
+    protected String getReadFormat() {
+        return (compression != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
     }
 
     @Override
-    protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writer.format(MARKLOGIC_CONNECTOR)
-            .options(makeWriteOptions())
-            .mode(SaveMode.Append)
-            .save();
-    }
-
-    protected Map<String, String> makeWriteOptions() {
-        Map<String, String> options = getConnectionParams().makeOptions();
-        options.putAll(writeDocumentParams.makeOptions());
-        if (documentType != null) {
-            options.put(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType.name());
+    protected Map<String, String> makeReadOptions() {
+        Map<String, String> options = super.makeReadOptions();
+        if (compression != null) {
+            options.put(Options.READ_FILES_COMPRESSION, compression.name());
         }
         return options;
     }
 
-    protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = getConnectionParams().makeOptions();
-        if (compression != null) {
-            options.put(Options.READ_FILES_COMPRESSION, compression.name());
-        }
-        if (filter != null) {
-            options.put("pathGlobFilter", filter);
-        }
-        if (recursiveFileLookup != null) {
-            options.put("recursiveFileLookup", recursiveFileLookup.toString());
+    @Override
+    protected Map<String, String> makeWriteOptions() {
+        Map<String, String> options = super.makeWriteOptions();
+        if (documentType != null) {
+            options.put(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType.name());
         }
         return options;
     }
