@@ -42,7 +42,7 @@ via `--previewDrop`:
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" --preview 10 --previewDrop content
 ```
 
-## Export to RDBMS
+## Export rows to RDBMS
 
 You can use `export_jdbc` to export rows selected via Optic to an RDBMS. The below example will find 15 rows in the
 Medical/Authors view in MarkLogic and write them to a new table named `Author` in Postgres.
@@ -71,6 +71,16 @@ Run the following to import the rows from the "Author" table, writing them as JS
 ```
 
 In qconsole, you can filter on "/author/" for the URI to see the 15 author documents.
+
+## Copy between databases
+
+You can copy documents from one database to another, including to the same database.
+
+```
+./nt/bin/nt copy --clientUri "new-tool-user:password@localhost:8003" \
+  --collections "author" --categories "content,metadata" \
+  --outputClientUri "new-tool-user:password@localhost:8000"
+```
 
 ## Testing against a separate Spark cluster
 

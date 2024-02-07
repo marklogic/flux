@@ -60,6 +60,7 @@ public class Main {
     private JCommander buildCommander() {
         JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
+            .addCommand("copy", new CopyCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))

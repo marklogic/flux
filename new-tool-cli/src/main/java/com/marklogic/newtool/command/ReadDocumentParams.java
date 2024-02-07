@@ -21,6 +21,10 @@ public class ReadDocumentParams {
     @Parameter(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
     private String options;
 
+    @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include; defaults to 'content'. " +
+        "Valid choices are: content, metadata (for all types of metadata), collections, permissions, quality, properties, and metadatavalues.")
+    private String categories;
+
     @Parameter(names = "--collections", description = "Comma-delimited sequence of collection names by which to constrain the query.")
     private String collections;
 
@@ -39,17 +43,22 @@ public class ReadDocumentParams {
     @Parameter(names = "--batchSize", description = "Number of documents to retrieve in each call to MarkLogic.")
     private Integer batchSize = 500;
 
+    @Parameter(names = "--partitionsPerForest", description = "Number of partition readers to create for each forest.")
+    private Integer partitionsPerForest = 4;
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
             Options.READ_DOCUMENTS_QUERY, query,
             Options.READ_DOCUMENTS_OPTIONS, options,
+            Options.READ_DOCUMENTS_CATEGORIES, categories,
             Options.READ_DOCUMENTS_COLLECTIONS, collections,
             Options.READ_DOCUMENTS_DIRECTORY, directory,
             Options.READ_DOCUMENTS_TRANSFORM, transform,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS, transformParams,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
-            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null
+            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
+            Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest != null ? partitionsPerForest.toString() : null
         );
     }
 }
