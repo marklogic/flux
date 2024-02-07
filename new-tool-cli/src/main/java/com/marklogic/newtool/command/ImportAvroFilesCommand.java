@@ -16,7 +16,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand {
         description = "Specify any Spark Avro option defined at " +
             "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true."
     )
-    private Map<String, String> avroParams = new HashMap<>();
+    private Map<String, String> avroParams = super.makeReadOptions();;
 
     @Override
     protected String getReadFormat() {
