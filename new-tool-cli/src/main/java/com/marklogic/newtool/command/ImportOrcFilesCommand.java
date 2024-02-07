@@ -14,7 +14,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand{
         description = "Specify any Spark ORC option defined at "  +
                       "https://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -Pspark.sql.orc.filterPushdown=true."
     )
-    private Map<String, String> orcParams = super.makeReadOptions();;
+    private Map<String, String> orcParams = new HashMap<>();
 
     @Override
     protected String getReadFormat() {
@@ -23,7 +23,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand{
 
     @Override
     protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = getConnectionParams().makeOptions();
+        Map<String, String> options = super.makeReadOptions();
         options.putAll(orcParams);
         return options;
     }
