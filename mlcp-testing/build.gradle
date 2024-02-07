@@ -1,0 +1,58 @@
+plugins {
+  id 'net.saliman.properties' version '1.5.2'
+}
+
+// Needed for mlcp 11.1.0.
+configurations {
+  mlcp {
+    attributes {
+      attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.class, TargetJvmEnvironment.STANDARD_JVM))
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  mlcp 'com.marklogic:mlcp:11.1.0'
+  mlcp files("lib")
+}
+
+task ntCopy(type: Exec) {
+  workingDir = "../nt/"
+  commandLine "./bin/nt", "copy",
+    "--clientUri", "${username}:${password}@${host}:${port}",
+    "--collections", "address_small",
+    "--batchSize", "500",
+    // results in 24 threads total, assuming 3 forests and 4 partitions per forests, which means 12 partitions.
+    "--outputThreadCount", "2",
+    "--outputBatchSize", "500",
+    "--outputPermissions", "rest-reader,read,rest-writer,update",
+    "--outputClientUri", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
+}
+
+task mlcpCopy(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args "COPY",
+    "-input_host", host,
+    "-input_port", port,
+    "-input_username", username,
+    "-input_password", password,
+    "-output_host", outputHost,
+    "-output_port", outputPort,
+    "-output_username", outputUsername,
+    "-output_password", outputPassword,
+    "-copy_collections", "false",
+    "-copy_permissions", "false",
+    "-copy_properties", "false",
+    "-copy_properties", "false",
+    "-copy_quality", "false",
+    "-copy_metadata", "false",
+    "-collection_filter", "address_small",
+    "-output_permissions", "rest-reader,read,rest-writer,update",
+    "-thread_count", "24",
+    "-batch_size", "500"
+}
