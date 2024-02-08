@@ -18,15 +18,16 @@ class ImportOrcFilesTest extends AbstractTest {
             "--clientUri", makeClientUri(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
+            "--uriPrefix", "/orc-test",
             "--uriReplace", ".json,''"
         );
 
         assertCollectionSize("orcFile-test", 5);
-        verifyDocContent("/author/author12.json");
-        verifyDocContent("/author/author2.json");
-        verifyDocContent("/author/author5.json");
-        verifyDocContent("/author/author6.json");
-        verifyDocContent("/author/author9.json");
+        verifyDocContent("/orc-test/author/author12.json");
+        verifyDocContent("/orc-test/author/author2.json");
+        verifyDocContent("/orc-test/author/author5.json");
+        verifyDocContent("/orc-test/author/author6.json");
+        verifyDocContent("/orc-test/author/author9.json");
     }
 
     @Test
