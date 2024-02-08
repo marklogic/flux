@@ -52,6 +52,7 @@ class ExportFilesTest extends AbstractTest {
     void exportToZips(@TempDir Path tempDir) {
         run(
             "export_files",
+            "--partitionsPerForest", "1",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
             "--clientUri", makeClientUri(),
