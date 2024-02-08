@@ -20,22 +20,8 @@ public class CopyCommand extends AbstractCommand {
     @ParametersDelegate
     private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
 
-    @Parameter(names = {"--outputClientUri"},
-        description = "Defines a connection string as user:password@host:port; only usable when using digest or basic authentication."
-    )
-    private String clientUri;
-
-    @Parameter(names = {"--outputHost"}, description = "The MarkLogic host to connect to.")
-    private String host;
-
-    @Parameter(names = "--outputPort", description = "Port of a MarkLogic REST API app server to connect to.")
-    private Integer port;
-
-    @Parameter(names = "--outputUsername", description = "Username when using 'digest' or 'basic' authentication.")
-    private String username;
-
-    @Parameter(names = "--outputPassword", description = "Password when using 'digest' or 'basic' authentication.", password = true)
-    private String password;
+    @ParametersDelegate
+    private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
     @Parameter(
         names = "--outputAbortOnFailure", arity = 1,
@@ -128,31 +114,16 @@ public class CopyCommand extends AbstractCommand {
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format(MARKLOGIC_CONNECTOR)
-            .options(makeWriteConnectionOptions())
+            .options(makeOutputConnectionOptions())
             .options(makeWriteOptions())
             .mode(SaveMode.Append)
             .save();
     }
 
-    protected Map<String, String> makeWriteConnectionOptions() {
-        Map<String, String> writeConnectionOptions;
-        if (clientUri != null && !clientUri.isEmpty()) {
-            writeConnectionOptions = OptionsUtil.makeOptions(Options.CLIENT_URI, clientUri);
-        } else {
-            writeConnectionOptions = OptionsUtil.makeOptions(
-                Options.CLIENT_HOST, host,
-                Options.CLIENT_PORT, port != null ? port.toString() : null,
-                Options.CLIENT_USERNAME, username,
-                Options.CLIENT_PASSWORD, password
-            );
-        }
-
+    protected Map<String, String> makeOutputConnectionOptions() {
+        Map<String, String> options = outputConnectionParams.makeOptions();
         // If user doesn't specify any "--output" connection options, then reuse the connection for reading data.
-        if (writeConnectionOptions.isEmpty()) {
-            writeConnectionOptions = getConnectionParams().makeOptions();
-        }
-
-        return writeConnectionOptions;
+        return options.isEmpty() ? getConnectionParams().makeOptions() : options;
     }
 
     protected Map<String, String> makeWriteOptions() {
