@@ -63,7 +63,8 @@ the root of this repository.
 Run the following to import the rows from the "Author" table, writing them as JSON documents:
 
 ```
-./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" --jdbcDriver "org.postgresql.Driver" \
+./nt/bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
+  --jdbcDriver "org.postgresql.Driver" \
   --query "select * from author" \
   --clientUri "new-tool-user:password@localhost:8003" \
   --permissions "new-tool-role,read,new-tool-role,update" \
@@ -81,6 +82,20 @@ You can copy documents from one database to another, including to the same datab
   --collections "author" --categories "content,metadata" \
   --outputClientUri "new-tool-user:password@localhost:8000"
 ```
+
+## Reprocessing data
+
+You can reprocess data in a manner very similar to that of Corb:
+
+```
+./nt/bin/nt reprocess -clientUri "new-tool-user:password@localhost:8003" \
+  --readJavascript "cts.uris(null, null, cts.collectionQuery('author'))"
+  --writeJavascript "var myValue; console.log(URI, myValue)"
+  "-WmyValue=test"
+```
+
+You can specify custom JavaScript or XQuery code, or specify a module to invoke. Run `./nt/bin/nt help reprocess` to 
+see the full list of arguments.
 
 ## Testing against a separate Spark cluster
 
