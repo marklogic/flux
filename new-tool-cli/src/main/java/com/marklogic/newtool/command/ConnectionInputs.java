@@ -53,6 +53,15 @@ public abstract class ConnectionInputs {
     protected String trustStoreType;
     protected String trustStoreAlgorithm;
 
+    public String getSelectedHost() {
+        if (clientUri != null) {
+            // TBD Ideally reuse this logic from the connector.
+            String[] parts = clientUri.split("@");
+            return parts[1].split(":")[0];
+        }
+        return host;
+    }
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.CLIENT_URI, clientUri,

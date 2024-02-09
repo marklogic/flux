@@ -10,26 +10,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportXmlAggregateTest extends AbstractTest {
 
     @Test
-    void shouldThrowExceptionWithoutElement() {
-        try{
-            run(
-                "import_aggregate_xml_files",
-                "--path", "src/test/resources/xml-file/people.xml",
-                "--clientUri", makeClientUri(),
-                "--permissions", DEFAULT_PERMISSIONS,
-                "--collections", "xml-test",
-                "--uriTemplate", "/xml/test.txt"
-            );
-        } catch(Exception ex) {
-            assertEquals("The following option is required: [--element]", ex.getMessage(),
-                "Should throw an exception since element parameter is required.");
-        }
+    void elementIsRequired() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_aggregate_xml_files",
+            "--path", "src/test/resources/xml-file/people.xml",
+            "--clientUri", makeClientUri()
+        ));
+        assertTrue(stderr.contains("The following option is required: [--element]"),
+            "Unexpected stderr: " + stderr);
     }
 
     @Test
@@ -109,7 +102,7 @@ class ImportXmlAggregateTest extends AbstractTest {
         run(
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-             "--element", "person",
+            "--element", "person",
             "--clientUri", makeClientUri(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importZippedXmlWithElement-test",

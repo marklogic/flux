@@ -21,8 +21,11 @@ class HelpCommand {
     void printUsageForCommand(JCommander commander, String commandName) {
         JCommander parsedCommander = commander.getCommands().get(commandName);
         if (parsedCommander == null) {
-            throw new IllegalArgumentException("Unrecognized command name: " + commandName);
+            System.out.println("Unrecognized command name: " + commandName);
+            System.out.println(String.format("To see all commands, run '%s' with no arguments.", programName));
+            return;
         }
+
         // Get the selected command and construct a new JCommander with only that command so that we can print usage for
         // the single command.
         Object command = parsedCommander.getObjects().get(0);

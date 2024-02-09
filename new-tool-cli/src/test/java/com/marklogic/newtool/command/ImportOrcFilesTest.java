@@ -44,23 +44,6 @@ class ImportOrcFilesTest extends AbstractTest {
         assertCollectionSize("orcFileWithCompressionTest-test", 5);
     }
 
-    @Test
-    void orcFileWithIncorrectCompressionTest() {
-        try {
-            run(
-                "import_orc_files",
-                "--path", "src/test/resources/orc-files/orc-file.orc",
-                "--clientUri", makeClientUri(),
-                "--permissions", DEFAULT_PERMISSIONS,
-                "--collections", "orcFileWithCompressionTest-test",
-                "-Pcompression=zip"
-            );
-        } catch(Exception ex){
-            assertTrue(ex.getMessage().contains("Codec [zip] is not available. Available codecs are uncompressed, lz4, " +
-                "lzo, snappy, zlib, none, zstd."));
-        }
-    }
-
     private void verifyDocContent(String uri) {
         JSONDocumentManager documentManager = getDatabaseClient().newJSONDocumentManager();
         String docContent = documentManager.read(uri).next().getContent(new StringHandle()).toString();

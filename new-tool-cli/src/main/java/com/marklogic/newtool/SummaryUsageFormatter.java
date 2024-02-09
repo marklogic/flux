@@ -34,7 +34,7 @@ class SummaryUsageFormatter extends DefaultUsageFormatter {
                 String commandDescription = getCommandDescription(programName.getName());
                 String description = s(indentCount) + displayName + s(descriptionIndent) + commandDescription;
                 wrapDescription(out, descriptionNewlineIndent, description);
-                out.append("\n");
+                out.append("\n\n");
             }
         }
     }
