@@ -25,6 +25,11 @@ public class CommonParams {
     @Parameter(names = "--repartition", description = "Specify the number of partitions / workers to be used for writing data.")
     private Integer repartition;
 
+    // This is declared here so a user will see it in when viewing command usage, but the Main program does not need
+    // it as it can easily check for it in the list of arguments it receives.
+    @Parameter(names = "--stacktrace", description = "If included and a command fails, the stacktrace will be printed.")
+    private Boolean showStacktrace;
+
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit != null) {
             dataset = dataset.limit(limit);

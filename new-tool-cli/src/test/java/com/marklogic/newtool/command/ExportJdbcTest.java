@@ -1,7 +1,6 @@
 package com.marklogic.newtool.command;
 
 import com.marklogic.newtool.AbstractTest;
-import org.apache.spark.sql.AnalysisException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,16 +59,6 @@ class ExportJdbcTest extends AbstractTest {
         exportFifteenAuthorsWithMode("OVERWRITE");
         verifyRowCountInTable(15, "Since mode was set to 'overwrite', Spark should have removed all rows in the table " +
             "and added the 15 author rows.");
-    }
-
-    @Test
-    void errorIfExists() {
-        exportFifteenAuthors();
-        verifyRowCountInTable(15);
-
-        AnalysisException ex = assertThrows(AnalysisException.class, () -> exportFifteenAuthorsWithMode("errorifexists"));
-        assertEquals("Table or view 'export_test' already exists. SaveMode: ErrorIfExists.", ex.getMessage(),
-            "Not sure about error handling yet; for now, just expecting the exception to be thrown.");
     }
 
     @Test

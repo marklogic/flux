@@ -2,7 +2,8 @@ package com.marklogic.newtool;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelpTest extends AbstractTest {
 
@@ -35,10 +36,9 @@ class HelpTest extends AbstractTest {
 
     @Test
     void helpForInvalidCommand() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-            () -> run("help", "not_a_real_command"));
-
-        assertEquals("Unrecognized command name: not_a_real_command", ex.getMessage());
+        String stdout = runAndReturnStdout(() -> run("help", "not_a_real_command"));
+        assertTrue(stdout.contains("Unrecognized command name: not_a_real_command"),
+            "Unexpected stdout: " + stdout);
     }
 
     @Test

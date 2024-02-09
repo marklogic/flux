@@ -11,7 +11,7 @@ public abstract class AbstractCommand implements Command {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger("com.marklogic.newtool");
 
     @ParametersDelegate
     private CommonParams commonParams = new CommonParams();
@@ -21,22 +21,28 @@ public abstract class AbstractCommand implements Command {
 
     @Override
     public Optional<Preview> execute(SparkSession session) {
-        long start = System.currentTimeMillis();
-        try {
-            DataFrameReader reader = session.read();
-            Dataset<Row> dataset = loadDataset(session, reader);
-            dataset = commonParams.applyParams(dataset);
-            if (commonParams.isPreviewRequested()) {
-                return Optional.of(commonParams.makePreview(dataset));
-            }
-            DataFrameWriter<Row> writer = dataset.write();
-            applyWriter(session, writer);
-            return Optional.empty();
-        } finally {
-            if (logger.isInfoEnabled()) {
-                logger.info("Completed, duration in ms: {}", System.currentTimeMillis() - start);
-            }
+        String host = getConnectionParams().getSelectedHost();
+        if (host != null && logger.isInfoEnabled()) {
+            logger.info("Will connect to MarkLogic host: {}", host);
         }
+
+        long start = System.currentTimeMillis();
+
+        DataFrameReader reader = session.read();
+        Dataset<Row> dataset = loadDataset(session, reader);
+
+        dataset = commonParams.applyParams(dataset);
+        if (commonParams.isPreviewRequested()) {
+            return Optional.of(commonParams.makePreview(dataset));
+        }
+
+        DataFrameWriter<Row> writer = dataset.write();
+        applyWriter(session, writer);
+        if (logger.isInfoEnabled()) {
+            logger.info("Completed, duration in ms: {}", System.currentTimeMillis() - start);
+        }
+
+        return Optional.empty();
     }
 
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);

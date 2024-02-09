@@ -97,6 +97,54 @@ You can reprocess data in a manner very similar to that of Corb:
 You can specify custom JavaScript or XQuery code, or specify a module to invoke. Run `./nt/bin/nt help reprocess` to 
 see the full list of arguments.
 
+## Examining error reports
+
+The following commands show examples of how the tool reports errors. One gap is that when a batch fails, the contents
+of the batch are not yet logged. This is an area of research as while the URIs can easily be included in the error 
+reporting, they are not necessarily helpful. Support for trying each document individually may be added in the future.
+
+You can test an invalid command name:
+
+    ./nt/bin/nt not_a_real_command
+
+You can forget a required argument:
+
+    ./nt/bin/nt import_files
+
+You can cause an error from Spark:
+
+    ./nt/bin/nt import_files --path invalid-path
+
+You can cause a failure with MarkLogic that caused the command to stop:
+
+```
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+  --clientUri "new-tool-user:password@localhost:8000" \
+  --repartition 1 \
+  --permissions "invalid-role,read,new-tool-role,update" \
+  --uriReplace ".*/mixed-files,'/test'"
+```
+
+You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
+
+```
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+  --clientUri "new-tool-user:password@localhost:8000" \
+  --repartition 1 \
+  --permissions "invalid-role,read,new-tool-role,update" \
+  --uriReplace ".*/mixed-files,'/test'" \
+  --stacktrace
+```
+
+You can cause a failure and tell the command to keep executing:
+
+```
+./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+  --clientUri "new-tool-user:password@localhost:8000" \
+  --permissions "invalid-role,read,new-tool-role,update" \
+  --uriReplace ".*/mixed-files,'/test'" --abortOnFailure false
+```
+
 ## Testing against a separate Spark cluster
 
 This section describes how to test the ETL tool against a separate Spark cluster instead of having the tool stand up
