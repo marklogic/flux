@@ -19,7 +19,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
         );
 
         assertOptions(
-            command.makeWriteConnectionOptions(),
+            command.makeOutputConnectionOptions(),
             Options.CLIENT_URI, "user:password@host:8000"
         );
     }
@@ -31,7 +31,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
         );
 
         assertOptions(
-            command.makeWriteConnectionOptions(),
+            command.makeOutputConnectionOptions(),
             Options.CLIENT_URI, "test:test@test:8000"
         );
     }
@@ -72,17 +72,73 @@ class CopyOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
+    void allOutputConnectionParams() {
+        CopyCommand command = (CopyCommand) getCommand(
+            "copy",
+            "--outputClientUri", "user:password@host:8000",
+            "--outputHost", "localhost",
+            "--outputPort", "8123",
+            "--outputBasePath", "/path",
+            "--outputDatabase", "somedb",
+            "--outputConnectionType", "direct",
+            "--outputAuthType", "basic",
+            "--outputUsername", "jane",
+            "--outputPassword", "secret",
+            "--outputCertificateFile", "my.jks",
+            "--outputCertificatePassword", "pwd123",
+            "--outputCloudApiKey", "key123",
+            "--outputKerberosPrincipal", "prince123",
+            "--outputSamlToken", "my-token",
+            "--outputSslProtocol", "TLSv1.3",
+            "--outputSslHostnameVerifier", "STRICT",
+            "--outputKeyStorePath", "key.jks",
+            "--outputKeyStorePassword", "keypass",
+            "--outputKeyStoreType", "JKS",
+            "--outputKeyStoreAlgorithm", "SunX509",
+            "--outputTrustStorePath", "trust.jks",
+            "--outputTrustStorePassword", "trustpass",
+            "--outputTrustStoreType", "PKCS",
+            "--outputTrustStoreAlgorithm", "SunX510"
+        );
+
+        assertOptions(command.makeOutputConnectionOptions(),
+            Options.CLIENT_URI, "user:password@host:8000",
+            Options.CLIENT_HOST, "localhost",
+            Options.CLIENT_PORT, "8123",
+            "spark.marklogic.client.basePath", "/path",
+            Options.CLIENT_DATABASE, "somedb",
+            Options.CLIENT_CONNECTION_TYPE, "DIRECT",
+            Options.CLIENT_AUTH_TYPE, "basic",
+            Options.CLIENT_USERNAME, "jane",
+            Options.CLIENT_PASSWORD, "secret",
+            "spark.marklogic.client.certificate.file", "my.jks",
+            "spark.marklogic.client.certificate.password", "pwd123",
+            "spark.marklogic.client.cloud.apiKey", "key123",
+            "spark.marklogic.client.kerberos.principal", "prince123",
+            "spark.marklogic.client.saml.token", "my-token",
+            "spark.marklogic.client.sslProtocol", "TLSv1.3",
+            "spark.marklogic.client.sslHostnameVerifier", "STRICT",
+            "spark.marklogic.client.ssl.keystore.path", "key.jks",
+            "spark.marklogic.client.ssl.keystore.password", "keypass",
+            "spark.marklogic.client.ssl.keystore.type", "JKS",
+            "spark.marklogic.client.ssl.keystore.algorithm", "SunX509",
+            "spark.marklogic.client.ssl.truststore.path", "trust.jks",
+            "spark.marklogic.client.ssl.truststore.password", "trustpass",
+            "spark.marklogic.client.ssl.truststore.type", "PKCS",
+            "spark.marklogic.client.ssl.truststore.algorithm", "SunX510"
+        );
+    }
+
+    @Test
     void testOutputParameterCount() {
         int copyCommandCount = getOutputParameterCountInCopyCommand();
         int writeDocumentParamsCount = getParameterCount(WriteDocumentParams.class);
-        int connectionParamsCount = getParameterCount(ConnectionParams.class);
 
-        assertEquals(copyCommandCount, writeDocumentParamsCount + connectionParamsCount,
+        assertEquals(copyCommandCount, writeDocumentParamsCount,
             "Expecting the CopyCommand to declare one Parameter field for each Parameter field found in " +
-                "WriteDocumentParams and ConnectionParams, as CopyCommand is expected to duplicate all of those " +
+                "WriteDocumentParams, as CopyCommand is expected to duplicate all of those " +
                 "parameters and start their names with '--output'. This test is intended to ensure that if we ever " +
-                "add a field to WriteDocumentParams or ConnectionParams, we need to remember to duplicate it in " +
-                "CopyCommand.");
+                "add a field to WriteDocumentParams, we need to remember to duplicate it in CopyCommand.");
     }
 
     private int getParameterCount(Class<?> clazz) {
