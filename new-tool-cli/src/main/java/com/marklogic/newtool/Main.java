@@ -72,6 +72,7 @@ public class Main {
             .addCommand("import_avro_files", new ImportAvroFilesCommand())
             .addCommand("import_aggregate_xml_files", new ImportAggregateXmlCommand())
             .addCommand("import_orc_files", new ImportOrcFilesCommand())
+            .addCommand("reprocess", new ReprocessCommand())
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
