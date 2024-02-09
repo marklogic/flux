@@ -18,6 +18,8 @@ class HelpCommand {
         this.columnSize = columnSize;
     }
 
+    // Sonar's not happy about stderr/stdout usage; will revisit this, ignoring warnings for now.
+    @SuppressWarnings("java:S106")
     void printUsageForCommand(JCommander commander, String commandName) {
         JCommander parsedCommander = commander.getCommands().get(commandName);
         if (parsedCommander == null) {

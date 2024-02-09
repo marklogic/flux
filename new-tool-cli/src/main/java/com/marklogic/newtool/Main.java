@@ -27,6 +27,8 @@ public class Main {
     // Only used for logging
     private String selectedCommandName;
 
+    // Sonar's not happy about stderr/stdout usage; will revisit this, ignoring warnings for now.
+    @SuppressWarnings({"java:S106", "java:S4507"})
     public static void main(String[] args) {
         try {
             Main main = new Main(args);
@@ -45,9 +47,9 @@ public class Main {
             }
             if (ex instanceof SparkException && ex.getCause() != null) {
                 // The SparkException message typically has a stacktrace in it that is not likely to be helpful.
-                System.err.println(String.format("\nCommand failed, cause: %s", ex.getCause().getMessage()));
+                System.err.println(String.format("%nCommand failed, cause: %s", ex.getCause().getMessage()));
             } else {
-                System.err.println(String.format("\nCommand failed, cause: %s", ex.getMessage()));
+                System.err.println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
             }
         }
     }
