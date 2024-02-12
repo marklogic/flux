@@ -5,11 +5,11 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.*;
 
-@Parameters(commandDescription = "Read rows from MarkLogic via Optic and write them to a table via JDBC.")
+@Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to a table via JDBC.")
 public class ExportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate
-    private ReadParams readParams = new ReadParams();
+    private ReadRowsParams readRowsParams = new ReadRowsParams();
 
     @ParametersDelegate
     private JdbcParams jdbcParams = new JdbcParams();
@@ -26,7 +26,7 @@ public class ExportJdbcCommand extends AbstractCommand {
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(readParams.makeOptions())
+            .options(readRowsParams.makeOptions())
             .load();
     }
 

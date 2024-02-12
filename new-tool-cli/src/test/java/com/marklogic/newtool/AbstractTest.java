@@ -20,6 +20,8 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     protected static final String DEFAULT_PERMISSIONS = "new-tool-role,read,new-tool-role,update";
 
+    protected static final String READ_AUTHORS_OPTIC_QUERY = "op.fromView('Medical', 'Authors', '')";
+
     private SparkSession sparkSession;
 
     @AfterEach
