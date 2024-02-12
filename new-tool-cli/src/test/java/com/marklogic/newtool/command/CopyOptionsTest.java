@@ -39,6 +39,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void allWriteParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
+            "--clientUri", "someone:word@somehost:7000",
             "--outputAbortOnFailure", "false",
             "--outputBatchSize", "123",
             "--outputCollections", "c1,c2",
@@ -75,6 +76,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     void allOutputConnectionParams() {
         CopyCommand command = (CopyCommand) getCommand(
             "copy",
+            "--clientUri", "someone:word@somehost:7000",
             "--outputClientUri", "user:password@host:8000",
             "--outputHost", "localhost",
             "--outputPort", "8123",

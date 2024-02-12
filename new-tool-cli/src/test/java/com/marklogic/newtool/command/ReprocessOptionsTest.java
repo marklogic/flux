@@ -13,6 +13,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readInvoke() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readInvoke", "/my/invoke.sjs",
             "--readPartitionsInvoke", "/my/other-invoke.sjs",
             "--readVar", "param1=value1",
@@ -31,6 +32,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeInvoke() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readInvoke", "/my/invoke.sjs",
             "--writeInvoke", "/my/invoke.sjs",
             "--externalVariableName", "MY_VAR",
@@ -55,6 +57,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readJavascript() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readJavascript", "fn.currentDate()",
             "--readPartitionsJavascript", "console.log('')",
             "--writeJavascript", "fn.currentDate()"
@@ -69,6 +72,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeJavascript() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readJavascript", "fn.currentDate()",
             "--writeJavascript", "fn.currentDate()"
         );
@@ -81,6 +85,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readXquery() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readXquery", "fn:current-date()",
             "--readPartitionsXquery", "xdmp:log('')",
             "--writeXquery", "fn:current-date()"
@@ -95,6 +100,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeXquery() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
             "--readXquery", "fn:current-date()",
             "--writeXquery", "fn:current-date()"
         );

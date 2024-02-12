@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
  * when running on Spark on Java 9 or higher. Our ETL tool prevents this, so you can ignore it when analyzing the
  * logging in these tests.
  */
+// Suppressing Sonar warnings about tests not having assertions as that is not yet possible with this test.
+@SuppressWarnings("java:S2699")
 class HandleErrorTest extends AbstractTest {
 
     @Test

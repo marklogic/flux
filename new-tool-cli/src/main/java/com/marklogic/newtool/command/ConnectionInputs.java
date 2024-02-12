@@ -34,7 +34,7 @@ public abstract class ConnectionInputs {
     protected String database;
     protected DatabaseClient.ConnectionType connectionType;
     protected Boolean disableGzippedResponses;
-    protected ConnectionParams.AuthenticationType authType;
+    protected AuthenticationType authType;
     protected String username;
     protected String password;
     protected String certificateFile;

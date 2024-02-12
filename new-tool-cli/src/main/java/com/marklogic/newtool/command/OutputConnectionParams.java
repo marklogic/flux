@@ -63,7 +63,7 @@ public class OutputConnectionParams extends ConnectionInputs {
         names = "--outputAuthType",
         description = "Type of authentication to use."
     )
-    public void setAuthType(ConnectionParams.AuthenticationType authType) {
+    public void setAuthType(AuthenticationType authType) {
         this.authType = authType;
     }
 

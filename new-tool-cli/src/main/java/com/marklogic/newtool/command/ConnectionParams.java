@@ -1,9 +1,33 @@
 package com.marklogic.newtool.command;
 
+import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
 import com.marklogic.client.DatabaseClient;
 
-public class ConnectionParams extends ConnectionInputs {
+import java.util.Map;
+
+@Parameters(parametersValidators = ConnectionParams.class)
+public class ConnectionParams extends ConnectionInputs implements IParametersValidator {
+
+    @Override
+    public void validate(Map<String, Object> parameters) throws ParameterException {
+        if (parameters.get("--clientUri") == null && parameters.get("--preview") == null) {
+            if (parameters.get("--host") == null) {
+                throw new ParameterException("Must specify a MarkLogic host via --host or --clientUri.");
+            }
+            if (parameters.get("--port") == null) {
+                throw new ParameterException("Must specify a MarkLogic app server port via --port or --clientUri.");
+            }
+
+            String authType = (String) parameters.get("--authType");
+            boolean isDigestOrBasicAuth = authType == null || ("digest".equalsIgnoreCase(authType) || "basic".equalsIgnoreCase(authType));
+            if (isDigestOrBasicAuth && parameters.get("--username") == null) {
+                throw new ParameterException("Must specify a MarkLogic user via --username when using 'BASIC' or 'DIGEST' authentication.");
+            }
+        }
+    }
 
     @Parameter(
         names = {"--clientUri"},
@@ -65,7 +89,7 @@ public class ConnectionParams extends ConnectionInputs {
         names = "--authType",
         description = "Type of authentication to use."
     )
-    public void setAuthType(ConnectionParams.AuthenticationType authType) {
+    public void setAuthType(AuthenticationType authType) {
         this.authType = authType;
     }
 
