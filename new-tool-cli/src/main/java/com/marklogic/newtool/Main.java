@@ -97,6 +97,7 @@ public class Main {
             .addCommand("copy", new CopyCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
+            .addCommand("export_parquet_files", new ExportParquetFilesCommand())
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
             .addCommand("import_files", new ImportFilesCommand())

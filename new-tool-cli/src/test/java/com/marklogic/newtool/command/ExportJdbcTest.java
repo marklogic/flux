@@ -79,7 +79,7 @@ class ExportJdbcTest extends AbstractTest {
         run(
             "export_jdbc",
             "--clientUri", makeClientUri(),
-            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", "this should be overwritten by the dynamic param",
             "--table", EXPORTED_TABLE_NAME,
@@ -98,7 +98,7 @@ class ExportJdbcTest extends AbstractTest {
         run(
             "export_jdbc",
             "--clientUri", makeClientUri(),
-            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--table", EXPORTED_TABLE_NAME,
