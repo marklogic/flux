@@ -58,6 +58,16 @@ tasks.register("buildTool", Copy) {
 }
 buildTool.dependsOn installDist, deleteTool
 
+tasks.register("buildToolForGettingStarted", Copy) {
+  description = "For testing NT with the getting-started example project."
+  from layout.buildDirectory.dir("install/new-tool-cli/")
+  include "bin/**"
+  include "ext/**"
+  include "lib/**"
+  into "../examples/getting-started"
+}
+buildToolForGettingStarted.dependsOn installDist
+
 test {
   finalizedBy jacocoTestReport
 }

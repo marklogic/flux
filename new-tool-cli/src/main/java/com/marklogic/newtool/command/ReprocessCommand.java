@@ -97,7 +97,7 @@ public class ReprocessCommand extends AbstractCommand {
 
     @Parameter(
         names = "--abortOnFailure", arity = 1,
-        description = "Set to true to cause the command to abort when writing data causes an error."
+        description = "Set to false to cause the command to continue processing data after a write fails."
     )
     private boolean abortOnFailure = true;
 

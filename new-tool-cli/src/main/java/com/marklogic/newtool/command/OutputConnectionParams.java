@@ -11,7 +11,7 @@ public class OutputConnectionParams extends ConnectionInputs {
 
     @Parameter(
         names = {"--outputClientUri"},
-        description = "Defines a connection string as user:password@host:port; only usable when using digest or basic authentication."
+        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
     )
     public void setClientUri(String clientUri) {
         this.clientUri = clientUri;

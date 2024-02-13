@@ -28,6 +28,23 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void gzip() {
+        run(
+            "import_delimited_files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv.gz",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-test",
+            "--uriTemplate", "/delimited/{number}.json"
+        );
+
+        assertCollectionSize("delimited-test", 3);
+        verifyDoc("/delimited/1.json", 1, "blue", true);
+        verifyDoc("/delimited/2.json", 2, "red", false);
+        verifyDoc("/delimited/3.json", 3, "green", true);
+    }
+
+    @Test
     void customDelimiter() {
         run(
             "import_delimited_files",
