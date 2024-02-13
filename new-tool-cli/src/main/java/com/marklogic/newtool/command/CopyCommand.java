@@ -85,7 +85,7 @@ public class CopyCommand extends AbstractCommand {
 
     @Parameter(
         names = "--outputUriReplace",
-        description = "Modify the URI for a document via a comma-delimited list of regular expression \n" +
+        description = "Modify the URI for a document via a comma-delimited list of regular expression " +
             "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
     )
     private String uriReplace;

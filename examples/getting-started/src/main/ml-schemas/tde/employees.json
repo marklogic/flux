@@ -1,0 +1,41 @@
+{
+  "template": {
+    "context": "/",
+    "collections": [
+      "employee"
+    ],
+    "rows": [
+      {
+        "schemaName": "Example",
+        "viewName": "Employees",
+        "columns": [
+          {
+            "name": "id",
+            "scalarType": "long",
+            "val": "id"
+          },
+          {
+            "name": "first_name",
+            "scalarType": "string",
+            "val": "first_name"
+          },
+          {
+            "name": "last_name",
+            "scalarType": "string",
+            "val": "last_name"
+          },
+          {
+            "name": "department",
+            "scalarType": "string",
+            "val": "department"
+          },
+          {
+            "name": "job_title",
+            "scalarType": "string",
+            "val": "job_title"
+          }
+        ]
+      }
+    ]
+  }
+}

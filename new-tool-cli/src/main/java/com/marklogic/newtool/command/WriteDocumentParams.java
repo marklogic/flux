@@ -10,7 +10,7 @@ public class WriteDocumentParams {
     // See https://jcommander.org/#_boolean for a description of the 'arity' field.
     @Parameter(
         names = "--abortOnFailure", arity = 1,
-        description = "Set to true to cause an import to abort when a batch of documents cannot be written to MarkLogic."
+        description = "Set to false to cause the command to continue processing data after a write fails."
     )
     private boolean abortOnFailure = true;
 
@@ -70,7 +70,7 @@ public class WriteDocumentParams {
 
     @Parameter(
         names = "--uriReplace",
-        description = "Modify the URI for a document via a comma-delimited list of regular expression \n" +
+        description = "Modify the URI for a document via a comma-delimited list of regular expression " +
             "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
     )
     private String uriReplace;

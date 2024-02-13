@@ -23,6 +23,6 @@ public class Preview {
             datasetPreview = datasetPreview.drop(columnsToDrop.toArray(new String[]{}));
         }
         // Not truncating at all. For now, users can drop columns if their values are too long.
-        datasetPreview.show(numberRows, Integer.MAX_VALUE, true);
+        datasetPreview.show(numberRows, Integer.MAX_VALUE, false);
     }
 }
