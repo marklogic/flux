@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 The MarkLogic Spark ETL tool (currently known as "NT" ("new tool") until a real name is branded) is a single application
-for a wide variety of data movement use cases involving MarkLogic. NT leverages the 
+for all of your data movement use cases involving MarkLogic. NT leverages the 
 [MarkLogic Spark connector](https://github.com/marklogic/marklogic-spark-connector) and
 [Apache Spark](https://spark.apache.org/) to provide a scalable, flexible, and extensible solution for importing, 
 reprocessing, copying, and exporting your data with MarkLogic. NT provides many of the benefits and best practices 

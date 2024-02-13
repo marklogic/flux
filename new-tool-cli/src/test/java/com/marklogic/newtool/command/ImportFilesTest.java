@@ -40,7 +40,8 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files",
             "--preview", "2",
-            "--previewDrop", "content", "modificationTime"
+            "--previewDrop", "content", "modificationTime",
+            "--previewVertical"
         ));
 
         String message = "Unexpected output to stdout: " + stdout;

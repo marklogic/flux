@@ -22,6 +22,9 @@ public class CommonParams {
     @Parameter(names = "--previewDrop", description = "Specify one or more columns to drop when using --preview.", variableArity = true)
     private List<String> previewColumnsToDrop = new ArrayList<>();
 
+    @Parameter(names = "--previewVertical", description = "Preview the data in a vertical format instead of in a table.")
+    private Boolean previewVertical;
+
     @Parameter(names = "--repartition", description = "Specify the number of partitions / workers to be used for writing data.")
     private Integer repartition;
 
@@ -41,7 +44,7 @@ public class CommonParams {
     }
 
     public Preview makePreview(Dataset<Row> dataset) {
-        return new Preview(dataset, preview, previewColumnsToDrop);
+        return new Preview(dataset, preview, previewColumnsToDrop, previewVertical != null ? previewVertical.booleanValue() : false);
     }
 
     public boolean isPreviewRequested() {

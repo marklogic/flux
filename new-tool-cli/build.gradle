@@ -17,22 +17,44 @@ configurations {
 }
 
 dependencies {
-  implementation "org.apache.spark:spark-sql_2.12:3.4.1"
+  implementation ("org.apache.spark:spark-sql_2.12:3.4.1") {
+    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
+    exclude module: "rocksdbjni"
+  }
   implementation "org.jcommander:jcommander:1.83"
-  implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 
-  implementation "org.apache.hadoop:hadoop-aws:3.3.6"
+  // The connector is the shadowJar with its dependencies relocated to avoid conflicts with Spark. Thus, we don't
+  // need its dependencies brought in, as they're already in the connector jar itself, just in different packages.
+  implementation ("com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT") {
+    exclude module: "marklogic-client-api"
+    exclude module: "scala-java8-compat_2.12"
+  }
+
+  // hadoop-aws depends on aws-java-sdk-bundle, which clocks in as a single 380mb jar. We only need the S3 portion of
+  // the AWS SDK, so the bundle is excluded in favor of the S3 API in the SDK.
+  implementation ("org.apache.hadoop:hadoop-aws:3.3.6") {
+    exclude module: "aws-java-sdk-bundle"
+  }
+  implementation "com.amazonaws:aws-java-sdk-s3:1.12.367"
+
   implementation "org.apache.hadoop:hadoop-client:3.3.6"
 
-  testImplementation "com.marklogic:marklogic-junit5:1.4.0"
+  // Spark doesn't include Avro support by default, so need to bring this in.
+  implementation "org.apache.spark:spark-avro_2.12:3.4.1"
 
+  testImplementation "com.marklogic:marklogic-junit5:1.4.0"
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:5.3.31"
   testImplementation "org.postgresql:postgresql:42.6.0"
-  implementation("org.apache.spark:spark-avro_2.12:3.4.1")
 
   shadowDependencies "org.jcommander:jcommander:1.83"
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
+}
+
+distributions {
+  main {
+    distributionBaseName = "nt"
+  }
 }
 
 application {
@@ -53,17 +75,14 @@ tasks.register("deleteTool", Delete) {
   delete "../nt"
 }
 tasks.register("buildTool", Copy) {
-  from layout.buildDirectory.dir("install/new-tool-cli")
+  from layout.buildDirectory.dir("install/nt")
   into "../nt"
 }
 buildTool.dependsOn installDist, deleteTool
 
 tasks.register("buildToolForGettingStarted", Copy) {
   description = "For testing NT with the getting-started example project."
-  from layout.buildDirectory.dir("install/new-tool-cli/")
-  include "bin/**"
-  include "ext/**"
-  include "lib/**"
+  from layout.buildDirectory.dir("install")
   into "../examples/getting-started"
 }
 buildToolForGettingStarted.dependsOn installDist

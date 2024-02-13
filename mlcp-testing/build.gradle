@@ -20,6 +20,21 @@ dependencies {
   mlcp files("lib")
 }
 
+task mlcpImportMixed(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args = [
+    "IMPORT",
+    "-host", host,
+    "-port", port,
+    "-username", username,
+    "-password", password,
+    "-input_file_path", "../new-tool-cli/src/test/resources/mixed-files",
+    "-output_collections", "mlcp-mixed-files",
+    "-output_permissions", "rest-reader,read,rest-writer,update"
+  ]
+}
+
 task ntCopy(type: Exec) {
   workingDir = "../nt/"
   commandLine "./bin/nt", "copy",
