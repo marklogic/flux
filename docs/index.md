@@ -21,6 +21,8 @@ With NT, you can automate common data movement use cases including:
 - Reprocess data in MarkLogic via custom code.
 - Export data to an RDBMS, a local filesystem, or S3.
 
+You also soon be able to extend NT with your own commands, along with embedding NT as a dependency in your own application.
+
 NT has the following system requirements:
 
 * Java 11 or higher.

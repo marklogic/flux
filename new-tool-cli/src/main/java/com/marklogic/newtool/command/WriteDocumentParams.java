@@ -18,7 +18,7 @@ public class WriteDocumentParams {
         names = "--batchSize",
         description = "The number of documents written in a call to MarkLogic."
     )
-    private Integer batchSize = 100;
+    private Integer batchSize = 200;
 
     @Parameter(
         names = "--collections",

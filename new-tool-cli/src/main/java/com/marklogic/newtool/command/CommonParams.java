@@ -44,7 +44,11 @@ public class CommonParams {
     }
 
     public Preview makePreview(Dataset<Row> dataset) {
-        return new Preview(dataset, preview, previewColumnsToDrop, previewVertical != null ? previewVertical.booleanValue() : false);
+        boolean vertical = false;
+        if (previewVertical != null) {
+            vertical = previewVertical.booleanValue();
+        }
+        return new Preview(dataset, preview, previewColumnsToDrop, vertical);
     }
 
     public boolean isPreviewRequested() {
