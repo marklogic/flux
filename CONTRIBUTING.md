@@ -206,7 +206,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./new-tool-cli/build/libs/new-tool-cli-0.1.0-all.jar`.
+This will produce an assembly jar at `./new-tool-cli/build/libs/new-tool-cli-0.2-SNAPSHOT-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -214,7 +214,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.Submit \
---master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1.0-all.jar \
+--master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2-SNAPSHOT-all.jar \
 import_files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
 ```
 
