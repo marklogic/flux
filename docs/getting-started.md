@@ -21,8 +21,9 @@ free to install NT anywhere and use the examples as a reference for running NT o
 
 ### Obtaining NT
 
-NT can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases) or 
-built locally. If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
+NT can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases), 
+from the [internal Wiki](https://wiki.marklogic.com/display/PM/Spark+ETL+0.1+Release), or built locally. 
+If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
 
 After downloading or building NT, extract it into the `./examples/getting-started` directory in this repository to 
 test it with the examples. 
@@ -127,13 +128,6 @@ mkdir export
     --path export \
     --compression zip \
     --repartition 1
-
-mkdir export
-./bin/nt export_files \
-    --clientUri "nt-user:password@localhost:8004" \
-    --path export \
-    --compression zip \
-    --repartition 1
 ```
 
 The above command specifies a collection of documents to export. You can also use the `--query` option to specify a
@@ -172,7 +166,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
     --collections employee \
     --compression zip \
     --repartition 1 \
-    --path s3a://rudin-public-bucket \
+    --path s3a://bucket-name-changeme \
     --s3AddCredentials
 ```
 
