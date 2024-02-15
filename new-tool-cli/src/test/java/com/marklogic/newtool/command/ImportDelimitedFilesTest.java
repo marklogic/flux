@@ -117,7 +117,8 @@ class ImportDelimitedFilesTest extends AbstractTest {
                 "import_delimited_files",
                 "--path", "src/test/resources/delimited-files/three-rows.csv",
                 "--limit", "1",
-                "--preview", "3"
+                "--preview", "3",
+                "--previewVertical"
             );
         });
 

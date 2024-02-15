@@ -15,25 +15,17 @@ This guide describes how to get started with NT with some examples demonstrating
 ## Setup
 
 The examples in this guide, along with examples found throughout this documentation, depend on a small application in the 
-`examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
-a MarkLogic instance and that the NT tool will be run from that directory as well. However, you are free to install 
-NT anywhere and use the examples simply as a reference for running NT on your own data. 
+`./examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
+a MarkLogic instance and that NT will be run from the `./examples/getting-started` directory as well. However, you are 
+free to install NT anywhere and use the examples as a reference for running NT on your own data. 
 
 ### Obtaining NT
 
-NT can either be downloaded from a TBD location or built locally. Given the size of the 
-application - the distribution is over 500mb, primarily due to the inclusion of the AWS SDK to support S3 access - the file may not
-yet be available at an internal location, and thus you will need to build the tool locally.
+NT can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases) or 
+built locally. If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
 
-Perform these steps to build the tool locally:
-
-1. Clone this repository.
-2. Ensure you are using Java 11 or higher.
-3. From the root directory of the repository, run `./gradlew distTar`, or `./gradlew distZip` if on Windows.
-
-This will produce a file at `./new-tool-cli/build/distributions`. To use NT with the examples in the guide, move or copy
-this file to the `examples/getting-started` directory and then extract it. Otherwise, you can extract the file to any
-location you choose. 
+After downloading or building NT, extract it into the `./examples/getting-started` directory in this repository to 
+test it with the examples. 
 
 ### Deploying the example application
 
@@ -53,9 +45,10 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 
 ## Usage
 
-You can run the tool without any arguments to see the list of available commands (all examples will assume the use of
+You can run the tool without any options to see the list of available commands (all examples will assume the use of
 Unix; if you are on Windows, substitute `./bin/nt` with `bin/nt`):
 
+    cd nt
     ./bin/nt
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
@@ -66,10 +59,35 @@ command. To see the usage for a particular command, such as `import_files`, run:
 Required parameters are marked with an asterisk - "*". Additionally, every command requires that either `--clientUri`
 or `--host` and `--port` be specified so that the tool known which MarkLogic cluster to connect to. 
 
+The `--clientUri` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
+app server you connect to requires basic or digest authentication. Its value is of the form 
+`(user):(password)@(host):(port)`. For example:
+
+    ./bin/nt import_files --clientUri "my-user:my-secret@localhost:8000" ...
+
 As the documentation for NT is built out, you will typically be able to find a number of features in the list of 
-command arguments that are not yet documented. Documentation will eventually encompass all arguments, but prior to 
+command options that are not yet documented. Documentation will eventually encompass all options, but prior to 
 the 1.0 release, you should expect to use `help name_of_command` to understand everything you can do with a particular
 command.
+
+### Reading options from a file
+
+NT supports reading options from a file, similar to MLCP. In a text file, put each option name and value on separate 
+lines:
+
+```
+-host
+localhost
+-port
+8000
+etc...
+```
+
+You then reference the file via the `@` symbol followed by a filename:
+
+    ./bin/nt import_files @my-options.txt
+
+You can reference multiple files this way and also include options on the command line too.
 
 ## Importing data
 
@@ -79,9 +97,11 @@ accessible via a JDBC driver. The example project contains a gzipped CSV file ge
 demonstrated:
 
 ```
-./bin/nt import_delimited_files --path data/employees.csv.gz \
-    --clientUri nt-user:password@localhost:8004 \
-    --permissions nt-role,read,nt-role,update --collections employee \
+./bin/nt import_delimited_files \
+    --path ../data/employees.csv.gz \
+    --clientUri "nt-user:password@localhost:8004" \
+    --permissions nt-role,read,nt-role,update \
+    --collections employee \
     --uriTemplate "/employee/{id}.json"
 ```
 
@@ -98,12 +118,17 @@ The following shows a notional example of reading rows from a Postgres database 
 requires a separate Postgres database; it is only included for reference):
 
 ```
-./bin/nt import_jdbc --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
-  --jdbcDriver "org.postgresql.Driver" \
-  --query "select * from customer" \
-  --clientUri "new-tool-user:password@localhost:8004" \
-  --permissions nt-role,read,nt-role,update --collections customer
+./bin/nt import_jdbc \
+    --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
+    --jdbcDriver "org.postgresql.Driver" \
+    --query "select * from customer" \
+    --clientUri "new-tool-user:password@localhost:8004" \
+    --permissions nt-role,read,nt-role,update \
+    --collections customer
 ```
+
+See the [Import guide](import.md) for further details, including how you can aggregate rows together via a SQL join, 
+thus producing hierarchical documents with nested data structures.
 
 ## Exporting data 
 
@@ -113,47 +138,52 @@ to select rows. The following shows an example of exporting the 1000 employee do
 
 ```
 mkdir export
-./bin/nt export_files --clientUri nt-user:password@localhost:8004 \
+./bin/nt export_files \
+    --clientUri "nt-user:password@localhost:8004" \
     --collections employee \
-    --path export --compression zip --repartition 1
+    --path export \
+    --compression zip \
+    --repartition 1
 ```
 
-The `./export` directory will contain a single zip file. The `--repartition 1` argument causes a single file to be 
-written. NT leans heavily into the Spark concept of "partitions", which can be thought of as "workers" when data is
-being read or written. The number of partitions used by a command can have a significant impact on performance. 
+The above command specifies a collection of documents to export. You can also use the `--query` argument to specify a
+[structured query](https://docs.marklogic.com/guide/search-dev/structured-query), 
+[serialized CTS query](https://docs.marklogic.com/guide/rest-dev/search#id_30577), or 
+[complex query](https://docs.marklogic.com/guide/rest-dev/search#id_69918), either as JSON or XML. You can also use 
+`--stringQuery` to leverage MarkLogic's search grammar for selecting documents. 
 
-Try running the same command, but without the `--repartition` argument:
+The following command shows a collection, a string query, and a structured query used together, resulting 
+in 4 JSON documents being written to `./export/employee`:
 
 ```
-./bin/nt export_files --clientUri nt-user:password@localhost:8004 \
+./bin/nt export_files \
+    --clientUri "nt-user:password@localhost:8004" \
     --collections employee \
-    --path export --compression zip
+    --stringQuery Engineering \
+    --query '{"query": {"value-query": {"json-property": "job_title", "text": "Junior Executive"}}}' \
+    --path export
 ```
 
-The `./export` directory will have 12 new zip files in it. This count is due to how NT reads data from MarkLogic, 
-which involves creating 4 partitions per forest in the MarkLogic database. The example application has 3 forests in its
-content database, and thus 3 * 4 = 12 partitions are created, resulting in 12 separate zip files. The `--repartition`
-argument - available on every command - thus gives you a way to control how many files are written. 
-
-Note as well that while the above command specifies a collection of documents to export, the `--query` argument accepts
-structured queries, serialized CTS queries, and complex queries, either as JSON or XML. You can also use `--stringQuery`
-to leverage MarkLogic's search grammar for selecting documents. See (TODO link for exporting docs) for more information.
+See [the Export guide](export.md) for more information.
 
 ### Exporting to S3
 
 NT allows for data to be exported easily to S3, with the same approach working for importing data as well. You can 
 reference an S3 bucket path via the "s3a://" prefix. The `--s3AddCredentials` argument will then use the AWS SDK to access your
 AWS credentials; please see the 
-[AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for information on how
-to specify your credentials. 
+[AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for information on how to configure your credentials. 
 
 The following shows an example of exporting to S3 with a fictitious bucket name. You can use this with your own S3 
 bucket, ensuring that your AWS credentials give you access to writing to the bucket:
 
 ```
-./bin/nt export_files --clientUri nt-user:password@localhost:8004 \
-    --collections employee --compression zip --repartition 1 \
-    --path s3a://bucket-name-changeme --s3AddCredentials
+./bin/nt export_files \
+    --clientUri "nt-user:password@localhost:8004" \
+    --collections employee \
+    --compression zip \
+    --repartition 1 \
+    --path s3a://rudin-public-bucket \
+    --s3AddCredentials
 ```
 
 ### Exporting rows
@@ -163,49 +193,42 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 
 ```
 mkdir export/parquet
-./bin/nt export_parquet_files --clientUri nt-user:password@localhost:8004 \
-    --path export/parquet --query "op.fromView('Example', 'Employees', '')" 
+./bin/nt export_parquet_files \
+    --clientUri "nt-user:password@localhost:8004" \
+    --path export/parquet \
+    --query "op.fromView('Example', 'Employees', '')" 
 ```
 
 You can also export rows via JDBC. Like the example above for importing via JDBC, this is a notional example only. 
-Change the details in it to match your database and JDBC driver:
+Change the details in it to match your database and JDBC driver, ensuring that the JDBC driver jar is in the 
+`./ext` directory of your NT installation:
 
 ```
-./bin/nt export_jdbc --clientUri nt-user:password@localhost:8004 \
+./bin/nt export_jdbc \
+    --clientUri "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
     --jdbcDriver "org.postgresql.Driver" \
-    --table employees
+    --table employees \
+    --mode overwrite
 ```
 
 ## Previewing commands
 
 For many data movement use cases, it can be helpful to see a preview of the data read from a particular source before
-any processing occurs to write that data to a destination. NT supports this a `--preview` argument that accepts a 
-number of records - technically, Spark rows - to read and display. The following example shows how an export command
-can preview 10 rows read from MarkLogic:
+any processing occurs to write that data to a destination. NT supports this via a `--preview` argument that accepts a 
+number of records to read and display, but without writing the data anywhere. The following example shows how an export 
+command can preview 10 rows read from MarkLogic without writing any data to files:
 
 ```
-./bin/nt export_parquet_files --clientUri nt-user:password@localhost:8004 \
-    --path export/parquet --query "op.fromView('Example', 'Employees', '')" \
+./bin/nt export_parquet_files \
+    --clientUri "nt-user:password@localhost:8004" \
+    --query "op.fromView('Example', 'Employees', '')" \
+    --path export/parquet \
     --preview 10
 ```
 
-The `--preview` argument works on every command in NT. For example, you can preview an import from a set of Parquet files 
-written above without writing any of the data to MarkLogic:
-
-```
-mkdir export/parquet
-./bin/nt export_parquet_files --clientUri nt-user:password@localhost:8004 \
-    --path export/parquet --query "op.fromView('Example', 'Employees', '')" 
-
-./bin/nt import_parquet_files --clientUri nt-user:password@localhost:8004 \
-    --path export/parquet --preview 10
-```
-
-Note that in the case of previewing an import, NT will show the data as it has been read, which consists of a set of 
-Spark rows. The data is not shown as a set of documents yet, as the transformation of rows to documents occurs when 
-the data is written to MarkLogic. 
+See the [Common Features guide](common_features.md) for more information.
 
 ## Reprocessing data
 
@@ -214,12 +237,15 @@ processing data in MarkLogic. The following shows an example of adding a new col
 documents:
 
 ```
-./bin/nt reprocess --clientUri nt-user:password@localhost:8004 \
+./bin/nt reprocess \
+    --clientUri "nt-user:password@localhost:8004" \
     --readJavascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
     --writeJavascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
 
 In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. 
+
+For more information, please see the [Reprocessing guide](reprocess.md).
 
 ## Copying data
 
@@ -232,7 +258,11 @@ The following shows how to copy the 1000 employee documents to the out-of-the-bo
 MarkLogic instance:
 
 ```
-./bin/nt copy --clientUri nt-user:password@localhost:8004 \
-  --collections employee --categories content,metadata \
-  --outputClientUri nt-user:password@localhost:8000
+./bin/nt copy \
+    --clientUri "nt-user:password@localhost:8004" \
+    --collections employee \
+    --categories content,metadata \
+    --outputClientUri "nt-user:password@localhost:8000"
 ```
+
+For more information, please see the [Copying guide](copy.md).

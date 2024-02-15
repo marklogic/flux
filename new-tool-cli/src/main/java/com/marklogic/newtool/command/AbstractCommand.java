@@ -39,7 +39,7 @@ public abstract class AbstractCommand implements Command {
         DataFrameWriter<Row> writer = dataset.write();
         applyWriter(session, writer);
         if (logger.isInfoEnabled()) {
-            logger.info("Completed in {}s", (System.currentTimeMillis() - start) / 1000);
+            logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
         }
 
         return Optional.empty();
