@@ -1,14 +1,35 @@
 package com.marklogic.newtool.command;
 
+import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
 import com.marklogic.spark.Options;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
  * For commands that export documents and must therefore read "document rows" first.
  */
-public class ReadDocumentParams {
+@Parameters(parametersValidators = ReadDocumentParams.class)
+public class ReadDocumentParams implements IParametersValidator {
+
+    @Override
+    public void validate(Map<String, Object> params) throws ParameterException {
+        List<String> queryParams = Arrays.asList("--query", "--stringQuery", "--collections", "--directory");
+        boolean hasOne = false;
+        for (String param : queryParams) {
+            if (params.get(param) != null) {
+                hasOne = true;
+                break;
+            }
+        }
+        if (!hasOne) {
+            throw new ParameterException(String.format("Must specify at least one of the following options: %s.", queryParams));
+        }
+    }
 
     @Parameter(names = "--stringQuery", description = "A query utilizing the MarkLogic search grammar; " +
         "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")

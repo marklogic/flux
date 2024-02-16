@@ -118,4 +118,21 @@ class ExportFilesTest extends AbstractTest {
             assertTrue(file.getName().endsWith(".gz"));
         }
     }
+
+    @Test
+    void exportWithNoQuery(@TempDir Path tempDir) {
+        String stderr = runAndReturnStderr(() -> {
+            run(
+                "export_files",
+                "--path", tempDir.toFile().getAbsolutePath(),
+                "--compression", "gzip",
+                "--clientUri", makeClientUri()
+            );
+        });
+
+        assertTrue(
+            stderr.contains("Must specify at least one of the following options: [--query, --stringQuery, --collections, --directory]."),
+            "Unexpected stderr: " + stderr
+        );
+    }
 }
