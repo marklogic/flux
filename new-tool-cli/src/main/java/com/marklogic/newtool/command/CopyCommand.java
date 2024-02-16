@@ -20,6 +20,10 @@ public class CopyCommand extends AbstractCommand {
     @ParametersDelegate
     private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
 
+    @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
+        "Valid choices are: content, metadata (for all types of metadata), collections, permissions, quality, properties, and metadatavalues.")
+    private String categories = "content,metadata";
+
     @ParametersDelegate
     private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
@@ -108,6 +112,7 @@ public class CopyCommand extends AbstractCommand {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(readDocumentParams.makeOptions())
+            .options(OptionsUtil.makeOptions(Options.READ_DOCUMENTS_CATEGORIES, categories))
             .load();
     }
 
