@@ -14,6 +14,7 @@ class CopyTest extends AbstractTest {
     void sameDatabase() {
         run(
             "copy",
+            "--categories", "content",
             "--collections", "author",
             "--clientUri", makeClientUri(),
             "--outputCollections", "author-copies",
