@@ -166,6 +166,28 @@ You can cause a failure and tell the command to keep executing:
   --uriReplace ".*/mixed-files,'/test'" --abortOnFailure false
 ```
 
+## Testing with a load balancer
+
+The `docker-compose.yml` file includes an instance of a 
+[Caddy load balancer](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). This is useful for any kind 
+of performance testing, as you typically want NT (and our Spark connector) to connect to a load balancer that can 
+both distribute load and handle retrying failed connections. 
+
+The `./caddy/config/Caddyfile` configuration file has some default config in it for communicating with a 3-node cluster
+owned by the performance team. Feel free to adjust this config locally as needed. 
+
+Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
+
+```
+./nt/bin/nt copy --clientUri "admin:admin@localhost:8006" \
+  --collections "address_small" \
+  --batchSize 500 \
+  --limit 10000 \
+  --categories content,metadata \
+  --outputClientUri "admin:admin@localhost:8007" \
+  --outputThreadCount 3 --partitionsPerForest 1 --outputBatchSize 200
+```
+
 ## Testing against a separate Spark cluster
 
 This section describes how to test the ETL tool against a separate Spark cluster instead of having the tool stand up

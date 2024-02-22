@@ -1,0 +1,21 @@
+# See https://caddyserver.com/docs/caddyfile-tutorial for more information.
+
+:8006 {
+  reverse_proxy mlperfr-009.bedford.progress.com:8015 mlperfr-010.bedford.progress.com:8015 mlperfr-011.bedford.progress.com:8015 {
+    transport http {
+      dial_timeout 31s
+    }
+    # Required for MLCP to work; "ip_hash" also works.
+    # See https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#load-balancing for more information.
+    lb_policy cookie
+  }
+}
+
+:8007 {
+  reverse_proxy mlperfr-009.bedford.progress.com:8016 mlperfr-010.bedford.progress.com:8016 mlperfr-011.bedford.progress.com:8016 {
+    transport http {
+      dial_timeout 31s
+    }
+    lb_policy cookie
+  }
+}

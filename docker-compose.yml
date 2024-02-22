@@ -4,6 +4,18 @@ name: new_tool
 
 services:
 
+  # See https://caddyserver.com/docs/quick-starts/reverse-proxy for more information on using Caddy as a reverse proxy
+  # and load balancer.
+  caddy-load-balancer:
+    image: caddy:2-alpine
+    volumes:
+      - ./caddy/data:/data
+      - ./caddy/config/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      # Expand this range as needed. See Caddyfile for which ports are used for reverse proxies.
+      - 8006:8006
+      - 8007:8007
+
   marklogic:
     image: "marklogicdb/marklogic-db:11.1.0-centos-1.1.0"
     platform: linux/amd64
