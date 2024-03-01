@@ -6,7 +6,7 @@ import com.beust.jcommander.Parameters;
 import java.util.HashMap;
 import java.util.Map;
 
-@Parameters(commandDescription = "Read delimited JSON lines file from local, HDFS, and S3 locations using Spark's support " +
+@Parameters(commandDescription = "Read delimited JSON lines files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each row being written " +
     "to MarkLogic.")
 public class ImportDelimitedJsonFilesCommand extends AbstractImportFilesCommand {
