@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportAvroFilesTest extends AbstractTest {
 
@@ -46,6 +45,23 @@ class ImportAvroFilesTest extends AbstractTest {
         verifyColorDoc("/avro/blue.json", "1", "blue", true);
         verifyColorDoc("/avro/red.json", "2", "red", false);
         verifyColorDoc("/avro/green.json", "3", "green", true);
+    }
+
+    @Test
+    void badConfigurationItem() {
+        String stderr = runAndReturnStderr(() ->
+            run(
+                "import_avro_files",
+                "--path", "src/test/resources/avro/*",
+                "--clientUri", makeClientUri(),
+                "--permissions", DEFAULT_PERMISSIONS,
+                "-Pspark.sql.parquet.filterPushdown=invalid-value"
+            )
+        );
+
+        assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
+            "This test verifies that spark.sql dynamic params are added to the Spark conf. An invalid value is used " +
+                "to verify this, as its inclusion in the Spark conf should cause an error. Actual stderr: " + stderr);
     }
 
     private void verifyColorDoc(String uri, String expectedNumber, String expectedColor, boolean expectedFlag) {
