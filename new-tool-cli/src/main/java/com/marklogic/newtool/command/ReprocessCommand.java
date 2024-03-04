@@ -8,8 +8,10 @@ import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Parameters(
     commandDescription = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.",
@@ -30,10 +32,22 @@ public class ReprocessCommand extends AbstractCommand {
     private String readJavascript;
 
     @Parameter(
+        names = {"--readJavascriptFile"},
+        description = "Local file containing JavaScript code to execute for reading data."
+    )
+    private String readJavascriptFile;
+
+    @Parameter(
         names = {"--readXquery"},
         description = "XQuery code to execute for reading data."
     )
     private String readXquery;
+
+    @Parameter(
+        names = {"--readXqueryFile"},
+        description = "Local file containing XQuery code to execute for reading data."
+    )
+    private String readXqueryFile;
 
     @Parameter(
         names = {"--readPartitionsInvoke"},
@@ -48,10 +62,22 @@ public class ReprocessCommand extends AbstractCommand {
     private String readPartitionsJavascript;
 
     @Parameter(
+        names = {"--readPartitionsJavascriptFile"},
+        description = "Local file containing JavaScript code to execute to define partitions that are sent to your custom code for reading."
+    )
+    private String readPartitionsJavascriptFile;
+
+    @Parameter(
         names = {"--readPartitionsXquery"},
         description = "XQuery code to execute to define partitions that are sent to your custom code for reading."
     )
     private String readPartitionsXquery;
+
+    @Parameter(
+        names = {"--readPartitionsXqueryFile"},
+        description = "Local file containing XQuery code to execute to define partitions that are sent to your custom code for reading."
+    )
+    private String readPartitionsXqueryFile;
 
     @Parameter(
         names = "--readVar", variableArity = true,
@@ -72,10 +98,22 @@ public class ReprocessCommand extends AbstractCommand {
     private String writeJavascript;
 
     @Parameter(
+        names = {"--writeJavascriptFile"},
+        description = "Local file containing JavaScript code to execute for writing data."
+    )
+    private String writeJavascriptFile;
+
+    @Parameter(
         names = {"--writeXquery"},
         description = "XQuery code to execute for writing data."
     )
     private String writeXquery;
+
+    @Parameter(
+        names = {"--writeXqueryFile"},
+        description = "Local file containing XQuery code to execute for writing data."
+    )
+    private String writeXqueryFile;
 
     @Parameter(
         names = {"--externalVariableName"},
@@ -128,11 +166,16 @@ public class ReprocessCommand extends AbstractCommand {
         Map<String, String> options = OptionsUtil.makeOptions(
             Options.READ_INVOKE, readInvoke,
             Options.READ_JAVASCRIPT, readJavascript,
+            Options.READ_JAVASCRIPT_FILE, readJavascriptFile,
             Options.READ_XQUERY, readXquery,
+            Options.READ_XQUERY_FILE, readXqueryFile,
             Options.READ_PARTITIONS_INVOKE, readPartitionsInvoke,
             Options.READ_PARTITIONS_JAVASCRIPT, readPartitionsJavascript,
-            Options.READ_PARTITIONS_XQUERY, readPartitionsXquery
+            Options.READ_PARTITIONS_JAVASCRIPT_FILE, readPartitionsJavascriptFile,
+            Options.READ_PARTITIONS_XQUERY, readPartitionsXquery,
+            Options.READ_PARTITIONS_XQUERY_FILE, readPartitionsXqueryFile
         );
+
         if (readVars != null) {
             readVars.forEach(readVar -> {
                 int pos = readVar.indexOf("=");
@@ -142,6 +185,7 @@ public class ReprocessCommand extends AbstractCommand {
                 options.put(Options.READ_VARS_PREFIX + readVar.substring(0, pos), readVar.substring(pos + 1));
             });
         }
+
         return options;
     }
 
@@ -149,12 +193,15 @@ public class ReprocessCommand extends AbstractCommand {
         Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_INVOKE, writeInvoke,
             Options.WRITE_JAVASCRIPT, writeJavascript,
+            Options.WRITE_JAVASCRIPT_FILE, writeJavascriptFile,
             Options.WRITE_XQUERY, writeXquery,
+            Options.WRITE_XQUERY_FILE, writeXqueryFile,
             Options.WRITE_EXTERNAL_VARIABLE_NAME, externalVariableName,
             Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, externalVariableDelimiter,
             Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
             Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null
         );
+
         if (writeVars != null) {
             writeVars.forEach(writeVar -> {
                 int pos = writeVar.indexOf("=");
@@ -164,6 +211,7 @@ public class ReprocessCommand extends AbstractCommand {
                 options.put(Options.WRITE_VARS_PREFIX + writeVar.substring(0, pos), writeVar.substring(pos + 1));
             });
         }
+
         return options;
     }
 
@@ -171,18 +219,46 @@ public class ReprocessCommand extends AbstractCommand {
 
         @Override
         public void validate(Map<String, Object> params) throws ParameterException {
-            int readCount = getCountOfNonNullParams(params, "--readInvoke", "--readJavascript", "--readXquery");
-            if (readCount != 1) {
-                throw new ParameterException("Must specify one of --readInvoke, --readJavascript, or --readXquery.");
+            validateReadParams(params);
+            validatePartitionParams(params);
+            validateWriteParams(params);
+        }
+
+        private void validateReadParams(Map<String, Object> params) {
+            String[] readParams = new String[]{
+                "--readInvoke", "--readJavascript", "--readXquery", "--readJavascriptFile", "--readXqueryFile"
+            };
+            if (getCountOfNonNullParams(params, readParams) != 1) {
+                throw new ParameterException(makeErrorMessage("Must specify one of ", readParams));
             }
-            int readPartitionsCount = getCountOfNonNullParams(params, "--readPartitionsInvoke", "--readPartitionsJavascript", "--readPartitionsXquery");
-            if (readPartitionsCount > 1) {
-                throw new ParameterException("Can only specify one of --readPartitionsInvoke, --readPartitionsJavascript, and --readPartitionsXquery.");
+        }
+
+        private void validatePartitionParams(Map<String, Object> params) {
+            String[] partitionParams = new String[]{
+                "--readPartitionsInvoke", "--readPartitionsJavascript", "--readPartitionsXquery",
+                "--readPartitionsJavascriptFile", "--readPartitionsXqueryFile"
+            };
+            if (getCountOfNonNullParams(params, partitionParams) > 1) {
+                throw new ParameterException(makeErrorMessage("Can only specify one of ", partitionParams));
             }
-            int writeCount = getCountOfNonNullParams(params, "--writeInvoke", "--writeJavascript", "--writeXquery");
-            if (writeCount != 1) {
-                throw new ParameterException("Must specify one of --writeInvoke, --writeJavascript, or --writeXquery.");
+        }
+
+        private void validateWriteParams(Map<String, Object> params) {
+            if (params.containsKey("--preview")) {
+                return;
             }
+            String[] writeParams = new String[]{
+                "--writeInvoke", "--writeJavascript", "--writeXquery", "--writeJavascriptFile", "--writeXqueryFile"
+            };
+            if (getCountOfNonNullParams(params, writeParams) != 1) {
+                throw new ParameterException(makeErrorMessage("Must specify one of ", writeParams));
+            }
+        }
+
+        private String makeErrorMessage(String preamble, String... args) {
+            List<String> list = Arrays.asList(args);
+            String str = list.subList(0, list.size() - 1).stream().collect(Collectors.joining(", "));
+            return preamble + str + ", or " + list.get(list.size() - 1) + ".";
         }
 
         private int getCountOfNonNullParams(Map<String, Object> params, String... paramNames) {

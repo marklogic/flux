@@ -13,8 +13,9 @@ public abstract class AbstractOptionsTest {
     protected final void assertOptions(Map<String, String> options, String... keysAndValues) {
         for (int i = 0; i < keysAndValues.length; i += 2) {
             String key = keysAndValues[i];
-            String value = keysAndValues[i + 1];
-            assertEquals(value, options.get(key), String.format("Unexpected value %s for key %s", value, key));
+            String expectedValue = keysAndValues[i + 1];
+            String actualValue = options.get(key);
+            assertEquals(expectedValue, actualValue, String.format("Unexpected value %s for key %s", actualValue, key));
         }
     }
 
