@@ -18,8 +18,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--clientUri", makeClientUri(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
-            "--uriPrefix", "/orc-test",
-            "--uriReplace", ".json,''"
+            "--uriPrefix", "/orc-test"
         );
 
         assertCollectionSize("orcFile-test", 5);
@@ -38,10 +37,16 @@ class ImportOrcFilesTest extends AbstractTest {
             "--clientUri", makeClientUri(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFileWithCompressionTest-test",
+            "--uriPrefix", "/orc-compressed-test",
             "-Pcompression=snappy"
         );
 
         assertCollectionSize("orcFileWithCompressionTest-test", 5);
+        verifyDocContent("/orc-compressed-test/author/author12.json");
+        verifyDocContent("/orc-compressed-test/author/author2.json");
+        verifyDocContent("/orc-compressed-test/author/author5.json");
+        verifyDocContent("/orc-compressed-test/author/author6.json");
+        verifyDocContent("/orc-compressed-test/author/author9.json");
     }
 
     private void verifyDocContent(String uri) {

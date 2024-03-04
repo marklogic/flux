@@ -15,7 +15,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
     void useOutputParamsForConnection() {
         CopyCommand command = (CopyCommand) getCommand("copy",
             "--clientUri", "test:test@test:8000",
-            "--outputClientUri", "user:password@host:8000"
+            "--outputClientUri", "user:password@host:8000",
+            "--collections", "anything"
         );
 
         assertOptions(
@@ -27,7 +28,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void useRegularConnectionParamsIfNoOutputConnectionParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
-            "--clientUri", "test:test@test:8000"
+            "--clientUri", "test:test@test:8000",
+            "--collections", "anything"
         );
 
         assertOptions(
@@ -40,6 +42,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     void allWriteParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
             "--clientUri", "someone:word@somehost:7000",
+            "--collections", "anything",
             "--outputAbortOnFailure", "false",
             "--outputBatchSize", "123",
             "--outputCollections", "c1,c2",
@@ -77,6 +80,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
         CopyCommand command = (CopyCommand) getCommand(
             "copy",
             "--clientUri", "someone:word@somehost:7000",
+            "--collections", "anything",
             "--outputClientUri", "user:password@host:8000",
             "--outputHost", "localhost",
             "--outputPort", "8123",
