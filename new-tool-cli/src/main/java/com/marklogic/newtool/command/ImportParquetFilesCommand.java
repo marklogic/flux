@@ -2,6 +2,7 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
+import org.apache.spark.sql.SparkSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +14,9 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand {
 
     @DynamicParameter(
         names = "-P",
-        description = "Specify any Spark Parquet option defined at " +
-            "https://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. -PmergeSchema=true."
+        description = "Specify any Spark Parquet option or configuration item defined at " +
+            "https://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. -PmergeSchema=true or " +
+            "-Pspark.sql.parquet.filterPushdown=false."
     )
     private Map<String, String> parquetParams = new HashMap<>();
 
@@ -24,9 +26,18 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
+    protected void modifySparkSession(SparkSession session) {
+        parquetParams.entrySet().stream()
+            .filter(OptionsUtil::isSparkConfigurationOption)
+            .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
+    }
+
+    @Override
     protected Map<String, String> makeReadOptions() {
         Map<String, String> options = super.makeReadOptions();
-        options.putAll(parquetParams);
+        parquetParams.entrySet().stream()
+            .filter(OptionsUtil::isSparkDataSourceOption)
+            .forEach(entry -> options.put(entry.getKey(), entry.getValue()));
         return options;
     }
 }
