@@ -46,8 +46,8 @@ public class Main {
                 }
             }
             if (ex instanceof SparkException && ex.getCause() != null) {
-                // The SparkException message typically has a stacktrace in it that is not likely to be helpful.
-                System.err.println(String.format("%nCommand failed, cause: %s", ex.getCause().getMessage()));
+                String message = extractExceptionMessage((SparkException) ex);
+                System.err.println(String.format("%nCommand failed, cause: %s", message));
             } else {
                 System.err.println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
             }
@@ -124,6 +124,17 @@ public class Main {
             return null;
         }
         return commander.getCommands().get(this.selectedCommandName).getObjects().get(0);
+    }
+
+    private static String extractExceptionMessage(SparkException ex) {
+        // The SparkException message typically has a stacktrace in it that is not likely to be helpful.
+        String message = ex.getCause().getMessage();
+        if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
+            // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
+            // wrapped SparkException that has a more useful error.
+            message = ex.getCause().getCause().getMessage();
+        }
+        return message;
     }
 
     public Object getSelectedCommand() {

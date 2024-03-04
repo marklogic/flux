@@ -53,6 +53,23 @@ class ImportParquetFilesTest extends AbstractTest {
         verifyColorDoc("/parquet/purple.json", null, "purple", "#A020F0");
     }
 
+    @Test
+    void invalidParquetFile() {
+        String stderr = runAndReturnStderr(() ->
+            run("import_parquet_files",
+                "--path", "src/test/resources/parquet/individual/invalid.parquet",
+                "--preview", "10"
+            )
+        );
+
+        assertTrue(
+            stderr.contains("Command failed, cause: [CANNOT_READ_FILE_FOOTER]"),
+            "Sometimes Spark will throw a SparkException that wraps a SparkException, and it's the wrapped exception " +
+                "that has the useful message in it. This test verifies that we use the message from the wrapped " +
+                "SparkException, which is far more helpful for this particular failure. Unexpected stderr: " + stderr
+        );
+    }
+
     private void verifyColorDoc(String uri, String expectedNumber, String expectedColor, String expectedHex) {
         JsonNode doc = readJsonDocument(uri);
 
