@@ -109,4 +109,60 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             Options.WRITE_XQUERY, "fn:current-date()"
         );
     }
+
+    @Test
+    void readJavascriptFile() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
+            "--readJavascriptFile", "my-code.js",
+            "--readPartitionsJavascriptFile", "path/my-partitions.js",
+            "--writeJavascript", "fn.currentDate()"
+        );
+
+        assertOptions(command.makeReadOptions(),
+            Options.READ_JAVASCRIPT_FILE, "my-code.js",
+            Options.READ_PARTITIONS_JAVASCRIPT_FILE, "path/my-partitions.js"
+        );
+    }
+
+    @Test
+    void readXqueryFile() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
+            "--readXqueryFile", "my-code.xqy",
+            "--readPartitionsXqueryFile", "path/my-partitions.xqy",
+            "--writeJavascript", "fn.currentDate()"
+        );
+
+        assertOptions(command.makeReadOptions(),
+            Options.READ_XQUERY_FILE, "my-code.xqy",
+            Options.READ_PARTITIONS_XQUERY_FILE, "path/my-partitions.xqy"
+        );
+    }
+
+    @Test
+    void writeJavascriptFile() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
+            "--readJavascript", "doesn't matter",
+            "--writeJavascriptFile", "my-code.js"
+        );
+
+        assertOptions(command.makeWriteOptions(),
+            Options.WRITE_JAVASCRIPT_FILE, "my-code.js"
+        );
+    }
+
+    @Test
+    void writeXqueryFile() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--clientUri", "user:password@host:8000",
+            "--readJavascript", "doesn't matter",
+            "--writeXqueryFile", "my-code.xqy"
+        );
+
+        assertOptions(command.makeWriteOptions(),
+            Options.WRITE_XQUERY_FILE, "my-code.xqy"
+        );
+    }
 }
