@@ -70,6 +70,23 @@ class ImportParquetFilesTest extends AbstractTest {
         );
     }
 
+    @Test
+    void badConfigurationItem() {
+        String stderr = runAndReturnStderr(() ->
+            run(
+                "import_parquet_files",
+                "--path", "src/test/resources/parquet/individual/cars.parquet",
+                "--clientUri", makeClientUri(),
+                "--permissions", DEFAULT_PERMISSIONS,
+                "-Pspark.sql.parquet.filterPushdown=invalid-value"
+            )
+        );
+
+        assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
+            "This test verifies that spark.sql dynamic params are added to the Spark conf. An invalid value is used " +
+                "to verify this, as its inclusion in the Spark conf should cause an error. Actual stderr: " + stderr);
+    }
+
     private void verifyColorDoc(String uri, String expectedNumber, String expectedColor, String expectedHex) {
         JsonNode doc = readJsonDocument(uri);
 

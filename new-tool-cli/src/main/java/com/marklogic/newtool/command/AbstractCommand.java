@@ -20,7 +20,9 @@ public abstract class AbstractCommand implements Command {
     private ConnectionParams connectionParams = new ConnectionParams();
 
     @Override
-    public Optional<Preview> execute(SparkSession session) {
+    public final Optional<Preview> execute(SparkSession session) {
+        modifySparkSession(session);
+
         String host = getConnectionParams().getSelectedHost();
         if (host != null && logger.isInfoEnabled()) {
             logger.info("Will connect to MarkLogic host: {}", host);
@@ -43,6 +45,10 @@ public abstract class AbstractCommand implements Command {
         }
 
         return Optional.empty();
+    }
+
+    protected void modifySparkSession(SparkSession session) {
+        // Subclasses can override this to e.g. modify the Spark configuration.
     }
 
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);
