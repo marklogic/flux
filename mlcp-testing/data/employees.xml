@@ -1,0 +1,19 @@
+<Company>
+  <Employee>
+    <name>John</name>
+    <age>40</age>
+    <mixed>has <b>mixed</b> content</mixed>
+  </Employee>
+  <Employee>
+    <name>Jane</name>
+    <age>41</age>
+    <mixed>has <b>mixed</b> content</mixed>
+  </Employee>
+  <wrapper>
+    <Employee>
+      <name>Brenda</name>
+      <age>42</age>
+      <mixed>has <b>mixed</b> content</mixed>
+    </Employee>
+  </wrapper>
+</Company>
