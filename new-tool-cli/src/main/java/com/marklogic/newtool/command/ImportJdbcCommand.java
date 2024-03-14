@@ -3,11 +3,12 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.*;
 
-@Parameters(commandDescription = "Read rows via JDBC and write documents in MarkLogic.")
+@Parameters(commandDescription = "Read rows via JDBC and write JSON documents to MarkLogic.")
 public class ImportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate
@@ -30,6 +31,12 @@ public class ImportJdbcCommand extends AbstractCommand {
     )
     private List<String> aggregationExpressions = new ArrayList<>();
 
+    @Parameter(
+        names = "--jsonRootName",
+        description = "Name of a root field to add to each JSON document."
+    )
+    private String jsonRootName;
+
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         Dataset<Row> dataset = session.read().format("jdbc")
@@ -45,6 +52,7 @@ public class ImportJdbcCommand extends AbstractCommand {
         writer.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(writeDocumentParams.makeOptions())
+            .options(OptionsUtil.makeOptions(Options.WRITE_JSON_ROOT_NAME, jsonRootName))
             .mode(SaveMode.Append)
             .save();
     }

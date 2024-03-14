@@ -26,6 +26,22 @@ class ImportDelimitedJsonFilesTest extends AbstractTest {
     }
 
     @Test
+    void jsonRootName() {
+        run(
+            "import_json_lines_files",
+            "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-json-test",
+            "--jsonRootName", "myData",
+            "--uriTemplate", "/delimited/{/myData/lastName}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/delimited/lastName-1.json");
+        assertEquals("firstName-1", doc.get("myData").get("firstName").asText());
+    }
+
+    @Test
     void customDelimiter() {
         run(
             "import_json_lines_files",

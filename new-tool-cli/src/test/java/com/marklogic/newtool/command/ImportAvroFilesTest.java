@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportAvroFilesTest extends AbstractTest {
 
@@ -27,6 +28,21 @@ class ImportAvroFilesTest extends AbstractTest {
         verifyColorDoc("/avro/puce.json", "4", "puce", true);
         verifyColorDoc("/avro/ecru.json", "5", "ecru", false);
         verifyColorDoc("/avro/mauve.json", "6", "mauve", true);
+    }
+
+    @Test
+    void jsonRootName() {
+        run(
+            "import_avro_files",
+            "--path", "src/test/resources/avro/*",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--jsonRootName", "myAvroData",
+            "--uriTemplate", "/avro/{/myAvroData/color}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/avro/blue.json");
+        assertEquals(1, doc.get("myAvroData").get("number").asInt());
     }
 
     @Test

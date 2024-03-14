@@ -29,6 +29,26 @@ class ImportJdbcTest extends AbstractTest {
     }
 
     @Test
+    void jsonRootName() {
+        run(
+            "import_jdbc",
+            "--jdbcUrl", PostgresUtil.URL,
+            "--jdbcUser", PostgresUtil.USER,
+            "--jdbcPassword", PostgresUtil.PASSWORD,
+            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--jsonRootName", "customer",
+            "--uriTemplate", "/customer/{/customer/customer_id}.json",
+            "--collections", "customer"
+        );
+
+        JsonNode doc = readJsonDocument("/customer/1.json");
+        assertEquals("Mary", doc.get("customer").get("first_name").asText());
+    }
+
+    @Test
     void tenCustomersWithUserAndPasswordInUrl() {
         run(
             "import_jdbc",

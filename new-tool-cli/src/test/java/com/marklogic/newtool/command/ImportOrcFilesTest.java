@@ -1,10 +1,12 @@
 package com.marklogic.newtool.command;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -27,6 +29,22 @@ class ImportOrcFilesTest extends AbstractTest {
         verifyDocContent("/orc-test/author/author5.json");
         verifyDocContent("/orc-test/author/author6.json");
         verifyDocContent("/orc-test/author/author9.json");
+    }
+
+    @Test
+    void jsonRootName() {
+        run(
+            "import_orc_files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uriPrefix", "/orc-test",
+            "--jsonRootName", "myOrcData",
+            "--uriTemplate", "/orc/{/myOrcData/LastName}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/orc/Humbee.json");
+        assertEquals("Aida", doc.get("myOrcData").get("ForeName").asText());
     }
 
     @Test

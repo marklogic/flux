@@ -28,6 +28,21 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void jsonRootName() {
+        run(
+            "import_delimited_files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--jsonRootName", "myData",
+            "--uriTemplate", "/delimited/{/myData/number}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/delimited/1.json");
+        assertEquals("blue", doc.get("myData").get("color").asText());
+    }
+
+    @Test
     void gzip() {
         run(
             "import_delimited_files",

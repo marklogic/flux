@@ -1,15 +1,23 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.marklogic.spark.Options;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
-    "to MarkLogic.")
+    "as a JSON document to MarkLogic.")
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand {
+
+    @Parameter(
+        names = "--jsonRootName",
+        description = "Name of a root field to add to each JSON document."
+    )
+    private String jsonRootName;
 
     @DynamicParameter(
         names = "-P",
@@ -34,5 +42,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand {
             options.put("inferSchema", "true");
         }
         return options;
+    }
+
+    @Override
+    protected Map<String, String> makeWriteOptions() {
+        return OptionsUtil.addOptions(super.makeWriteOptions(),
+            Options.WRITE_JSON_ROOT_NAME, jsonRootName
+        );
     }
 }

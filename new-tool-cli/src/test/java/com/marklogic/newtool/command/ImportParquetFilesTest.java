@@ -27,6 +27,22 @@ class ImportParquetFilesTest extends AbstractTest {
     }
 
     @Test
+    void jsonRootName() {
+        run(
+            "import_parquet_files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "parquet-test",
+            "--jsonRootName", "car",
+            "--uriTemplate", "/parquet/{/car/model}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/parquet/Toyota Corolla.json");
+        assertEquals("33.9", doc.get("car").get("mpg").asText());
+    }
+
+    @Test
     void defaultSettingsMultipleFileDifferentSchema_mergeTrue() {
         run(
             "import_parquet_files",
