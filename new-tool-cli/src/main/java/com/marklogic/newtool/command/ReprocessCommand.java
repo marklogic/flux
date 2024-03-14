@@ -244,7 +244,7 @@ public class ReprocessCommand extends AbstractCommand {
         }
 
         private void validateWriteParams(Map<String, Object> params) {
-            if (params.containsKey("--preview")) {
+            if (params.get("--preview") != null) {
                 return;
             }
             String[] writeParams = new String[]{

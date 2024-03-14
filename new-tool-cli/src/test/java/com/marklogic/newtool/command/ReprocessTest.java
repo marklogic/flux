@@ -67,7 +67,7 @@ class ReprocessTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
             "--clientUri", makeClientUri(),
-            "--readJavascript", "doesn't matter"
+            "--readJavascript", "fn.currentDate()"
         ));
 
         assertTrue(

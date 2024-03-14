@@ -65,32 +65,28 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
      * Handy method for running anything and returning everything written to stdout.
      */
     protected final String runAndReturnStdout(Runnable r) {
-        PrintStream original = System.out;
         System.out.flush();
+        PrintStream original = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            PrintStream printStream = new PrintStream(outputStream);
-            System.setOut(printStream);
+            System.setOut(new PrintStream(outputStream, true));
             r.run();
-            System.out.flush();
-            printStream.flush();
         } finally {
+            System.out.flush();
             System.setOut(original);
         }
         return new String(outputStream.toByteArray());
     }
 
     protected final String runAndReturnStderr(Runnable r) {
-        PrintStream original = System.err;
         System.err.flush();
+        PrintStream original = System.err;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            PrintStream printStream = new PrintStream(outputStream);
-            System.setErr(printStream);
+            System.setErr(new PrintStream(outputStream, true));
             r.run();
-            System.err.flush();
-            printStream.flush();
         } finally {
+            System.err.flush();
             System.setErr(original);
         }
         return new String(outputStream.toByteArray());
