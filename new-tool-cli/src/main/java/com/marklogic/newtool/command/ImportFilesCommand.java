@@ -6,7 +6,7 @@ import com.marklogic.spark.Options;
 
 import java.util.Map;
 
-@Parameters(commandDescription = "Read local, HDFS, and S3 files and write documents in MarkLogic.")
+@Parameters(commandDescription = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic.")
 public class ImportFilesCommand extends AbstractImportFilesCommand {
 
     public enum DocumentType {

@@ -8,10 +8,16 @@ import com.marklogic.spark.Options;
 import java.util.HashMap;
 import java.util.Map;
 
-@Parameters(commandDescription = "Read delimited JSON lines files from local, HDFS, and S3 locations using Spark's support " +
-    "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each row being written " +
-    "as a JSON document to MarkLogic.")
-public class ImportDelimitedJsonFilesCommand extends AbstractImportFilesCommand {
+@Parameters(commandDescription = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
+    "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
+    "as a JSON document in MarkLogic.")
+public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
+
+    @Parameter(
+        names = "--jsonLines",
+        description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
+    )
+    private Boolean jsonLines;
 
     @Parameter(
         names = "--jsonRootName",
@@ -34,6 +40,11 @@ public class ImportDelimitedJsonFilesCommand extends AbstractImportFilesCommand 
     @Override
     protected Map<String, String> makeReadOptions() {
         Map<String, String> options = super.makeReadOptions();
+        // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
+        // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
+        if (jsonLines == null || !jsonLines.booleanValue()) {
+            options.put("multiLine", "true");
+        }
         options.putAll(jsonParams);
         return options;
     }

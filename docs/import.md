@@ -122,7 +122,7 @@ compression as well.
 
 #### JSON Lines files
 
-`import_json_lines_files` with -P used to specify [JSON Lines options](https://spark.apache.org/docs/latest/sql-data-sources-json.html).
+`import_json_files` with -P used to specify [JSON Lines options](https://spark.apache.org/docs/latest/sql-data-sources-json.html).
 
 #### ORC files
 
