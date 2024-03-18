@@ -22,6 +22,11 @@ abstract class OptionsUtil {
         return options;
     }
 
+    static Map<String, String> addOptions(Map<String, String> options, String... keysAndValues) {
+        options.putAll(makeOptions(keysAndValues));
+        return options;
+    }
+
     /**
      * Spark configuration options begin with "spark.sql." - for example, see
      * https://spark.apache.org/docs/latest/sql-data-sources-parquet.html . For these to have an effect, they must
