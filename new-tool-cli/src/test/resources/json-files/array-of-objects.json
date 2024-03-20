@@ -1,0 +1,10 @@
+[
+  {
+    "number": 1,
+    "hello": "world"
+  },
+  {
+    "number": 2,
+    "description": "This is different from the first object."
+  }
+]

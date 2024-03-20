@@ -106,7 +106,7 @@ public class Main {
             .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
-            .addCommand("import_json_lines_files", new ImportDelimitedJsonFilesCommand())
+            .addCommand("import_json_files", new ImportJsonFilesCommand())
             .addCommand("import_orc_files", new ImportOrcFilesCommand())
             .addCommand("import_parquet_files", new ImportParquetFilesCommand())
             .addCommand("import_rdf_files", new ImportRdfFilesCommand())
