@@ -23,7 +23,8 @@ class ExportAvroFilesTest extends AbstractTest {
         );
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
-        assertEquals(4, files.length, "Expecting 1 file per partition.");
+        assertTrue(files.length <= 4, "Expecting at most 1 file per partition. We may get less than 4 if the Optic " +
+            "rows are randomly assigned to only 3 partitions instead of 4. Actual count: " + files.length);
 
         // Read the files back in to ensure we get 15 rows
         run(

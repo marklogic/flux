@@ -44,7 +44,7 @@ pipeline{
           docker exec -i new_tool-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
           docker exec -i  new_tool-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
           cd $WORKSPACE/spark-etl/;
-          ./gradlew clean test || true;
+          ./gradlew --refresh-dependencies clean test || true;
         '''
         junit '**/*.xml'
       }
