@@ -18,7 +18,7 @@ public class ReadDocumentParams implements IParametersValidator {
 
     @Override
     public void validate(Map<String, Object> params) throws ParameterException {
-        List<String> queryParams = Arrays.asList("--query", "--stringQuery", "--collections", "--directory");
+        List<String> queryParams = Arrays.asList("--query", "--uris", "--stringQuery", "--collections", "--directory");
         boolean hasOne = false;
         for (String param : queryParams) {
             if (params.get(param) != null) {
@@ -34,6 +34,10 @@ public class ReadDocumentParams implements IParametersValidator {
     @Parameter(names = "--stringQuery", description = "A query utilizing the MarkLogic search grammar; " +
         "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
     private String stringQuery;
+
+    @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
+        "with --collections, --directory, and --stringQuery. If specified, --query will be ignored.")
+    private String uris;
 
     @Parameter(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
         "See https://docs.marklogic.com/guide/rest-dev/search#id_49329 for more information.")
@@ -66,6 +70,7 @@ public class ReadDocumentParams implements IParametersValidator {
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
+            Options.READ_DOCUMENTS_URIS, uris,
             Options.READ_DOCUMENTS_QUERY, query,
             Options.READ_DOCUMENTS_OPTIONS, options,
             Options.READ_DOCUMENTS_COLLECTIONS, collections,

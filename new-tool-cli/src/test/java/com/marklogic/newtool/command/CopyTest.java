@@ -28,6 +28,23 @@ class CopyTest extends AbstractTest {
     }
 
     @Test
+    void withUris() {
+        run(
+            "copy",
+            "--categories", "content",
+            "--uris", "/author/author1.json\n/author/author2.json",
+            "--clientUri", makeClientUri(),
+            "--outputCollections", "author-copies",
+            "--outputUriPrefix", "/copied",
+            "--outputPermissions", DEFAULT_PERMISSIONS
+        );
+
+        assertCollectionSize("author", 15);
+        assertCollectionSize("author-copies", 2);
+        assertDirectoryCount("/copied/", 2);
+    }
+
+    @Test
     void sameDatabaseWithMetadata() {
         run(
             "copy",

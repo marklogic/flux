@@ -49,6 +49,21 @@ class ExportFilesTest extends AbstractTest {
     }
 
     @Test
+    void exportViaUris(@TempDir Path tempDir) {
+        run(
+            "export_files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--clientUri", makeClientUri(),
+            "--uris", "/author/author1.json\n/author/author2.json"
+        );
+
+        File authorsDir = new File(tempDir.toFile(), "author");
+        assertEquals(2, authorsDir.listFiles().length);
+        assertTrue(new File(authorsDir, "author1.json").exists());
+        assertTrue(new File(authorsDir, "author2.json").exists());
+    }
+
+    @Test
     void exportToZips(@TempDir Path tempDir) {
         run(
             "export_files",
@@ -131,7 +146,7 @@ class ExportFilesTest extends AbstractTest {
         });
 
         assertTrue(
-            stderr.contains("Must specify at least one of the following options: [--query, --stringQuery, --collections, --directory]."),
+            stderr.contains("Must specify at least one of the following options: [--query, --uris, --stringQuery, --collections, --directory]."),
             "Unexpected stderr: " + stderr
         );
     }
