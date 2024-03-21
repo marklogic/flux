@@ -1,0 +1,39 @@
+{
+  "role-name": "spark-user-role",
+  "description": "This is only needed for the MLCP archive tests, which depend on an MLCP archive that references this role.",
+  "role": [
+    "rest-extension-user"
+  ],
+  "privilege": [
+    {
+      "privilege-name": "rest-reader",
+      "action": "http://marklogic.com/xdmp/privileges/rest-reader",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "rest-writer",
+      "action": "http://marklogic.com/xdmp/privileges/rest-writer",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "xdbc-invoke",
+      "action": "http://marklogic.com/xdmp/privileges/xdbc-invoke",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "xdbc-eval",
+      "action": "http://marklogic.com/xdmp/privileges/xdbc-eval",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "any-uri",
+      "action": "http://marklogic.com/xdmp/privileges/any-uri",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "unprotected-collections",
+      "action": "http://marklogic.com/xdmp/privileges/unprotected-collections",
+      "kind": "execute"
+    }
+  ]
+}

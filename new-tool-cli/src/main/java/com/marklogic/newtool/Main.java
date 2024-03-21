@@ -103,6 +103,7 @@ public class Main {
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_aggregate_xml_files", new ImportAggregateXmlCommand())
             .addCommand("import_avro_files", new ImportAvroFilesCommand())
+            .addCommand("import_mlcp_archives", new ImportMlcpArchivesCommand())
             .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
             .addCommand("import_files", new ImportFilesCommand())
             .addCommand("import_jdbc", new ImportJdbcCommand())
