@@ -100,6 +100,7 @@ public class Main {
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("export_orc_files", new ExportOrcFilesCommand())
             .addCommand("export_parquet_files", new ExportParquetFilesCommand())
+            .addCommand("export_rdf_files", new ExportRdfFilesCommand())
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_aggregate_xml_files", new ImportAggregateXmlCommand())
             .addCommand("import_avro_files", new ImportAvroFilesCommand())
