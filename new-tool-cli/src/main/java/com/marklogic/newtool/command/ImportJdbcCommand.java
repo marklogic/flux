@@ -12,7 +12,7 @@ import java.util.*;
 public class ImportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate
-    private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
+    private WriteDocumentWithTemplateParams writeDocumentParams = new WriteDocumentWithTemplateParams();
 
     @ParametersDelegate
     private JdbcParams jdbcParams = new JdbcParams();

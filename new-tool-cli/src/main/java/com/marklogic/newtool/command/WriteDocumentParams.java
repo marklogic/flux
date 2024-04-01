@@ -5,6 +5,10 @@ import com.marklogic.spark.Options;
 
 import java.util.Map;
 
+/**
+ * Defines all basic params for writing documents. Does not include support for a URI template, as that is not always
+ * relevant nor possible depending on what kind of data is being imported.
+ */
 public class WriteDocumentParams {
 
     // See https://jcommander.org/#_boolean for a description of the 'arity' field.
@@ -81,13 +85,6 @@ public class WriteDocumentParams {
     )
     private String uriSuffix;
 
-    @Parameter(
-        names = "--uriTemplate",
-        description = "String defining a template for constructing each document URI. " +
-            "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
-    )
-    private String uriTemplate;
-
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
@@ -101,8 +98,7 @@ public class WriteDocumentParams {
             Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
             Options.WRITE_URI_PREFIX, uriPrefix,
             Options.WRITE_URI_REPLACE, uriReplace,
-            Options.WRITE_URI_SUFFIX, uriSuffix,
-            Options.WRITE_URI_TEMPLATE, uriTemplate
+            Options.WRITE_URI_SUFFIX, uriSuffix
         );
     }
 }
