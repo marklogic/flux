@@ -2,12 +2,18 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.spark.Options;
-
-import java.util.Map;
+import org.apache.spark.sql.*;
 
 @Parameters(commandDescription = "Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic.")
-public class ImportRdfFilesCommand extends AbstractImportFilesCommand {
+public class ImportRdfFilesCommand extends AbstractCommand {
+
+    @ParametersDelegate
+    private ReadFilesParams readFilesParams = new ReadFilesParams();
+
+    @ParametersDelegate
+    private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
 
     @Parameter(names = "--graph", description = "Specify the graph URI for each triple not already associated with a graph. If not set, " +
         "triples will be added to the default MarkLogic graph - http://marklogic.com/semantics#default-graph . ")
@@ -21,27 +27,31 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand {
     private CompressionType compression;
 
     @Override
-    protected String getReadFormat() {
-        return MARKLOGIC_CONNECTOR;
+    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        if (logger.isInfoEnabled()) {
+            logger.info("Importing files from: {}", readFilesParams.getPaths());
+        }
+        readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        return reader
+            .format(MARKLOGIC_CONNECTOR)
+            .options(readFilesParams.makeOptions())
+            .options(OptionsUtil.makeOptions(
+                Options.READ_FILES_TYPE, "rdf",
+                Options.READ_FILES_COMPRESSION, compression != null ? compression.name() : null
+            ))
+            .load(readFilesParams.getPaths().toArray(new String[]{}));
     }
 
     @Override
-    protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = super.makeReadOptions();
-        options.putAll(OptionsUtil.makeOptions(
-            Options.READ_FILES_TYPE, "rdf",
-            Options.READ_FILES_COMPRESSION, compression != null ? compression.name() : null
-        ));
-        return options;
-    }
-
-    @Override
-    protected Map<String, String> makeWriteOptions() {
-        Map<String, String> options = super.makeWriteOptions();
-        options.putAll(OptionsUtil.makeOptions(
-            Options.WRITE_GRAPH, graph,
-            Options.WRITE_GRAPH_OVERRIDE, graphOverride
-        ));
-        return options;
+    protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
+        writer.format(MARKLOGIC_CONNECTOR)
+            .options(getConnectionParams().makeOptions())
+            .options(writeDocumentParams.makeOptions())
+            .options(OptionsUtil.makeOptions(
+                Options.WRITE_GRAPH, graph,
+                Options.WRITE_GRAPH_OVERRIDE, graphOverride
+            ))
+            .mode(SaveMode.Append)
+            .save();
     }
 }

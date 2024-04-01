@@ -3,6 +3,8 @@ package com.marklogic.newtool.command;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class ImportRdfFilesTest extends AbstractTest {
 
     private static final String DEFAULT_MARKLOGIC_GRAPH = "http://marklogic.com/semantics#default-graph";
@@ -102,5 +104,23 @@ class ImportRdfFilesTest extends AbstractTest {
                 "graph collections",
             "all-my-rdf", 7
         );
+    }
+
+    @Test
+    void uriTemplateOptionShouldNotWork() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_rdf_files",
+            "--path", "src/test/resources/rdf/englishlocale.ttl",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "my-triples",
+            "--uriTemplate", "/test/{uri}"
+        ));
+
+        // We may want to eventually modify this JCommander error, as it's not intuitive as to what it means.
+        assertTrue(stderr.contains("Was passed main parameter '--uriTemplate'"),
+            "Was expecting an error due to --uriTemplate not being supported for importing RDF files, as it doesn't " +
+                "have any meaningful use case since we default to '/triplestore/uuid.xml' for managed triples " +
+                "documents. Unexpected stderr: " + stderr);
     }
 }

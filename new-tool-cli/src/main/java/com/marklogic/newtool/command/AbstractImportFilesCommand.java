@@ -1,11 +1,8 @@
 package com.marklogic.newtool.command;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,20 +10,11 @@ import java.util.Map;
  */
 public abstract class AbstractImportFilesCommand extends AbstractCommand {
 
-    @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
-    private List<String> paths = new ArrayList<>();
+    @ParametersDelegate
+    private ReadFilesParams readFilesParams = new ReadFilesParams();
 
     @ParametersDelegate
-    private WriteDocumentParams writeDocumentParams = new WriteDocumentParams();
-
-    @Parameter(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
-    private String filter;
-
-    @Parameter(names = "--recursiveFileLookup", arity = 1, description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
-    private Boolean recursiveFileLookup = true;
-
-    @ParametersDelegate
-    private S3Params s3Params = new S3Params();
+    private WriteDocumentWithTemplateParams writeDocumentParams = new WriteDocumentWithTemplateParams();
 
     /**
      * Subclass must define the format used for reading - e.g. "csv", "marklogic", etc.
@@ -38,13 +26,13 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
     @Override
     protected final Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         if (logger.isInfoEnabled()) {
-            logger.info("Importing files from: {}", paths);
+            logger.info("Importing files from: {}", readFilesParams.getPaths());
         }
-        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader
             .format(getReadFormat())
             .options(makeReadOptions())
-            .load(paths.toArray(new String[]{}));
+            .load(readFilesParams.getPaths().toArray(new String[]{}));
     }
 
     @Override
@@ -61,14 +49,7 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
      * @return
      */
     protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = getConnectionParams().makeOptions();
-        if (filter != null) {
-            options.put("pathGlobFilter", filter);
-        }
-        if (recursiveFileLookup != null) {
-            options.put("recursiveFileLookup", recursiveFileLookup.toString());
-        }
-        return options;
+        return readFilesParams.makeOptions();
     }
 
     /**

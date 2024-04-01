@@ -137,8 +137,11 @@ class CopyOptionsTest extends AbstractOptionsTest {
 
     @Test
     void testOutputParameterCount() {
-        int copyCommandCount = getOutputParameterCountInCopyCommand();
-        int writeDocumentParamsCount = getParameterCount(WriteDocumentParams.class);
+        final int copyCommandCount = getOutputParameterCountInCopyCommand();
+
+        // Can't find a way to get the count from the subclass, so gotta get counts from both subclass and parent class.
+        final int writeDocumentParamsCount =
+            getParameterCount(WriteDocumentWithTemplateParams.class) + getParameterCount(WriteDocumentParams.class);
 
         assertEquals(copyCommandCount, writeDocumentParamsCount,
             "Expecting the CopyCommand to declare one Parameter field for each Parameter field found in " +
