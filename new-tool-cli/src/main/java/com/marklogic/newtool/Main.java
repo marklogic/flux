@@ -112,6 +112,7 @@ public class Main {
             .addCommand("import_parquet_files", new ImportParquetFilesCommand())
             .addCommand("import_rdf_files", new ImportRdfFilesCommand())
             .addCommand("reprocess", new ReprocessCommand())
+            .addCommand("import_archives", new ImportArchivesCommand())
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
