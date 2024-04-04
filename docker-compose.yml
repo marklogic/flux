@@ -29,7 +29,7 @@ services:
       - 8000-8005:8000-8005
 
   postgres:
-    image: postgres:latest
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -55,7 +55,7 @@ services:
 
   # Copied from https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/install-the-server/#example-docker-compose-configuration .
   sonarqube:
-    image: sonarqube:community
+    image: sonarqube:10.3.0-community
     depends_on:
       - postgres
     environment:
