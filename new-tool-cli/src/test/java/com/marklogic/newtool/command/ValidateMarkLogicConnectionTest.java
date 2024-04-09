@@ -58,6 +58,9 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--clientUri", "admin-missing-password@localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for spark.marklogic.client.uri"), "Unexpected output: " + output);
+        assertTrue(output.contains("Invalid value for --clientUri"),
+            "Unexpected output: " + output + "; this test also confirms that the ETL tool is overriding " +
+                "error messages from the connector so that CLI option names appear instead of connector " +
+                "option names. This is also confirmed by ErrorMessagesTest.");
     }
 }
