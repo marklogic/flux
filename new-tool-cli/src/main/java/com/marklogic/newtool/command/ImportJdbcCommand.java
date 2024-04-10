@@ -37,6 +37,9 @@ public class ImportJdbcCommand extends AbstractCommand {
     )
     private String jsonRootName;
 
+    @ParametersDelegate
+    private XmlDocumentParams xmlDocumentParams = new XmlDocumentParams();
+
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         Dataset<Row> dataset = session.read().format("jdbc")
@@ -52,6 +55,7 @@ public class ImportJdbcCommand extends AbstractCommand {
         writer.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(writeDocumentParams.makeOptions())
+            .options(xmlDocumentParams.makeOptions())
             .options(OptionsUtil.makeOptions(Options.WRITE_JSON_ROOT_NAME, jsonRootName))
             .mode(SaveMode.Append)
             .save();
