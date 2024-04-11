@@ -3,6 +3,7 @@ package com.marklogic.newtool.command;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.SparkSession;
 
@@ -19,6 +20,9 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand {
         description = "Name of a root field to add to each JSON document."
     )
     private String jsonRootName;
+
+    @ParametersDelegate
+    private XmlDocumentParams xmlDocumentParams = new XmlDocumentParams();
 
     @DynamicParameter(
         names = "-P",
@@ -51,8 +55,10 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand {
 
     @Override
     protected Map<String, String> makeWriteOptions() {
-        return OptionsUtil.addOptions(super.makeWriteOptions(),
+        Map<String, String> options = OptionsUtil.addOptions(super.makeWriteOptions(),
             Options.WRITE_JSON_ROOT_NAME, jsonRootName
         );
+        options.putAll(xmlDocumentParams.makeOptions());
+        return options;
     }
 }

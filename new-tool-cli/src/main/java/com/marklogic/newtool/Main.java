@@ -102,6 +102,7 @@ public class Main {
             .addCommand("export_parquet_files", new ExportParquetFilesCommand())
             .addCommand("help", new HelpCommand(PROGRAM_NAME, COLUMN_SIZE))
             .addCommand("import_aggregate_xml_files", new ImportAggregateXmlCommand())
+            .addCommand("import_archives", new ImportArchivesCommand())
             .addCommand("import_avro_files", new ImportAvroFilesCommand())
             .addCommand("import_mlcp_archives", new ImportMlcpArchivesCommand())
             .addCommand("import_delimited_files", new ImportDelimitedFilesCommand())
@@ -112,7 +113,6 @@ public class Main {
             .addCommand("import_parquet_files", new ImportParquetFilesCommand())
             .addCommand("import_rdf_files", new ImportRdfFilesCommand())
             .addCommand("reprocess", new ReprocessCommand())
-            .addCommand("import_archives", new ImportArchivesCommand())
             .columnSize(COLUMN_SIZE)
             .build();
         jc.setUsageFormatter(new SummaryUsageFormatter(jc));
