@@ -60,5 +60,36 @@ pipeline{
         }
       }
     }
+    stage('publish'){
+      agent{ label 'devExpLinuxPool'}
+      when {
+        branch 'main'
+      }
+      steps{
+        script{
+          sh label:'publish', script: '''#!/bin/bash
+            export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
+            export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
+            export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+            cd $WORKSPACE/spark-etl;
+            ./gradlew clean;
+            ./gradlew distZip;
+          '''
+          archiveArtifacts artifacts: '**/build/**/*.zip', followSymlinks: false
+          def artifactory = Artifactory.newServer(url: 'https://bed-artifactory.bedford.progress.com:443/artifactory/', credentialsId: 'builder-credentials-artifactory')
+          def uploadSpec = """{
+            "files": [
+              {
+                "pattern": "${WORKSPACE}/**/build/**/*.zip",
+                "target": "ml-generic-dev-tierpoint/spark-etl/",
+                "props": "build.number=${BUILD_NUMBER};build.name=${JOB_NAME}"
+              }
+             ]
+            }"""
+            artifactory.upload(uploadSpec)
+            echo "${uploadSpec}"
+        }
+      }
+    }
   }
 }
