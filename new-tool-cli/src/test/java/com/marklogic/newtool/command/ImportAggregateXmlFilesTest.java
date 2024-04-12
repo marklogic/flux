@@ -10,9 +10,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ImportXmlAggregateTest extends AbstractTest {
+class ImportAggregateXmlFilesTest extends AbstractTest {
 
     @Test
     void elementIsRequired() {
@@ -117,7 +118,6 @@ class ImportXmlAggregateTest extends AbstractTest {
 
     @Test
     void importMultipleZippedXml() throws FileNotFoundException {
-
         run(
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/multiple-xmls.zip",
@@ -151,6 +151,40 @@ class ImportXmlAggregateTest extends AbstractTest {
         verifyDoc("Person-1", "Person-1", "company-1", "/*[name()='person']/*[name()='%s']");
         verifyDoc("Person-2", "Person-2", "company-2", "/*[name()='person']/*[name()='%s']");
         verifyDoc("Person-3", "Person-3", "company-3", "/*[name()='person']/*[name()='%s']");
+    }
+
+    @Test
+    void dontAbortOnReadFailureByDefault() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_aggregate_xml_files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--path", "src/test/resources/xml-file/people.xml",
+            "--element", "person",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "agg-xml"
+        ));
+
+        assertFalse(stderr.contains("Command failed"),
+            "The command should default to logging read failures and not having the command fail; actual stderr: " + stderr);
+        assertCollectionSize("agg-xml", 3);
+    }
+
+    @Test
+    void abortOnReadFailure() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_aggregate_xml_files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--abortOnReadFailure",
+            "--element", "person",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "agg-xml"
+        ));
+
+        assertTrue(stderr.contains("Command failed, cause: Unable to read XML from file"),
+            "With --abortOnReadFailure included, the command should fail if it cannot read a file; stderr: " + stderr);
+        assertCollectionSize("agg-xml", 0);
     }
 
     private void verifyDoc(String uri, String name, String company, String xpath) {

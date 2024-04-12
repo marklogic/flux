@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportArchivesTest extends AbstractTest {
+
     @Test
     void allMetadata() {
         run(
@@ -20,6 +20,7 @@ class ImportArchivesTest extends AbstractTest {
             "--uriReplace", ".*archive.zip,''",
             "--clientUri", makeClientUri()
         );
+
         for (String uri : getUrisInCollection("collection1", 2)) {
             XmlNode doc = readXmlDocument(uri);
             assertEquals("world", doc.getElementValue("/hello"));
@@ -58,6 +59,37 @@ class ImportArchivesTest extends AbstractTest {
             assertEquals(0, metadata.getProperties().size());
             assertEquals(0, metadata.getQuality());
         }
+    }
+
+    @Test
+    void dontAbortOnReadFailureByDefault() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_archives",
+            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/mlcp-archives",
+            "--clientUri", makeClientUri()
+        ));
+
+        assertFalse(stderr.contains("Command failed"),
+            "The command should log error by default; stderr: " + stderr);
+
+        assertCollectionSize("The docs from the valid MLCP archive should still be imported", "collection1", 2);
+    }
+
+    @Test
+    void abortOnReadFailure() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_archives",
+            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/mlcp-archives",
+            "--abortOnReadFailure",
+            "--clientUri", makeClientUri()
+        ));
+
+        assertTrue(
+            stderr.contains("Command failed, cause: Could not find metadata entry for entry /test/1.xml.metadata in file"),
+            "Unexpected stderr: " + stderr
+        );
     }
 
     private void verifyCollections(DocumentMetadataHandle metadata) {

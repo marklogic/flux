@@ -11,21 +11,28 @@ import java.util.Map;
 public class ImportAggregateXmlCommand extends AbstractImportFilesCommand {
 
     @Parameter(required = true, names = "--element",
-        description = "Specifies the local name of the element to use as the root of each document.")
+        description = "Specifies the local name of the element to use as the root of each document."
+    )
     private String element;
 
-    @Parameter(required = false, names = "--namespace", description = "Specifies namespace where the input data resides.")
+    @Parameter(names = "--namespace",
+        description = "Specifies the namespace of the element to use as the root of each document."
+    )
     private String namespace;
 
-    @Parameter(required = false, names = "--uriElement",
-        description = "Specifies the local name of the element used for creating uris of docs inserted into MarkLogic.")
+    @Parameter(names = "--uriElement",
+        description = "Specifies the local name of the element used for creating URIs."
+    )
     private String uriElement;
 
-    @Parameter(required = false, names = "--uriNamespace",
-        description = "Specifies namespace where the input data resides.")
+    @Parameter(names = "--uriNamespace",
+        description = "Specifies the namespace of the element used for creating URIs."
+    )
     private String uriNamespace;
 
-    @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+    @Parameter(names = "--compression",
+        description = "When importing compressed files, specify the type of compression used."
+    )
     private CompressionType compression;
 
     @Override
@@ -35,14 +42,13 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand {
 
     @Override
     protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = super.makeReadOptions();
-        options.put(Options.READ_AGGREGATES_XML_ELEMENT, element);
-        options.put(Options.READ_AGGREGATES_XML_NAMESPACE, namespace);
-        options.put(Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement);
-        options.put(Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace);
-        if (compression != null) {
-            options.put(Options.READ_FILES_COMPRESSION, compression.name());
-        }
-        return options;
+        return OptionsUtil.addOptions(
+            super.makeReadOptions(),
+            Options.READ_AGGREGATES_XML_ELEMENT, element,
+            Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
+            Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement,
+            Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace,
+            Options.READ_FILES_COMPRESSION, compression != null ? compression.name() : null
+        );
     }
 }

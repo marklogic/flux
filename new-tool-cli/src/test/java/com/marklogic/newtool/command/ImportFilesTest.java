@@ -171,6 +171,41 @@ class ImportFilesTest extends AbstractTest {
         assertCollectionSize("files", 1);
     }
 
+    @Test
+    void invalidGzippedFile() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/mixed-files/hello2.txt.gz",
+            "--clientUri", makeClientUri(),
+            "--collections", "files",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uriReplace", ".*/mixed-files,''",
+            "--compression", "gzip"
+        );
+
+        assertCollectionSize("The command should default to not aborting on failure, and thus an error should be " +
+            "logged for the JSON file and the gz file should still be processed.", "files", 1);
+        verifyDocsWereWritten(1, "/hello2.txt");
+    }
+
+    @Test
+    void abortOnFailure() {
+        String stderr = runAndReturnStderr(() -> run (
+            "import_files",
+            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--abortOnReadFailure",
+            "--clientUri", makeClientUri(),
+            "--collections", "files",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--compression", "gzip"
+        ));
+
+        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abortReadOnFailure, " +
+            "the command should fail when it encounters an invalid gzipped file.");
+        assertCollectionSize("files", 0);
+    }
+
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {
         List<String> uris = getUrisInCollection("files", values.length);
         assertEquals(expectedUriCount, uris.size());

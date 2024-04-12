@@ -123,4 +123,34 @@ class ImportRdfFilesTest extends AbstractTest {
                 "have any meaningful use case since we default to '/triplestore/uuid.xml' for managed triples " +
                 "documents. Unexpected stderr: " + stderr);
     }
+
+    @Test
+    void invalidFileDontAbort() {
+        run(
+            "import_rdf_files",
+            "--path", "src/test/resources/mixed-files/hello2.txt.gz",
+            "--path", "src/test/resources/rdf/englishlocale.ttl",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "my-triples"
+        );
+
+        assertCollectionSize("An error should have been logged for the non-RDF hello2.txt.gz file but it should not " +
+            "have caused the command to fail, which defaults to not aborting on read failure.", "my-triples", 1);
+    }
+
+    @Test
+    void invalidFileAbort() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_rdf_files",
+            "--path", "src/test/resources/mixed-files/hello2.txt.gz",
+            "--abortOnReadFailure",
+            "--clientUri", makeClientUri(),
+            "--collections", "my-triples"
+        ));
+
+        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"),
+            "Unexpected stderr: " + stderr);
+        assertCollectionSize("my-triples", 0);
+    }
 }
