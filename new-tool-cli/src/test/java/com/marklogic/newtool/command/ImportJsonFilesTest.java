@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportJsonFilesTest extends AbstractTest {
 
@@ -125,6 +125,47 @@ class ImportJsonFilesTest extends AbstractTest {
         assertEquals(3, doc.get("number").asInt());
         doc = readJsonDocument("/objects.zip/object4.json");
         assertEquals(4, doc.get("number").asInt());
+    }
+
+    @Test
+    void dontAbortOnReadFailure() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_json_files",
+            "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
+            "--path", "src/test/resources/xml-file/single-xml.zip",
+            "--jsonLines",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-json-test"
+        ));
+
+        assertCollectionSize(
+            "The 3 valid lines in line-delimited-json.txt should be processed, with the data in single-xml.zip " +
+                "being ignored due to the command defaulting to mode=DROPMALFORMED.",
+            "delimited-json-test", 3
+        );
+
+        assertFalse(stderr.contains("Command failed"), "The command should default to mode=DROPMALFORMED so that " +
+            "invalid lines do not produce an error but rather are discarded.");
+    }
+
+    @Test
+    void abortOnReadFailure() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_json_files",
+            "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
+            "--path", "src/test/resources/xml-file/single-xml.zip",
+            "--jsonLines",
+            "--abortOnReadFailure",
+            "--clientUri", makeClientUri(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-json-test"
+        ));
+
+        assertCollectionSize("delimited-json-test", 0);
+        assertTrue(stderr.contains("Command failed, cause: Invalid UTF-8 start"), "The command should have failed " +
+            "due to the invalid single-xml.zip file being included along with --abortOnReadFailure being " +
+            "included as well; actual stderr: " + stderr);
     }
 
     private void verifyDoc(String uri, String firstName, String lastName) {
