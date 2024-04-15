@@ -60,6 +60,33 @@ class ImportMlcpArchivesTest extends AbstractTest {
         }
     }
 
+    @Test
+    void invalidFileDontAbort() {
+        run(
+            "import_mlcp_archives",
+            "--path", "src/test/resources/mlcp-archives",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--clientUri", makeClientUri()
+        );
+
+        assertCollectionSize("The error from the non-MLCP-archive file goodbye.zip should have been logged " +
+            "and should not have caused the command to fail. And so the two documents in the valid MLCP archive " +
+            "should still have been imported into 'collection1'.", "collection1", 2);
+    }
+
+    @Test
+    void invalidFileAbort() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_mlcp_archives",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--abortOnReadFailure",
+            "--clientUri", makeClientUri()
+        ));
+
+        assertTrue(stderr.contains("Command failed, cause: Unable to read metadata for entry: goodbye.json"),
+            "Unexpected stderr: " + stderr);
+    }
+
     private void verifyCollections(DocumentMetadataHandle metadata) {
         assertEquals(2, metadata.getCollections().size());
         assertTrue(metadata.getCollections().contains("collection1"));

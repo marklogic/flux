@@ -2,6 +2,7 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.spark.Options;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,11 @@ public class ReadFilesParams {
     @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
 
+    @Parameter(names = "--abortOnReadFailure",
+        description = "Causes the command to abort when it fails to read a file."
+    )
+    private Boolean abortOnReadFailure = false;
+
     @Parameter(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
     private String filter;
 
@@ -27,6 +33,11 @@ public class ReadFilesParams {
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
+        if (abortOnReadFailure != null && abortOnReadFailure) {
+            options.put(Options.READ_FILES_ABORT_ON_FAILURE, "true");
+        } else {
+            options.put(Options.READ_FILES_ABORT_ON_FAILURE, "false");
+        }
         if (filter != null) {
             options.put("pathGlobFilter", filter);
         }
