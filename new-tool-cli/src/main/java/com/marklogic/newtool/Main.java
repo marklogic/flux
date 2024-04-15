@@ -95,6 +95,7 @@ public class Main {
         JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("copy", new CopyCommand())
+            .addCommand("export_archives", new ExportArchivesCommand())
             .addCommand("export_avro_files", new ExportAvroFilesCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
