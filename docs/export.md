@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Exporting Data
-nav_order: 3
+nav_order: 4
 ---
 
 This will eventually document each of the commands for exporting data from MarkLogic.
