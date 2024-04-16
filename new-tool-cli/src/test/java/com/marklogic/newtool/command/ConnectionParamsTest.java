@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command;
 
 import com.marklogic.newtool.AbstractOptionsTest;
+import com.marklogic.newtool.command.importdata.ImportFilesCommand;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 

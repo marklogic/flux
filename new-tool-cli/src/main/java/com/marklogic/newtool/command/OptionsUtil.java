@@ -3,7 +3,7 @@ package com.marklogic.newtool.command;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class OptionsUtil {
+public abstract class OptionsUtil {
 
     /**
      * Avoids adding options with a null value, which can cause errors with some Spark data sources.
@@ -11,7 +11,7 @@ abstract class OptionsUtil {
      * @param keysAndValues
      * @return
      */
-    static Map<String, String> makeOptions(String... keysAndValues) {
+    public static Map<String, String> makeOptions(String... keysAndValues) {
         Map<String, String> options = new HashMap<>();
         for (int i = 0; i < keysAndValues.length; i += 2) {
             String value = keysAndValues[i + 1];
@@ -22,7 +22,7 @@ abstract class OptionsUtil {
         return options;
     }
 
-    static Map<String, String> addOptions(Map<String, String> options, String... keysAndValues) {
+    public static Map<String, String> addOptions(Map<String, String> options, String... keysAndValues) {
         options.putAll(makeOptions(keysAndValues));
         return options;
     }
@@ -35,7 +35,7 @@ abstract class OptionsUtil {
      * @param option
      * @return
      */
-    static boolean isSparkConfigurationOption(Map.Entry<String, String> option) {
+    public static boolean isSparkConfigurationOption(Map.Entry<String, String> option) {
         return option.getKey() != null && option.getKey().startsWith("spark.sql.");
     }
 
@@ -46,7 +46,7 @@ abstract class OptionsUtil {
      * @param option
      * @return
      */
-    static boolean isSparkDataSourceOption(Map.Entry<String, String> option) {
+    public static boolean isSparkDataSourceOption(Map.Entry<String, String> option) {
         return option.getKey() != null && !option.getKey().startsWith("spark.sql.");
     }
 
