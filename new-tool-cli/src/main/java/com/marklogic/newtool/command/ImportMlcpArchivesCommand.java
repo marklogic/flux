@@ -1,10 +1,12 @@
 package com.marklogic.newtool.command;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
 
+@Parameters(commandDescription = "Read local, HDFS, and S3 archive files written by MLCP and write the documents in each archive to MarkLogic.")
 public class ImportMlcpArchivesCommand extends AbstractImportFilesCommand {
 
     @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
