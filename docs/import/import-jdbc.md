@@ -21,28 +21,76 @@ To import data from a database, you must obtain the database's JDBC driver JAR f
 location in the NT installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of 
 NT.
 
-## Importing from a table
+## Configuring a JDBC connection
 
-## Importing via a query
+The `import_jdbc` command requires that you specify connection details for the database you wish to read from via JDBC.
+Connection details are specified via the following options:
+
+- `--jdbcUrl` is required and specifies the JDBC connection URL.
+- `--jdbcDriver` is required specifies the main class name of the JDBC driver.
+- `--jdbcUser` specifies an optional user to authenticate as (this may already be specified via `--jdbcUrl`).
+- `--jdbcPassword` specifies an optional password to authenticate with (this may already be specified via `--jdbcUrl`).
+
+## Importing data
+
+To import all rows in a table, use the `--query` option with a SQL query selecting all rows (connection details for 
+MarkLogic are omitted for brevity):
+
+    ./bin/nt import_jdbc --query "SELECT * FROM customer" 
+
+The SQL query can contain any syntax supported by your database. 
+
+## Specifying a JSON root name
+
+By default, each column a row will become a top-level field in the JSON document written to
+MarkLogic. It is often useful to have a single "root" field in a JSON document so that it is more self-describing. It
+can help with indexing purposes in MarkLogic as well. To include a JSON root field, use the `--jsonRootName` option with
+a value for the name of the root field. The data read from a row will then be nested under this root field.
+
+## Creating XML documents
+
+To create an XML document for each row instead of a JSON document, include the `--xmlRootName`
+option to specify the name of the root element in each XML document. You can optionally include `--xmlNamespace` to
+specify a namespace for the root element that will then be inherited by every child element as well.
 
 ## Aggregating rows
 
-TODO, but the options:
+In many scenarios, simply reading rows from a single table and creating a document for each row in MarkLogic does not
+best utilize the variety of indexing options in MarkLogic. Nor does it allow for data to be stored in hierarchical
+structures that better represent complex entities. 
+
+To facilitate producing hierarchical documents with multiple sets of related data, the following options can be used
+to combine multiple rows from a SQL query (which typically will include one or more joins) into hierarchical documents:
 
 - `--groupBy` specifies a column name to group rows by; this is typically the column used in a join.
 - `--aggregate` specifies a string of the form `new_column_name=column1;column2;column3`. The `new_column_name` column
   will contain an array of objects, with each object having columns of `column`, `column2`, and `column3`.
 
-Example:
+For example, consider the [Postgres tutorial database](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
+that features 15 tables with multiple relationships. One such relationship is between customers and payments. Depending
+on the needs of an application, it may be beneficial for payments to be stored in the related customer document. The
+following options would be used to achieve that (connection details are omitted for brevity):
 
 ```
 ./bin/nt import_jdbc \
-    --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
-    --jdbcDriver "org.postgresql.Driver" \
-    --query "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date from customer c inner join public.payment p on c.customer_id = p.customer_id" \
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --groupBy customer_id \
-    --aggregate "payments=payment_id;amount;payment_date" \
-    --clientUri "new-tool-user:password@localhost:8004" \
-    --permissions nt-role,read,nt-role,update \
-    --collections customer
+    --aggregate "payments=payment_id;amount;payment_date"
 ```
+
+The options above result in the following aggregation being performed:
+
+1. Rows retrieved from the Postgres are grouped together based on values in the `customer_id` column.
+2. For each payment for a given customer, the values in a payment row are added to a struct that is then added to an array 
+in a new column named `payments`.
+3. The `payment_id`, `amount`, and `payment_date` columns are removed.
+
+Each customer JSON document will as a result have a top-level `payments` array containing one object for each related
+payment. The approach can be used for many joins as well, thus producing multiple top-level array fields containing
+related objects.
+
+## Advanced options
+
+The `import_jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of
+the [Spark JDBC options](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html) via the `-P` dynamic option
+to control how JDBC is used. Dynamic options are expressed as `-PoptionName=optionValue`.
