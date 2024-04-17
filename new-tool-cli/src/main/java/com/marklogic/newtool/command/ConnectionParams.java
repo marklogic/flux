@@ -63,7 +63,7 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
 
     @Parameter(
         names = "--database",
-        description = "Name of a database to connect if it differs from the one associated with the app server identified by 'port'."
+        description = "Name of a database to connect if it differs from the one associated with the app server identified by '--port'."
     )
     public void setDatabase(String database) {
         this.database = database;
@@ -79,7 +79,7 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
 
     @Parameter(
         names = "--disableGzippedResponses",
-        description = "If set to true, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
+        description = "If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
     )
     public void setDisableGzippedResponses(Boolean disableGzippedResponses) {
         this.disableGzippedResponses = disableGzippedResponses;

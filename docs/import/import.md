@@ -1,9 +1,8 @@
 ---
 layout: default
 title: Importing Data
-nav_order: 3
+nav_order: 4
 has_children: true
-permalink: /docs/import
 ---
 
 NT supports importing data from a variety of file sources, as well as from databases that offer a 

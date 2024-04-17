@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Common Options
-nav_order: 6
+nav_order: 3
 ---
 
 This guide describes options common to every command in NT.
@@ -12,15 +12,62 @@ This guide describes options common to every command in NT.
 - TOC
 {:toc}
 
+## Connecting to MarkLogic
+
+Every command in NT will need to connect to a MarkLogic database, either for reading data or writing data or both. 
+Generally, you must include at least the following information for each command:
+
+- The name of a MarkLogic host.
+- The port of a MarkLogic app server connected to the database you wish to interact with.
+- Authentication information.
+
+For the common use case of using digest or basic authentication with a MarkLogic app server, you can use the 
+`--clientUri` option to specify the host, port, username, and password in a single concise option:
+
+    --clientUri user:password@host:port
+
+For other authentication mechanisms, you must use the `--host` and `--port` options to define the host and port for 
+your MarkLogic app server. 
+
+All available connection options are shown in the table below:
+
+| Option | Description | 
+| --- | --- |
+| --authType | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
+| --basePath | Path to prepend to each call to a MarkLogic REST API app server. |
+| --certificateFile | File path for a key store to be used for 'CERTIFICATE' authentication. |
+| --certificatePassword | Password for the key store referenced by '--certificateFile'. |
+| --clientUri |  Defines a connection string as user:password@host:port; only usable when using `DIGEST` or `BASIC` authentication. |
+| --cloudApiKey | API key for authenticating with a MarkLogic Cloud cluster. |
+| --connectionType |  Defines whether connections can be made directly to each host in the MarkLogic cluster. Possible values are `DIRECT` and `GATEWAY`. |
+| --database | Name of a database to connect if it differs from the one associated with the app server identified by '--port'. |
+| --disableGzippedResponses | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
+| --host | The MarkLogic host to connect to. |
+| --kerberosPrincipal | Principal to be used with `KERBEROS` authentication. |
+| --keyStoreAlgorithm |  Algorithm of the key store identified by '--keyStorePath'; defaults to `SunX509`. |
+| --keyStorePassword | Password for the key store identified by '--keyStorePath'. |
+| --keyStorePath | File path for a key store for two-way SSL connections. |
+| --keyStoreType | Type of the key store identified by '--keyStorePath'; defaults to `JKS`. |
+| --password | Password when using `DIGEST` or `BASIC` authentication. |
+| --samlToken | Token to be used with `SAML` authentication. |
+| --sslHostnameVerifier | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
+| --sslProtocol | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store or trust store is configured, defaults to `TLSv1.2`. |
+| --trustStoreAlgorithm | Algorithm of the trust store identified by '--trustStorePath'; defaults to `SunX509`. |
+| --trustStorePassword | Password for the trust store identified by '--trustStorePath'. |
+| --trustStorePath | File path for a trust store for establishing trust with the certificate used by the MarkLogic app server. |
+| --trustStoreType | Type of the trust store identified by '--trustStorePath'; defaults to `JKS`. |
+| --username | Username when using `DIGEST` or `BASIC` authentication. |
+
+
 ## Reading options from a file
 
 NT supports reading options from a file, similar to MLCP. In a text file, put each option name and value on separate
 lines:
 
 ```
--host
+--host
 localhost
--port
+--port
 8000
 etc...
 ```
