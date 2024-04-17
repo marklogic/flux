@@ -7,8 +7,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExportArchivesTest extends AbstractTest {
 
@@ -41,5 +40,30 @@ class ExportArchivesTest extends AbstractTest {
 
         assertCollectionSize("The original 'author' collection should not have been affected since we " +
             "specified a different collection for the import.", "author", 15);
+    }
+
+    @Test
+    void contentShouldAlwaysBeIncluded(@TempDir Path tempDir) {
+        String stderr = runAndReturnStderr(() -> run(
+            "export_archives",
+            "--clientUri", makeClientUri(),
+            "--collections", "author",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--categories", "collections,permissions"
+        ));
+
+        assertFalse(stderr.contains("Command failed"), "Unexpected command failure: " + stderr);
+
+        // Import the file back in to verify its contents.
+        run(
+            "import_archives",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--clientUri", makeClientUri(),
+            "--collections", "imported-author"
+        );
+
+        assertCollectionSize("The export command should always include content, even when --categories is used " +
+            "to select a subset of metadata. Thus, the import should work as well and reuse the permissions that " +
+            "were retrieved in the original import.", "imported-author", 15);
     }
 }

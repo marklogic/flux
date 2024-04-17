@@ -17,8 +17,8 @@ public class ExportArchivesCommand extends AbstractCommand {
     private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
 
     @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
-        "Valid choices are: content, metadata (for all types of metadata), collections, permissions, quality, properties, and metadatavalues.")
-    private String categories = "content,metadata";
+        "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
+    private String categories;
 
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
@@ -28,7 +28,7 @@ public class ExportArchivesCommand extends AbstractCommand {
         s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(OptionsUtil.makeOptions(Options.READ_DOCUMENTS_CATEGORIES, categories))
+            .options(OptionsUtil.makeOptions(Options.READ_DOCUMENTS_CATEGORIES, determineCategories()))
             .options(readDocumentParams.makeOptions())
             .load();
     }
@@ -40,5 +40,18 @@ public class ExportArchivesCommand extends AbstractCommand {
             // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.
             .mode(SaveMode.Append)
             .save(path);
+    }
+
+    /**
+     * While the "read documents" operation allows for only reading metadata, that isn't valid for an archive - we
+     * always need content to be returned as well.
+     *
+     * @return
+     */
+    private String determineCategories() {
+        if (categories != null && categories.trim().length() > 0) {
+            return "content," + categories;
+        }
+        return "content,metadata";
     }
 }
