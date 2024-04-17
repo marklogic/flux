@@ -8,7 +8,11 @@ import org.apache.spark.sql.*;
 
 import java.util.Map;
 
-public abstract class AbstractExportFilesCommand extends AbstractCommand {
+/**
+ * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
+ * more files.
+ */
+abstract class AbstractExportRowsToFilesCommand extends AbstractCommand {
 
     @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
     private String path;
@@ -24,8 +28,15 @@ public abstract class AbstractExportFilesCommand extends AbstractCommand {
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
+    /**
+     * @return subclass must return the Spark data format for the desired output file.
+     */
     protected abstract String getWriteFormat();
 
+    /**
+     * Allows subclass a chance to provide their own output-specific write options.
+     * @return
+     */
     protected abstract Map<String, String> makeWriteOptions();
 
     @Override

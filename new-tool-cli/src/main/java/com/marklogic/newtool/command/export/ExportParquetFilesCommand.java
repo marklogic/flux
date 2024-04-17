@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to Parquet files on a local filesystem, HDFS, or S3.")
-public class ExportParquetFilesCommand extends AbstractExportFilesCommand {
+public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand {
 
     @DynamicParameter(
         names = "-P",
