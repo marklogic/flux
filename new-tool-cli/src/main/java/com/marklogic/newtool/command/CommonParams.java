@@ -54,4 +54,52 @@ public class CommonParams {
     public boolean isPreviewRequested() {
         return preview != null;
     }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getPreview() {
+        return preview;
+    }
+
+    public void setPreview(Integer preview) {
+        this.preview = preview;
+    }
+
+    public List<String> getPreviewColumnsToDrop() {
+        return previewColumnsToDrop;
+    }
+
+    public void setPreviewColumnsToDrop(List<String> previewColumnsToDrop) {
+        this.previewColumnsToDrop = previewColumnsToDrop;
+    }
+
+    public Boolean getPreviewVertical() {
+        return previewVertical;
+    }
+
+    public void setPreviewVertical(Boolean previewVertical) {
+        this.previewVertical = previewVertical;
+    }
+
+    public Integer getRepartition() {
+        return repartition;
+    }
+
+    public void setRepartition(Integer repartition) {
+        this.repartition = repartition;
+    }
+
+    public Boolean getShowStacktrace() {
+        return showStacktrace;
+    }
+
+    public void setShowStacktrace(Boolean showStacktrace) {
+        this.showStacktrace = showStacktrace;
+    }
 }

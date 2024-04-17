@@ -19,12 +19,11 @@ class ExportParquetFilesTest extends AbstractTest {
             "export_parquet_files",
             "--clientUri", makeClientUri(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
-            "--partitions", "3",
             "--path", tempDir.toFile().getAbsolutePath()
         );
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".snappy.parquet"));
-        assertEquals(3, files.length, "Expecting 1 file per partition, with Spark defaulting to snappy for compression.");
+        assertEquals(1, files.length, "Expecting 1 file as the default, with Spark defaulting to snappy for compression.");
 
         // Read the files back in to ensure we get 15 rows
         run(
@@ -59,12 +58,13 @@ class ExportParquetFilesTest extends AbstractTest {
             "--clientUri", makeClientUri(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",
+            "--fileCount", "2",
             "--path", tempDir.toFile().getAbsolutePath(),
             "-Pcompression=gzip"
         );
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".gz.parquet"));
-        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files, as there are 2 partitions, and the " +
+        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --fileCount is 2, and the " +
             "-Pcompression option should tell Spark Parquet to use gzip instead of snappy.");
     }
 }

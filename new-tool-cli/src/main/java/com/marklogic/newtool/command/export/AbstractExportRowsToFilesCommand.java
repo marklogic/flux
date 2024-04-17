@@ -28,6 +28,9 @@ abstract class AbstractExportRowsToFilesCommand extends AbstractCommand {
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
+    @Parameter(names = "--fileCount", description = "Specifies how many files should be written; also an alias for '--repartition'.")
+    private Integer fileCount = 1;
+
     /**
      * @return subclass must return the Spark data format for the desired output file.
      */
@@ -41,6 +44,9 @@ abstract class AbstractExportRowsToFilesCommand extends AbstractCommand {
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        if (fileCount != null && fileCount > 0) {
+            getCommonParams().setRepartition(fileCount);
+        }
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(readRowsParams.makeOptions())

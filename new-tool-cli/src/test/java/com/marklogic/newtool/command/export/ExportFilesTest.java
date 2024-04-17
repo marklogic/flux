@@ -106,11 +106,11 @@ class ExportFilesTest extends AbstractTest {
             "--compression", "zip",
             "--clientUri", makeClientUri(),
             "--collections", "author",
-            "--repartition", "5"
+            "--zipFileCount", "5"
         );
 
         File dir = tempDir.toFile();
-        assertEquals(5, dir.listFiles().length, "Should have 5 zip files instead of 3 due to the use of --repartition.");
+        assertEquals(5, dir.listFiles().length, "Should have 5 zip files instead of 3 due to the use of --zipFileCount.");
     }
 
     @Test

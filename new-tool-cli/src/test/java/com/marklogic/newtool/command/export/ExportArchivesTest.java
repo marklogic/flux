@@ -17,8 +17,7 @@ class ExportArchivesTest extends AbstractTest {
             "export_archives",
             "--clientUri", makeClientUri(),
             "--collections", "author",
-            // May want a "--files" alias here.
-            "--repartition", "1",
+            "--fileCount", "1",
             "--path", tempDir.toFile().getAbsolutePath()
         );
 

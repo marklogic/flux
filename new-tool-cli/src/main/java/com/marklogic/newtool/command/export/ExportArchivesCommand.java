@@ -23,8 +23,16 @@ public class ExportArchivesCommand extends AbstractCommand {
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
+    // Exporting archives tends to involve a large number of documents, such that getting one zip per partition may
+    // be desirable. So no default value is given here.
+    @Parameter(names = "--fileCount", description = "Specifies how many files should be written; also an alias for '--repartition'.")
+    private Integer fileCount;
+
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        if (fileCount != null && fileCount > 0) {
+            getCommonParams().setRepartition(fileCount);
+        }
         s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
