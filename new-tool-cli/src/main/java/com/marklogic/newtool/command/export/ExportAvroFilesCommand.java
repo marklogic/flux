@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to Avro files on a local filesystem, HDFS, or S3.")
-public class ExportAvroFilesCommand extends AbstractExportFilesCommand {
+public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand {
 
     @DynamicParameter(
         names = "-P",

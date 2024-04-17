@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to ORC files on a local filesystem, HDFS, or S3.")
-public class ExportOrcFilesCommand extends AbstractExportFilesCommand {
+public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand {
 
     @DynamicParameter(
         names = "-P",
