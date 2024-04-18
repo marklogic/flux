@@ -142,6 +142,7 @@ You can cause a failure with MarkLogic that caused the command to stop:
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --clientUri "new-tool-user:password@localhost:8000" \
   --repartition 1 \
+  --abortOnWriteFailure \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'"
 ```
@@ -154,16 +155,17 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
   --repartition 1 \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'" \
+  --abortOnWriteFailure \
   --stacktrace
 ```
 
-You can cause a failure and tell the command to keep executing:
+You can cause a failure and tell the command to keep executing by not including `--abortOnWriteFailure`:
 
 ```
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --clientUri "new-tool-user:password@localhost:8000" \
   --permissions "invalid-role,read,new-tool-role,update" \
-  --uriReplace ".*/mixed-files,'/test'" --abortOnFailure false
+  --uriReplace ".*/mixed-files,'/test'"
 ```
 
 ## Testing with a load balancer

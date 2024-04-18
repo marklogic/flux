@@ -37,7 +37,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeInvoke", "/my/invoke.sjs",
             "--externalVariableName", "MY_VAR",
             "--externalVariableDelimiter", ";",
-            "--abortOnFailure", "false",
+            "--abortOnWriteFailure",
             "--batchSize", "123",
             "--writeVar", "param1=value1",
             "--writeVar", "param2=spaces work!"
@@ -47,7 +47,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             Options.WRITE_INVOKE, "/my/invoke.sjs",
             Options.WRITE_EXTERNAL_VARIABLE_NAME, "MY_VAR",
             Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, ";",
-            Options.WRITE_ABORT_ON_FAILURE, "false",
+            Options.WRITE_ABORT_ON_FAILURE, "true",
             Options.WRITE_BATCH_SIZE, "123",
             Options.WRITE_VARS_PREFIX + "param1", "value1",
             Options.WRITE_VARS_PREFIX + "param2", "spaces work!"

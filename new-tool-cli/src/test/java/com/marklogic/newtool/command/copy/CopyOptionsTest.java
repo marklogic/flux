@@ -45,9 +45,10 @@ class CopyOptionsTest extends AbstractOptionsTest {
         CopyCommand command = (CopyCommand) getCommand("copy",
             "--clientUri", "someone:word@somehost:7000",
             "--collections", "anything",
-            "--outputAbortOnFailure", "false",
+            "--outputAbortOnWriteFailure",
             "--outputBatchSize", "123",
             "--outputCollections", "c1,c2",
+            "--outputFailedDocumentsPath", "/my/failures",
             "--outputPermissions", "rest-reader,read,qconsole-user,update",
             "--outputTemporalCollection", "t1",
             "--outputThreadCount", "7",
@@ -61,9 +62,10 @@ class CopyOptionsTest extends AbstractOptionsTest {
         );
 
         assertOptions(command.makeWriteOptions(),
-            Options.WRITE_ABORT_ON_FAILURE, "false",
+            Options.WRITE_ABORT_ON_FAILURE, "true",
             Options.WRITE_BATCH_SIZE, "123",
             Options.WRITE_COLLECTIONS, "c1,c2",
+            Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, "/my/failures",
             Options.WRITE_PERMISSIONS, "rest-reader,read,qconsole-user,update",
             Options.WRITE_TEMPORAL_COLLECTION, "t1",
             Options.WRITE_THREAD_COUNT, "7",

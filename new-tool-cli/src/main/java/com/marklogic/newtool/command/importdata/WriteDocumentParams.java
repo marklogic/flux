@@ -12,12 +12,11 @@ import java.util.Map;
  */
 public class WriteDocumentParams {
 
-    // See https://jcommander.org/#_boolean for a description of the 'arity' field.
     @Parameter(
-        names = "--abortOnFailure", arity = 1,
-        description = "Set to false to cause the command to continue processing data after a write fails."
+        names = "--abortOnWriteFailure",
+        description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
     )
-    private boolean abortOnFailure = true;
+    private Boolean abortOnWriteFailure;
 
     @Parameter(
         names = "--batchSize",
@@ -30,6 +29,12 @@ public class WriteDocumentParams {
         description = "Comma-delimited string of collection names to add to each document."
     )
     private String collections;
+
+    @Parameter(
+        names = "--failedDocumentsPath",
+        description = "File path for writing an archive file containing failed documents and their metadata."
+    )
+    private String failedDocumentsPath;
 
     @Parameter(
         names = "--permissions",
@@ -88,7 +93,8 @@ public class WriteDocumentParams {
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
-            Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
+            Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
+            Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
             Options.WRITE_COLLECTIONS, collections,
             Options.WRITE_PERMISSIONS, permissions,
