@@ -43,7 +43,6 @@ class ReprocessTest extends AbstractTest {
             "--preview", "2"
         ));
 
-
         assertTrue(stdout.contains("only showing top 2 rows"),
             "No 'write' param should be required when a user uses '--preview', as the user is specifically asking " +
                 "just to see the read data and not to write anything.");
