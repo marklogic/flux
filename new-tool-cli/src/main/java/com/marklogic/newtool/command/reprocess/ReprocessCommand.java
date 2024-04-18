@@ -136,10 +136,10 @@ public class ReprocessCommand extends AbstractCommand {
     private List<String> writeVars = new ArrayList<>();
 
     @Parameter(
-        names = "--abortOnFailure", arity = 1,
-        description = "Set to false to cause the command to continue processing data after a write fails."
+        names = "--abortOnWriteFailure",
+        description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
     )
-    private boolean abortOnFailure = true;
+    private Boolean abortOnWriteFailure;
 
     @Parameter(
         names = "--batchSize",
@@ -200,7 +200,7 @@ public class ReprocessCommand extends AbstractCommand {
             Options.WRITE_XQUERY_FILE, writeXqueryFile,
             Options.WRITE_EXTERNAL_VARIABLE_NAME, externalVariableName,
             Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, externalVariableDelimiter,
-            Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
+            Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
             Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null
         );
 

@@ -31,10 +31,10 @@ public class CopyCommand extends AbstractCommand {
     private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
     @Parameter(
-        names = "--outputAbortOnFailure", arity = 1,
-        description = "Set to true to cause an import to abort when a batch of documents cannot be written to MarkLogic."
+        names = "--outputAbortOnWriteFailure",
+        description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
     )
-    private boolean abortOnFailure = true;
+    private Boolean abortOnWriteFailure;
 
     @Parameter(
         names = "--outputBatchSize",
@@ -47,6 +47,12 @@ public class CopyCommand extends AbstractCommand {
         description = "Comma-delimited string of collection names to add to each document."
     )
     private String collections;
+
+    @Parameter(
+        names = "--outputFailedDocumentsPath",
+        description = "File path for writing an archive file containing failed documents and their metadata."
+    )
+    private String failedDocumentsPath;
 
     @Parameter(
         names = "--outputPermissions",
@@ -136,7 +142,8 @@ public class CopyCommand extends AbstractCommand {
 
     protected Map<String, String> makeWriteOptions() {
         return OptionsUtil.makeOptions(
-            Options.WRITE_ABORT_ON_FAILURE, Boolean.toString(abortOnFailure),
+            Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
+            Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
             Options.WRITE_COLLECTIONS, collections,
             Options.WRITE_PERMISSIONS, permissions,

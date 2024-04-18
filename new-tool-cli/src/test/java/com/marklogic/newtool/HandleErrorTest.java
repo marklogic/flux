@@ -46,36 +46,30 @@ class HandleErrorTest extends AbstractTest {
      * Shows the logging for when the command fails and stops execution.
      */
     @Test
-    void abortOnFailure() {
-        run(
-            "import_files",
-            "--path", "src/test/resources/mixed-files/hello*",
-            "--repartition", "2",
-            "--clientUri", makeClientUri(),
-            "--permissions", "invalid-role,read,rest-writer,update"
-        );
-    }
-
-    @Test
-    void abortOnFailureAndShowStacktrace() {
+    void abortOnWriteFailure() {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--repartition", "2",
             "--clientUri", makeClientUri(),
             "--permissions", "invalid-role,read,rest-writer,update",
-            "--stacktrace"
+            "--abortOnWriteFailure"
         );
     }
 
-    /**
-     * Shows logging for when abortOnFailure=failure such that the command should keep executing.
-     * <p>
-     * This shows one area of improvement we have in the connector - and really WriteBatcher itself - over how we
-     * report documents that failed. We can show all the URIs in the failed batch, but that doesn't really help much -
-     * the user needs to know exactly which URI(s) failed (and even that may not help, as the URI may not correlate to
-     * an input in the dataset, and the user really needs to see the content of the document).
-     */
+    @Test
+    void abortOnWriteFailureAndShowStacktrace() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--repartition", "2",
+            "--clientUri", makeClientUri(),
+            "--permissions", "invalid-role,read,rest-writer,update",
+            "--stacktrace",
+            "--abortOnWriteFailure"
+        );
+    }
+
     @Test
     void dontAbortOnFailure() {
         run(
@@ -84,8 +78,7 @@ class HandleErrorTest extends AbstractTest {
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",
             "--clientUri", makeClientUri(),
-            "--permissions", "invalid-role,read,rest-writer,update",
-            "--abortOnFailure", "false"
+            "--permissions", "invalid-role,read,rest-writer,update"
         );
     }
 }

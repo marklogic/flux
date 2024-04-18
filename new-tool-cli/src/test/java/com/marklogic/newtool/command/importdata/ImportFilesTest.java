@@ -190,7 +190,7 @@ class ImportFilesTest extends AbstractTest {
     }
 
     @Test
-    void abortOnFailure() {
+    void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run (
             "import_files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
