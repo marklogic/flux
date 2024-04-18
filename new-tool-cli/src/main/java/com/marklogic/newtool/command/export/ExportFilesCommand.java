@@ -30,8 +30,14 @@ public class ExportFilesCommand extends AbstractCommand {
     @Parameter(names = "--prettyPrint", description = "Pretty-print the contents of JSON and XML files.")
     private Boolean prettyPrint;
 
+    @Parameter(names = "--zipFileCount", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
+    private Integer zipFileCount;
+
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        if (zipFileCount != null && zipFileCount > 0) {
+            getCommonParams().setRepartition(zipFileCount);
+        }
         s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())

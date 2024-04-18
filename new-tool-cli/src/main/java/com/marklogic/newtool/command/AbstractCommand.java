@@ -58,4 +58,8 @@ public abstract class AbstractCommand implements Command {
     public ConnectionParams getConnectionParams() {
         return connectionParams;
     }
+
+    public CommonParams getCommonParams() {
+        return commonParams;
+    }
 }
