@@ -128,7 +128,17 @@ The following shows an example of only importing the first 10 rows from a delimi
 
 ## Repartitioning
 
-TODO - `--repartition`.
+When NT reads data from a data source, it does so via one or more "partitions" that allows for data to be read in 
+parallel. The number of partitions depends on the type of data source and may be configurable depending on which 
+command you are running. 
+
+When NT writes the data it has read, a separate worker is created for each partition, thereby allowing for data to be
+written in parallel. 
+
+You can adjust the number of partitions and thus the number of workers used for writing data via the `--repartition` 
+input, which accepts a number greater than zero. You may find better performance by increasing the number of partitions
+for writing data to MarkLogic. In other cases, such as exporting data to ZIP files, you can control how many ZIP files
+are written via `--repartition`. 
 
 ## Viewing a stacktrace
 

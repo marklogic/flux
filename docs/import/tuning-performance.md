@@ -39,4 +39,6 @@ The rule of thumb can thus be expressed as:
 
 ### Direct connections to each host
 
-TODO `--connectionType direct` (which then enables the underlying DMSDK support for direct connections to hosts).
+In a scenario where NT can connect directly to each host in your MarkLogic cluster without a load balancer being 
+present, you can set the `--connectionType` option to a value of `direct`. NT will then effectively act as a load 
+balancer by distributing work across each host in the cluster. 
