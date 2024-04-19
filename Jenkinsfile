@@ -55,7 +55,7 @@ pipeline{
             sudo /usr/local/sbin/mladmin delete $WORKSPACE/spark-etl/docker/marklogic/logs/;
             docker exec -i --privileged --user root new_tool-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
             docker-compose rm -fsv || true;
-            echo "y" | docker volume prune || true;
+            echo "y" | docker volume prune --filter all=1 || true;
           '''
         }
       }
