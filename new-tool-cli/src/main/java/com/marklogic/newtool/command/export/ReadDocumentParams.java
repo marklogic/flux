@@ -1,34 +1,22 @@
 package com.marklogic.newtool.command.export;
 
-import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
+import com.marklogic.newtool.AtLeastOneValidator;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
  * For commands that export documents and must therefore read "document rows" first.
  */
-@Parameters(parametersValidators = ReadDocumentParams.class)
-public class ReadDocumentParams implements IParametersValidator {
+@Parameters(parametersValidators = ReadDocumentParams.Validator.class)
+public class ReadDocumentParams {
 
-    @Override
-    public void validate(Map<String, Object> params) throws ParameterException {
-        List<String> queryParams = Arrays.asList("--query", "--uris", "--stringQuery", "--collections", "--directory");
-        boolean hasOne = false;
-        for (String param : queryParams) {
-            if (params.get(param) != null) {
-                hasOne = true;
-                break;
-            }
-        }
-        if (!hasOne) {
-            throw new ParameterException(String.format("Must specify at least one of the following options: %s.", queryParams));
+    public static class Validator extends AtLeastOneValidator {
+        public Validator() {
+            super("--query", "--uris", "--stringQuery", "--collections", "--directory");
         }
     }
 
