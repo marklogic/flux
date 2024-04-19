@@ -7,7 +7,7 @@ nav_order: 7
 ---
 
 NT can import archive files containing documents and their associated metadata. This includes archives written via 
-the `export_archives` command (TODO add link) as well as archives written by 
+the [`export_archives` command](../../export/export-archives.md) as well as archives written by 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/loading-content-and-metadata-from-an-archive.html), 
 which are hereafter referred to as "MLCP archives".
 
