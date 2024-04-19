@@ -13,12 +13,12 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
 
     @Override
     public void validate(Map<String, Object> parameters) throws ParameterException {
-        if (parameters.get("--clientUri") == null && parameters.get("--preview") == null) {
+        if (parameters.get("--connectionString") == null && parameters.get("--preview") == null) {
             if (parameters.get("--host") == null) {
-                throw new ParameterException("Must specify a MarkLogic host via --host or --clientUri.");
+                throw new ParameterException("Must specify a MarkLogic host via --host or --connectionString.");
             }
             if (parameters.get("--port") == null) {
-                throw new ParameterException("Must specify a MarkLogic app server port via --port or --clientUri.");
+                throw new ParameterException("Must specify a MarkLogic app server port via --port or --connectionString.");
             }
 
             String authType = (String) parameters.get("--authType");
@@ -30,11 +30,11 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
     }
 
     @Parameter(
-        names = {"--clientUri"},
+        names = {"--connectionString"},
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
     )
-    public void setClientUri(String clientUri) {
-        this.clientUri = clientUri;
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
     }
 
     @Parameter(

@@ -17,7 +17,7 @@ class ImportJsonFilesTest extends AbstractTest {
         run(
             "import_json_files",
             "--path", "src/test/resources/json-files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "json-objects",
             "--uriTemplate", "/json-object/{number}.json",
@@ -49,7 +49,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "import_json_files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--jsonLines",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
             "--uriTemplate", "/delimited/{lastName}.json"
@@ -67,7 +67,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "import_json_files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--jsonLines",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
             "--jsonRootName", "myData",
@@ -85,7 +85,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/custom-delimiter-json.txt",
             "--jsonLines",
             "-PlineSep=:\n",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "custom-delimited-test",
             "--uriTemplate", "/custom/delimited/{firstName}.json"
@@ -115,7 +115,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/json-files/object-files/objects.zip",
             "--compression", "zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "zipped-objects",
             "--uriReplace", ".*object-files,''"
@@ -134,7 +134,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--jsonLines",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
         ));
@@ -157,7 +157,7 @@ class ImportJsonFilesTest extends AbstractTest {
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--jsonLines",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
         ));

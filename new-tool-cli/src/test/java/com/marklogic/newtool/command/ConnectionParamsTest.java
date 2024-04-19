@@ -14,7 +14,7 @@ class ConnectionParamsTest extends AbstractOptionsTest {
         ImportFilesCommand command = (ImportFilesCommand) getCommand(
             "import_files",
             "--path", "/doesnt/matter/for-this-test",
-            "--clientUri", "user:password@host:8000",
+            "--connectionString", "user:password@host:8000",
             "--host", "localhost",
             "--port", "8123",
             "--disableGzippedResponses",

@@ -22,7 +22,7 @@ The `import_files` command is used to import a set of files into MarkLogic, with
 document. You must specify at least one `--path` option along with connection information for the MarkLogic database
 you wish to write to. For example:
 
-    ./bin/nt import_files --path /path/to/files --clientUri user:password@localhost:8000
+    ./bin/nt import_files --path /path/to/files --connectionString user:password@localhost:8000
 
 ## Controlling document URIs
 

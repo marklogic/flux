@@ -81,7 +81,7 @@ class ExportJdbcTest extends AbstractTest {
     void dynamicParam() {
         run(
             "export_jdbc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", "this should be overwritten by the dynamic param",
@@ -100,7 +100,7 @@ class ExportJdbcTest extends AbstractTest {
     private void exportFifteenAuthorsWithMode(String saveMode) {
         run(
             "export_jdbc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,

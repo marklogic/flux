@@ -22,9 +22,9 @@ Generally, you must include at least the following information for each command:
 - Authentication information.
 
 For the common use case of using digest or basic authentication with a MarkLogic app server, you can use the 
-`--clientUri` option to specify the host, port, username, and password in a single concise option:
+`--connectionString` option to specify the host, port, username, and password in a single concise option:
 
-    --clientUri user:password@host:port
+    --connectionString user:password@host:port
 
 For other authentication mechanisms, you must use the `--host` and `--port` options to define the host and port for 
 your MarkLogic app server. 
@@ -37,7 +37,7 @@ All available connection options are shown in the table below:
 | --basePath | Path to prepend to each call to a MarkLogic REST API app server. |
 | --certificateFile | File path for a key store to be used for 'CERTIFICATE' authentication. |
 | --certificatePassword | Password for the key store referenced by '--certificateFile'. |
-| --clientUri |  Defines a connection string as user:password@host:port; only usable when using `DIGEST` or `BASIC` authentication. |
+| --connectionString |  Defines a connection string as user:password@host:port; only usable when using `DIGEST` or `BASIC` authentication. |
 | --cloudApiKey | API key for authenticating with a MarkLogic Cloud cluster. |
 | --connectionType |  Defines whether connections can be made directly to each host in the MarkLogic cluster. Possible values are `DIRECT` and `GATEWAY`. |
 | --database | Name of a database to connect if it differs from the one associated with the app server identified by '--port'. |
@@ -98,7 +98,7 @@ instead of in a table:
 
 ```
 ./bin/nt import_parquet_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --path export/parquet \
     --preview 10 \
     --previewDrop job_title,department
@@ -119,7 +119,7 @@ The following shows an example of only importing the first 10 rows from a delimi
 ```
 ./bin/nt import_delimited_files \
     --path ../data/employees.csv.gz \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections employee \
     --uriTemplate "/employee/{id}.json" \

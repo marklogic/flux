@@ -17,7 +17,7 @@ class ReprocessTest extends AbstractTest {
     void test() {
         run(
             "reprocess",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--readJavascript", "var collection; cts.uris(null, null, cts.collectionQuery(collection))",
             "--readVar", "collection=author",
             "--writeInvoke", "/writeDocument.sjs",
@@ -38,7 +38,7 @@ class ReprocessTest extends AbstractTest {
     void previewDoesntRequireWriteParam() {
         String stdout = runAndReturnStdout(() -> run(
             "reprocess",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--readJavascript", "cts.uris(null, null, cts.collectionQuery('author'))",
             "--preview", "2"
         ));
@@ -52,7 +52,7 @@ class ReprocessTest extends AbstractTest {
     void missingReadParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         ));
 
         assertTrue(
@@ -65,7 +65,7 @@ class ReprocessTest extends AbstractTest {
     void missingWriteParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--readJavascript", "fn.currentDate()"
         ));
 
@@ -79,7 +79,7 @@ class ReprocessTest extends AbstractTest {
     void moreThanOnePartitionParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--readJavascript", "doesn't matter",
             "--writeJavascript", "doesn't matter",
             "--readPartitionsJavascript", "doesn't matter",

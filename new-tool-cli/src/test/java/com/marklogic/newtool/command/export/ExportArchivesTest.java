@@ -15,7 +15,7 @@ class ExportArchivesTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         run(
             "export_archives",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--fileCount", "1",
             "--path", tempDir.toFile().getAbsolutePath()
@@ -29,7 +29,7 @@ class ExportArchivesTest extends AbstractTest {
         run(
             "import_archives",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "imported-author"
         );
 
@@ -45,7 +45,7 @@ class ExportArchivesTest extends AbstractTest {
     void contentShouldAlwaysBeIncluded(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
             "export_archives",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--categories", "collections,permissions"
@@ -57,7 +57,7 @@ class ExportArchivesTest extends AbstractTest {
         run(
             "import_archives",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "imported-author"
         );
 

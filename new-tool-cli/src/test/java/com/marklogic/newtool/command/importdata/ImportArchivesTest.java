@@ -18,7 +18,7 @@ class ImportArchivesTest extends AbstractTest {
             "import_archives",
             "--path", "src/test/resources/archive-files",
             "--uriReplace", ".*archive.zip,''",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         );
 
         for (String uri : getUrisInCollection("collection1", 2)) {
@@ -44,7 +44,7 @@ class ImportArchivesTest extends AbstractTest {
             "--path", "src/test/resources/archive-files",
             "--categories", "collections,permissions",
             "--uriReplace", ".*archive.zip,''",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         );
 
         for (String uri : getUrisInCollection("collection1", 2)) {
@@ -67,7 +67,7 @@ class ImportArchivesTest extends AbstractTest {
             "import_archives",
             "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         ));
 
         assertFalse(stderr.contains("Command failed"),
@@ -83,7 +83,7 @@ class ImportArchivesTest extends AbstractTest {
             "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         ));
 
         assertTrue(

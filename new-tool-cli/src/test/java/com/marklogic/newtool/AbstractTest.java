@@ -52,7 +52,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
             "{xdmp.documentDelete(uri)}";
     }
 
-    protected final String makeClientUri() {
+    protected final String makeConnectionString() {
         // new-tool-user is expected to have the minimum set of privileges for running all the tests.
         return String.format("%s:%s@%s:%d", "new-tool-user", "password", databaseClient.getHost(), databaseClient.getPort());
     }

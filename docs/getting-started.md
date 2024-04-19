@@ -57,14 +57,14 @@ command. To see the usage for a particular command, such as `import_files`, run:
 
     ./bin/nt help import_files
 
-Required options are marked with an asterisk - "*". Additionally, every command requires that either `--clientUri`
+Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connectionString`
 or `--host` and `--port` be specified so that the tool knows which MarkLogic cluster to connect to. 
 
-The `--clientUri` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
+The `--connectionString` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
 app server you connect to requires basic or digest authentication. Its value is of the form 
 `(user):(password)@(host):(port)`. For example:
 
-    ./bin/nt import_files --clientUri "my-user:my-secret@localhost:8000" ...
+    ./bin/nt import_files --connectionString "my-user:my-secret@localhost:8000" ...
 
 Options can be read from a file; see the [Common Options](common-options.md) guide for more information.
 
@@ -83,7 +83,7 @@ demonstrated:
 ```
 ./bin/nt import_delimited_files \
     --path ../data/employees.csv.gz \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections employee \
     --uriTemplate "/employee/{id}.json"
@@ -106,7 +106,7 @@ requires a separate Postgres database; it is only included for reference):
     --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
     --jdbcDriver "org.postgresql.Driver" \
     --query "select * from customer" \
-    --clientUri "new-tool-user:password@localhost:8004" \
+    --connectionString "new-tool-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections customer
 ```
@@ -123,7 +123,7 @@ to select rows. The following shows an example of exporting the 1000 employee do
 ```
 mkdir export
 ./bin/nt export_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --path export \
     --compression zip \
@@ -141,7 +141,7 @@ in 4 JSON documents being written to `./export/employee`:
 
 ```
 ./bin/nt export_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --stringQuery Engineering \
     --query '{"query": {"value-query": {"json-property": "job_title", "text": "Junior Executive"}}}' \
@@ -162,7 +162,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
 
 ```
 ./bin/nt export_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
     --repartition 1 \
@@ -178,7 +178,7 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 ```
 mkdir export/parquet
 ./bin/nt export_parquet_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --path export/parquet \
     --query "op.fromView('Example', 'Employees', '')" 
 ```
@@ -189,7 +189,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 
 ```
 ./bin/nt export_jdbc \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
     --jdbcDriver "org.postgresql.Driver" \
@@ -206,7 +206,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 
 ```
 ./bin/nt export_parquet_files \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --path export/parquet \
     --preview 10
@@ -222,7 +222,7 @@ documents:
 
 ```
 ./bin/nt reprocess \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --readJavascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
     --writeJavascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
@@ -243,10 +243,10 @@ MarkLogic instance:
 
 ```
 ./bin/nt copy \
-    --clientUri "nt-user:password@localhost:8004" \
+    --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --categories content,metadata \
-    --outputClientUri "nt-user:password@localhost:8000"
+    --outputConnectionString "nt-user:password@localhost:8000"
 ```
 
 For more information, please see the [Copying guide](copy.md).

@@ -23,7 +23,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''"
@@ -64,8 +64,8 @@ class ImportFilesTest extends AbstractTest {
         File optionsFile = new File(tempDir.toFile(), "options.txt");
         String options = "--path\n" +
             "src/test/resources/mixed-files/hello*\n" +
-            "--clientUri\n" +
-            makeClientUri() + "\n" +
+            "--connectionString\n" +
+            makeConnectionString() + "\n" +
             "--uriReplace\n" +
             ".*/mixed-files,''";
         FileCopyUtils.copy(options.getBytes(), optionsFile);
@@ -85,7 +85,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''",
@@ -100,7 +100,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''",
@@ -115,7 +115,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriReplace", ".*/mixed-files,''",
@@ -130,7 +130,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uriReplace", ".*/mixed-files,''",
@@ -145,7 +145,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--filter", "*.json",
@@ -160,7 +160,7 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import_files",
             "--path", "src/test/resources/mixed-files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--filter", "*.json",
@@ -177,7 +177,7 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriReplace", ".*/mixed-files,''",
@@ -195,7 +195,7 @@ class ImportFilesTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
             "--compression", "gzip"

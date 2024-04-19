@@ -27,7 +27,7 @@ public abstract class ConnectionInputs {
         STRICT
     }
 
-    protected String clientUri;
+    protected String connectionString;
     protected String host;
     protected Integer port;
     protected String basePath;
@@ -54,9 +54,9 @@ public abstract class ConnectionInputs {
     protected String trustStoreAlgorithm;
 
     public String getSelectedHost() {
-        if (clientUri != null) {
+        if (connectionString != null) {
             // TBD Ideally reuse this logic from the connector.
-            String[] parts = clientUri.split("@");
+            String[] parts = connectionString.split("@");
             return parts[1].split(":")[0];
         }
         return host;
@@ -64,7 +64,7 @@ public abstract class ConnectionInputs {
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
-            Options.CLIENT_URI, clientUri,
+            Options.CLIENT_URI, connectionString,
             Options.CLIENT_HOST, host,
             Options.CLIENT_PORT, port != null ? port.toString() : null,
             "spark.marklogic.client.disableGzippedResponses", disableGzippedResponses != null ? Boolean.toString(disableGzippedResponses) : null,

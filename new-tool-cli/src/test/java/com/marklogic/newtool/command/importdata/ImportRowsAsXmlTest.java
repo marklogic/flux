@@ -16,7 +16,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import_delimited_files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-xml",
             "--uriTemplate", "/delimited/{number}.xml",
@@ -39,7 +39,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
             "--jdbcPassword", PostgresUtil.PASSWORD,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/customer/{customer_id}.xml",
             "--collections", "jdbc-customer",
@@ -58,7 +58,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import_parquet_files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
             "--xmlRootName", "myParquet",
@@ -77,7 +77,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import_avro_files",
             "--path", "src/test/resources/avro/*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
             "--uriTemplate", "/avro/{color}.xml",
@@ -96,7 +96,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import_orc_files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-test",
             "--uriTemplate", "/orc/{ForeName}",

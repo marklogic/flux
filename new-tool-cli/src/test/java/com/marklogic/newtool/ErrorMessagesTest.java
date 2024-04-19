@@ -16,7 +16,7 @@ class ErrorMessagesTest {
             "Expecting 13 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
-        assertEquals("--clientUri", bundle.getString(Options.CLIENT_URI));
+        assertEquals("--connectionString", bundle.getString(Options.CLIENT_URI));
         assertEquals("--batchSize", bundle.getString(Options.READ_BATCH_SIZE));
         assertEquals("--partitionsPerForest", bundle.getString(Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST));
         assertEquals("--partitions", bundle.getString(Options.READ_NUM_PARTITIONS));

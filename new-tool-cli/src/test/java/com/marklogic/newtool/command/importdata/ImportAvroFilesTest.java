@@ -14,7 +14,7 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import_avro_files",
             "--path", "src/test/resources/avro/*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
             "--uriTemplate", "/avro/{color}.json"
@@ -34,7 +34,7 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import_avro_files",
             "--path", "src/test/resources/avro/*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--jsonRootName", "myAvroData",
             "--uriTemplate", "/avro/{/myAvroData/color}.json"
@@ -49,7 +49,7 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import_avro_files",
             "--path", "src/test/resources/avro/*",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
             "-PignoreExtension=false",
@@ -68,7 +68,7 @@ class ImportAvroFilesTest extends AbstractTest {
             run(
                 "import_avro_files",
                 "--path", "src/test/resources/avro/*",
-                "--clientUri", makeClientUri(),
+                "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Pspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -85,7 +85,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "import_avro_files",
             "--path", "src/test/resources/avro/colors.avro",
             "--path", "src/test/resources/json-files/array-of-objects.json",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-data"
         ));
@@ -101,7 +101,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "import_avro_files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

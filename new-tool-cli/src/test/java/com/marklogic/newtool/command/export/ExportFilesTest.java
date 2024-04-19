@@ -25,7 +25,7 @@ class ExportFilesTest extends AbstractTest {
         run(
             "export_files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author",
             // Including this simply to verify that it doesn't cause an error. Its impact is only going to be seen
             // in performance tests.
@@ -53,7 +53,7 @@ class ExportFilesTest extends AbstractTest {
         run(
             "export_files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--uris", "/author/author1.json\n/author/author2.json"
         );
 
@@ -70,7 +70,7 @@ class ExportFilesTest extends AbstractTest {
             "--partitionsPerForest", "1",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author"
         );
 
@@ -104,7 +104,7 @@ class ExportFilesTest extends AbstractTest {
             "export_files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--zipFileCount", "5"
         );
@@ -119,7 +119,7 @@ class ExportFilesTest extends AbstractTest {
             "export_files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "gzip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "author"
         );
 
@@ -141,7 +141,7 @@ class ExportFilesTest extends AbstractTest {
                 "export_files",
                 "--path", tempDir.toFile().getAbsolutePath(),
                 "--compression", "gzip",
-                "--clientUri", makeClientUri()
+                "--connectionString", makeConnectionString()
             );
         });
 

@@ -29,7 +29,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--query", query,
             "--groupBy", "customer_id",
             "--aggregate", "payments=payment_id;amount;payment_date",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/customer/{customer_id}.json"
         );
@@ -79,7 +79,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--groupBy", "customer_id",
             "--aggregate", "payments=payment_id;amount",
             "--aggregate", "rentals=rental_id;inventory_id",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/customer/{customer_id}.json"
         );
@@ -123,7 +123,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--query", query,
             "--groupBy", "film_id",
             "--aggregate", "actor_ids=actor_id",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriTemplate", "/film/{film_id}.json"
         );

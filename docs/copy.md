@@ -34,7 +34,7 @@ combination of those options as well.
 The `copy` command then requires that you specify connection information via for the target database that the documents
 will be copied into. Each of the [connection options](common-options.md) can be used for this target database, but with
 `output` as a prefix so that they are distinguished from the connections used for the source database. For example, 
-`--outputClientUri` is used to specify a connection string for the target database. If you are copying the documents
+`--outputConnectionString` is used to specify a connection string for the target database. If you are copying the documents
 to the same database that they were read from, you can omit output connection options.
 
 The following shows an example of copying documents from a collection to a different database in the same MarkLogic 
@@ -42,9 +42,9 @@ cluster:
 
 ```
 ./bin/nt copy \
-  --clientUri "user:password@localhost:8000" \
+  --connectionString "user:password@localhost:8000" \
   --collections "example" \
-  --outputClientUri "user:password@localhost:8000" \
+  --outputConnectionString "user:password@localhost:8000" \
   --outputDatabase "target-database"
 ```
 

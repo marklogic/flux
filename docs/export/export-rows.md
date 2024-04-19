@@ -65,7 +65,7 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 a notional example of doing so:
 
 ```
-./bin/nt export_jdbc --clientUri user:password@localhost:8000 \
+./bin/nt export_jdbc --connectionString user:password@localhost:8000 \
   --query "op.fromView('example', 'employee', '')" \
   --jdbcUrl "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
   --jdbcDriver "org.postgresql.Driver" \

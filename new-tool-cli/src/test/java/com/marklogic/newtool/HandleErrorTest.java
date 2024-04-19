@@ -18,7 +18,7 @@ class HandleErrorTest extends AbstractTest {
     void invalidCommand() {
         run(
             "not_a_real_command",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         );
     }
 
@@ -26,7 +26,7 @@ class HandleErrorTest extends AbstractTest {
     void missingRequiredParam() {
         run(
             "import_files",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         );
     }
 
@@ -38,7 +38,7 @@ class HandleErrorTest extends AbstractTest {
         run(
             "import_files",
             "--path", "/not/valid",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         );
     }
 
@@ -51,7 +51,7 @@ class HandleErrorTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--repartition", "2",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update",
             "--abortOnWriteFailure"
         );
@@ -63,7 +63,7 @@ class HandleErrorTest extends AbstractTest {
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--repartition", "2",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update",
             "--stacktrace",
             "--abortOnWriteFailure"
@@ -77,7 +77,7 @@ class HandleErrorTest extends AbstractTest {
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update"
         );
     }
