@@ -66,12 +66,7 @@ app server you connect to requires basic or digest authentication. Its value is 
 
     ./bin/nt import_files --connectionString "my-user:my-secret@localhost:8000" ...
 
-Options can be read from a file; see the [Common Options](common-options.md) guide for more information.
-
-As the documentation for NT is built out, you will typically be able to find a number of features in the list of 
-command options that are not yet documented. Documentation will eventually encompass all options, but prior to 
-the 1.0 release, you should expect to use `help name_of_command` to understand everything you can do with a particular
-command.
+Options can also be read from a file; see the [Common Options](common-options.md) guide for more information.
 
 ## Importing data
 
@@ -111,13 +106,14 @@ requires a separate Postgres database; it is only included for reference):
     --collections customer
 ```
 
-See the [Import guide](import.md) for further details, including how you can aggregate rows together via a SQL join, 
+See the [Import guide](import/import.md) for further details, including how you can aggregate rows together via a SQL join, 
 thus producing hierarchical documents with nested data structures.
 
 ## Exporting data 
 
 NT supports several commands for exporting data from MarkLogic, either as documents or rows, to a variety of 
-destinations. Commands that export documents support a variety of queries, while commands that export rows use Optic
+destinations. Commands that export documents support a variety of queries, while commands that export rows use the
+[MarkLogic Optic API](https://docs.marklogic.com/guide/app-dev/OpticAPI)
 to select rows. The following shows an example of exporting the 1000 employee documents to a single zip file:
 
 ```
@@ -127,14 +123,15 @@ mkdir export
     --collections employee \
     --path export \
     --compression zip \
-    --repartition 1
+    --zipFileCount 1
 ```
 
 The above command specifies a collection of documents to export. You can also use the `--query` option to specify a
 [structured query](https://docs.marklogic.com/guide/search-dev/structured-query), 
 [serialized CTS query](https://docs.marklogic.com/guide/rest-dev/search#id_30577), or 
 [complex query](https://docs.marklogic.com/guide/rest-dev/search#id_69918), either as JSON or XML. You can also use 
-`--stringQuery` to leverage MarkLogic's search grammar for selecting documents. 
+`--stringQuery` to leverage MarkLogic's 
+[search grammar](https://docs.marklogic.com/guide/search-dev/string-query) for selecting documents. 
 
 The following command shows a collection, a string query, and a structured query used together, resulting 
 in 4 JSON documents being written to `./export/employee`:
@@ -145,15 +142,16 @@ in 4 JSON documents being written to `./export/employee`:
     --collections employee \
     --stringQuery Engineering \
     --query '{"query": {"value-query": {"json-property": "job_title", "text": "Junior Executive"}}}' \
-    --path export
+    --path export \
+    --prettyPrint
 ```
 
-See [the Export guide](export.md) for more information.
+See [the Export guide](export/export.md) for more information.
 
 ### Exporting to S3
 
-NT allows for data to be exported easily to S3, with the same approach working for importing data as well. You can 
-reference an S3 bucket path via the "s3a://" prefix. The `--s3AddCredentials` option will then use the AWS SDK to access your
+NT allows for data to be exported to S3, with the same approach working for importing data as well. You can 
+reference an S3 bucket path via the `s3a://` prefix. The `--s3AddCredentials` option will then use the AWS SDK to access your
 AWS credentials; please see the 
 [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for information on how to configure your credentials. 
 
@@ -165,7 +163,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
     --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
-    --repartition 1 \
+    --zipFileCount 1 \
     --path s3a://bucket-name-changeme \
     --s3AddCredentials
 ```
@@ -233,10 +231,10 @@ For more information, please see the [Reprocessing guide](reprocess.md).
 
 ## Copying data
 
-The 'copy' command in NT is similar to the commands for exporting data, but instead allows you to read documents
+The `copy` command in NT is similar to the commands for exporting data, but instead allows you to read documents
 from one database and write them to another. When copying, you may want to include metadata for each document - 
 collections, permissions, quality, properties, and metadata values. This is accomplished via the `--categories`
-option, with `--categories=content,metadata` returning both the document and all of its metadata.
+option, with the default value of `content,metadata` returning both the document and all of its metadata.
 
 The following shows how to copy the 1000 employee documents to the out-of-the-box Documents database in your 
 MarkLogic instance:
@@ -245,7 +243,6 @@ MarkLogic instance:
 ./bin/nt copy \
     --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
-    --categories content,metadata \
     --outputConnectionString "nt-user:password@localhost:8000"
 ```
 

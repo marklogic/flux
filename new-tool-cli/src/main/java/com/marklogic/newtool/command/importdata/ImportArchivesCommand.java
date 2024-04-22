@@ -7,7 +7,7 @@ import com.marklogic.spark.Options;
 
 import java.util.Map;
 
-@Parameters(commandDescription = "Read local, HDFS, and S3 archive files written via 'export_archives' and write the documents in each archive to MarkLogic.")
+@Parameters(commandDescription = "Read local, HDFS, and S3 archive files created via the 'export_archives' command and write the documents in each archive to MarkLogic.")
 public class ImportArchivesCommand extends AbstractImportFilesCommand {
 
     @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
