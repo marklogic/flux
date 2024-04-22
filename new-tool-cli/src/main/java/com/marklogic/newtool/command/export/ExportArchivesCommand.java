@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
@@ -8,6 +9,7 @@ import com.marklogic.newtool.command.S3Params;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
+@Parameters(commandDescription = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.")
 public class ExportArchivesCommand extends AbstractCommand {
 
     @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
