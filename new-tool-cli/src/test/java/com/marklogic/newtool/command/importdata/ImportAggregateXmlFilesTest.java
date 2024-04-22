@@ -20,7 +20,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/people.xml",
-            "--clientUri", makeClientUri()
+            "--connectionString", makeConnectionString()
         ));
         assertTrue(stderr.contains("The following option is required: [--element]"),
             "Unexpected stderr: " + stderr);
@@ -32,7 +32,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withElement-test",
             "--uriReplace", ".*/xml-file,''"
@@ -51,7 +51,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/xml-file/people-with-namespace.xml",
             "--element", "person",
             "--namespace", "org:example",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withElementAndNamespace-test",
             "--uriReplace", ".*/xml-file,''"
@@ -72,7 +72,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--namespace", "org:example",
             "--uriElement", "name",
             "--uriNamespace", "org:example",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withAllOptions-test"
         );
@@ -88,7 +88,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         run(
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importZippedXml-test",
             "--compression", "zip",
@@ -104,7 +104,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--element", "person",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importZippedXmlWithElement-test",
             "--uriElement", "name",
@@ -122,7 +122,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/multiple-xmls.zip",
             "--element", "",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importMultipleZippedXml-test",
             "--compression", "zip",
@@ -140,7 +140,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import_aggregate_xml_files",
             "--path", "src/test/resources/xml-file/people.xml.gz",
             "--element", "person",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importGzippedXml-test",
             "--compression", "gzip",
@@ -160,7 +160,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
         ));
@@ -177,7 +177,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--abortOnReadFailure",
             "--element", "person",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
         ));

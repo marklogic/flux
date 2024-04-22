@@ -14,7 +14,7 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import_parquet_files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
             "--uriTemplate", "/parquet/{model}.json"
@@ -31,7 +31,7 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import_parquet_files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
             "--jsonRootName", "car",
@@ -47,7 +47,7 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import_parquet_files",
             "--path", "src/test/resources/parquet/related/*.parquet",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
             "-PmergeSchema=true",
@@ -93,7 +93,7 @@ class ImportParquetFilesTest extends AbstractTest {
             run(
                 "import_parquet_files",
                 "--path", "src/test/resources/parquet/individual/cars.parquet",
-                "--clientUri", makeClientUri(),
+                "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Pspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -113,7 +113,7 @@ class ImportParquetFilesTest extends AbstractTest {
             // Without mergeSchema=true, Spark will throw an error of "Unable to infer schema for Parquet". This seems
             // to occur if there's at least one bad file. With mergeSchema=true,
             "-PmergeSchema=true",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-cars"
         ));
@@ -133,7 +133,7 @@ class ImportParquetFilesTest extends AbstractTest {
             // This is kept here to ensure the command fails because it could read the Avro file and not because
             // Spark could not infer a schema.
             "-PmergeSchema=true",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

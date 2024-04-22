@@ -15,7 +15,7 @@ class ExportAvroFilesTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         run(
             "export_avro_files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "4",
             "--path", tempDir.toFile().getAbsolutePath()
@@ -29,7 +29,7 @@ class ExportAvroFilesTest extends AbstractTest {
         run(
             "import_avro_files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test"
         );
@@ -48,7 +48,7 @@ class ExportAvroFilesTest extends AbstractTest {
     void dynamicParameter(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
             "export_avro_files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",
             "--path", tempDir.toFile().getAbsolutePath(),

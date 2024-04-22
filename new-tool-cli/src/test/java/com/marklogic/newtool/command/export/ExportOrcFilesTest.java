@@ -16,7 +16,7 @@ class ExportOrcFilesTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         run(
             "export_orc_files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "4",
             "--path", tempDir.toFile().getAbsolutePath()
@@ -30,7 +30,7 @@ class ExportOrcFilesTest extends AbstractTest {
         run(
             "import_orc_files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-test"
         );
@@ -42,7 +42,7 @@ class ExportOrcFilesTest extends AbstractTest {
     void dynamicParameter(@TempDir Path tempDir) {
         run(
             "export_orc_files",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "1",
             "--path", tempDir.toFile().getAbsolutePath(),

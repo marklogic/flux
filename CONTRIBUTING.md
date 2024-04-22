@@ -140,7 +140,7 @@ You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --clientUri "new-tool-user:password@localhost:8000" \
+  --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --abortOnWriteFailure \
   --permissions "invalid-role,read,new-tool-role,update" \
@@ -151,7 +151,7 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
 
 ```
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --clientUri "new-tool-user:password@localhost:8000" \
+  --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'" \
@@ -163,7 +163,7 @@ You can cause a failure and tell the command to keep executing by not including 
 
 ```
 ./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --clientUri "new-tool-user:password@localhost:8000" \
+  --connectionString "new-tool-user:password@localhost:8000" \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'"
 ```
@@ -181,12 +181,12 @@ owned by the performance team. Feel free to adjust this config locally as needed
 Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
 
 ```
-./nt/bin/nt copy --clientUri "admin:admin@localhost:8006" \
+./nt/bin/nt copy --connectionString "admin:admin@localhost:8006" \
   --collections "address_small" \
   --batchSize 500 \
   --limit 10000 \
   --categories content,metadata \
-  --outputClientUri "admin:admin@localhost:8007" \
+  --outputConnectionString "admin:admin@localhost:8007" \
   --outputThreadCount 3 --partitionsPerForest 1 --outputBatchSize 200
 ```
 

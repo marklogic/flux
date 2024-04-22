@@ -70,7 +70,7 @@ task ntImportRdf(type: Exec) {
   description = "Intended to run against a local Caddy load balancer."
   workingDir = "../nt/"
   commandLine "./bin/nt", "import_rdf_files",
-    "--clientUri", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
+    "--connectionString", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",
     "--connectionType", "gateway",
@@ -82,7 +82,7 @@ task ntDirectImportRdf(type: Exec) {
   description = "For testing without a load balancer."
   workingDir = "../nt/"
   commandLine "./bin/nt", "import_rdf_files",
-    "--clientUri", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--connectionString", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",
     "--connectionType", "direct",
@@ -93,14 +93,14 @@ task ntDirectImportRdf(type: Exec) {
 task ntCopy(type: Exec) {
   workingDir = "../nt/"
   commandLine "./bin/nt", "copy",
-    "--clientUri", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--connectionString", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
     "--collections", "address_small",
     "--batchSize", "500",
     // results in 24 threads total, assuming 3 forests and 4 partitions per forests, which means 12 partitions.
     "--outputThreadCount", "2",
     "--outputBatchSize", "500",
     "--outputPermissions", "rest-reader,read,rest-writer,update",
-    "--outputClientUri", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
+    "--outputConnectionString", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
 }
 
 task mlcpCopy(type: JavaExec) {
@@ -145,7 +145,7 @@ task ntTwoWaySSL(type: Exec) {
     "then run this task to ensure that two-way SSL works."
   workingDir = "../nt/"
   commandLine "./bin/nt", "copy",
-    "--clientUri", "rest-writer:x@localhost:8012",
+    "--connectionString", "rest-writer:x@localhost:8012",
     "--collections", "zipcode",
     "--keyStorePath", "../mlcp-testing/keyStore.jks",
     "--keyStorePassword", "password",

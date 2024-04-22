@@ -16,7 +16,7 @@ class CopyTest extends AbstractTest {
             "copy",
             "--categories", "content",
             "--collections", "author",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--outputCollections", "author-copies",
             "--outputUriPrefix", "/copied",
             "--outputPermissions", DEFAULT_PERMISSIONS
@@ -33,7 +33,7 @@ class CopyTest extends AbstractTest {
             "copy",
             "--categories", "content",
             "--uris", "/author/author1.json\n/author/author2.json",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--outputCollections", "author-copies",
             "--outputUriPrefix", "/copied",
             "--outputPermissions", DEFAULT_PERMISSIONS
@@ -51,8 +51,8 @@ class CopyTest extends AbstractTest {
             "--collections", "author",
             "--partitionsPerForest", "1",
             "--categories", "content,metadata",
-            "--clientUri", makeClientUri(),
-            "--outputClientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
+            "--outputConnectionString", makeConnectionString(),
             // No need to specify permissions since they are included via "--categories".
             "--outputCollections", "author-copies",
             "--outputUriPrefix", "/copied"

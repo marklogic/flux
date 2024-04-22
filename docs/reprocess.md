@@ -48,7 +48,7 @@ you wish to reprocess.
 The following shows a simple example of querying a collection for its URIs and logging each one:
 
 ```
-./bin/nt reprocess --clientUri user:password@localhost:8000 \
+./bin/nt reprocess --connectionString user:password@localhost:8000 \
   --readJavascript "cts.uris(null, null, cts.collectionQuery('example'))"
   --writeJavascript "var URI; console.log(URI)"
 ```
@@ -65,7 +65,7 @@ with each value being of the same form.
 The following shows a simple example of including a variable in both the reader and writer:
 
 ```
-./bin/nt reprocess --clientUri user:password@localhost:8000 \
+./bin/nt reprocess --connectionString user:password@localhost:8000 \
   --readJavascript "var collection; cts.uris(null, null, cts.collectionQuery(collection))"
   --readVar "collection=example"
   --writeJavascript "var URI; var exampleVariable; console.log([URI, exampleVariable])"
@@ -91,7 +91,7 @@ Partition values can thus be anything you want. A common use case is to partitio
 MarkLogic database. The following shows an example of partitions based on forests:
 
 ```
-./bin/nt reprocess --clientUri user:password@localhost:8000 \
+./bin/nt reprocess --connectionString user:password@localhost:8000 \
   --readPartitionsJavascript "xdmp.databaseForests(xdmp.database())"
   --readJavascript "cts.uris(null, null, cts.collectionQuery('example'), 0, [PARTITION])"
   --writeJavascript "var URI; console.log(URI)"

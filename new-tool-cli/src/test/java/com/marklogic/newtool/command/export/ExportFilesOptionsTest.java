@@ -15,7 +15,7 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
     void prettyPrint() {
         ExportFilesCommand command = (ExportFilesCommand) getCommand(
             "export_files",
-            "--clientUri", "test:test@host:8000",
+            "--connectionString", "test:test@host:8000",
             "--collections", "anything",
             "--path", "anywhere",
             "--prettyPrint",
@@ -31,7 +31,7 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
     void dontPrettyPrint() {
         ExportFilesCommand command = (ExportFilesCommand) getCommand(
             "export_files",
-            "--clientUri", "test:test@host:8000",
+            "--connectionString", "test:test@host:8000",
             "--collections", "anything",
             "--path", "anywhere",
             "--compression", "zip"

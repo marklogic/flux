@@ -16,7 +16,7 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import_orc_files",
             "--path", "src/test/resources/orc-files/orc-file.orc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
             "--uriPrefix", "/orc-test"
@@ -35,7 +35,7 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import_orc_files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uriPrefix", "/orc-test",
             "--jsonRootName", "myOrcData",
@@ -51,7 +51,7 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import_orc_files",
             "--path", "src/test/resources/orc-files/orc-file.orc",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFileWithCompressionTest-test",
             "--uriPrefix", "/orc-compressed-test",
@@ -72,7 +72,7 @@ class ImportOrcFilesTest extends AbstractTest {
             run(
                 "import_orc_files",
                 "--path", "src/test/resources/orc-files",
-                "--clientUri", makeClientUri(),
+                "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Pspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -89,7 +89,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "import_orc_files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--path", "src/test/resources/avro/colors.avro",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-data"
         ));
@@ -105,7 +105,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "import_parquet_files",
             "--path", "src/test/resources/avro/colors.avro",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

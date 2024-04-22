@@ -20,7 +20,7 @@ The `import_delimited_files` command is used to read delimited text files. The c
 the delimiter for each row value. You must specify at least one `--path` option along with connection information 
 for the MarkLogic database you wish to write to:
 
-    ./bin/nt import_delimited_files --path /path/to/files --clientUri "user:password@localhost:8000"
+    ./bin/nt import_delimited_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 

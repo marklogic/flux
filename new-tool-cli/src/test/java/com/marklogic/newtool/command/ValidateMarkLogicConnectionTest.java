@@ -17,7 +17,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--path", "src/test/resources/mixed-files"
         ));
 
-        assertTrue(output.contains("Must specify a MarkLogic host via --host or --clientUri."),
+        assertTrue(output.contains("Must specify a MarkLogic host via --host or --connectionString."),
             "Unexpected stderr: " + output);
     }
 
@@ -29,7 +29,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--host", getDatabaseClient().getHost()
         ));
 
-        assertTrue(output.contains("Must specify a MarkLogic app server port via --port or --clientUri."),
+        assertTrue(output.contains("Must specify a MarkLogic app server port via --port or --connectionString."),
             "Unexpected stderr: " + output);
     }
 
@@ -55,10 +55,10 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
         String output = runAndReturnStderr(() -> run(
             "import_files",
             "--path", "src/test/resources/mixed-files",
-            "--clientUri", "admin-missing-password@localhost:8003"
+            "--connectionString", "admin-missing-password@localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --clientUri"),
+        assertTrue(output.contains("Invalid value for --connectionString"),
             "Unexpected output: " + output + "; this test also confirms that the ETL tool is overriding " +
                 "error messages from the connector so that CLI option names appear instead of connector " +
                 "option names. This is also confirmed by ErrorMessagesTest.");

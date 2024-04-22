@@ -14,7 +14,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples"
         );
@@ -34,7 +34,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--graph", "my-graph"
         );
@@ -48,7 +48,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/three-quads.trig",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--graphOverride", "my-other-graph"
         );
@@ -70,7 +70,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/englishlocale2.ttl.gz",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--compression", "gzip"
         );
@@ -86,7 +86,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/each-rdf-file-type.zip",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "all-my-rdf",
             "--compression", "zip"
@@ -111,7 +111,7 @@ class ImportRdfFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import_rdf_files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples",
             "--uriTemplate", "/test/{uri}"
@@ -130,7 +130,7 @@ class ImportRdfFilesTest extends AbstractTest {
             "import_rdf_files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples"
         );
@@ -145,7 +145,7 @@ class ImportRdfFilesTest extends AbstractTest {
             "import_rdf_files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--abortOnReadFailure",
-            "--clientUri", makeClientUri(),
+            "--connectionString", makeConnectionString(),
             "--collections", "my-triples"
         ));
 
