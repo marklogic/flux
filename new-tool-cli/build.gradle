@@ -23,12 +23,7 @@ dependencies {
   }
   implementation "org.jcommander:jcommander:1.83"
 
-  // The connector is the shadowJar with its dependencies relocated to avoid conflicts with Spark. Thus, we don't
-  // need its dependencies brought in, as they're already in the connector jar itself, just in different packages.
-  implementation ("com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT") {
-    exclude module: "marklogic-client-api"
-    exclude module: "scala-java8-compat_2.12"
-  }
+  implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 
   // hadoop-aws depends on aws-java-sdk-bundle, which clocks in as a single 380mb jar. We only need the S3 portion of
   // the AWS SDK, so the bundle is excluded in favor of the S3 API in the SDK.
@@ -42,7 +37,11 @@ dependencies {
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.4.1"
 
-  testImplementation "com.marklogic:marklogic-junit5:1.4.0"
+  testImplementation ("com.marklogic:marklogic-junit5:1.4.0") {
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.dataformat"
+  }
+
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:5.3.31"
   testImplementation "org.postgresql:postgresql:42.6.0"

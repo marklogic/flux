@@ -15,19 +15,14 @@ class ImportOrcFilesTest extends AbstractTest {
     void orcFileTest() {
         run(
             "import_orc_files",
-            "--path", "src/test/resources/orc-files/orc-file.orc",
+            "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
-            "--uriPrefix", "/orc-test"
+            "--uriTemplate", "/orc-test/{LastName}.json"
         );
 
-        assertCollectionSize("orcFile-test", 5);
-        verifyDocContent("/orc-test/author/author12.json");
-        verifyDocContent("/orc-test/author/author2.json");
-        verifyDocContent("/orc-test/author/author5.json");
-        verifyDocContent("/orc-test/author/author6.json");
-        verifyDocContent("/orc-test/author/author9.json");
+        getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);
     }
 
     @Test
@@ -50,20 +45,15 @@ class ImportOrcFilesTest extends AbstractTest {
     void orcFileWithCompressionTest() {
         run(
             "import_orc_files",
-            "--path", "src/test/resources/orc-files/orc-file.orc",
+            "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "orcFileWithCompressionTest-test",
-            "--uriPrefix", "/orc-compressed-test",
+            "--collections", "compression-test",
+            "--uriTemplate", "/orc-compressed-test{LastName}.json",
             "-Pcompression=snappy"
         );
 
-        assertCollectionSize("orcFileWithCompressionTest-test", 5);
-        verifyDocContent("/orc-compressed-test/author/author12.json");
-        verifyDocContent("/orc-compressed-test/author/author2.json");
-        verifyDocContent("/orc-compressed-test/author/author5.json");
-        verifyDocContent("/orc-compressed-test/author/author6.json");
-        verifyDocContent("/orc-compressed-test/author/author9.json");
+        getUrisInCollection("compression-test", 15).forEach(this::verifyDocContent);
     }
 
     @Test
