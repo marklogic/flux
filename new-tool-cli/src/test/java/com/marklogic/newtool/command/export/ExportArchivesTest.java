@@ -30,7 +30,8 @@ class ExportArchivesTest extends AbstractTest {
             "import_archives",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
-            "--collections", "imported-author"
+            "--collections", "imported-author",
+            "--uriPrefix", "/imported"
         );
 
         assertCollectionSize("Being able to read these URIs verifies that the metadata was exported and imported " +
@@ -58,7 +59,8 @@ class ExportArchivesTest extends AbstractTest {
             "import_archives",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
-            "--collections", "imported-author"
+            "--collections", "imported-author",
+            "--uriPrefix", "/imported"
         );
 
         assertCollectionSize("The export command should always include content, even when --categories is used " +
