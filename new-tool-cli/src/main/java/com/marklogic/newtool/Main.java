@@ -102,6 +102,7 @@ public class Main {
             .addCommand("copy", new CopyCommand())
             .addCommand("export_archives", new ExportArchivesCommand())
             .addCommand("export_avro_files", new ExportAvroFilesCommand())
+            .addCommand("export_delimited_files", new ExportDelimitedFilesCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
             .addCommand("export_orc_files", new ExportOrcFilesCommand())
