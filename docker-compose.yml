@@ -17,7 +17,7 @@ services:
       - 8007:8007
 
   marklogic:
-    image: "marklogicdb/marklogic-db:11.1.0-centos-1.1.0"
+    image: "marklogicdb/marklogic-db:11.2.0-centos-1.1.2"
     platform: linux/amd64
     environment:
       - MARKLOGIC_INIT=true
