@@ -10,7 +10,7 @@ import java.util.EnumSet;
  * A JCommander converter - https://jcommander.org/#_custom_types_converters_and_splitters - that handles the fact that
  * Spark's {@code SaveMode} uses camel-cased enum values instead of uppercase values.
  */
-class SaveModeConverter implements IStringConverter<SaveMode> {
+public class SaveModeConverter implements IStringConverter<SaveMode> {
 
     @Override
     public SaveMode convert(String value) {
