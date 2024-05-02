@@ -46,6 +46,9 @@ dependencies {
   testImplementation "org.springframework:spring-jdbc:5.3.31"
   testImplementation "org.postgresql:postgresql:42.6.0"
 
+  // For testing custom commands with a 3rd party connector.
+  testImplementation "com.databricks:spark-xml_2.12:0.18.0"
+
   shadowDependencies "org.jcommander:jcommander:1.83"
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 }
