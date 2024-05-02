@@ -15,7 +15,7 @@ class ImportAvroFilesOptionsTest extends AbstractOptionsTest {
             "import_avro_files",
             "--path", "/doesnt/matter",
             "-PdatetimeRebaseMode=CORRECTED",
-            "-Pspark.sql.parquet.filterPushdown=false",
+            "-Cspark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 

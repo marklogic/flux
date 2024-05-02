@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
-import org.apache.spark.sql.SparkSession;
 
 import java.util.Map;
 
@@ -35,21 +34,10 @@ abstract class AbstractImportStructuredFilesCommand extends AbstractImportFilesC
     }
 
     @Override
-    protected final void modifySparkSession(SparkSession session) {
-        if (dynamicParams != null) {
-            dynamicParams.entrySet().stream()
-                .filter(OptionsUtil::isSparkConfigurationOption)
-                .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
-        }
-    }
-
-    @Override
     protected Map<String, String> makeReadOptions() {
         Map<String, String> options = super.makeReadOptions();
         if (dynamicParams != null) {
-            dynamicParams.entrySet().stream()
-                .filter(OptionsUtil::isSparkDataSourceOption)
-                .forEach(entry -> options.put(entry.getKey(), entry.getValue()));
+            options.putAll(dynamicParams);
         }
         return options;
     }

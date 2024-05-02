@@ -70,7 +70,7 @@ class ImportAvroFilesTest extends AbstractTest {
                 "--path", "src/test/resources/avro/*",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
-                "-Pspark.sql.parquet.filterPushdown=invalid-value"
+                "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
         );
 

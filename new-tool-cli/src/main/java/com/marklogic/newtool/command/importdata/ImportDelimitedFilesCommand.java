@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
-    "as a JSON document to MarkLogic.")
+    "as a JSON  or XML document to MarkLogic.")
 public class ImportDelimitedFilesCommand extends AbstractImportStructuredFilesCommand {
 
     @DynamicParameter(

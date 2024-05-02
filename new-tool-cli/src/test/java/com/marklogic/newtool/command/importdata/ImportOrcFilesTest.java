@@ -64,7 +64,7 @@ class ImportOrcFilesTest extends AbstractTest {
                 "--path", "src/test/resources/orc-files",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
-                "-Pspark.sql.parquet.filterPushdown=invalid-value"
+                "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
         );
 

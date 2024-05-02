@@ -11,7 +11,7 @@ import org.apache.spark.sql.*;
 
 import java.util.*;
 
-@Parameters(commandDescription = "Read rows via JDBC and write JSON documents to MarkLogic.")
+@Parameters(commandDescription = "Read rows via JDBC and write JSON or XML documents to MarkLogic.")
 public class ImportJdbcCommand extends AbstractCommand {
 
     @ParametersDelegate
