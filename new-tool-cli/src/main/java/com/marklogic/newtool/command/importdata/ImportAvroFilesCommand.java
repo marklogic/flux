@@ -8,14 +8,14 @@ import java.util.Map;
 
 @Parameters(commandDescription = "Read Avro files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-avro.html, with each row being written " +
-    "to MarkLogic.")
+    "as a JSON or XML document in MarkLogic.")
 public class ImportAvroFilesCommand extends AbstractImportStructuredFilesCommand {
 
     @DynamicParameter(
         names = "-P",
-        description = "Specify any Spark Avro option or configuration item defined at" +
-            "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true or " +
-            "-Pspark.sql.avro.filterPushdown.enabled=false."
+        description = "Specify any Spark Avro data source option defined at " +
+            "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
+            "Spark configuration options must be defined via '-C'."
     )
     private Map<String, String> avroParams;
 

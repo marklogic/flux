@@ -95,7 +95,7 @@ class ImportParquetFilesTest extends AbstractTest {
                 "--path", "src/test/resources/parquet/individual/cars.parquet",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
-                "-Pspark.sql.parquet.filterPushdown=invalid-value"
+                "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
         );
 

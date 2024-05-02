@@ -15,7 +15,7 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
             "import_orc_files",
             "--path", "/doesnt/matter",
             "-PmergeSchema=true",
-            "-Pspark.sql.parquet.filterPushdown=false",
+            "-Cspark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 

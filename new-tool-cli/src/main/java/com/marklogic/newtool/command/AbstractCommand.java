@@ -1,10 +1,13 @@
 package com.marklogic.newtool.command;
 
+import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.ParametersDelegate;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class AbstractCommand implements Command {
@@ -19,9 +22,15 @@ public abstract class AbstractCommand implements Command {
     @ParametersDelegate
     private ConnectionParams connectionParams = new ConnectionParams();
 
+    @DynamicParameter(
+        names = "-C",
+        description = "Specify any key and value to be added to the Spark runtime configuration; e.g. -Cspark.logConf=true."
+    )
+    private Map<String, String> configParams = new HashMap<>();
+
     @Override
     public final Optional<Preview> execute(SparkSession session) {
-        modifySparkSession(session);
+        configParams.entrySet().stream().forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
 
         String host = getConnectionParams().getSelectedHost();
         if (host != null && logger.isInfoEnabled()) {
@@ -45,10 +54,6 @@ public abstract class AbstractCommand implements Command {
         }
 
         return Optional.empty();
-    }
-
-    protected void modifySparkSession(SparkSession session) {
-        // Subclasses can override this to e.g. modify the Spark configuration.
     }
 
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);

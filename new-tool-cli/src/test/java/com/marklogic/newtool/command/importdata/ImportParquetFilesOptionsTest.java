@@ -15,7 +15,7 @@ class ImportParquetFilesOptionsTest extends AbstractOptionsTest {
             "import_parquet_files",
             "--path", "/doesnt/matter",
             "-PdatetimeRebaseMode=CORRECTED",
-            "-Pspark.sql.parquet.filterPushdown=false",
+            "-Cspark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 

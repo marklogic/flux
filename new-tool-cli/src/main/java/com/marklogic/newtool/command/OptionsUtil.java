@@ -26,30 +26,7 @@ public abstract class OptionsUtil {
         options.putAll(makeOptions(keysAndValues));
         return options;
     }
-
-    /**
-     * Spark configuration options begin with "spark.sql." - for example, see
-     * https://spark.apache.org/docs/latest/sql-data-sources-parquet.html . For these to have an effect, they must
-     * be included in the Spark configuration instead of as an option for the reader or writer.
-     *
-     * @param option
-     * @return
-     */
-    public static boolean isSparkConfigurationOption(Map.Entry<String, String> option) {
-        return option.getKey() != null && option.getKey().startsWith("spark.sql.");
-    }
-
-    /**
-     * Any option - typically from a map of dynamic parameters - that does not begin with "spark.sql." is considered
-     * to be a data source option that should be included as an option for the reader or writer.
-     *
-     * @param option
-     * @return
-     */
-    public static boolean isSparkDataSourceOption(Map.Entry<String, String> option) {
-        return option.getKey() != null && !option.getKey().startsWith("spark.sql.");
-    }
-
+    
     private OptionsUtil() {
     }
 }
