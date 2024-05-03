@@ -1,0 +1,12 @@
+plugins {
+  id "java"
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+dependencies {
+  implementation "com.marklogic:new-tool-cli:0.3-SNAPSHOT"
+}

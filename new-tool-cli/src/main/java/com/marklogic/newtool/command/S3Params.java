@@ -24,8 +24,7 @@ public class S3Params {
     private String endpoint;
 
     /**
-     * @param config
-     * @param paths
+     * @param config the Spark runtime configuration object
      */
     public void addToHadoopConfiguration(Configuration config) {
         // See See https://sparkbyexamples.com/amazon-aws/write-read-csv-file-from-s3-into-dataframe/ for more
