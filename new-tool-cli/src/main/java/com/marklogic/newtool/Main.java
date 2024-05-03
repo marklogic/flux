@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.marklogic.newtool.command.Command;
 import com.marklogic.newtool.command.Preview;
 import com.marklogic.newtool.command.copy.CopyCommand;
+import com.marklogic.newtool.command.custom.CustomExportDocumentsCommand;
 import com.marklogic.newtool.command.custom.CustomExportRowsCommand;
 import com.marklogic.newtool.command.custom.CustomImportCommand;
 import com.marklogic.newtool.command.export.*;
@@ -102,6 +103,7 @@ public class Main {
         JCommander jc = JCommander.newBuilder()
             .programName(PROGRAM_NAME)
             .addCommand("copy", new CopyCommand())
+            .addCommand("custom_export_documents", new CustomExportDocumentsCommand())
             .addCommand("custom_export_rows", new CustomExportRowsCommand())
             .addCommand("custom_import", new CustomImportCommand())
             .addCommand("export_archives", new ExportArchivesCommand())

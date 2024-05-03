@@ -38,7 +38,6 @@ public class ExportFilesCommand extends AbstractCommand {
         if (zipFileCount != null && zipFileCount > 0) {
             getCommonParams().setRepartition(zipFileCount);
         }
-        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(readDocumentParams.makeOptions())
@@ -47,6 +46,7 @@ public class ExportFilesCommand extends AbstractCommand {
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
+        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(MARKLOGIC_CONNECTOR)
             .options(makeWriteOptions())
             // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.

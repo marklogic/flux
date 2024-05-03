@@ -23,7 +23,8 @@ class CustomExportRowsTest extends AbstractTest {
             "--repartition", "1",
             "-Ppath=" + tempDir.toFile().getAbsolutePath(),
             "-ProotTag=authors",
-            "-ProwTag=author"
+            "-ProwTag=author",
+            "--mode", "Overwrite"
         );
 
         // The name of this file may be an implementation detail of the connector and thus subject to change.
