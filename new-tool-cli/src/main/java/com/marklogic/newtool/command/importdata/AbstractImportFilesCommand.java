@@ -20,7 +20,7 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
     /**
      * Subclass must define the format used for reading - e.g. "csv", "marklogic", etc.
      *
-     * @return
+     * @return the name of the Spark data source or connector to pass to the Spark 'format(String)' method
      */
     protected abstract String getReadFormat();
 
@@ -47,7 +47,7 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
     /**
      * Subclasses can override this to add their own options.
      *
-     * @return
+     * @return a map of options to pass to the Spark reader
      */
     protected Map<String, String> makeReadOptions() {
         return readFilesParams.makeOptions();
@@ -56,7 +56,7 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
     /**
      * Subclasses can override this to add their own options.
      *
-     * @return
+     * @return a map of options to pass to the Spark writer
      */
     protected Map<String, String> makeWriteOptions() {
         Map<String, String> options = getConnectionParams().makeOptions();

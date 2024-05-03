@@ -38,7 +38,8 @@ abstract class AbstractExportRowsToFilesCommand extends AbstractCommand {
 
     /**
      * Allows subclass a chance to provide their own output-specific write options.
-     * @return
+     *
+     * @return a map of options to pass to the Spark writer
      */
     protected abstract Map<String, String> makeWriteOptions();
 

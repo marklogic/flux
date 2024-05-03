@@ -8,8 +8,8 @@ public abstract class OptionsUtil {
     /**
      * Avoids adding options with a null value, which can cause errors with some Spark data sources.
      *
-     * @param keysAndValues
-     * @return
+     * @param keysAndValues sequence of keys and values to construct options
+     * @return a map of all keys that have non-null values
      */
     public static Map<String, String> makeOptions(String... keysAndValues) {
         Map<String, String> options = new HashMap<>();
@@ -26,7 +26,7 @@ public abstract class OptionsUtil {
         options.putAll(makeOptions(keysAndValues));
         return options;
     }
-    
+
     private OptionsUtil() {
     }
 }
