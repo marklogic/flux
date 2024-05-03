@@ -23,13 +23,13 @@ public class CustomImportCommand extends AbstractCommand {
 
     @DynamicParameter(
             names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--source'; e.g. -PmyOption=someValue."
+            description = "Specify any number of options to be passed to the connector identified by '--source'."
     )
     private Map<String, String> readerParams = new HashMap<>();
 
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
-    
+
     @ParametersDelegate
     private WriteDocumentWithTemplateParams writeDocumentParams = new WriteDocumentWithTemplateParams();
 
