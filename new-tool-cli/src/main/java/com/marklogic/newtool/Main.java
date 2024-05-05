@@ -91,12 +91,7 @@ public class Main {
     }
 
     protected SparkSession buildSparkSession() {
-        // Will make these hardcoded strings configurable soon.
-        return SparkSession.builder()
-            .master("local[*]")
-            .config("spark.ui.showConsoleProgress", "true")
-            .config("spark.sql.session.timeZone", "UTC")
-            .getOrCreate();
+        return SparkUtil.buildSparkSession();
     }
 
     private JCommander buildCommander() {
