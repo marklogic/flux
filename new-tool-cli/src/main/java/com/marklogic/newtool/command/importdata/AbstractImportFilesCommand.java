@@ -63,4 +63,12 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
         options.putAll(writeDocumentParams.makeOptions());
         return options;
     }
+
+    protected final ReadFilesParams getReadFilesParams() {
+        return readFilesParams;
+    }
+
+    protected final WriteDocumentWithTemplateParams getWriteDocumentParams() {
+        return writeDocumentParams;
+    }
 }

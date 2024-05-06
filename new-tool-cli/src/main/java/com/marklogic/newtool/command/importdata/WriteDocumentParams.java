@@ -108,4 +108,12 @@ public class WriteDocumentParams {
             Options.WRITE_URI_SUFFIX, uriSuffix
         );
     }
+
+    public void setCollections(String collections) {
+        this.collections = collections;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
 }
