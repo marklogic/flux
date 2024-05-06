@@ -1,15 +1,23 @@
 package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.newtool.SparkUtil;
+import com.marklogic.newtool.api.FilesImporter;
 import com.marklogic.newtool.command.AbstractCommand;
+import com.marklogic.newtool.command.Preview;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Base class for commands that import files and write to MarkLogic.
  */
-public abstract class AbstractImportFilesCommand extends AbstractCommand {
+public abstract class AbstractImportFilesCommand<T extends FilesImporter<T>> extends AbstractCommand implements FilesImporter<T> {
 
     @ParametersDelegate
     private ReadFilesParams readFilesParams = new ReadFilesParams();
@@ -64,11 +72,69 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
         return options;
     }
 
-    protected final ReadFilesParams getReadFilesParams() {
-        return readFilesParams;
+    // Will eventually move up to AbstractCommand
+    @Override
+    public Optional<Preview> execute() {
+        return execute(SparkUtil.buildSparkSession());
     }
 
-    protected final WriteDocumentWithTemplateParams getWriteDocumentParams() {
-        return writeDocumentParams;
+    // Will eventually move up to AbstractCommand
+    @Override
+    public T withConnectionString(String connectionString) {
+        getConnectionParams().setConnectionString(connectionString);
+        return (T) this;
+    }
+
+    @Override
+    public T withPath(String path) {
+        readFilesParams.getPaths().add(path);
+        return (T) this;
+    }
+
+    @Override
+    public T withFilter(String filter) {
+        readFilesParams.setFilter(filter);
+        return (T) this;
+    }
+
+    @Override
+    public T withRecursiveFileLookup(boolean value) {
+        readFilesParams.setRecursiveFileLookup(value);
+        return (T) this;
+    }
+
+    @Override
+    public T withCollectionsString(String commaDelimitedCollections) {
+        writeDocumentParams.setCollections(commaDelimitedCollections);
+        return (T) this;
+    }
+
+    @Override
+    public T withCollections(String... collections) {
+        writeDocumentParams.setCollections(Stream.of(collections).collect(Collectors.joining(",")));
+        return (T) this;
+    }
+
+    @Override
+    public T withPermissionsString(String rolesAndCapabilities) {
+        writeDocumentParams.setPermissions(rolesAndCapabilities);
+        return (T) this;
+    }
+
+    @Override
+    public T withPermissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
+        // This likely won't stay here, will get refactored to a non-command-specific location.
+        StringBuilder sb = new StringBuilder();
+        permissions.entrySet().stream().forEach(entry -> {
+            String role = entry.getKey();
+            entry.getValue().forEach(capability -> {
+                if (!sb.toString().equals("")) {
+                    sb.append(",");
+                }
+                sb.append(role).append(",").append(capability.name());
+            });
+        });
+        writeDocumentParams.setPermissions(sb.toString());
+        return (T) this;
     }
 }

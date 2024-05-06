@@ -119,6 +119,11 @@ java {
   withJavadocJar()
   withSourcesJar()
 }
+
+javadoc {
+  include "com/marklogic/newtool/api/**"
+}
+
 publishing {
   publications {
     mainJava(MavenPublication) {

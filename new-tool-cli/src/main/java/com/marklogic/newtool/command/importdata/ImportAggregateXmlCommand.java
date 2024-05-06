@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.marklogic.newtool.api.AggregateXmlFilesImporter;
 import com.marklogic.newtool.command.CompressionType;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -10,16 +11,9 @@ import java.util.Map;
 
 @Parameters(commandDescription = "Read aggregate XML files from local, HDFS, and S3 locations using Spark's support " +
     "with each row being written to MarkLogic.")
-public class ImportAggregateXmlCommand extends AbstractImportFilesCommand {
+public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
 
-    @Parameter(required = true, names = "--element",
-        description = "Specifies the local name of the element to use as the root of each document."
-    )
     private String element;
-
-    @Parameter(names = "--namespace",
-        description = "Specifies the namespace of the element to use as the root of each document."
-    )
     private String namespace;
 
     @Parameter(names = "--uriElement",
@@ -52,5 +46,23 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand {
             Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace,
             Options.READ_FILES_COMPRESSION, compression != null ? compression.name() : null
         );
+    }
+
+    @Override
+    @Parameter(required = true, names = "--element",
+        description = "Specifies the local name of the element to use as the root of each document."
+    )
+    public AggregateXmlFilesImporter withElement(String element) {
+        this.element = element;
+        return this;
+    }
+
+    @Override
+    @Parameter(names = "--namespace",
+        description = "Specifies the namespace of the element to use as the root of each document."
+    )
+    public AggregateXmlFilesImporter withNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
     }
 }

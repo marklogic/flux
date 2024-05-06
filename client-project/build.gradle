@@ -8,5 +8,9 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:new-tool-cli:0.3-SNAPSHOT"
+  implementation ("com.marklogic:new-tool-cli:0.3-SNAPSHOT") {
+    // It's possible to exclude this from the runtime classpath if none of the classes a user interacts with
+    // implement JCommander interfaces.
+    // exclude module: "jcommander"
+  }
 }

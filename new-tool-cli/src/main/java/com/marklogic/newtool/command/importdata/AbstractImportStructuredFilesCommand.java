@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.FilesImporter;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * "Structured files" = rows with an arbitrary schema that can be converted into either JSON or XML documents.
  */
-abstract class AbstractImportStructuredFilesCommand extends AbstractImportFilesCommand {
+abstract class AbstractImportStructuredFilesCommand<T extends FilesImporter<T>> extends AbstractImportFilesCommand<T> {
 
     @Parameter(
         names = "--jsonRootName",

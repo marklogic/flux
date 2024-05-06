@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
+import com.marklogic.newtool.api.DelimitedFilesImporter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 @Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
     "as a JSON  or XML document to MarkLogic.")
-public class ImportDelimitedFilesCommand extends AbstractImportStructuredFilesCommand {
+public class ImportDelimitedFilesCommand extends AbstractImportStructuredFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
 
     @DynamicParameter(
         names = "-P",

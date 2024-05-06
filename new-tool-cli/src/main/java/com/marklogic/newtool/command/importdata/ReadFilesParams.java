@@ -84,4 +84,12 @@ public class ReadFilesParams {
     public S3Params getS3Params() {
         return s3Params;
     }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public void setRecursiveFileLookup(Boolean recursiveFileLookup) {
+        this.recursiveFileLookup = recursiveFileLookup;
+    }
 }

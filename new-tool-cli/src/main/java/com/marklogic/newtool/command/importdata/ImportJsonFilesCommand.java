@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.marklogic.newtool.api.JsonFilesImporter;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -12,18 +13,10 @@ import java.util.Map;
 @Parameters(commandDescription = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
     "as a JSON document in MarkLogic.")
-public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
+public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
 
-    @Parameter(
-        names = "--jsonLines",
-        description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
-    )
     private Boolean jsonLines;
 
-    @Parameter(
-        names = "--jsonRootName",
-        description = "Name of a root field to add to each JSON document."
-    )
     private String jsonRootName;
 
     @DynamicParameter(
@@ -55,5 +48,25 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
         return OptionsUtil.addOptions(super.makeWriteOptions(),
             Options.WRITE_JSON_ROOT_NAME, jsonRootName
         );
+    }
+
+    @Override
+    @Parameter(
+        names = "--jsonLines",
+        description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
+    )
+    public JsonFilesImporter withJsonLines(boolean value) {
+        this.jsonLines = value;
+        return this;
+    }
+
+    @Override
+    @Parameter(
+        names = "--jsonRootName",
+        description = "Name of a root field to add to each JSON document."
+    )
+    public JsonFilesImporter withJsonRootName(String jsonRootName) {
+        this.jsonRootName = jsonRootName;
+        return this;
     }
 }
