@@ -21,7 +21,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeInvoke", "/my/invoke.sjs"
         );
 
-        assertOptions(command.makeReadOptions(),
+        assertOptions(command.readParams.get(),
             Options.READ_INVOKE, "/my/invoke.sjs",
             Options.READ_PARTITIONS_INVOKE, "/my/other-invoke.sjs",
             Options.READ_VARS_PREFIX + "param1", "value1",
@@ -43,7 +43,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeVar", "param2=spaces work!"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.get(),
             Options.WRITE_INVOKE, "/my/invoke.sjs",
             Options.WRITE_EXTERNAL_VARIABLE_NAME, "MY_VAR",
             Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, ";",
@@ -63,7 +63,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeJavascript", "fn.currentDate()"
         );
 
-        assertOptions(command.makeReadOptions(),
+        assertOptions(command.readParams.get(),
             Options.READ_JAVASCRIPT, "fn.currentDate()",
             Options.READ_PARTITIONS_JAVASCRIPT, "console.log('')"
         );
@@ -77,7 +77,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeJavascript", "fn.currentDate()"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.get(),
             Options.WRITE_JAVASCRIPT, "fn.currentDate()"
         );
     }
@@ -91,7 +91,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeXquery", "fn:current-date()"
         );
 
-        assertOptions(command.makeReadOptions(),
+        assertOptions(command.readParams.get(),
             Options.READ_XQUERY, "fn:current-date()",
             Options.READ_PARTITIONS_XQUERY, "xdmp:log('')"
         );
@@ -105,7 +105,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeXquery", "fn:current-date()"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.get(),
             Options.WRITE_XQUERY, "fn:current-date()"
         );
     }
@@ -119,7 +119,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeJavascript", "fn.currentDate()"
         );
 
-        assertOptions(command.makeReadOptions(),
+        assertOptions(command.readParams.get(),
             Options.READ_JAVASCRIPT_FILE, "my-code.js",
             Options.READ_PARTITIONS_JAVASCRIPT_FILE, "path/my-partitions.js"
         );
@@ -134,7 +134,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeJavascript", "fn.currentDate()"
         );
 
-        assertOptions(command.makeReadOptions(),
+        assertOptions(command.readParams.get(),
             Options.READ_XQUERY_FILE, "my-code.xqy",
             Options.READ_PARTITIONS_XQUERY_FILE, "path/my-partitions.xqy"
         );
@@ -148,7 +148,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeJavascriptFile", "my-code.js"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.get(),
             Options.WRITE_JAVASCRIPT_FILE, "my-code.js"
         );
     }
@@ -161,7 +161,7 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--writeXqueryFile", "my-code.xqy"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.get(),
             Options.WRITE_XQUERY_FILE, "my-code.xqy"
         );
     }

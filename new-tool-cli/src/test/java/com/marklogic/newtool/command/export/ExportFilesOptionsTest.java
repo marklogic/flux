@@ -22,7 +22,7 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
             "--compression", "gzip"
         );
 
-        Map<String, String> options = command.makeWriteOptions();
+        Map<String, String> options = command.writeParams.get();
         assertEquals("true", options.get(Options.WRITE_FILES_PRETTY_PRINT));
         assertEquals("GZIP", options.get(Options.WRITE_FILES_COMPRESSION));
     }
@@ -37,7 +37,7 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
             "--compression", "zip"
         );
 
-        Map<String, String> options = command.makeWriteOptions();
+        Map<String, String> options = command.writeParams.get();
         assertFalse(options.containsKey(Options.WRITE_FILES_PRETTY_PRINT));
         assertEquals("ZIP", options.get(Options.WRITE_FILES_COMPRESSION));
     }
