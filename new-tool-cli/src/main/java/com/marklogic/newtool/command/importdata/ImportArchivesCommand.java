@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -10,21 +11,40 @@ import java.util.Map;
 @Parameters(commandDescription = "Read local, HDFS, and S3 archive files created via the 'export_archives' command and write the documents in each archive to MarkLogic.")
 public class ImportArchivesCommand extends AbstractImportFilesCommand {
 
-    @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
-        "If not specified, all types of metadata are included. " +
-        "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
-    private String categories;
+    @ParametersDelegate
+    private ReadArchiveFilesParams readParams = new ReadArchiveFilesParams();
+
+    @ParametersDelegate
+    private WriteDocumentWithTemplateParams writeParams = new WriteDocumentWithTemplateParams();
+
+    @Override
+    protected ReadFilesParams getReadParams() {
+        return readParams;
+    }
+
+    @Override
+    protected WriteDocumentWithTemplateParams getWriteParams() {
+        return writeParams;
+    }
 
     @Override
     protected String getReadFormat() {
         return MARKLOGIC_CONNECTOR;
     }
 
-    @Override
-    protected Map<String, String> makeReadOptions() {
-        return OptionsUtil.addOptions(super.makeReadOptions(),
-            Options.READ_FILES_TYPE, "archive",
-            Options.READ_ARCHIVES_CATEGORIES, categories
-        );
+    public static class ReadArchiveFilesParams extends ReadFilesParams {
+
+        @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
+            "If not specified, all types of metadata are included. " +
+            "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
+        private String categories;
+
+        @Override
+        public Map<String, String> makeOptions() {
+            return OptionsUtil.addOptions(super.makeOptions(),
+                Options.READ_FILES_TYPE, "archive",
+                Options.READ_ARCHIVES_CATEGORIES, categories
+            );
+        }
     }
 }

@@ -5,12 +5,13 @@ import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Defines all basic params for writing documents. Does not include support for a URI template, as that is not always
  * relevant nor possible depending on what kind of data is being imported.
  */
-public class WriteDocumentParams {
+public class WriteDocumentParams implements Supplier<Map<String, String>> {
 
     @Parameter(
         names = "--abortOnWriteFailure",
@@ -107,6 +108,11 @@ public class WriteDocumentParams {
             Options.WRITE_URI_REPLACE, uriReplace,
             Options.WRITE_URI_SUFFIX, uriSuffix
         );
+    }
+
+    @Override
+    public Map<String, String> get() {
+        return makeOptions();
     }
 
     public void setCollections(String collections) {

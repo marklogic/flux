@@ -31,12 +31,15 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uriSuffix", ".suffix",
             "--uriTemplate", "/test/{value}.json"
         );
-
-        assertOptions(command.makeWriteOptions(),
+        
+        assertOptions(command.getConnectionParams().makeOptions(),
             Options.CLIENT_HOST, "somehost",
             Options.CLIENT_PORT, "8001",
             Options.CLIENT_USERNAME, "someuser",
-            Options.CLIENT_PASSWORD, "someword",
+            Options.CLIENT_PASSWORD, "someword"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
             Options.WRITE_ABORT_ON_FAILURE, "true",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, "/my/failures",
             Options.WRITE_BATCH_SIZE, "50",

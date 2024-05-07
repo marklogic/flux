@@ -3,8 +3,7 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.marklogic.newtool.command.OptionsUtil;
-import com.marklogic.spark.Options;
+import com.beust.jcommander.ParametersDelegate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,24 +13,11 @@ import java.util.Map;
     "as a JSON document in MarkLogic.")
 public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
 
-    @Parameter(
-        names = "--jsonLines",
-        description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
-    )
-    private Boolean jsonLines;
+    @ParametersDelegate
+    private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
 
-    @Parameter(
-        names = "--jsonRootName",
-        description = "Name of a root field to add to each JSON document."
-    )
-    private String jsonRootName;
-
-    @DynamicParameter(
-        names = "-P",
-        description = "Specify any Spark JSON option defined at " +
-            "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
-    )
-    private Map<String, String> jsonParams = new HashMap<>();
+    @ParametersDelegate
+    private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
     protected String getReadFormat() {
@@ -39,21 +25,40 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
-    protected Map<String, String> makeReadOptions() {
-        Map<String, String> options = super.makeReadOptions();
-        // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
-        // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
-        if (jsonLines == null || !jsonLines.booleanValue()) {
-            options.put("multiLine", "true");
-        }
-        options.putAll(jsonParams);
-        return options;
+    protected ReadFilesParams getReadParams() {
+        return readParams;
     }
 
     @Override
-    protected Map<String, String> makeWriteOptions() {
-        return OptionsUtil.addOptions(super.makeWriteOptions(),
-            Options.WRITE_JSON_ROOT_NAME, jsonRootName
-        );
+    protected WriteDocumentWithTemplateParams getWriteParams() {
+        return writeParams;
+    }
+
+    public static class ReadJsonFilesParams extends ReadFilesParams {
+
+        @Parameter(
+            names = "--jsonLines",
+            description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
+        )
+        private Boolean jsonLines;
+
+        @DynamicParameter(
+            names = "-P",
+            description = "Specify any Spark JSON option defined at " +
+                "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
+        )
+        private Map<String, String> dynamicParams = new HashMap<>();
+
+        @Override
+        public Map<String, String> makeOptions() {
+            Map<String, String> options = super.makeOptions();
+            // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
+            // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
+            if (jsonLines == null || !jsonLines.booleanValue()) {
+                options.put("multiLine", "true");
+            }
+            options.putAll(dynamicParams);
+            return options;
+        }
     }
 }
