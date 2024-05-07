@@ -5,63 +5,74 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
-import com.marklogic.newtool.command.S3Params;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+
+import java.util.Map;
 
 @Parameters(commandDescription = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.")
 public class ExportArchivesCommand extends AbstractCommand {
 
-    @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
-    private String path;
+    @ParametersDelegate
+    private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();
 
     @ParametersDelegate
-    private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
-
-    @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
-        "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
-    private String categories;
-
-    @ParametersDelegate
-    private S3Params s3Params = new S3Params();
-
-    // Exporting archives tends to involve a large number of documents, such that getting one zip per partition may
-    // be desirable. So no default value is given here.
-    @Parameter(names = "--fileCount", description = "Specifies how many files should be written; also an alias for '--repartition'.")
-    private Integer fileCount;
+    private WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
+        final Integer fileCount = writeParams.getFileCount();
         if (fileCount != null && fileCount > 0) {
             getCommonParams().setRepartition(fileCount);
         }
-        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(OptionsUtil.makeOptions(Options.READ_DOCUMENTS_CATEGORIES, determineCategories()))
-            .options(readDocumentParams.makeOptions())
+            .options(readParams.makeOptions())
             .load();
     }
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
+        writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(MARKLOGIC_CONNECTOR)
-            .option(Options.WRITE_FILES_COMPRESSION, "zip")
+            .options(writeParams.get())
             // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.
             .mode(SaveMode.Append)
-            .save(path);
+            .save(writeParams.getPath());
     }
 
-    /**
-     * While the "read documents" operation allows for only reading metadata, that isn't valid for an archive - we
-     * always need content to be returned as well.
-     *
-     * @return
-     */
-    private String determineCategories() {
-        if (categories != null && categories.trim().length() > 0) {
-            return "content," + categories;
+    public static class WriteArchiveFilesParams extends WriteFilesParams {
+
+        @Override
+        public Map<String, String> get() {
+            return OptionsUtil.makeOptions(Options.WRITE_FILES_COMPRESSION, "zip");
         }
-        return "content,metadata";
+    }
+
+    public static class ReadArchiveDocumentsParams extends ReadDocumentParams {
+
+        @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
+            "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
+        private String categories;
+
+        @Override
+        public Map<String, String> makeOptions() {
+            return OptionsUtil.addOptions(super.makeOptions(),
+                Options.READ_DOCUMENTS_CATEGORIES, determineCategories()
+            );
+        }
+
+        /**
+         * While the "read documents" operation allows for only reading metadata, that isn't valid for an archive - we
+         * always need content to be returned as well.
+         *
+         * @return
+         */
+        private String determineCategories() {
+            if (categories != null && categories.trim().length() > 0) {
+                return "content," + categories;
+            }
+            return "content,metadata";
+        }
     }
 }

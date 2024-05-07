@@ -35,7 +35,7 @@ class ExportRdfFilesTest extends AbstractTest {
         File[] files = tempDir.toFile().listFiles();
         assertEquals(1, files.length);
         assertTrue(files[0].getName().endsWith(".nq"), "Unexpected filename: " + files[0].getName());
-        
+
         // And import them again to make sure we get the expected amount, but in a different collection.
         run(
             "import_rdf_files",

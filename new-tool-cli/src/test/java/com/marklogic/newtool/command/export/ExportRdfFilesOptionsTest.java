@@ -29,7 +29,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
             "--graphOverride", "use-this-graph"
         );
 
-        Map<String, String> options = command.makeReadOptions();
+        Map<String, String> options = command.readParams.get();
         assertEquals("/a1.json\n/a2.json", options.get(Options.READ_TRIPLES_URIS));
         assertEquals("hello", options.get(Options.READ_TRIPLES_STRING_QUERY));
         assertEquals("<query/>", options.get(Options.READ_TRIPLES_QUERY));
@@ -40,7 +40,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("50", options.get(Options.READ_BATCH_SIZE));
         assertEquals("2", options.get(Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST));
 
-        options = command.makeWriteOptions();
+        options = command.writeParams.get();
         assertEquals("trig", options.get(Options.WRITE_RDF_FILES_FORMAT));
         assertEquals("use-this-graph", options.get(Options.WRITE_RDF_FILES_GRAPH));
     }
