@@ -19,7 +19,7 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
             "--preview", "10"
         );
 
-        Map<String, String> options = command.makeReadOptions();
+        Map<String, String> options = command.getReadParams().makeOptions();
         assertOptions(options, "mergeSchema", "true");
         assertFalse(options.containsKey("spark.sql.parquet.filterPushdown"),
             "Dynamic params starting with 'spark.sql' should not be added to the 'read' options. They should " +

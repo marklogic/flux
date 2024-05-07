@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,19 +10,44 @@ import java.util.Map;
 @Parameters(commandDescription = "Read Avro files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-avro.html, with each row being written " +
     "as a JSON or XML document in MarkLogic.")
-public class ImportAvroFilesCommand extends AbstractImportStructuredFilesCommand {
+public class ImportAvroFilesCommand extends AbstractImportFilesCommand {
 
-    @DynamicParameter(
-        names = "-P",
-        description = "Specify any Spark Avro data source option defined at " +
-            "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
-            "Spark configuration options must be defined via '-C'."
-    )
-    private Map<String, String> avroParams;
+    @ParametersDelegate
+    private ReadAvroFilesParams readParams = new ReadAvroFilesParams();
 
-    public ImportAvroFilesCommand() {
-        super("avro");
-        this.avroParams = new HashMap<>();
-        setDynamicParams(this.avroParams);
+    @ParametersDelegate
+    private WriteStructuredDocumentParams writeDocumentParams = new WriteStructuredDocumentParams();
+
+    @Override
+    protected String getReadFormat() {
+        return "avro";
+    }
+
+    @Override
+    protected ReadFilesParams getReadParams() {
+        return readParams;
+    }
+
+    @Override
+    protected WriteDocumentWithTemplateParams getWriteParams() {
+        return writeDocumentParams;
+    }
+
+    public static class ReadAvroFilesParams extends ReadFilesParams {
+
+        @DynamicParameter(
+            names = "-P",
+            description = "Specify any Spark Avro data source option defined at " +
+                "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
+                "Spark configuration options must be defined via '-C'."
+        )
+        private Map<String, String> dynamicParams = new HashMap<>();
+
+        @Override
+        public Map<String, String> makeOptions() {
+            Map<String, String> options = super.makeOptions();
+            options.putAll(dynamicParams);
+            return options;
+        }
     }
 }
