@@ -41,4 +41,12 @@ public class S3Params {
             config.set("fs.s3n.endpoint", endpoint);
         }
     }
+
+    public void setAddCredentials(boolean addCredentials) {
+        this.addCredentials = addCredentials;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 }

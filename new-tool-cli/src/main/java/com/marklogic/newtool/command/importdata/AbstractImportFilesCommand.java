@@ -1,8 +1,10 @@
 package com.marklogic.newtool.command.importdata;
 
+import com.marklogic.newtool.api.ReadFilesOptions;
 import com.marklogic.newtool.command.AbstractCommand;
 import org.apache.spark.sql.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -29,10 +31,11 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
             logger.info("Importing files from: {}", readFilesParams.getPaths());
         }
         readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        List<String> paths = readFilesParams.getPaths();
         return reader
             .format(getReadFormat())
             .options(readFilesParams.makeOptions())
-            .load(readFilesParams.getPaths().toArray(new String[]{}));
+            .load(paths.toArray(new String[]{}));
     }
 
     @Override

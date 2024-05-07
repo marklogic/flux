@@ -2,6 +2,8 @@ package com.marklogic.newtool.command.copy;
 
 import com.beust.jcommander.Parameter;
 import com.marklogic.client.DatabaseClient;
+import com.marklogic.newtool.api.AuthenticationType;
+import com.marklogic.newtool.api.SslHostnameVerifier;
 import com.marklogic.newtool.command.ConnectionInputs;
 
 /**

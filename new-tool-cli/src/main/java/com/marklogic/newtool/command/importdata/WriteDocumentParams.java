@@ -1,17 +1,22 @@
 package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.newtool.api.WriteDocumentsOptions;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Defines all basic params for writing documents. Does not include support for a URI template, as that is not always
  * relevant nor possible depending on what kind of data is being imported.
  */
-public class WriteDocumentParams implements Supplier<Map<String, String>> {
+public class WriteDocumentParams<T extends WriteDocumentsOptions> implements WriteDocumentsOptions<T>, Supplier<Map<String, String>> {
 
     @Parameter(
         names = "--abortOnWriteFailure",
@@ -115,11 +120,103 @@ public class WriteDocumentParams implements Supplier<Map<String, String>> {
         return makeOptions();
     }
 
-    public void setCollections(String collections) {
-        this.collections = collections;
+    @Override
+    public T abortOnFailure(Boolean value) {
+        this.abortOnWriteFailure = value;
+        return (T) this;
     }
 
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    @Override
+    public T batchSize(int batchSize) {
+        this.batchSize = batchSize;
+        return (T) this;
+    }
+
+    @Override
+    public T collections(String... collections) {
+        this.collections = Stream.of(collections).collect(Collectors.joining(","));
+        return (T) this;
+    }
+
+    @Override
+    public T collectionsString(String commaDelimitedCollections) {
+        this.collections = commaDelimitedCollections;
+        return (T) this;
+    }
+
+    @Override
+    public T failedDocumentsPath(String path) {
+        this.failedDocumentsPath = path;
+        return (T) this;
+    }
+
+    @Override
+    public T permissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
+        StringBuilder sb = new StringBuilder();
+        permissions.entrySet().stream().forEach(entry -> {
+            String role = entry.getKey();
+            entry.getValue().forEach(capability -> {
+                if (!sb.toString().equals("")) {
+                    sb.append(",");
+                }
+                sb.append(role).append(",").append(capability.name());
+            });
+        });
+        this.permissions = sb.toString();
+        return (T) this;
+    }
+
+    @Override
+    public T permissionsString(String rolesAndCapabilities) {
+        this.permissions = rolesAndCapabilities;
+        return (T) this;
+    }
+
+    @Override
+    public T temporalCollection(String temporalCollection) {
+        this.temporalCollection = temporalCollection;
+        return (T) this;
+    }
+
+    @Override
+    public T threadCount(int threadCount) {
+        this.threadCount = threadCount;
+        return (T) this;
+    }
+
+    @Override
+    public T transform(String transform) {
+        this.transform = transform;
+        return (T) this;
+    }
+
+    @Override
+    public T transformParams(String delimitedNamesAndValues) {
+        this.transformParams = delimitedNamesAndValues;
+        return (T) this;
+    }
+
+    @Override
+    public T transformParamsDelimiter(String delimiter) {
+        this.transformParamsDelimiter = delimiter;
+        return (T) this;
+    }
+
+    @Override
+    public T uriPrefix(String uriPrefix) {
+        this.uriPrefix = uriPrefix;
+        return (T) this;
+    }
+
+    @Override
+    public T uriReplace(String uriReplace) {
+        this.uriReplace = uriReplace;
+        return (T) this;
+    }
+
+    @Override
+    public T uriSuffix(String uriSuffix) {
+        this.uriSuffix = uriSuffix;
+        return (T) this;
     }
 }

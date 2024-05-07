@@ -1,6 +1,8 @@
 package com.marklogic.newtool.command;
 
 import com.marklogic.client.DatabaseClient;
+import com.marklogic.newtool.api.AuthenticationType;
+import com.marklogic.newtool.api.SslHostnameVerifier;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
@@ -10,22 +12,6 @@ import java.util.Map;
  * with parameter annotations.
  */
 public abstract class ConnectionInputs {
-
-    public enum AuthenticationType {
-        BASIC,
-        DIGEST,
-        CLOUD,
-        KERBEROS,
-        CERTIFICATE,
-        SAML
-    }
-
-    // Need this as the Java Client's SSLHostnameVerifier isn't an enum.
-    public enum SslHostnameVerifier {
-        ANY,
-        COMMON,
-        STRICT
-    }
 
     protected String connectionString;
     protected String host;

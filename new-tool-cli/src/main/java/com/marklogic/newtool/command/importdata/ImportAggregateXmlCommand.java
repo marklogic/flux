@@ -3,7 +3,7 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.command.CompressionType;
+import com.marklogic.newtool.api.CompressionType;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
