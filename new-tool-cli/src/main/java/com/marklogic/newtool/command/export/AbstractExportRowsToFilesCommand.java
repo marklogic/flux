@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import org.apache.spark.sql.*;
 
@@ -8,7 +9,7 @@ import org.apache.spark.sql.*;
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
  * more files.
  */
-abstract class AbstractExportRowsToFilesCommand extends AbstractCommand {
+abstract class AbstractExportRowsToFilesCommand extends AbstractCommand<Executor<AbstractExportRowsToFilesCommand>> {
 
     @ParametersDelegate
     private ReadRowsParams readParams = new ReadRowsParams();

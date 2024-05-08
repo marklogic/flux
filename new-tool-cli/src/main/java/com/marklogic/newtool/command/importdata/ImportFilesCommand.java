@@ -3,9 +3,7 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.SparkUtil;
 import com.marklogic.newtool.api.CompressionType;
-import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.GenericFilesImporter;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -14,7 +12,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @Parameters(commandDescription = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic.")
-public class ImportFilesCommand extends AbstractImportFilesCommand implements GenericFilesImporter {
+public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesImporter> implements GenericFilesImporter {
 
     @ParametersDelegate
     private ReadGenericFilesParams readParams = new ReadGenericFilesParams();
@@ -33,25 +31,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand implements Ge
     }
 
     @Override
-    protected WriteDocumentWithTemplateParams getWriteParams() {
+    protected WriteDocumentParams getWriteParams() {
         return writeParams;
-    }
-
-    @Override
-    public void execute() {
-        execute(SparkUtil.buildSparkSession());
-    }
-
-    @Override
-    public GenericFilesImporter connectionString(String connectionString) {
-        getConnectionParams().connectionString(connectionString);
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter connection(Consumer<ConnectionOptions> consumer) {
-        consumer.accept(getConnectionParams());
-        return this;
     }
 
     @Override
@@ -85,7 +66,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand implements Ge
         }
     }
 
-    public static class WriteGenericDocumentsParams extends WriteDocumentWithTemplateParams<WriteGenericDocumentsOptions> implements WriteGenericDocumentsOptions {
+    public static class WriteGenericDocumentsParams extends WriteDocumentParams<WriteGenericDocumentsOptions> implements WriteGenericDocumentsOptions {
 
         private DocumentType documentType;
 

@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.JdbcParams;
 import com.marklogic.newtool.command.OptionsUtil;
@@ -11,7 +12,7 @@ import org.apache.spark.sql.*;
 import java.util.Map;
 
 @Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to a table via JDBC.")
-public class ExportJdbcCommand extends AbstractCommand {
+public class ExportJdbcCommand extends AbstractCommand<Executor<ExportJdbcCommand>> {
 
     @ParametersDelegate
     private ReadRowsParams readRowsParams = new ReadRowsParams();

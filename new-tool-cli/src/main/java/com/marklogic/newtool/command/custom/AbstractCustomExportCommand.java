@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.custom;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.S3Params;
 import com.marklogic.newtool.command.export.SaveModeConverter;
@@ -14,7 +15,7 @@ import org.apache.spark.sql.SparkSession;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class AbstractCustomExportCommand extends AbstractCommand {
+abstract class AbstractCustomExportCommand extends AbstractCommand<Executor<AbstractCustomExportCommand>> {
 
     @ParametersDelegate
     private S3Params s3Params = new S3Params();

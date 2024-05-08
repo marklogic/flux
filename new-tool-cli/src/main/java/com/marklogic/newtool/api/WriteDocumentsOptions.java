@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
-    T abortOnFailure(Boolean value);
+    T abortOnWriteFailure(Boolean value);
 
     T batchSize(int batchSize);
 
@@ -36,4 +36,6 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T uriReplace(String uriReplace);
 
     T uriSuffix(String uriSuffix);
+
+    T uriTemplate(String uriTemplate);
 }

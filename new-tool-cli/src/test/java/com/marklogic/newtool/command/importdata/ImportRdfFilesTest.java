@@ -107,24 +107,6 @@ class ImportRdfFilesTest extends AbstractTest {
     }
 
     @Test
-    void uriTemplateOptionShouldNotWork() {
-        String stderr = runAndReturnStderr(() -> run(
-            "import_rdf_files",
-            "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--connectionString", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "my-triples",
-            "--uriTemplate", "/test/{uri}"
-        ));
-
-        // We may want to eventually modify this JCommander error, as it's not intuitive as to what it means.
-        assertTrue(stderr.contains("Was passed main parameter '--uriTemplate'"),
-            "Was expecting an error due to --uriTemplate not being supported for importing RDF files, as it doesn't " +
-                "have any meaningful use case since we default to '/triplestore/uuid.xml' for managed triples " +
-                "documents. Unexpected stderr: " + stderr);
-    }
-
-    @Test
     void invalidFileDontAbort() {
         run(
             "import_rdf_files",

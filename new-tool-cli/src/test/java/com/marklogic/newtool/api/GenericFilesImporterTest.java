@@ -3,6 +3,7 @@ package com.marklogic.newtool.api;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.newtool.AbstractTest;
+import com.marklogic.spark.ConnectorException;
 import org.apache.spark.sql.AnalysisException;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +24,7 @@ class GenericFilesImporterTest extends AbstractTest {
             .readFiles(options -> options.paths(PATH))
             .writeDocuments(options -> options
                 .collectionsString("api-files,second-collection")
-                .permissionsString(DEFAULT_PERMISSIONS)
-            )
+                .permissionsString(DEFAULT_PERMISSIONS))
             .execute();
 
         assertCollectionSize("api-files", 4);
@@ -37,13 +37,11 @@ class GenericFilesImporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .readFiles(options -> options
                 .paths("src/test/resources/mixed-files/goodbye.zip")
-                .compressionType(CompressionType.ZIP)
-            )
+                .compressionType(CompressionType.ZIP))
             .writeDocuments(options -> options
                 .collections("files")
                 .permissionsString(DEFAULT_PERMISSIONS)
-                .uriReplace(".*/mixed-files,''")
-            )
+                .uriReplace(".*/mixed-files,''"))
             .execute();
 
         assertCollectionSize("files", 3);
@@ -61,8 +59,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriReplace(".*/mixed-files,''")
                 .uriSuffix(".unknown")
-                .documentType(GenericFilesImporter.DocumentType.JSON)
-            )
+                .documentType(GenericFilesImporter.DocumentType.JSON))
             .execute();
 
         String kind = getDatabaseClient().newServerEval()
@@ -82,8 +79,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .permissions(Map.of(
                     "new-tool-role", Set.of(DocumentMetadataHandle.Capability.READ, DocumentMetadataHandle.Capability.UPDATE),
                     "qconsole-user", Set.of(DocumentMetadataHandle.Capability.READ)
-                ))
-            )
+                )))
             .execute();
 
         assertCollectionSize("mixed-files", 4);
@@ -107,5 +103,18 @@ class GenericFilesImporterTest extends AbstractTest {
                 "exception to escape. Think we need for AbstractCommand to catch Throwable and look for a " +
                 "Spark-specific exception. If one is found, we need a new generic 'NT' runtime exception to throw " +
                 "with the Spark-specific exception message.");
+    }
+
+    @Test
+    void abortOnWriteFailure() {
+        GenericFilesImporter command = NT.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .readFiles(options -> options.paths(PATH))
+            .writeDocuments(options -> options
+                .abortOnWriteFailure(true)
+                .permissionsString("not-a-real-role,update"));
+
+        ConnectorException ex = assertThrowsConnectorException(() -> command.execute());
+        assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
 }

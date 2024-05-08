@@ -10,7 +10,7 @@ import java.util.Map;
 @Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
     "as a JSON  or XML document to MarkLogic.")
-public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand {
+public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<ImportDelimitedFilesCommand> {
 
     @ParametersDelegate
     private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams();
@@ -29,11 +29,11 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
-    protected WriteDocumentWithTemplateParams getWriteParams() {
+    protected WriteDocumentParams getWriteParams() {
         return writeParams;
     }
 
-    public static class ReadDelimitedFilesParams extends ReadFilesParams {
+    public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadDelimitedFilesParams> {
 
         @DynamicParameter(
             names = "-P",

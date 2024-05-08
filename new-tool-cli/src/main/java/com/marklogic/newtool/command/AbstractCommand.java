@@ -2,6 +2,8 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.SparkUtil;
+import com.marklogic.newtool.api.Executor;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +11,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
 
@@ -66,5 +69,22 @@ public abstract class AbstractCommand implements Command {
 
     public CommonParams getCommonParams() {
         return commonParams;
+    }
+
+    @Override
+    public void execute() {
+        execute(SparkUtil.buildSparkSession());
+    }
+
+    @Override
+    public T connection(Consumer consumer) {
+        consumer.accept(getConnectionParams());
+        return (T)this;
+    }
+
+    @Override
+    public T connectionString(String connectionString) {
+        getConnectionParams().connectionString(connectionString);
+        return (T)this;
     }
 }

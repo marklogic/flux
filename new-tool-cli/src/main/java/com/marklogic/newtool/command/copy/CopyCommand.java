@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.copy;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.newtool.command.export.ReadDocumentParams;
@@ -18,7 +19,7 @@ import java.util.Map;
  * are the same to avoid a situation where e.g. a new param is added to {@code WriteDocumentParams} but not added here.
  */
 @Parameters(commandDescription = "Copy documents from one to another database, which includes the originating database.")
-public class CopyCommand extends AbstractCommand {
+public class CopyCommand extends AbstractCommand<Executor<CopyCommand>> {
 
     @ParametersDelegate
     private ReadDocumentParams readDocumentParams = new ReadDocumentParams();

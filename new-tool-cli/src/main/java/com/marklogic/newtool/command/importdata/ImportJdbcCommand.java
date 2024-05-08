@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.JdbcParams;
 import com.marklogic.newtool.command.OptionsUtil;
@@ -11,7 +12,7 @@ import org.apache.spark.sql.*;
 import java.util.*;
 
 @Parameters(commandDescription = "Read rows via JDBC and write JSON or XML documents to MarkLogic.")
-public class ImportJdbcCommand extends AbstractCommand {
+public class ImportJdbcCommand extends AbstractCommand<Executor<ImportJdbcCommand>> {
 
     @ParametersDelegate
     private ReadJdbcParams readParams = new ReadJdbcParams();

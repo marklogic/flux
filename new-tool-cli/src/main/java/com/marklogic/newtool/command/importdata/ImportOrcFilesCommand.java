@@ -10,7 +10,7 @@ import java.util.Map;
 @Parameters(commandDescription = "Read ORC files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-orc.html, with each row being " +
     "written as a JSON or XML document in MarkLogic.")
-public class ImportOrcFilesCommand extends AbstractImportFilesCommand {
+public class ImportOrcFilesCommand extends AbstractImportFilesCommand<ImportOrcFilesCommand> {
 
     @ParametersDelegate
     private ReadOrcFilesParams readParams = new ReadOrcFilesParams();
@@ -29,11 +29,11 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
-    protected WriteDocumentWithTemplateParams getWriteParams() {
+    protected WriteDocumentParams getWriteParams() {
         return writeDocumentParams;
     }
 
-    public static class ReadOrcFilesParams extends ReadFilesParams {
+    public static class ReadOrcFilesParams extends ReadFilesParams<ReadOrcFilesParams> {
 
         @DynamicParameter(
             names = "-P",
