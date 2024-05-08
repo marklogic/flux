@@ -1,17 +1,16 @@
 package com.marklogic.newtool.command.importdata;
 
-import com.marklogic.newtool.api.ReadFilesOptions;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import org.apache.spark.sql.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * Base class for commands that import files and write to MarkLogic.
  */
-public abstract class AbstractImportFilesCommand extends AbstractCommand {
+public abstract class AbstractImportFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
     /**
      * Subclass must define the format used for reading - e.g. "csv", "marklogic", etc.
@@ -20,22 +19,21 @@ public abstract class AbstractImportFilesCommand extends AbstractCommand {
      */
     protected abstract String getReadFormat();
 
-    protected abstract ReadFilesParams getReadParams();
+    protected abstract <P extends ReadFilesParams> P getReadParams();
 
     protected abstract Supplier<Map<String, String>> getWriteParams();
 
     @Override
     protected final Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        ReadFilesParams readFilesParams = getReadParams();
+        ReadFilesParams<?> readFilesParams = getReadParams();
         if (logger.isInfoEnabled()) {
             logger.info("Importing files from: {}", readFilesParams.getPaths());
         }
         readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
-        List<String> paths = readFilesParams.getPaths();
         return reader
             .format(getReadFormat())
             .options(readFilesParams.makeOptions())
-            .load(paths.toArray(new String[]{}));
+            .load(readFilesParams.getPaths().toArray(new String[]{}));
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Map;
 @Parameters(commandDescription = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
     "as a JSON document in MarkLogic.")
-public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
+public class ImportJsonFilesCommand extends AbstractImportFilesCommand<ImportJsonFilesCommand> {
 
     @ParametersDelegate
     private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
@@ -30,11 +30,11 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
-    protected WriteDocumentWithTemplateParams getWriteParams() {
+    protected WriteDocumentParams getWriteParams() {
         return writeParams;
     }
 
-    public static class ReadJsonFilesParams extends ReadFilesParams {
+    public static class ReadJsonFilesParams extends ReadFilesParams<ReadJsonFilesParams> {
 
         @Parameter(
             names = "--jsonLines",

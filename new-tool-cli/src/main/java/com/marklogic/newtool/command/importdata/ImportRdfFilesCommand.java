@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Parameters(commandDescription = "Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic.")
-public class ImportRdfFilesCommand extends AbstractImportFilesCommand {
+public class ImportRdfFilesCommand extends AbstractImportFilesCommand<ImportRdfFilesCommand> {
 
     @ParametersDelegate
     private ReadRdfFilesParams readParams = new ReadRdfFilesParams();
@@ -34,7 +34,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand {
         return writeDocumentParams;
     }
 
-    public static class ReadRdfFilesParams extends ReadFilesParams {
+    public static class ReadRdfFilesParams extends ReadFilesParams<ReadRdfFilesParams> {
 
         @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
         private CompressionType compression;
@@ -48,7 +48,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand {
         }
     }
 
-    public static class WriteTriplesDocumentsParams extends WriteDocumentParams {
+    public static class WriteTriplesDocumentsParams extends WriteDocumentParams<WriteTriplesDocumentsParams> {
 
         @Parameter(names = "--graph", description = "Specify the graph URI for each triple not already associated with a graph. If not set, " +
             "triples will be added to the default MarkLogic graph - http://marklogic.com/semantics#default-graph . ")

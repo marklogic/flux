@@ -3,7 +3,6 @@ package com.marklogic.newtool.command.copy;
 import com.beust.jcommander.Parameter;
 import com.marklogic.newtool.AbstractOptionsTest;
 import com.marklogic.newtool.command.importdata.WriteDocumentParams;
-import com.marklogic.newtool.command.importdata.WriteDocumentWithTemplateParams;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
@@ -142,11 +141,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void testOutputParameterCount() {
         final int copyCommandCount = getOutputParameterCountInCopyCommand();
-
-        // Can't find a way to get the count from the subclass, so gotta get counts from both subclass and parent class.
-        final int writeDocumentParamsCount =
-            getParameterCount(WriteDocumentWithTemplateParams.class) + getParameterCount(WriteDocumentParams.class);
-
+        final int writeDocumentParamsCount = getParameterCount(WriteDocumentParams.class);
         assertEquals(copyCommandCount, writeDocumentParamsCount,
             "Expecting the CopyCommand to declare one Parameter field for each Parameter field found in " +
                 "WriteDocumentParams, as CopyCommand is expected to duplicate all of those " +

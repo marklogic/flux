@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.api.CompressionType;
 import com.marklogic.newtool.command.OptionsUtil;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Parameters(commandDescription = "Read documents from MarkLogic and write them to a local filesystem, HDFS, or S3.")
-public class ExportFilesCommand extends AbstractCommand {
+public class ExportFilesCommand extends AbstractCommand<Executor<ExportFilesCommand>> {
 
     @ParametersDelegate
     private ReadDocumentParams readParams = new ReadDocumentParams();

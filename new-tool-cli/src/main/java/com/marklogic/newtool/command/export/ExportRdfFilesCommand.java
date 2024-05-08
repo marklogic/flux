@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.AtLeastOneValidator;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
     commandDescription = "Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3.",
     parametersValidators = ExportRdfFilesCommand.Validator.class
 )
-public class ExportRdfFilesCommand extends AbstractCommand {
+public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFilesCommand>> {
 
     public static class Validator extends AtLeastOneValidator {
         public Validator() {

@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.newtool.api.WriteStructuredDocumentsOptions;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * For import commands that can write "structured" rows with an arbitrary schema, either as JSON or XML documents.
  */
-public class WriteStructuredDocumentParams extends WriteDocumentWithTemplateParams {
+public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStructuredDocumentsOptions> implements WriteStructuredDocumentsOptions {
 
     @Parameter(
         names = "--jsonRootName",
@@ -37,5 +38,23 @@ public class WriteStructuredDocumentParams extends WriteDocumentWithTemplatePara
             Options.WRITE_XML_ROOT_NAME, xmlRootName,
             Options.WRITE_XML_NAMESPACE, xmlNamespace
         );
+    }
+
+    @Override
+    public WriteStructuredDocumentsOptions jsonRootName(String jsonRootName) {
+        this.jsonRootName = jsonRootName;
+        return this;
+    }
+
+    @Override
+    public WriteStructuredDocumentsOptions xmlRootName(String xmlRootName) {
+        this.xmlRootName = xmlRootName;
+        return this;
+    }
+
+    @Override
+    public WriteStructuredDocumentsOptions xmlNamespace(String xmlNamespace) {
+        this.xmlNamespace = xmlNamespace;
+        return this;
     }
 }

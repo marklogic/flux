@@ -97,6 +97,13 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriSuffix;
 
+    @Parameter(
+        names = "--uriTemplate",
+        description = "String defining a template for constructing each document URI. " +
+            "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
+    )
+    private String uriTemplate;
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
@@ -111,7 +118,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
             Options.WRITE_URI_PREFIX, uriPrefix,
             Options.WRITE_URI_REPLACE, uriReplace,
-            Options.WRITE_URI_SUFFIX, uriSuffix
+            Options.WRITE_URI_SUFFIX, uriSuffix,
+            Options.WRITE_URI_TEMPLATE, uriTemplate
         );
     }
 
@@ -121,7 +129,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T abortOnFailure(Boolean value) {
+    public T abortOnWriteFailure(Boolean value) {
         this.abortOnWriteFailure = value;
         return (T) this;
     }
@@ -217,6 +225,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T uriSuffix(String uriSuffix) {
         this.uriSuffix = uriSuffix;
+        return (T) this;
+    }
+
+    @Override
+    public T uriTemplate(String uriTemplate) {
+        this.uriTemplate = uriTemplate;
         return (T) this;
     }
 }

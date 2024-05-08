@@ -3,6 +3,8 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
+import com.marklogic.spark.ConnectorException;
+import org.apache.spark.SparkException;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
@@ -12,6 +14,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 public abstract class AbstractTest extends AbstractMarkLogicTest {
@@ -103,5 +107,13 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
             .config("spark.sql.session.timeZone", "UTC")
             .getOrCreate();
         return sparkSession;
+    }
+
+    protected final ConnectorException assertThrowsConnectorException(Runnable r) {
+        SparkException ex = assertThrows(SparkException.class, () -> r.run());
+        assertTrue(ex.getCause() instanceof ConnectorException,
+            "Expect the Spark-thrown SparkException to wrap our ConnectorException, which is an exception that we " +
+                "intentionally throw when an error condition is detected.");
+        return (ConnectorException) ex.getCause();
     }
 }

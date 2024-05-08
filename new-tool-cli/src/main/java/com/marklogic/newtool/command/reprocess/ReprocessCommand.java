@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.reprocess;
 
 import com.beust.jcommander.*;
+import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
     commandDescription = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.",
     parametersValidators = ReprocessCommand.ReprocessValidator.class
 )
-public class ReprocessCommand extends AbstractCommand {
+public class ReprocessCommand extends AbstractCommand<Executor<ReprocessCommand>> {
 
     @ParametersDelegate
     protected ReadParams readParams = new ReadParams();

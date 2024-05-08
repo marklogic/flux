@@ -10,7 +10,7 @@ import java.util.Map;
 @Parameters(commandDescription = "Read Parquet files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-parquet.html, with each row being written " +
     "as a JSON or XML document in MarkLogic.")
-public class ImportParquetFilesCommand extends AbstractImportFilesCommand {
+public class ImportParquetFilesCommand extends AbstractImportFilesCommand<ImportParquetFilesCommand> {
 
     @ParametersDelegate
     private ReadParquetFilesParams readParams = new ReadParquetFilesParams();
@@ -29,11 +29,11 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand {
     }
 
     @Override
-    protected WriteDocumentWithTemplateParams getWriteParams() {
+    protected WriteDocumentParams getWriteParams() {
         return writeDocumentParams;
     }
 
-    public static class ReadParquetFilesParams extends ReadFilesParams {
+    public static class ReadParquetFilesParams extends ReadFilesParams<ReadParquetFilesParams> {
 
         @DynamicParameter(
             names = "-P",
