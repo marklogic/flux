@@ -45,18 +45,18 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
                 "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
                 "Spark configuration options must be defined via '-C'."
         )
-        private Map<String, String> dynamicParams = new HashMap<>();
+        private Map<String, String> additionalOptions = new HashMap<>();
 
         @Override
         public Map<String, String> makeOptions() {
             Map<String, String> options = super.makeOptions();
-            options.putAll(dynamicParams);
+            options.putAll(additionalOptions);
             return options;
         }
 
         @Override
         public ReadSparkFilesOptions additionalOptions(Map<String, String> options) {
-            this.dynamicParams = options;
+            this.additionalOptions = options;
             return this;
         }
     }

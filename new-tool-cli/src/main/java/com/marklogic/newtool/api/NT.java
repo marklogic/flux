@@ -23,6 +23,10 @@ public interface NT {
         return new ImportAvroFilesCommand();
     }
 
+    static DelimitedFilesImporter importDelimitedFiles() {
+        return new ImportDelimitedFilesCommand();
+    }
+
     /**
      * @return an object that can import any type of file as-is, with the document type being determined by
      * the file extension.
@@ -31,10 +35,22 @@ public interface NT {
         return new ImportFilesCommand();
     }
 
+    static JsonFilesImporter importJsonFiles() {
+        return new ImportJsonFilesCommand();
+    }
+
     /**
      * @return an object that can import archive files created by MLCP.
      */
     static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
         return new ImportMlcpArchivesCommand();
+    }
+
+    static OrcFilesImporter importOrcFiles() {
+        return new ImportOrcFilesCommand();
+    }
+
+    static ParquetFilesImporter importParquetFiles() {
+        return new ImportParquetFilesCommand();
     }
 }
