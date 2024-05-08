@@ -1,4 +1,4 @@
-package com.marklogic.newtool.command;
+package com.marklogic.newtool.api;
 
 public enum CompressionType {
     ZIP,

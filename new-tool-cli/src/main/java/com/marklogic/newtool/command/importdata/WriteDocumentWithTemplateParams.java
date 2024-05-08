@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.newtool.api.WriteDocumentsOptions;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * For commands where defining URIs via a template makes sense.
  */
-public class WriteDocumentWithTemplateParams extends WriteDocumentParams {
+public class WriteDocumentWithTemplateParams<T extends WriteDocumentsOptions> extends WriteDocumentParams<T> {
 
     @Parameter(
         names = "--uriTemplate",

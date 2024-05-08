@@ -2,25 +2,21 @@ package com.marklogic.newtool.command.importdata;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.ReadFilesOptions;
 import com.marklogic.newtool.command.S3Params;
 import com.marklogic.spark.Options;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Defines common parameters for any import command that reads from files.
  */
-public class ReadFilesParams {
+public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T> {
 
     @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
 
-    @Parameter(names = "--abortOnReadFailure",
-        description = "Causes the command to abort when it fails to read a file."
-    )
+    @Parameter(names = "--abortOnReadFailure", description = "Causes the command to abort when it fails to read a file.")
     private Boolean abortOnReadFailure = false;
 
     @Parameter(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
@@ -83,5 +79,41 @@ public class ReadFilesParams {
 
     public S3Params getS3Params() {
         return s3Params;
+    }
+
+    @Override
+    public T paths(String... paths) {
+        this.paths = Arrays.asList(paths);
+        return (T) this;
+    }
+
+    @Override
+    public T filter(String filter) {
+        this.filter = filter;
+        return (T) this;
+    }
+
+    @Override
+    public T recursiveFileLookup(Boolean value) {
+        this.recursiveFileLookup = value;
+        return (T) this;
+    }
+
+    @Override
+    public T abortOnReadFailure(Boolean value) {
+        this.abortOnReadFailure = value;
+        return (T) this;
+    }
+
+    @Override
+    public T s3AddCredentials() {
+        this.s3Params.setAddCredentials(true);
+        return (T) this;
+    }
+
+    @Override
+    public T s3Endpoint(String endpoint) {
+        this.s3Params.setEndpoint(endpoint);
+        return (T) this;
     }
 }

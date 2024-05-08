@@ -1,19 +1,22 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.client.io.DocumentMetadataHandle;
-
-import java.util.Map;
-import java.util.Set;
+import java.util.function.Consumer;
 
 public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
-    GenericFilesImporter withPath(String path);
+    enum DocumentType {
+        JSON, TEXT, XML
+    }
 
-    GenericFilesImporter withCollections(String... collections);
+    interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
+        ReadGenericFilesOptions compressionType(CompressionType compressionType);
+    }
 
-    GenericFilesImporter withCollectionsString(String commaDelimitedCollections);
+    interface WriteGenericDocumentsOptions extends WriteDocumentsOptions<WriteGenericDocumentsOptions> {
+        WriteGenericDocumentsOptions documentType(DocumentType documentType);
+    }
 
-    GenericFilesImporter withPermissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions);
+    GenericFilesImporter readFiles(Consumer<ReadGenericFilesOptions> consumer);
 
-    GenericFilesImporter withPermissionsString(String rolesAndCapabilities);
+    GenericFilesImporter writeDocuments(Consumer<WriteGenericDocumentsOptions> consumer);
 }

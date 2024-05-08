@@ -3,25 +3,18 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.newtool.SparkUtil;
+import com.marklogic.newtool.api.CompressionType;
+import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.GenericFilesImporter;
-import com.marklogic.newtool.command.CompressionType;
-import com.marklogic.newtool.command.Preview;
+import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 @Parameters(commandDescription = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic.")
 public class ImportFilesCommand extends AbstractImportFilesCommand implements GenericFilesImporter {
-
-    public enum DocumentType {
-        JSON, TEXT, XML
-    }
 
     @ParametersDelegate
     private ReadGenericFilesParams readParams = new ReadGenericFilesParams();
@@ -31,7 +24,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand implements Ge
 
     @Override
     protected String getReadFormat() {
-        return (readParams.compression != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
+        return (readParams.compressionType != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
     }
 
     @Override
@@ -44,84 +37,70 @@ public class ImportFilesCommand extends AbstractImportFilesCommand implements Ge
         return writeParams;
     }
 
-    public static class ReadGenericFilesParams extends ReadFilesParams {
+    @Override
+    public void execute() {
+        execute(SparkUtil.buildSparkSession());
+    }
+
+    @Override
+    public GenericFilesImporter connectionString(String connectionString) {
+        getConnectionParams().connectionString(connectionString);
+        return this;
+    }
+
+    @Override
+    public GenericFilesImporter connection(Consumer<ConnectionOptions> consumer) {
+        consumer.accept(getConnectionParams());
+        return this;
+    }
+
+    @Override
+    public GenericFilesImporter readFiles(Consumer<ReadGenericFilesOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public GenericFilesImporter writeDocuments(Consumer<WriteGenericDocumentsOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
+    }
+
+    public static class ReadGenericFilesParams extends ReadFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
+
+        private CompressionType compressionType;
+
+        @Override
         @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
-        private CompressionType compression;
+        public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
+            this.compressionType = compressionType;
+            return this;
+        }
 
         @Override
         public Map<String, String> makeOptions() {
-            Map<String, String> options = super.makeOptions();
-            if (compression != null) {
-                options.put(Options.READ_FILES_COMPRESSION, compression.name());
-            }
-            return options;
+            return OptionsUtil.addOptions(super.makeOptions(),
+                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
+            );
         }
     }
 
-    public static class WriteGenericDocumentsParams extends WriteDocumentWithTemplateParams {
+    public static class WriteGenericDocumentsParams extends WriteDocumentWithTemplateParams<WriteGenericDocumentsOptions> implements WriteGenericDocumentsOptions {
 
-        @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
         private DocumentType documentType;
 
         @Override
-        public Map<String, String> makeOptions() {
-            Map<String, String> options = super.makeOptions();
-            if (documentType != null) {
-                options.put(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType.name());
-            }
-            return options;
+        @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
+        public WriteGenericDocumentsOptions documentType(DocumentType documentType) {
+            this.documentType = documentType;
+            return this;
         }
-    }
 
-    @Override
-    public Optional<Preview> execute() {
-        return execute(SparkUtil.buildSparkSession());
-    }
-
-    @Override
-    public GenericFilesImporter withConnectionString(String connectionString) {
-        getConnectionParams().setConnectionString(connectionString);
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter withPath(String path) {
-        getReadParams().getPaths().add(path);
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter withCollectionsString(String commaDelimitedCollections) {
-        getWriteParams().setCollections(commaDelimitedCollections);
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter withCollections(String... collections) {
-        getWriteParams().setCollections(Stream.of(collections).collect(Collectors.joining(",")));
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter withPermissionsString(String rolesAndCapabilities) {
-        getWriteParams().setPermissions(rolesAndCapabilities);
-        return this;
-    }
-
-    @Override
-    public GenericFilesImporter withPermissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
-        // This likely won't stay here, will get refactored to a non-command-specific location.
-        StringBuilder sb = new StringBuilder();
-        permissions.entrySet().stream().forEach(entry -> {
-            String role = entry.getKey();
-            entry.getValue().forEach(capability -> {
-                if (!sb.toString().equals("")) {
-                    sb.append(",");
-                }
-                sb.append(role).append(",").append(capability.name());
-            });
-        });
-        getWriteParams().setPermissions(sb.toString());
-        return this;
+        @Override
+        public Map<String, String> makeOptions() {
+            return OptionsUtil.addOptions(super.makeOptions(),
+                Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+            );
+        }
     }
 }
