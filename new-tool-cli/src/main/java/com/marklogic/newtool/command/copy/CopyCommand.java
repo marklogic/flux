@@ -6,7 +6,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
-import com.marklogic.newtool.command.export.ReadDocumentParams;
+import com.marklogic.newtool.command.export.ReadDocumentParamsImpl;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
@@ -22,7 +22,7 @@ import java.util.Map;
 public class CopyCommand extends AbstractCommand<Executor<CopyCommand>> {
 
     @ParametersDelegate
-    private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
+    private ReadDocumentParamsImpl readDocumentParams = new ReadDocumentParamsImpl();
 
     @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
         "Valid choices are: content, metadata (for all types of metadata), collections, permissions, quality, properties, and metadatavalues.")

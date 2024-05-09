@@ -1,12 +1,36 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.newtool.command.export.ExportJdbcCommand;
+import com.marklogic.newtool.command.export.*;
 import com.marklogic.newtool.command.importdata.*;
 
 public interface NT {
 
+    static ArchiveFilesExporter exportArchiveFiles() {
+        return new ExportArchivesCommand();
+    }
+
+    static AvroFilesExporter exportAvroFiles() {
+        return new ExportAvroFilesCommand();
+    }
+
+    static DelimitedFilesExporter exportDelimitedFiles() {
+        return new ExportDelimitedFilesCommand();
+    }
+
+    static GenericFilesExporter exportGenericFiles() {
+        return new ExportFilesCommand();
+    }
+
     static JdbcExporter exportJdbc() {
         return new ExportJdbcCommand();
+    }
+
+    static OrcFilesExporter exportOrcFiles() {
+        return new ExportOrcFilesCommand();
+    }
+
+    static ParquetFilesExporter exportParquetFiles() {
+        return new ExportParquetFilesCommand();
     }
 
     /**

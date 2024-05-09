@@ -2,12 +2,13 @@ package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.WriteFilesOptions;
 import com.marklogic.newtool.command.S3Params;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class WriteFilesParams implements Supplier<Map<String, String>> {
+public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T> {
 
     @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
     private String path;
@@ -28,5 +29,29 @@ public abstract class WriteFilesParams implements Supplier<Map<String, String>> 
 
     public Integer getFileCount() {
         return fileCount;
+    }
+
+    @Override
+    public T path(String path) {
+        this.path = path;
+        return (T) this;
+    }
+
+    @Override
+    public T s3AddCredentials() {
+        s3Params.setAddCredentials(true);
+        return (T) this;
+    }
+
+    @Override
+    public T s3Endpoint(String endpoint) {
+        s3Params.setEndpoint(endpoint);
+        return (T) this;
+    }
+
+    @Override
+    public T fileCount(Integer fileCount) {
+        this.fileCount = fileCount;
+        return (T) this;
     }
 }

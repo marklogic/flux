@@ -3,16 +3,19 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.marklogic.newtool.AtLeastOneValidator;
+import com.marklogic.newtool.api.ReadDocumentsOptions;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * For commands that export documents and must therefore read "document rows" first.
  */
 @Parameters(parametersValidators = ReadDocumentParams.Validator.class)
-public class ReadDocumentParams {
+public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadDocumentsOptions<T> {
 
     public static class Validator extends AtLeastOneValidator {
         public Validator() {
@@ -70,5 +73,71 @@ public class ReadDocumentParams {
             Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
             Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest != null ? partitionsPerForest.toString() : null
         );
+    }
+
+    @Override
+    public T stringQuery(String stringQuery) {
+        this.stringQuery = stringQuery;
+        return (T) this;
+    }
+
+    @Override
+    public T uris(String... uris) {
+        this.uris = Stream.of(uris).collect(Collectors.joining(","));
+        return (T) this;
+    }
+
+    @Override
+    public T query(String query) {
+        this.query = query;
+        return (T) this;
+    }
+
+    @Override
+    public T options(String options) {
+        this.options = options;
+        return (T) this;
+    }
+
+    @Override
+    public T collections(String... collections) {
+        this.collections = Stream.of(collections).collect(Collectors.joining(","));
+        return (T) this;
+    }
+
+    @Override
+    public T directory(String directory) {
+        this.directory = directory;
+        return (T) this;
+    }
+
+    @Override
+    public T transform(String transform) {
+        this.transform = transform;
+        return (T) this;
+    }
+
+    @Override
+    public T transformParams(String delimitedNamesAndValues) {
+        this.transformParams = delimitedNamesAndValues;
+        return (T) this;
+    }
+
+    @Override
+    public T transformParamsDelimiter(String delimiter) {
+        this.transformParamsDelimiter = delimiter;
+        return (T) this;
+    }
+
+    @Override
+    public T batchSize(Integer batchSize) {
+        this.batchSize = batchSize;
+        return (T) this;
+    }
+
+    @Override
+    public T partitionsPerForest(Integer partitionsPerForest) {
+        this.partitionsPerForest = partitionsPerForest;
+        return (T) this;
     }
 }
