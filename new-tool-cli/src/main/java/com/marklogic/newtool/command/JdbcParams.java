@@ -2,11 +2,12 @@ package com.marklogic.newtool.command;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
+import com.marklogic.newtool.api.JdbcOptions;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class JdbcParams {
+public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
 
     @Parameter(names = "--jdbcUrl", required = true, description = "The JDBC URL to connect to.")
     private String url;
@@ -36,5 +37,35 @@ public class JdbcParams {
         );
         options.putAll(additionalOptions);
         return options;
+    }
+
+    @Override
+    public T url(String url) {
+        this.url = url;
+        return (T) this;
+    }
+
+    @Override
+    public T driver(String driver) {
+        this.driver = driver;
+        return (T) this;
+    }
+
+    @Override
+    public T user(String user) {
+        this.user = user;
+        return (T) this;
+    }
+
+    @Override
+    public T password(String password) {
+        this.password = password;
+        return (T) this;
+    }
+
+    @Override
+    public T additionalOptions(Map<String, String> additionalOptions) {
+        this.additionalOptions = additionalOptions;
+        return (T) this;
     }
 }

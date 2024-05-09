@@ -35,6 +35,10 @@ public interface NT {
         return new ImportFilesCommand();
     }
 
+    static JdbcImporter importJdbc() {
+        return new ImportJdbcCommand();
+    }
+
     static JsonFilesImporter importJsonFiles() {
         return new ImportJsonFilesCommand();
     }
