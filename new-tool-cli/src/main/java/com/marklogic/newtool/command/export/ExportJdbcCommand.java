@@ -3,16 +3,18 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.JdbcExporter;
+import com.marklogic.newtool.api.ReadRowsOptions;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.JdbcParams;
 import com.marklogic.newtool.command.OptionsUtil;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to a table via JDBC.")
-public class ExportJdbcCommand extends AbstractCommand<Executor<ExportJdbcCommand>> {
+public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
     @ParametersDelegate
     private ReadRowsParams readRowsParams = new ReadRowsParams();
@@ -36,7 +38,7 @@ public class ExportJdbcCommand extends AbstractCommand<Executor<ExportJdbcComman
             .save();
     }
 
-    public static class WriteJdbcParams extends JdbcParams {
+    public static class WriteJdbcParams extends JdbcParams<WriteRowsOptions> implements WriteRowsOptions {
 
         @Parameter(names = "--table", required = true, description = "The JDBC table that should be written to.")
         private String table;
@@ -52,5 +54,29 @@ public class ExportJdbcCommand extends AbstractCommand<Executor<ExportJdbcComman
                 "dbtable", table
             );
         }
+
+        @Override
+        public WriteRowsOptions table(String table) {
+            this.table = table;
+            return this;
+        }
+
+        @Override
+        public WriteRowsOptions saveMode(SaveMode saveMode) {
+            this.saveMode = saveMode;
+            return this;
+        }
+    }
+
+    @Override
+    public JdbcExporter readRows(Consumer<ReadRowsOptions> consumer) {
+        consumer.accept(readRowsParams);
+        return this;
+    }
+
+    @Override
+    public JdbcExporter writeRows(Consumer<WriteRowsOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }

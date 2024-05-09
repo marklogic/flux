@@ -1,8 +1,13 @@
 package com.marklogic.newtool.api;
 
+import com.marklogic.newtool.command.export.ExportJdbcCommand;
 import com.marklogic.newtool.command.importdata.*;
 
 public interface NT {
+
+    static JdbcExporter exportJdbc() {
+        return new ExportJdbcCommand();
+    }
 
     /**
      * @return an object that can import aggregate XML files, where each instance of a particular child element is

@@ -1,6 +1,7 @@
 package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.newtool.api.ReadRowsOptions;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * Defines parameters for reading rows via an Optic query.
  */
-public class ReadRowsParams {
+public class ReadRowsParams implements ReadRowsOptions {
 
     @Parameter(names = "--query", description = "The Optic DSL query for retrieving rows; must use op.fromView as an accessor.")
     private String query;
@@ -34,5 +35,29 @@ public class ReadRowsParams {
             Options.READ_PUSH_DOWN_AGGREGATES, disableAggregationPushDown != null ? Boolean.toString(!disableAggregationPushDown) : null,
             Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
         );
+    }
+
+    @Override
+    public ReadRowsOptions opticQuery(String opticQuery) {
+        this.query = opticQuery;
+        return this;
+    }
+
+    @Override
+    public ReadRowsOptions disableAggregationPushDown(Boolean value) {
+        this.disableAggregationPushDown = value;
+        return this;
+    }
+
+    @Override
+    public ReadRowsOptions batchSize(Integer batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
+
+    @Override
+    public ReadRowsOptions partitions(Integer partitions) {
+        this.partitions = partitions;
+        return this;
     }
 }
