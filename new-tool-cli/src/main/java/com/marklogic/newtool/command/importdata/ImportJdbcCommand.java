@@ -3,16 +3,18 @@ package com.marklogic.newtool.command.importdata;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.JdbcImporter;
+import com.marklogic.newtool.api.WriteStructuredDocumentsOptions;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.JdbcParams;
 import com.marklogic.newtool.command.OptionsUtil;
 import org.apache.spark.sql.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @Parameters(commandDescription = "Read rows via JDBC and write JSON or XML documents to MarkLogic.")
-public class ImportJdbcCommand extends AbstractCommand<Executor<ImportJdbcCommand>> {
+public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements JdbcImporter {
 
     @ParametersDelegate
     private ReadJdbcParams readParams = new ReadJdbcParams();
@@ -37,7 +39,19 @@ public class ImportJdbcCommand extends AbstractCommand<Executor<ImportJdbcComman
             .save();
     }
 
-    public static class ReadJdbcParams extends JdbcParams {
+    @Override
+    public JdbcImporter readJdbc(Consumer<ReadJdbcOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public JdbcImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
+    }
+
+    public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
         @Parameter(names = "--query", required = true,
             description = "A SQL query used to read data from the JDBC data source.")
@@ -136,6 +150,24 @@ public class ImportJdbcCommand extends AbstractCommand<Executor<ImportJdbcComman
                 }
             }
             return columns;
+        }
+
+        @Override
+        public JdbcImporter.ReadJdbcOptions query(String query) {
+            this.query = query;
+            return this;
+        }
+
+        @Override
+        public JdbcImporter.ReadJdbcOptions groupBy(String groupBy) {
+            this.groupBy = groupBy;
+            return this;
+        }
+
+        @Override
+        public JdbcImporter.ReadJdbcOptions aggregationExpressions(String... expressions) {
+            this.aggregationExpressions = Arrays.asList(expressions);
+            return this;
         }
     }
 }
