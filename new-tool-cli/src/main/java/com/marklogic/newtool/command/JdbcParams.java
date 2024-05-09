@@ -25,7 +25,7 @@ public class JdbcParams {
         description = "Specify any Spark JDBC option defined at " +
             "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. -Pfetchsize=100."
     )
-    private Map<String, String> dynamicParams = new HashMap<>();
+    private Map<String, String> additionalOptions = new HashMap<>();
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = OptionsUtil.makeOptions(
@@ -34,7 +34,7 @@ public class JdbcParams {
             "user", user,
             "password", password
         );
-        options.putAll(dynamicParams);
+        options.putAll(additionalOptions);
         return options;
     }
 }

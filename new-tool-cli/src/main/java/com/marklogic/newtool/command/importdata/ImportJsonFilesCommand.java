@@ -4,14 +4,17 @@ import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.JsonFilesImporter;
+import com.marklogic.newtool.api.WriteStructuredDocumentsOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Parameters(commandDescription = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
     "as a JSON document in MarkLogic.")
-public class ImportJsonFilesCommand extends AbstractImportFilesCommand<ImportJsonFilesCommand> {
+public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
 
     @ParametersDelegate
     private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
@@ -34,7 +37,7 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<ImportJso
         return writeParams;
     }
 
-    public static class ReadJsonFilesParams extends ReadFilesParams<ReadJsonFilesParams> {
+    public static class ReadJsonFilesParams extends ReadFilesParams<ReadJsonFilesOptions> implements ReadJsonFilesOptions {
 
         @Parameter(
             names = "--jsonLines",
@@ -47,7 +50,7 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<ImportJso
             description = "Specify any Spark JSON option defined at " +
                 "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
         )
-        private Map<String, String> dynamicParams = new HashMap<>();
+        private Map<String, String> additionalOptions = new HashMap<>();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -57,8 +60,32 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<ImportJso
             if (jsonLines == null || !jsonLines.booleanValue()) {
                 options.put("multiLine", "true");
             }
-            options.putAll(dynamicParams);
+            options.putAll(additionalOptions);
             return options;
         }
+
+        @Override
+        public ReadJsonFilesOptions jsonLines(Boolean value) {
+            this.jsonLines = value;
+            return this;
+        }
+
+        @Override
+        public ReadJsonFilesOptions additionalOptions(Map<String, String> additionalOptions) {
+            this.additionalOptions = additionalOptions;
+            return this;
+        }
+    }
+
+    @Override
+    public JsonFilesImporter readFiles(Consumer<ReadJsonFilesOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public JsonFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }
