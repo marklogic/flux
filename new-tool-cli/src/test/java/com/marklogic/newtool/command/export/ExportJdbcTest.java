@@ -1,27 +1,12 @@
 package com.marklogic.newtool.command.export;
 
-import com.marklogic.newtool.AbstractTest;
+import com.marklogic.newtool.AbstractExportJdbcTest;
 import com.marklogic.newtool.command.PostgresUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExportJdbcTest extends AbstractTest {
-
-    private static final String EXPORTED_TABLE_NAME = "export_test";
-
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void dropTestTableIfItExists() {
-        DriverManagerDataSource ds = new DriverManagerDataSource(PostgresUtil.URL_WITH_AUTH);
-        ds.setDriverClassName(PostgresUtil.DRIVER);
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        jdbcTemplate.execute("DROP TABLE IF EXISTS " + EXPORTED_TABLE_NAME);
-    }
+class ExportJdbcTest extends AbstractExportJdbcTest {
 
     @Test
     void simpleTest() {
@@ -107,16 +92,5 @@ class ExportJdbcTest extends AbstractTest {
             "--table", EXPORTED_TABLE_NAME,
             "--mode", saveMode
         );
-    }
-
-    private void verifyRowCountInTable(int expectedCount) {
-        verifyRowCountInTable(expectedCount, "Unexpected count");
-    }
-
-    private void verifyRowCountInTable(int expectedCount, String message) {
-        this.jdbcTemplate.query("select count(*) from " + EXPORTED_TABLE_NAME, resultSet -> {
-            int count = resultSet.getInt("count");
-            assertEquals(expectedCount, count, message);
-        });
     }
 }
