@@ -33,6 +33,10 @@ public interface NT {
         return new ExportParquetFilesCommand();
     }
 
+    static RdfFilesExporter exportRdfFiles() {
+        return new ExportRdfFilesCommand();
+    }
+
     /**
      * @return an object that can import aggregate XML files, where each instance of a particular child element is
      * written to MarkLogic as a separate document.
@@ -85,5 +89,9 @@ public interface NT {
 
     static ParquetFilesImporter importParquetFiles() {
         return new ImportParquetFilesCommand();
+    }
+
+    static RdfFilesImporter importRdfFiles() {
+        return new ImportRdfFilesCommand();
     }
 }

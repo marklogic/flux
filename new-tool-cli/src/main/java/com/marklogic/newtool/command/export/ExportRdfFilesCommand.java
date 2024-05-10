@@ -4,20 +4,23 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.AtLeastOneValidator;
-import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.RdfFilesExporter;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Parameters(
     commandDescription = "Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3.",
     parametersValidators = ExportRdfFilesCommand.Validator.class
 )
-public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFilesCommand>> {
+public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> implements RdfFilesExporter {
 
     public static class Validator extends AtLeastOneValidator {
         public Validator() {
@@ -52,7 +55,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFil
             .save(writeParams.getPath());
     }
 
-    public static class ReadTriplesParams implements Supplier<Map<String, String>> {
+    public static class ReadTriplesParams implements Supplier<Map<String, String>>, RdfFilesExporter.ReadTriplesDocumentsOptions {
 
         @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
             "with --collections, --directory, and --stringQuery. If specified, --query will be ignored.")
@@ -98,9 +101,63 @@ public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFil
                 Options.READ_BATCH_SIZE, batchSize.toString()
             );
         }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions graphs(String... graphs) {
+            this.graphs = Stream.of(graphs).collect(Collectors.joining(","));
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions stringQuery(String stringQuery) {
+            this.stringQuery = stringQuery;
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions uris(String... uris) {
+            this.uris = Stream.of(uris).collect(Collectors.joining(","));
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions query(String query) {
+            this.query = query;
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions options(String options) {
+            this.options = options;
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions collections(String... collections) {
+            this.collections = Stream.of(collections).collect(Collectors.joining(","));
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions directory(String directory) {
+            this.directory = directory;
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions batchSize(Integer batchSize) {
+            this.batchSize = batchSize;
+            return this;
+        }
+
+        @Override
+        public RdfFilesExporter.ReadTriplesDocumentsOptions partitionsPerForest(Integer partitionsPerForest) {
+            this.partitionsPerForest = partitionsPerForest;
+            return this;
+        }
     }
 
-    public static class WriteRdfFilesParams extends WriteFilesParams<WriteRdfFilesParams> {
+    public static class WriteRdfFilesParams extends WriteFilesParams<WriteRdfFilesOptions> implements WriteRdfFilesOptions {
 
         @Parameter(names = "--format", description = "RDF file format; supported values are 'nq', 'nt', 'rdfthrift', 'trig', 'trix', and 'ttl'.")
         private String format = "ttl";
@@ -115,5 +172,29 @@ public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFil
                 Options.WRITE_RDF_FILES_GRAPH, graphOverride
             );
         }
+
+        @Override
+        public WriteRdfFilesOptions format(String format) {
+            this.format = format;
+            return this;
+        }
+
+        @Override
+        public WriteRdfFilesOptions graphOverride(String graphOverride) {
+            this.graphOverride = graphOverride;
+            return this;
+        }
+    }
+
+    @Override
+    public RdfFilesExporter readTriples(Consumer<ReadTriplesDocumentsOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public RdfFilesExporter writeFiles(Consumer<WriteRdfFilesOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }
