@@ -1,9 +1,25 @@
 package com.marklogic.newtool.api;
 
+import com.marklogic.newtool.command.custom.CustomExportDocumentsCommand;
+import com.marklogic.newtool.command.custom.CustomExportRowsCommand;
+import com.marklogic.newtool.command.custom.CustomImportCommand;
 import com.marklogic.newtool.command.export.*;
 import com.marklogic.newtool.command.importdata.*;
+import com.marklogic.newtool.command.reprocess.ReprocessCommand;
 
 public interface NT {
+
+    static CustomImporter customImport() {
+        return new CustomImportCommand();
+    }
+
+    static CustomDocumentsExporter customExportDocuments() {
+        return new CustomExportDocumentsCommand();
+    }
+
+    static CustomRowsExporter customExportRows() {
+        return new CustomExportRowsCommand();
+    }
 
     static ArchiveFilesExporter exportArchiveFiles() {
         return new ExportArchivesCommand();
@@ -93,5 +109,9 @@ public interface NT {
 
     static RdfFilesImporter importRdfFiles() {
         return new ImportRdfFilesCommand();
+    }
+
+    static Reprocessor reprocess() {
+        return new ReprocessCommand();
     }
 }

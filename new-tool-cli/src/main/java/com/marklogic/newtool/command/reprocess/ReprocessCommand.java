@@ -1,7 +1,7 @@
 package com.marklogic.newtool.command.reprocess;
 
 import com.beust.jcommander.*;
-import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.Reprocessor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
     commandDescription = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.",
     parametersValidators = ReprocessCommand.ReprocessValidator.class
 )
-public class ReprocessCommand extends AbstractCommand<Executor<ReprocessCommand>> {
+public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Reprocessor {
 
     @ParametersDelegate
     protected ReadParams readParams = new ReadParams();
@@ -100,7 +101,7 @@ public class ReprocessCommand extends AbstractCommand<Executor<ReprocessCommand>
         }
     }
 
-    public static class ReadParams implements Supplier<Map<String, String>> {
+    public static class ReadParams implements Supplier<Map<String, String>>, ReadOptions {
 
         @Parameter(
             names = {"--readInvoke"},
@@ -195,9 +196,77 @@ public class ReprocessCommand extends AbstractCommand<Executor<ReprocessCommand>
 
             return options;
         }
+
+        @Override
+        public ReadOptions invoke(String modulePath) {
+            this.readInvoke = modulePath;
+            return this;
+        }
+
+        @Override
+        public ReadOptions javascript(String query) {
+            this.readJavascript = query;
+            return this;
+        }
+
+        @Override
+        public ReadOptions javascriptFile(String path) {
+            this.readJavascriptFile = path;
+            return this;
+        }
+
+        @Override
+        public ReadOptions xquery(String query) {
+            this.readXquery = query;
+            return this;
+        }
+
+        @Override
+        public ReadOptions xqueryFile(String path) {
+            this.readXqueryFile = path;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsInvoke(String modulePath) {
+            this.readPartitionsInvoke = modulePath;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsJavascript(String query) {
+            this.readPartitionsJavascript = query;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsJavascriptFile(String path) {
+            this.readPartitionsJavascriptFile = path;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsXquery(String query) {
+            this.readPartitionsXquery = query;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsXqueryFile(String path) {
+            this.readPartitionsXqueryFile = path;
+            return this;
+        }
+
+        @Override
+        public ReadOptions vars(Map<String, String> namesAndValues) {
+            this.readVars = namesAndValues.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.toList());
+            return this;
+        }
     }
 
-    public static class WriteParams implements Supplier<Map<String, String>> {
+    public static class WriteParams implements Supplier<Map<String, String>>, WriteOptions {
 
         @Parameter(
             names = {"--writeInvoke"},
@@ -285,5 +354,79 @@ public class ReprocessCommand extends AbstractCommand<Executor<ReprocessCommand>
 
             return options;
         }
+
+        @Override
+        public WriteOptions invoke(String modulePath) {
+            this.writeInvoke = modulePath;
+            return this;
+        }
+
+        @Override
+        public WriteOptions javascript(String query) {
+            this.writeJavascript = query;
+            return this;
+        }
+
+        @Override
+        public WriteOptions javascriptFile(String path) {
+            this.writeJavascriptFile = path;
+            return this;
+        }
+
+        @Override
+        public WriteOptions xquery(String query) {
+            this.writeXquery = query;
+            return this;
+        }
+
+        @Override
+        public WriteOptions xqueryFile(String path) {
+            this.writeXqueryFile = path;
+            return this;
+        }
+
+        @Override
+        public WriteOptions externalVariableName(String name) {
+            this.externalVariableName = name;
+            return this;
+        }
+
+        @Override
+        public WriteOptions externalVariableDelimiter(String delimiter) {
+            this.externalVariableDelimiter = delimiter;
+            return this;
+        }
+
+        @Override
+        public WriteOptions vars(Map<String, String> namesAndValues) {
+            this.writeVars = namesAndValues.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.toList());
+            return this;
+        }
+
+        @Override
+        public WriteOptions abortOnWriteFailure(Boolean value) {
+            this.abortOnWriteFailure = value;
+            return this;
+        }
+
+        @Override
+        public WriteOptions batchSize(Integer batchSize) {
+            this.batchSize = batchSize;
+            return this;
+        }
+    }
+
+    @Override
+    public Reprocessor readItems(Consumer<ReadOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public Reprocessor writeItems(Consumer<WriteOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }
