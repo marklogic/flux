@@ -100,7 +100,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<Executor<ExportRdfFil
         }
     }
 
-    public static class WriteRdfFilesParams extends WriteFilesParams {
+    public static class WriteRdfFilesParams extends WriteFilesParams<WriteRdfFilesParams> {
 
         @Parameter(names = "--format", description = "RDF file format; supported values are 'nq', 'nt', 'rdfthrift', 'trig', 'trix', and 'ttl'.")
         private String format = "ttl";

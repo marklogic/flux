@@ -3,16 +3,20 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.ArchiveFilesExporter;
+import com.marklogic.newtool.api.WriteFilesOptions;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Parameters(commandDescription = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.")
-public class ExportArchivesCommand extends AbstractCommand<Executor<ExportArchivesCommand>> {
+public class ExportArchivesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {
 
     @ParametersDelegate
     private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();
@@ -42,7 +46,7 @@ public class ExportArchivesCommand extends AbstractCommand<Executor<ExportArchiv
             .save(writeParams.getPath());
     }
 
-    public static class WriteArchiveFilesParams extends WriteFilesParams {
+    public static class WriteArchiveFilesParams extends WriteFilesParams<WriteArchiveFilesParams> {
 
         @Override
         public Map<String, String> get() {
@@ -50,7 +54,7 @@ public class ExportArchivesCommand extends AbstractCommand<Executor<ExportArchiv
         }
     }
 
-    public static class ReadArchiveDocumentsParams extends ReadDocumentParams {
+    public static class ReadArchiveDocumentsParams extends ReadDocumentParams<ReadArchiveDocumentOptions> implements ReadArchiveDocumentOptions {
 
         @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
@@ -61,6 +65,12 @@ public class ExportArchivesCommand extends AbstractCommand<Executor<ExportArchiv
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_DOCUMENTS_CATEGORIES, determineCategories()
             );
+        }
+
+        @Override
+        public ReadArchiveDocumentOptions categories(String... categories) {
+            this.categories = Stream.of(categories).collect(Collectors.joining(","));
+            return this;
         }
 
         /**
@@ -75,5 +85,17 @@ public class ExportArchivesCommand extends AbstractCommand<Executor<ExportArchiv
             }
             return "content,metadata";
         }
+    }
+
+    @Override
+    public ArchiveFilesExporter readDocuments(Consumer<ReadArchiveDocumentOptions> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public ArchiveFilesExporter writeFiles(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }

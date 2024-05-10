@@ -2,7 +2,7 @@ package com.marklogic.newtool.command.custom;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.command.export.ReadDocumentParams;
+import com.marklogic.newtool.command.export.ReadDocumentParamsImpl;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -12,7 +12,7 @@ import org.apache.spark.sql.SparkSession;
 public class CustomExportDocumentsCommand extends AbstractCustomExportCommand {
 
     @ParametersDelegate
-    private ReadDocumentParams readDocumentParams = new ReadDocumentParams();
+    private ReadDocumentParamsImpl readDocumentParams = new ReadDocumentParamsImpl();
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {

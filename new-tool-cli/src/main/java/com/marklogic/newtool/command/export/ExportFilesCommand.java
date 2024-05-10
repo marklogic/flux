@@ -3,22 +3,24 @@ package com.marklogic.newtool.command.export;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.newtool.api.Executor;
-import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.api.CompressionType;
+import com.marklogic.newtool.api.GenericFilesExporter;
+import com.marklogic.newtool.api.ReadDocumentsOptions;
+import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.OptionsUtil;
 import com.marklogic.newtool.command.S3Params;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Parameters(commandDescription = "Read documents from MarkLogic and write them to a local filesystem, HDFS, or S3.")
-public class ExportFilesCommand extends AbstractCommand<Executor<ExportFilesCommand>> {
+public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {
 
     @ParametersDelegate
-    private ReadDocumentParams readParams = new ReadDocumentParams();
+    private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
     @ParametersDelegate
     protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
@@ -45,7 +47,7 @@ public class ExportFilesCommand extends AbstractCommand<Executor<ExportFilesComm
             .save(writeParams.path);
     }
 
-    public static class WriteGenericFilesParams implements Supplier<Map<String, String>> {
+    public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions {
 
         @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
         private String path;
@@ -54,7 +56,7 @@ public class ExportFilesCommand extends AbstractCommand<Executor<ExportFilesComm
         private S3Params s3Params = new S3Params();
 
         @Parameter(names = "--compression", description = "Set to 'ZIP' to write one zip file per partition, or to 'GZIP' to GZIP each document file.")
-        private CompressionType compression;
+        private CompressionType compressionType;
 
         @Parameter(names = "--prettyPrint", description = "Pretty-print the contents of JSON and XML files.")
         private Boolean prettyPrint;
@@ -65,9 +67,57 @@ public class ExportFilesCommand extends AbstractCommand<Executor<ExportFilesComm
         @Override
         public Map<String, String> get() {
             return OptionsUtil.makeOptions(
-                Options.WRITE_FILES_COMPRESSION, compression != null ? compression.name() : null,
+                Options.WRITE_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.WRITE_FILES_PRETTY_PRINT, prettyPrint != null ? prettyPrint.toString() : null
             );
         }
+
+        @Override
+        public WriteGenericFilesOptions compressionType(CompressionType compressionType) {
+            this.compressionType = compressionType;
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions prettyPrint(Boolean value) {
+            this.prettyPrint = value;
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions zipFileCount(Integer zipFileCount) {
+            this.zipFileCount = zipFileCount;
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions s3AddCredentials() {
+            s3Params.setAddCredentials(true);
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions s3Endpoint(String endpoint) {
+            s3Params.setEndpoint(endpoint);
+            return this;
+        }
+    }
+
+    @Override
+    public GenericFilesExporter readDocuments(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public GenericFilesExporter writeFiles(Consumer<WriteGenericFilesOptions> consumer) {
+        consumer.accept(writeParams);
+        return this;
     }
 }

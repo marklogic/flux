@@ -2,6 +2,7 @@ package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.WriteFilesOptions;
 import com.marklogic.newtool.command.AbstractCommand;
 import org.apache.spark.sql.*;
 
@@ -9,12 +10,14 @@ import org.apache.spark.sql.*;
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
  * more files.
  */
-abstract class AbstractExportRowsToFilesCommand extends AbstractCommand<Executor<AbstractExportRowsToFilesCommand>> {
+abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
     @ParametersDelegate
-    private ReadRowsParams readParams = new ReadRowsParams();
+    protected final ReadRowsParams readParams = new ReadRowsParams();
 
-    protected abstract WriteStructuredFilesParams getWriteFilesParams();
+    // Sonar complaining about the use of ?; not sure yet how to "fix" it, so ignoring.
+    @SuppressWarnings("java:S1452")
+    protected abstract WriteStructuredFilesParams<? extends WriteFilesOptions> getWriteFilesParams();
 
     /**
      * @return subclass must return the Spark data format for the desired output file.
@@ -35,7 +38,7 @@ abstract class AbstractExportRowsToFilesCommand extends AbstractCommand<Executor
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        WriteStructuredFilesParams writeParams = getWriteFilesParams();
+        WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
         writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(getWriteFormat())
             .options(writeParams.get())

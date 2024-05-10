@@ -1,12 +1,13 @@
 package com.marklogic.newtool.command.export;
 
 import com.beust.jcommander.Parameter;
+import com.marklogic.newtool.api.WriteFilesOptions;
 import org.apache.spark.sql.SaveMode;
 
 /**
  * Structured = reuses a Spark data source, where saveMode can vary.
  */
-public abstract class WriteStructuredFilesParams extends WriteFilesParams {
+public abstract class WriteStructuredFilesParams<T extends WriteFilesOptions> extends WriteFilesParams<T> {
 
     @Parameter(names = "--mode", converter = SaveModeConverter.class,
         description = "Specifies how data is written if the path already exists. " +
