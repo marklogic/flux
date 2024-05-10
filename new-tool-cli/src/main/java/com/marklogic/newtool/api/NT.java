@@ -1,60 +1,60 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.newtool.command.copy.CopyCommand;
-import com.marklogic.newtool.command.custom.CustomExportDocumentsCommand;
-import com.marklogic.newtool.command.custom.CustomExportRowsCommand;
-import com.marklogic.newtool.command.custom.CustomImportCommand;
-import com.marklogic.newtool.command.export.*;
-import com.marklogic.newtool.command.importdata.*;
-import com.marklogic.newtool.command.reprocess.ReprocessCommand;
+import com.marklogic.newtool.impl.copy.CopyCommand;
+import com.marklogic.newtool.impl.custom.CustomExportDocumentsCommand;
+import com.marklogic.newtool.impl.custom.CustomExportRowsCommand;
+import com.marklogic.newtool.impl.custom.CustomImportCommand;
+import com.marklogic.newtool.impl.export.*;
+import com.marklogic.newtool.impl.importdata.*;
+import com.marklogic.newtool.impl.reprocess.ReprocessCommand;
 
-public interface NT {
+public abstract class NT {
 
-    static DocumentCopier copyDocuments() {
+    public static DocumentCopier copyDocuments() {
         return new CopyCommand();
     }
 
-    static CustomImporter customImport() {
+    public static CustomImporter customImport() {
         return new CustomImportCommand();
     }
 
-    static CustomDocumentsExporter customExportDocuments() {
+    public static CustomDocumentsExporter customExportDocuments() {
         return new CustomExportDocumentsCommand();
     }
 
-    static CustomRowsExporter customExportRows() {
+    public static CustomRowsExporter customExportRows() {
         return new CustomExportRowsCommand();
     }
 
-    static ArchiveFilesExporter exportArchiveFiles() {
+    public static ArchiveFilesExporter exportArchiveFiles() {
         return new ExportArchivesCommand();
     }
 
-    static AvroFilesExporter exportAvroFiles() {
+    public static AvroFilesExporter exportAvroFiles() {
         return new ExportAvroFilesCommand();
     }
 
-    static DelimitedFilesExporter exportDelimitedFiles() {
+    public static DelimitedFilesExporter exportDelimitedFiles() {
         return new ExportDelimitedFilesCommand();
     }
 
-    static GenericFilesExporter exportGenericFiles() {
+    public static GenericFilesExporter exportGenericFiles() {
         return new ExportFilesCommand();
     }
 
-    static JdbcExporter exportJdbc() {
+    public static JdbcExporter exportJdbc() {
         return new ExportJdbcCommand();
     }
 
-    static OrcFilesExporter exportOrcFiles() {
+    public static OrcFilesExporter exportOrcFiles() {
         return new ExportOrcFilesCommand();
     }
 
-    static ParquetFilesExporter exportParquetFiles() {
+    public static ParquetFilesExporter exportParquetFiles() {
         return new ExportParquetFilesCommand();
     }
 
-    static RdfFilesExporter exportRdfFiles() {
+    public static RdfFilesExporter exportRdfFiles() {
         return new ExportRdfFilesCommand();
     }
 
@@ -62,22 +62,22 @@ public interface NT {
      * @return an object that can import aggregate XML files, where each instance of a particular child element is
      * written to MarkLogic as a separate document.
      */
-    static AggregateXmlFilesImporter importAggregateXmlFiles() {
+    public static AggregateXmlFilesImporter importAggregateXmlFiles() {
         return new ImportAggregateXmlCommand();
     }
 
     /**
      * @return an object that can import archive files - i.e. ZIP files that contain documents and metadata.
      */
-    static ArchiveFilesImporter importArchiveFiles() {
+    public static ArchiveFilesImporter importArchiveFiles() {
         return new ImportArchivesCommand();
     }
 
-    static AvroFilesImporter importAvroFiles() {
+    public static AvroFilesImporter importAvroFiles() {
         return new ImportAvroFilesCommand();
     }
 
-    static DelimitedFilesImporter importDelimitedFiles() {
+    public static DelimitedFilesImporter importDelimitedFiles() {
         return new ImportDelimitedFilesCommand();
     }
 
@@ -85,38 +85,41 @@ public interface NT {
      * @return an object that can import any type of file as-is, with the document type being determined by
      * the file extension.
      */
-    static GenericFilesImporter importGenericFiles() {
+    public static GenericFilesImporter importGenericFiles() {
         return new ImportFilesCommand();
     }
 
-    static JdbcImporter importJdbc() {
+    public static JdbcImporter importJdbc() {
         return new ImportJdbcCommand();
     }
 
-    static JsonFilesImporter importJsonFiles() {
+    public static JsonFilesImporter importJsonFiles() {
         return new ImportJsonFilesCommand();
     }
 
     /**
      * @return an object that can import archive files created by MLCP.
      */
-    static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
+    public static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
         return new ImportMlcpArchivesCommand();
     }
 
-    static OrcFilesImporter importOrcFiles() {
+    public static OrcFilesImporter importOrcFiles() {
         return new ImportOrcFilesCommand();
     }
 
-    static ParquetFilesImporter importParquetFiles() {
+    public static ParquetFilesImporter importParquetFiles() {
         return new ImportParquetFilesCommand();
     }
 
-    static RdfFilesImporter importRdfFiles() {
+    public static RdfFilesImporter importRdfFiles() {
         return new ImportRdfFilesCommand();
     }
 
-    static Reprocessor reprocess() {
+    public static Reprocessor reprocess() {
         return new ReprocessCommand();
+    }
+
+    private NT() {
     }
 }

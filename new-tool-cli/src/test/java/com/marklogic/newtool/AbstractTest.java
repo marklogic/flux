@@ -3,6 +3,7 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
+import com.marklogic.newtool.cli.Main;
 import com.marklogic.spark.ConnectorException;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.SparkSession;

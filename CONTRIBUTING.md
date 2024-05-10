@@ -237,7 +237,7 @@ of `--path`, as an absolute path is needed, and of course change the value of `-
 cluster:
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.Submit \
+$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar \
 import_files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
 ```
@@ -250,7 +250,7 @@ previewing an import of files from an S3 bucket by including the AWS SDK as pack
 to something you can access :
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.Submit \
+$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
 import_files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
@@ -276,7 +276,7 @@ Once your cluster is created, you'll add a "Step" in order to run spark-submit:
 
 1. Choose "Spark application" for the type of job.
 2. For "JAR location", select the assembly jar that you uploaded to S3.
-3. For "Spark-submit options", enter `--class com.marklogic.newtool.Submit`.
+3. For "Spark-submit options", enter `--class com.marklogic.newtool.cli.Submit`.
 4. For "Arguments", enter the CLI command all the args you would normally enter when using the CLI.
 
 If your CLI command will be accessing S3, you most likely should not include `--s3AddCredentials`. The EMR EC2 instance
