@@ -1,0 +1,18 @@
+package com.marklogic.newtool.api;
+
+import org.apache.spark.sql.SaveMode;
+
+import java.util.Map;
+
+public interface CustomExportWriteOptions {
+
+    CustomExportWriteOptions target(String target);
+
+    CustomExportWriteOptions additionalOptions(Map<String, String> additionalOptions);
+
+    CustomExportWriteOptions saveMode(SaveMode saveMode);
+
+    CustomExportWriteOptions s3AddCredentials();
+
+    CustomExportWriteOptions s3Endpoint(String endpoint);
+}

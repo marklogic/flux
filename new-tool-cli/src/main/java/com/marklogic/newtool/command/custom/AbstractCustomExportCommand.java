@@ -3,6 +3,7 @@ package com.marklogic.newtool.command.custom;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.CustomExportWriteOptions;
 import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.command.AbstractCommand;
 import com.marklogic.newtool.command.S3Params;
@@ -15,32 +16,66 @@ import org.apache.spark.sql.SparkSession;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class AbstractCustomExportCommand extends AbstractCommand<Executor<AbstractCustomExportCommand>> {
+abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
 
     @ParametersDelegate
-    private S3Params s3Params = new S3Params();
+    protected final CustomWriteParams writeParams = new CustomWriteParams();
 
-    @Parameter(names = "--target", description = "Identifier for the Spark connector that is the target of data to export.")
-    private String target;
+    public static class CustomWriteParams implements CustomExportWriteOptions {
 
-    @DynamicParameter(
-        names = "-P",
-        description = "Specify any number of options to be passed to the connector identified by '--target'."
-    )
-    private Map<String, String> writerParams = new HashMap<>();
+        @ParametersDelegate
+        private S3Params s3Params = new S3Params();
 
-    @Parameter(names = "--mode", converter = SaveModeConverter.class,
-        description = "Specifies how data is written if the path already exists. " +
-            "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
-    private SaveMode saveMode = SaveMode.Append;
+        @Parameter(names = "--target", description = "Identifier for the Spark connector that is the target of data to export.")
+        private String target;
 
+        @DynamicParameter(
+            names = "-P",
+            description = "Specify any number of options to be passed to the connector identified by '--target'."
+        )
+        private Map<String, String> additionalOptions = new HashMap<>();
+
+        @Parameter(names = "--mode", converter = SaveModeConverter.class,
+            description = "Specifies how data is written if the path already exists. " +
+                "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
+        private SaveMode saveMode = SaveMode.Append;
+
+        @Override
+        public CustomExportWriteOptions target(String target) {
+            this.target = target;
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions additionalOptions(Map<String, String> additionalOptions) {
+            this.additionalOptions = additionalOptions;
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions saveMode(SaveMode saveMode) {
+            this.saveMode = saveMode;
+            return this;
+        }
+
+        public CustomExportWriteOptions s3AddCredentials() {
+            this.s3Params.setAddCredentials(true);
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions s3Endpoint(String endpoint) {
+            this.s3Params.setEndpoint(endpoint);
+            return this;
+        }
+    }
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
-        writer.format(target)
-            .options(writerParams)
-            .mode(saveMode)
+        writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        writer.format(writeParams.target)
+            .options(writeParams.additionalOptions)
+            .mode(writeParams.saveMode)
             .save();
     }
 }
