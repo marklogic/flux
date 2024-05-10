@@ -3,208 +3,262 @@ package com.marklogic.newtool.command.copy;
 import com.beust.jcommander.Parameter;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
+import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.SslHostnameVerifier;
 import com.marklogic.newtool.command.ConnectionInputs;
 
 /**
  * Defines all inputs with a "--output" prefix so it can be used in {@code CopyCommand} without conflicting with
- * all of the args in {@code ConnectionParams}.
+ * the args in {@code ConnectionParams}.
  */
-public class OutputConnectionParams extends ConnectionInputs {
+class OutputConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
+    @Override
     @Parameter(
         names = {"--outputConnectionString"},
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
     )
-    public void setConnectionString(String connectionString) {
+    public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = {"--outputHost"},
         description = "The MarkLogic host to connect to."
     )
-    public void setHost(String host) {
+    public ConnectionOptions host(String host) {
         this.host = host;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputPort",
         description = "Port of a MarkLogic REST API app server to connect to."
     )
-    public void setPort(Integer port) {
+    public ConnectionOptions port(int port) {
         this.port = port;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputBasePath",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
-    public void setBasePath(String basePath) {
+    public ConnectionOptions basePath(String basePath) {
         this.basePath = basePath;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputDatabase",
         description = "Name of a database to connect if it differs from the one associated with the app server identified by 'port'."
     )
-    public void setDatabase(String database) {
+    public ConnectionOptions database(String database) {
         this.database = database;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputConnectionType",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
     )
-    public void setConnectionType(DatabaseClient.ConnectionType connectionType) {
+    public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
+        return this;
     }
 
-    // disableGzippedResponses doesn't apply for the output connection for a COPY procedure.
+    @Override
+    public ConnectionOptions disableGzippedResponses(Boolean value) {
+        // disableGzippedResponses doesn't apply for the output connection for a COPY procedure.
+        return this;
+    }
 
+
+    @Override
     @Parameter(
         names = "--outputAuthType",
         description = "Type of authentication to use."
     )
-    public void setAuthType(AuthenticationType authType) {
+    public ConnectionOptions authenticationType(AuthenticationType authType) {
         this.authType = authType;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputUsername",
         description = "Username when using 'DIGEST' or 'BASIC' authentication."
     )
-    public void setUsername(String username) {
+    public ConnectionOptions username(String username) {
         this.username = username;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputPassword",
         description = "Password when using 'DIGEST' or 'BASIC' authentication.",
         password = true
     )
-    public void setPassword(String password) {
+    public ConnectionOptions password(String password) {
         this.password = password;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputCertificateFile",
         description = "File path for a key store to be used for 'CERTIFICATE' authentication."
     )
-    public void setCertificateFile(String certificateFile) {
+    public ConnectionOptions certificateFile(String certificateFile) {
         this.certificateFile = certificateFile;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputCertificatePassword",
         description = "Password for the key store referenced by '--certificateFile'."
     )
-    public void setCertificatePassword(String certificatePassword) {
+    public ConnectionOptions certificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputCloudApiKey",
         description = "API key for authenticating with a MarkLogic Cloud cluster."
     )
-    public void setCloudApiKey(String cloudApiKey) {
+    public ConnectionOptions cloudApiKey(String cloudApiKey) {
         this.cloudApiKey = cloudApiKey;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputKerberosPrincipal",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
-    public void setKerberosPrincipal(String kerberosPrincipal) {
+    public ConnectionOptions kerberosPrincipal(String kerberosPrincipal) {
         this.kerberosPrincipal = kerberosPrincipal;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputSamlToken",
         description = "Token to be used with 'SAML' authentication."
     )
-    public void setSamlToken(String samlToken) {
+    public ConnectionOptions samlToken(String samlToken) {
         this.samlToken = samlToken;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputSslProtocol",
         description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store " +
             "or trust store is configured, defaults to 'TLSv1.2'."
     )
-    public void setSslProtocol(String sslProtocol) {
+    public ConnectionOptions sslProtocol(String sslProtocol) {
         this.sslProtocol = sslProtocol;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputSslHostnameVerifier",
         description = "Hostname verification strategy when connecting via SSL."
     )
-    public void setSslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
+    public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
         this.sslHostnameVerifier = sslHostnameVerifier;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputKeyStorePath",
         description = "File path for a key store for two-way SSL connections."
     )
-    public void setKeyStorePath(String keyStorePath) {
+    public ConnectionOptions keyStorePath(String keyStorePath) {
         this.keyStorePath = keyStorePath;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputKeyStorePassword",
         description = "Password for the key store identified by '--keyStorePath'."
     )
-    public void setKeyStorePassword(String keyStorePassword) {
+    public ConnectionOptions keyStorePassword(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputKeyStoreType",
         description = "Type of the key store identified by '--keyStorePath'; defaults to 'JKS'."
     )
-    public void setKeyStoreType(String keyStoreType) {
+    public ConnectionOptions keyStoreType(String keyStoreType) {
         this.keyStoreType = keyStoreType;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputKeyStoreAlgorithm",
         description = "Algorithm of the key store identified by '--keyStorePath'; defaults to 'SunX509'."
     )
-    public void setKeyStoreAlgorithm(String keyStoreAlgorithm) {
+    public ConnectionOptions keyStoreAlgorithm(String keyStoreAlgorithm) {
         this.keyStoreAlgorithm = keyStoreAlgorithm;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputTrustStorePath",
         description = "File path for a trust store for establishing trust with the certificate used by the MarkLogic app server."
     )
-    public void setTrustStorePath(String trustStorePath) {
+    public ConnectionOptions trustStorePath(String trustStorePath) {
         this.trustStorePath = trustStorePath;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputTrustStorePassword",
         description = "Password for the trust store identified by '--trustStorePath'."
     )
-    public void setTrustStorePassword(String trustStorePassword) {
+    public ConnectionOptions trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputTrustStoreType",
         description = "Type of the trust store identified by '--trustStorePath'; defaults to 'JKS'."
     )
-    public void setTrustStoreType(String trustStoreType) {
+    public ConnectionOptions trustStoreType(String trustStoreType) {
         this.trustStoreType = trustStoreType;
+        return this;
     }
 
+    @Override
     @Parameter(
         names = "--outputTrustStoreAlgorithm",
         description = "Algorithm of the trust store identified by '--trustStorePath'; defaults to 'SunX509'."
     )
-    public void setTrustStoreAlgorithm(String trustStoreAlgorithm) {
+    public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;
+        return this;
     }
 }

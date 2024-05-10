@@ -26,6 +26,9 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     protected static final String READ_AUTHORS_OPTIC_QUERY = "op.fromView('Medical', 'Authors', '')";
 
+    protected static final String DEFAULT_USER = "new-tool-user";
+    protected static final String DEFAULT_PASSWORD = "password";
+
     private SparkSession sparkSession;
 
     @AfterEach
@@ -58,7 +61,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     protected final String makeConnectionString() {
         // new-tool-user is expected to have the minimum set of privileges for running all the tests.
-        return String.format("%s:%s@%s:%d", "new-tool-user", "password", databaseClient.getHost(), databaseClient.getPort());
+        return String.format("%s:%s@%s:%d", DEFAULT_USER, DEFAULT_PASSWORD, databaseClient.getHost(), databaseClient.getPort());
     }
 
     protected final void run(String... args) {
