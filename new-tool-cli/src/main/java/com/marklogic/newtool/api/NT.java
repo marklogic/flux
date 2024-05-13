@@ -1,5 +1,6 @@
 package com.marklogic.newtool.api;
 
+import com.marklogic.newtool.command.copy.CopyCommand;
 import com.marklogic.newtool.command.custom.CustomExportDocumentsCommand;
 import com.marklogic.newtool.command.custom.CustomExportRowsCommand;
 import com.marklogic.newtool.command.custom.CustomImportCommand;
@@ -8,6 +9,10 @@ import com.marklogic.newtool.command.importdata.*;
 import com.marklogic.newtool.command.reprocess.ReprocessCommand;
 
 public interface NT {
+
+    static DocumentCopier copyDocuments() {
+        return new CopyCommand();
+    }
 
     static CustomImporter customImport() {
         return new CustomImportCommand();

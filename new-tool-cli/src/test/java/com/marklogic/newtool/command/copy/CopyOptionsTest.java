@@ -60,7 +60,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--outputUriTemplate", "/{example}.xml"
         );
 
-        assertOptions(command.makeWriteOptions(),
+        assertOptions(command.writeParams.makeOptions(),
             Options.WRITE_ABORT_ON_FAILURE, "true",
             Options.WRITE_BATCH_SIZE, "123",
             Options.WRITE_COLLECTIONS, "c1,c2",
@@ -161,7 +161,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
 
     private int getOutputParameterCountInCopyCommand() {
         int count = 0;
-        for (Field field : CopyCommand.class.getDeclaredFields()) {
+        for (Field field : CopyCommand.CopyWriteDocumentsParams.class.getDeclaredFields()) {
             Parameter param = field.getAnnotation(Parameter.class);
             if (param != null && param.names()[0].startsWith("--output")) {
                 count++;

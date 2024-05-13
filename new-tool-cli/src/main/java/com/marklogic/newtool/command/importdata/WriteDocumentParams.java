@@ -160,17 +160,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @Override
     public T permissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
-        StringBuilder sb = new StringBuilder();
-        permissions.entrySet().stream().forEach(entry -> {
-            String role = entry.getKey();
-            entry.getValue().forEach(capability -> {
-                if (!sb.toString().equals("")) {
-                    sb.append(",");
-                }
-                sb.append(role).append(",").append(capability.name());
-            });
-        });
-        this.permissions = sb.toString();
+        this.permissions = WriteUtil.permissionsToString(permissions);
         return (T) this;
     }
 
