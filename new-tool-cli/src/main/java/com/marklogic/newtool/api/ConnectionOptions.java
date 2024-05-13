@@ -1,7 +1,5 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.client.DatabaseClient;
-
 public interface ConnectionOptions {
 
     ConnectionOptions authenticationType(AuthenticationType authenticationType);
@@ -16,7 +14,7 @@ public interface ConnectionOptions {
 
     ConnectionOptions database(String database);
 
-    ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType);
+    ConnectionOptions connectionType(String connectionType);
 
     ConnectionOptions disableGzippedResponses(Boolean value);
 

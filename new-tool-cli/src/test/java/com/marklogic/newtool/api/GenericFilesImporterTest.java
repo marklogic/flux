@@ -1,14 +1,10 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.client.io.DocumentMetadataHandle;
-import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.newtool.AbstractTest;
 import com.marklogic.spark.ConnectorException;
 import org.apache.spark.sql.AnalysisException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,28 +63,6 @@ class GenericFilesImporterTest extends AbstractTest {
             .evalAs(String.class);
         assertEquals("object", kind, "Forcing the document type to JSON should result in a document with " +
             "an unknown extension - in this case, 'unknown' - to be treated as JSON.");
-    }
-
-    @Test
-    void withPermissionMap() {
-        NT.importGenericFiles()
-            .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths(PATH))
-            .writeDocuments(options -> options
-                .collections("mixed-files", "another-test")
-                .permissions(Map.of(
-                    "new-tool-role", Set.of(DocumentMetadataHandle.Capability.READ, DocumentMetadataHandle.Capability.UPDATE),
-                    "qconsole-user", Set.of(DocumentMetadataHandle.Capability.READ)
-                )))
-            .execute();
-
-        assertCollectionSize("mixed-files", 4);
-        getUrisInCollection("another-test", 4).forEach(uri -> {
-            PermissionsTester tester = readDocumentPermissions(uri);
-            tester.assertReadPermissionExists("new-tool-role");
-            tester.assertUpdatePermissionExists("new-tool-role");
-            tester.assertReadPermissionExists("qconsole-user");
-        });
     }
 
     @Test
