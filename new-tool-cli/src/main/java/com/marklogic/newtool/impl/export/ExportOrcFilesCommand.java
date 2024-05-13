@@ -55,6 +55,12 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
     }
 
     @Override
+    public OrcFilesExporter readRows(String opticQuery) {
+        readParams.opticQuery(opticQuery);
+        return this;
+    }
+
+    @Override
     public OrcFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;

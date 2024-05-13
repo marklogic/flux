@@ -24,4 +24,20 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
 
         verifyRowCountInTable(15);
     }
+
+    @Test
+    void queryOnly() {
+        NT.exportJdbc()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY)
+            .writeRows(options -> options
+                .url(PostgresUtil.URL_WITH_AUTH)
+                .additionalOptions(Map.of("driver", PostgresUtil.DRIVER))
+                .table(EXPORTED_TABLE_NAME)
+                .saveMode(SaveMode.ErrorIfExists)
+            )
+            .execute();
+
+        verifyRowCountInTable(15);
+    }
 }

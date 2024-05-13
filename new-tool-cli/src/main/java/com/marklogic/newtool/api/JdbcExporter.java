@@ -14,5 +14,7 @@ public interface JdbcExporter extends Executor<JdbcExporter> {
 
     JdbcExporter readRows(Consumer<ReadRowsOptions> consumer);
 
+    JdbcExporter readRows(String opticQuery);
+
     JdbcExporter writeRows(Consumer<WriteRowsOptions> consumer);
 }

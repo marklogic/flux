@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
     @ParametersDelegate
-    private ReadRowsParams readRowsParams = new ReadRowsParams();
+    private ReadRowsParams readParams = new ReadRowsParams();
 
     @ParametersDelegate
     private WriteJdbcParams writeParams = new WriteJdbcParams();
@@ -26,7 +26,7 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(readRowsParams.makeOptions())
+            .options(readParams.makeOptions())
             .load();
     }
 
@@ -70,7 +70,13 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
 
     @Override
     public JdbcExporter readRows(Consumer<ReadRowsOptions> consumer) {
-        consumer.accept(readRowsParams);
+        consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public JdbcExporter readRows(String opticQuery) {
+        readParams.opticQuery(opticQuery);
         return this;
     }
 
