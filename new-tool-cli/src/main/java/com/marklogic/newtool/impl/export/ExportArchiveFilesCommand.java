@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Parameters(commandDescription = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.")
-public class ExportArchivesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {
+public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {
 
     @ParametersDelegate
     private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();

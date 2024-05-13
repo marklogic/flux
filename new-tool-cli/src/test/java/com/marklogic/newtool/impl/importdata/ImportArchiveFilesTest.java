@@ -8,16 +8,16 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class ImportMlcpArchivesTest extends AbstractTest {
+class ImportArchiveFilesTest extends AbstractTest {
 
     @Test
     void allMetadata() {
         run(
-            "import_mlcp_archives",
-            "--path", "src/test/resources/mlcp-archives",
+            "import_archive_files",
+            "--path", "src/test/resources/archive-files",
+            "--uriReplace", ".*archive.zip,''",
             "--connectionString", makeConnectionString()
         );
 
@@ -40,9 +40,10 @@ class ImportMlcpArchivesTest extends AbstractTest {
     @Test
     void subsetOfMetadata() {
         run(
-            "import_mlcp_archives",
-            "--path", "src/test/resources/mlcp-archives",
+            "import_archive_files",
+            "--path", "src/test/resources/archive-files",
             "--categories", "collections,permissions",
+            "--uriReplace", ".*archive.zip,''",
             "--connectionString", makeConnectionString()
         );
 
@@ -61,30 +62,34 @@ class ImportMlcpArchivesTest extends AbstractTest {
     }
 
     @Test
-    void invalidFileDontAbort() {
-        run(
-            "import_mlcp_archives",
+    void dontAbortOnReadFailureByDefault() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_archive_files",
+            "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
-            "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--connectionString", makeConnectionString()
-        );
+        ));
 
-        assertCollectionSize("The error from the non-MLCP-archive file goodbye.zip should have been logged " +
-            "and should not have caused the command to fail. And so the two documents in the valid MLCP archive " +
-            "should still have been imported into 'collection1'.", "collection1", 2);
+        assertFalse(stderr.contains("Command failed"),
+            "The command should log error by default; stderr: " + stderr);
+
+        assertCollectionSize("The docs from the valid MLCP archive should still be imported", "collection1", 2);
     }
 
     @Test
-    void invalidFileAbort() {
+    void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_mlcp_archives",
-            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "import_archive_files",
+            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/mlcp-archives",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString()
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read metadata for entry: goodbye.json"),
-            "Unexpected stderr: " + stderr);
+        assertTrue(
+            stderr.contains("Command failed, cause: Could not find metadata entry for entry /test/1.xml.metadata in file"),
+            "Unexpected stderr: " + stderr
+        );
     }
 
     private void verifyCollections(DocumentMetadataHandle metadata) {

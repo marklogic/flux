@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Parameters(commandDescription = "Read local, HDFS, and S3 archive files written by MLCP and write the documents in each archive to MarkLogic.")
-public class ImportMlcpArchivesCommand extends AbstractImportFilesCommand<MlcpArchiveFilesImporter> implements MlcpArchiveFilesImporter {
+public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<MlcpArchiveFilesImporter> implements MlcpArchiveFilesImporter {
 
     @ParametersDelegate
     private ReadMlcpArchiveFilesParams readParams = new ReadMlcpArchiveFilesParams();

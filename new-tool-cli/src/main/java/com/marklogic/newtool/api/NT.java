@@ -27,7 +27,7 @@ public abstract class NT {
     }
 
     public static ArchiveFilesExporter exportArchiveFiles() {
-        return new ExportArchivesCommand();
+        return new ExportArchiveFilesCommand();
     }
 
     public static AvroFilesExporter exportAvroFiles() {
@@ -70,7 +70,7 @@ public abstract class NT {
      * @return an object that can import archive files - i.e. ZIP files that contain documents and metadata.
      */
     public static ArchiveFilesImporter importArchiveFiles() {
-        return new ImportArchivesCommand();
+        return new ImportArchiveFilesCommand();
     }
 
     public static AvroFilesImporter importAvroFiles() {
@@ -101,7 +101,7 @@ public abstract class NT {
      * @return an object that can import archive files created by MLCP.
      */
     public static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
-        return new ImportMlcpArchivesCommand();
+        return new ImportMlcpArchiveFilesCommand();
     }
 
     public static OrcFilesImporter importOrcFiles() {
