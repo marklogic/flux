@@ -107,6 +107,7 @@ public class Main {
             .addCommand("export_delimited_files", new ExportDelimitedFilesCommand())
             .addCommand("export_files", new ExportFilesCommand())
             .addCommand("export_jdbc", new ExportJdbcCommand())
+            .addCommand("export_json_lines_files", new ExportJsonLinesFilesCommand())
             .addCommand("export_orc_files", new ExportOrcFilesCommand())
             .addCommand("export_parquet_files", new ExportParquetFilesCommand())
             .addCommand("export_rdf_files", new ExportRdfFilesCommand())
