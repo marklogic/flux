@@ -1,7 +1,5 @@
 package com.marklogic.newtool.api;
 
-import org.apache.spark.sql.SaveMode;
-
 import java.util.Map;
 
 public interface CustomExportWriteOptions {

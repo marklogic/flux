@@ -2,7 +2,6 @@ package com.marklogic.newtool.api;
 
 import com.marklogic.junit5.XmlNode;
 import com.marklogic.newtool.AbstractTest;
-import org.apache.spark.sql.SaveMode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
@@ -29,7 +28,7 @@ class CustomRowsExporterTest extends AbstractTest {
                     "rootTag", "authors",
                     "rowTag", "author"
                 ))
-                .saveMode(SaveMode.Overwrite))
+                .saveMode(SaveMode.OVERWRITE))
             .execute();
 
         // The name of this file may be an implementation detail of the connector and thus subject to change.

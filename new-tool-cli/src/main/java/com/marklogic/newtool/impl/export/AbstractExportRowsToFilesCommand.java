@@ -4,6 +4,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.Executor;
 import com.marklogic.newtool.api.WriteFilesOptions;
 import com.marklogic.newtool.impl.AbstractCommand;
+import com.marklogic.newtool.impl.SparkUtil;
 import org.apache.spark.sql.*;
 
 /**
@@ -42,7 +43,7 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
         writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(getWriteFormat())
             .options(writeParams.get())
-            .mode(writeParams.getSaveMode())
+            .mode(SparkUtil.toSparkSaveMode(writeParams.getSaveMode()))
             .save(writeParams.getPath());
     }
 }

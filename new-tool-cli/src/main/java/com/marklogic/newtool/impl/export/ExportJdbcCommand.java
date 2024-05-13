@@ -5,9 +5,11 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.JdbcExporter;
 import com.marklogic.newtool.api.ReadRowsOptions;
+import com.marklogic.newtool.api.SaveMode;
 import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.JdbcParams;
 import com.marklogic.newtool.impl.OptionsUtil;
+import com.marklogic.newtool.impl.SparkUtil;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
@@ -34,7 +36,7 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format("jdbc")
             .options(writeParams.makeOptions())
-            .mode(writeParams.saveMode)
+            .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))
             .save();
     }
 
@@ -43,10 +45,10 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
         @Parameter(names = "--table", required = true, description = "The JDBC table that should be written to.")
         private String table;
 
-        @Parameter(names = "--mode", converter = SaveModeConverter.class,
+        @Parameter(names = "--mode",
             description = "Specifies how data is written to a table if the table already exists. " +
                 "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
-        private SaveMode saveMode = SaveMode.ErrorIfExists;
+        private SaveMode saveMode = SaveMode.ERRORIFEXISTS;
 
         @Override
         public Map<String, String> makeOptions() {

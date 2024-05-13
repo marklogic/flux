@@ -2,7 +2,6 @@ package com.marklogic.newtool.api;
 
 import com.marklogic.newtool.AbstractExportJdbcTest;
 import com.marklogic.newtool.impl.PostgresUtil;
-import org.apache.spark.sql.SaveMode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -18,7 +17,7 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .additionalOptions(Map.of("driver", PostgresUtil.DRIVER))
                 .table(EXPORTED_TABLE_NAME)
-                .saveMode(SaveMode.ErrorIfExists)
+                .saveMode(SaveMode.ERRORIFEXISTS)
             )
             .execute();
 
@@ -34,7 +33,7 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .additionalOptions(Map.of("driver", PostgresUtil.DRIVER))
                 .table(EXPORTED_TABLE_NAME)
-                .saveMode(SaveMode.ErrorIfExists)
+                .saveMode(SaveMode.ERRORIFEXISTS)
             )
             .execute();
 

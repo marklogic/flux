@@ -1,7 +1,7 @@
 package com.marklogic.newtool.impl.export;
 
 import com.marklogic.newtool.AbstractTest;
-import org.apache.spark.sql.SaveMode;
+import com.marklogic.newtool.api.SaveMode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -44,7 +44,7 @@ class ExportParquetFilesTest extends AbstractTest {
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--mode", SaveMode.ErrorIfExists.name()
+            "--mode", SaveMode.ERRORIFEXISTS.name()
         ));
 
         assertTrue(stderr.contains("already exists"), "This test is just verifying that --mode is interpreted " +

@@ -1,7 +1,5 @@
 package com.marklogic.newtool.api;
 
-import org.apache.spark.sql.SaveMode;
-
 import java.util.function.Consumer;
 
 public interface JdbcExporter extends Executor<JdbcExporter> {
