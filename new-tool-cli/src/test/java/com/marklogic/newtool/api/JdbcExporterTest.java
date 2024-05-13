@@ -1,7 +1,7 @@
 package com.marklogic.newtool.api;
 
 import com.marklogic.newtool.AbstractExportJdbcTest;
-import com.marklogic.newtool.command.PostgresUtil;
+import com.marklogic.newtool.impl.PostgresUtil;
 import org.apache.spark.sql.SaveMode;
 import org.junit.jupiter.api.Test;
 

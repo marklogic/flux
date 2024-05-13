@@ -1,6 +1,6 @@
 package com.marklogic.newtool;
 
-import com.marklogic.newtool.command.PostgresUtil;
+import com.marklogic.newtool.impl.PostgresUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;

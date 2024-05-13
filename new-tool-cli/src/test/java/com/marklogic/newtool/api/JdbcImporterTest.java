@@ -3,7 +3,7 @@ package com.marklogic.newtool.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.newtool.AbstractTest;
-import com.marklogic.newtool.command.PostgresUtil;
+import com.marklogic.newtool.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
