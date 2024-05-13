@@ -1,13 +1,11 @@
 package com.marklogic.newtool.impl.importdata;
 
 import com.beust.jcommander.Parameter;
-import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.newtool.api.WriteDocumentsOptions;
 import com.marklogic.newtool.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,12 +153,6 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T failedDocumentsPath(String path) {
         this.failedDocumentsPath = path;
-        return (T) this;
-    }
-
-    @Override
-    public T permissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
-        this.permissions = WriteUtil.permissionsToString(permissions);
         return (T) this;
     }
 

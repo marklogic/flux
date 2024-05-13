@@ -3,19 +3,16 @@ package com.marklogic.newtool.impl.copy;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.DocumentCopier;
 import com.marklogic.newtool.api.WriteDocumentsOptions;
 import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.OptionsUtil;
 import com.marklogic.newtool.impl.export.ReadDocumentParams;
-import com.marklogic.newtool.impl.importdata.WriteUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -183,12 +180,6 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams failedDocumentsPath(String path) {
             this.failedDocumentsPath = path;
-            return this;
-        }
-
-        @Override
-        public CopyWriteDocumentsParams permissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions) {
-            this.permissions = WriteUtil.permissionsToString(permissions);
             return this;
         }
 

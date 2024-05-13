@@ -82,7 +82,6 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
         return this;
     }
 
-    @Override
     @Parameter(
         names = "--connectionType",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
@@ -90,6 +89,11 @@ public class ConnectionParams extends ConnectionInputs implements IParametersVal
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
         return this;
+    }
+
+    @Override
+    public ConnectionOptions connectionType(String connectionType) {
+        return connectionType(DatabaseClient.ConnectionType.valueOf(connectionType));
     }
 
     @Override

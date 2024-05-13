@@ -1,10 +1,5 @@
 package com.marklogic.newtool.api;
 
-import com.marklogic.client.io.DocumentMetadataHandle;
-
-import java.util.Map;
-import java.util.Set;
-
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T abortOnWriteFailure(Boolean value);
@@ -16,8 +11,6 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T collectionsString(String commaDelimitedCollections);
 
     T failedDocumentsPath(String path);
-
-    T permissions(Map<String, Set<DocumentMetadataHandle.Capability>> permissions);
 
     T permissionsString(String rolesAndCapabilities);
 

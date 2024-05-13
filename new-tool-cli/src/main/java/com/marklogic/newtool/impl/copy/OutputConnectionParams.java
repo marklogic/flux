@@ -63,7 +63,6 @@ class OutputConnectionParams extends ConnectionInputs implements ConnectionOptio
         return this;
     }
 
-    @Override
     @Parameter(
         names = "--outputConnectionType",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
@@ -71,6 +70,11 @@ class OutputConnectionParams extends ConnectionInputs implements ConnectionOptio
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
         return this;
+    }
+
+    @Override
+    public ConnectionOptions connectionType(String connectionType) {
+        return connectionType(DatabaseClient.ConnectionType.valueOf(connectionType));
     }
 
     @Override
