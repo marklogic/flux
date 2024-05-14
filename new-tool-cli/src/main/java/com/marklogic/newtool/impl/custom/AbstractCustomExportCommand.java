@@ -5,12 +5,12 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.CustomExportWriteOptions;
 import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.SaveMode;
 import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.S3Params;
-import com.marklogic.newtool.impl.export.SaveModeConverter;
+import com.marklogic.newtool.impl.SparkUtil;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 
 import java.util.HashMap;
@@ -35,10 +35,10 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @Parameter(names = "--mode", converter = SaveModeConverter.class,
+        @Parameter(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
                 "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
-        private SaveMode saveMode = SaveMode.Append;
+        private SaveMode saveMode = SaveMode.APPEND;
 
         @Override
         public CustomExportWriteOptions target(String target) {
@@ -75,7 +75,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
         writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(writeParams.target)
             .options(writeParams.additionalOptions)
-            .mode(writeParams.saveMode)
+            .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))
             .save();
     }
 }
