@@ -17,12 +17,29 @@ class AvroFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .readRows(options -> options
                 .opticQuery(READ_AUTHORS_OPTIC_QUERY)
-                .partitions(4))
+                .partitions(2))
             .writeFiles(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1))
             .execute();
 
+        verifyFiles(tempDir);
+    }
+
+    @Test
+    void queryOnly(@TempDir Path tempDir) {
+        NT.exportAvroFiles()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY)
+            .writeFiles(options -> options
+                .path(tempDir.toFile().getAbsolutePath())
+                .fileCount(1))
+            .execute();
+
+        verifyFiles(tempDir);
+    }
+
+    private void verifyFiles(Path tempDir) {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
         assertEquals(1, files.length);
 

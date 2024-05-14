@@ -55,6 +55,12 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
     }
 
     @Override
+    public ParquetFilesExporter readRows(String opticQuery) {
+        readParams.opticQuery(opticQuery);
+        return this;
+    }
+
+    @Override
     public ParquetFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;

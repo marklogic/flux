@@ -35,6 +35,12 @@ public class CustomExportRowsCommand extends AbstractCustomExportCommand<CustomR
     }
 
     @Override
+    public CustomRowsExporter readRows(String opticQuery) {
+        readParams.opticQuery(opticQuery);
+        return this;
+    }
+
+    @Override
     public CustomRowsExporter writeRows(Consumer<CustomExportWriteOptions> consumer) {
         consumer.accept(writeParams);
         return this;
