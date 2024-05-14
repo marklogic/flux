@@ -9,4 +9,6 @@ public interface DelimitedFilesExporter extends Executor<DelimitedFilesExporter>
     DelimitedFilesExporter readRows(String opticQuery);
 
     DelimitedFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+
+    DelimitedFilesExporter writeFiles(String path);
 }

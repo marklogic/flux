@@ -65,4 +65,10 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public ParquetFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

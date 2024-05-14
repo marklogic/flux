@@ -120,4 +120,10 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public GenericFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

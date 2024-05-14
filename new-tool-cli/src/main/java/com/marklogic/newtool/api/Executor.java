@@ -22,4 +22,10 @@ public interface Executor<T extends Executor> {
      * @return instance of this executor
      */
     T connectionString(String connectionString);
+
+    /**
+     * @param limit Maximum number of records to read from the executor's data source.
+     * @return instance of this executor
+     */
+    T limit(int limit);
 }

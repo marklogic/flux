@@ -68,4 +68,10 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public DelimitedFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

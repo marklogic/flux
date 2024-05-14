@@ -9,4 +9,6 @@ public interface ParquetFilesExporter extends Executor<ParquetFilesExporter> {
     ParquetFilesExporter readRows(String opticQuery);
 
     ParquetFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+
+    ParquetFilesExporter writeFiles(String path);
 }

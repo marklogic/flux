@@ -38,4 +38,17 @@ class ArchiveFilesExporterTest extends AbstractTest {
             "to write nor read these documents.", "imported-author", 15);
 
     }
+
+    @Test
+    void pathOnly(@TempDir Path tempDir) {
+        NT.exportArchiveFiles()
+            .connectionString(makeConnectionString())
+            .readDocuments(options -> options.collections("author").categories("content", "collections", "permissions"))
+            .limit(1)
+            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .execute();
+
+        File[] files = tempDir.toFile().listFiles();
+        assertEquals(1, files.length);
+    }
 }

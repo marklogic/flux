@@ -9,4 +9,6 @@ public interface AvroFilesExporter extends Executor<AvroFilesExporter> {
     AvroFilesExporter readRows(String opticQuery);
 
     AvroFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+
+    AvroFilesExporter writeFiles(String path);
 }

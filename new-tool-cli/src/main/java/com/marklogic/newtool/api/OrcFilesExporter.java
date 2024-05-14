@@ -9,4 +9,6 @@ public interface OrcFilesExporter extends Executor<OrcFilesExporter> {
     OrcFilesExporter readRows(String opticQuery);
 
     OrcFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+
+    OrcFilesExporter writeFiles(String path);
 }

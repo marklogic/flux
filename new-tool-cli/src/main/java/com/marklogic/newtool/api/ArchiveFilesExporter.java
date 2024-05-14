@@ -11,4 +11,6 @@ public interface ArchiveFilesExporter extends Executor<ArchiveFilesExporter> {
     ArchiveFilesExporter readDocuments(Consumer<ReadArchiveDocumentOptions> consumer);
 
     ArchiveFilesExporter writeFiles(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer);
+
+    ArchiveFilesExporter writeFiles(String path);
 }

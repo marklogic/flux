@@ -36,4 +36,17 @@ class DelimitedFilesExporterTest extends AbstractTest {
         assertEquals(15, lines.length);
         assertEquals("1,Awton,Finlay,2022-07-13,2022-07-13T09:00:00.000Z,4,,,", lines[0]);
     }
+
+    @Test
+    void pathOnly(@TempDir Path tempDir) {
+        NT.exportDelimitedFiles()
+            .connectionString(makeConnectionString())
+            .readRows("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
+            .limit(1)
+            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .execute();
+
+        File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
+        assertEquals(1, files.length);
+    }
 }

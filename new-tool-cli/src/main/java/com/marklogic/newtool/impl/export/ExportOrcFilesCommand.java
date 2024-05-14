@@ -65,4 +65,10 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public OrcFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }
