@@ -10,5 +10,7 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
 
     ArchiveFilesImporter readFiles(Consumer<ReadArchiveFilesOptions> consumer);
 
+    ArchiveFilesImporter readFiles(String... paths);
+
     ArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

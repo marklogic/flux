@@ -68,6 +68,12 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     }
 
     @Override
+    public AvroFilesImporter readFiles(String... paths) {
+        readParams.paths(paths);
+        return this;
+    }
+
+    @Override
     public AvroFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeDocumentParams);
         return this;

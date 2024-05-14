@@ -68,6 +68,12 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
     }
 
     @Override
+    public ParquetFilesImporter readFiles(String... paths) {
+        readParams.paths(paths);
+        return this;
+    }
+
+    @Override
     public ParquetFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;

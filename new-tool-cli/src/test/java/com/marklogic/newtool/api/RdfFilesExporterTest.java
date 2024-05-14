@@ -14,7 +14,7 @@ class RdfFilesExporterTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) {
         NT.importRdfFiles()
-            .readFiles(options -> options.paths("src/test/resources/rdf/englishlocale.ttl"))
+            .readFiles("src/test/resources/rdf/englishlocale.ttl")
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS).graph("my-graph"))
             .execute();
@@ -33,7 +33,7 @@ class RdfFilesExporterTest extends AbstractTest {
         assertEquals(1, files.length);
 
         NT.importRdfFiles()
-            .readFiles(options -> options.paths(tempDir.toFile().getAbsolutePath()))
+            .readFiles(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS))
             .execute();

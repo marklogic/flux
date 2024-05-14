@@ -69,6 +69,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     }
 
     @Override
+    public DelimitedFilesImporter readFiles(String... paths) {
+        readParams.paths(paths);
+        return this;
+    }
+
+    @Override
     public DelimitedFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
