@@ -18,5 +18,7 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
 
     AggregateXmlFilesImporter readFiles(Consumer<ReadXmlFilesOptions> consumer);
 
+    AggregateXmlFilesImporter readFiles(String... paths);
+
     AggregateXmlFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

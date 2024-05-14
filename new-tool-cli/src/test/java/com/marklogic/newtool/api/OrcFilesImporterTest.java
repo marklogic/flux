@@ -14,7 +14,7 @@ class OrcFilesImporterTest extends AbstractTest {
     void test() {
         NT.importOrcFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths("src/test/resources/orc-files/authors.orc"))
+            .readFiles("src/test/resources/orc-files/authors.orc")
             .writeDocuments(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test")

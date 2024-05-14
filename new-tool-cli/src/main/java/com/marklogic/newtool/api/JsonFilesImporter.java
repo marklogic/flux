@@ -13,5 +13,7 @@ public interface JsonFilesImporter extends Executor<JsonFilesImporter> {
 
     JsonFilesImporter readFiles(Consumer<ReadJsonFilesOptions> consumer);
 
+    JsonFilesImporter readFiles(String... paths);
+
     JsonFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

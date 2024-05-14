@@ -15,8 +15,7 @@ class AvroFilesImporterTest extends AbstractTest {
     void test() {
         NT.importAvroFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
-                .paths("src/test/resources/avro/*"))
+            .readFiles("src/test/resources/avro/*")
             .writeDocuments(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("avro-test")

@@ -16,5 +16,7 @@ public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
 
     RdfFilesImporter readFiles(Consumer<ReadRdfFilesOptions> consumer);
 
+    RdfFilesImporter readFiles(String... paths);
+
     RdfFilesImporter writeDocuments(Consumer<WriteTriplesDocumentsOptions> consumer);
 }

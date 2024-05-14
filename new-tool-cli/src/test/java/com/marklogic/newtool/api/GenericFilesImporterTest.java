@@ -17,7 +17,7 @@ class GenericFilesImporterTest extends AbstractTest {
     void test() {
         NT.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths(PATH))
+            .readFiles(PATH)
             .writeDocuments(options -> options
                 .collectionsString("api-files,second-collection")
                 .permissionsString(DEFAULT_PERMISSIONS))
@@ -49,7 +49,7 @@ class GenericFilesImporterTest extends AbstractTest {
     void documentType() {
         NT.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths("src/test/resources/mixed-files/hello.json"))
+            .readFiles("src/test/resources/mixed-files/hello.json")
             .writeDocuments(options -> options
                 .collectionsString("api-files,second-collection")
                 .permissionsString(DEFAULT_PERMISSIONS)
@@ -69,7 +69,7 @@ class GenericFilesImporterTest extends AbstractTest {
     void badPath() {
         GenericFilesImporter command = NT.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths("path/doesnt/exist"));
+            .readFiles("path/doesnt/exist");
 
         AnalysisException ex = assertThrows(AnalysisException.class, () -> command.execute());
         assertTrue(ex.getMessage().contains("Path does not exist"),

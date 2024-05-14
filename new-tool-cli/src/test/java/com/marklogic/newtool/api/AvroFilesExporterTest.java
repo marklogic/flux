@@ -45,7 +45,7 @@ class AvroFilesExporterTest extends AbstractTest {
 
         // Read the files back in to ensure we get 15 rows
         NT.importAvroFiles()
-            .readFiles(options -> options.paths(tempDir.toFile().getAbsolutePath()))
+            .readFiles(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS).collections("avro-test"))
             .execute();

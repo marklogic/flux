@@ -10,5 +10,7 @@ public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImpor
 
     MlcpArchiveFilesImporter readFiles(Consumer<ReadMlcpArchiveFilesOptions> consumer);
 
+    MlcpArchiveFilesImporter readFiles(String... paths);
+
     MlcpArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

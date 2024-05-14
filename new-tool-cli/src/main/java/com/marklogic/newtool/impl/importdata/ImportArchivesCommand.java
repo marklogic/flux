@@ -67,6 +67,12 @@ public class ImportArchivesCommand extends AbstractImportFilesCommand<ArchiveFil
     }
 
     @Override
+    public ArchiveFilesImporter readFiles(String... paths) {
+        readParams.paths(paths);
+        return this;
+    }
+
+    @Override
     public ArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
         consumer.accept(writeParams);
         return this;

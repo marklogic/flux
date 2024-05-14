@@ -66,6 +66,12 @@ public class ImportMlcpArchivesCommand extends AbstractImportFilesCommand<MlcpAr
     }
 
     @Override
+    public MlcpArchiveFilesImporter readFiles(String... paths) {
+        readParams.paths(paths);
+        return this;
+    }
+
+    @Override
     public MlcpArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
         consumer.accept(writeParams);
         return this;

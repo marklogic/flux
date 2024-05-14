@@ -10,7 +10,7 @@ class RdfFilesImporterTest extends AbstractTest {
     @Test
     void withGraph() {
         NT.importRdfFiles()
-            .readFiles(options -> options.paths("src/test/resources/rdf/englishlocale.ttl"))
+            .readFiles("src/test/resources/rdf/englishlocale.ttl")
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
@@ -24,7 +24,7 @@ class RdfFilesImporterTest extends AbstractTest {
     @Test
     void withGraphOverride() {
         NT.importRdfFiles()
-            .readFiles(options -> options.paths("src/test/resources/rdf/three-quads.trig"))
+            .readFiles("src/test/resources/rdf/three-quads.trig")
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

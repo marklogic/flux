@@ -28,7 +28,7 @@ class ArchiveFilesExporterTest extends AbstractTest {
 
         // Import the file back in to verify its contents.
         NT.importArchiveFiles()
-            .readFiles(options -> options.paths(tempDir.toFile().getAbsolutePath()))
+            .readFiles(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
             .writeDocuments(options -> options.collections("imported-author").uriPrefix("/imported"))
             .execute();

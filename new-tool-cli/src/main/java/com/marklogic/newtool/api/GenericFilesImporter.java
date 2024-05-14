@@ -18,5 +18,7 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     GenericFilesImporter readFiles(Consumer<ReadGenericFilesOptions> consumer);
 
+    GenericFilesImporter readFiles(String... paths);
+
     GenericFilesImporter writeDocuments(Consumer<WriteGenericDocumentsOptions> consumer);
 }
