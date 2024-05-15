@@ -7,7 +7,7 @@ nav_order: 4
 
 NT can export documents with their metadata as "archive files" - ZIP files that contain an entry for each document
 and another entry for the XML metadata file associated with each document. Archive files can then be imported via 
-the `import_archives` command, providing a convenient mechanism for storing data and later importing it into a separate
+the `import_archive_files` command, providing a convenient mechanism for storing data and later importing it into a separate
 database.
 
 ## Table of contents
@@ -18,7 +18,7 @@ database.
 
 ## Usage
 
-The `export_archives` command requires a query for selecting documents to export and a directory path for writing 
+The `export_archive_files` command requires a query for selecting documents to export and a directory path for writing 
 archive files to. 
 
 The following options then control which documents are selected to be exported:

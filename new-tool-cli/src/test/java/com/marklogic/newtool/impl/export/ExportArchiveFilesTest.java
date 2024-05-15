@@ -9,12 +9,12 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExportArchivesTest extends AbstractTest {
+class ExportArchiveFilesTest extends AbstractTest {
 
     @Test
     void test(@TempDir Path tempDir) {
         run(
-            "export_archives",
+            "export_archive_files",
             "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--fileCount", "1",
@@ -27,7 +27,7 @@ class ExportArchivesTest extends AbstractTest {
 
         // Import the file back in to verify its contents.
         run(
-            "import_archives",
+            "import_archive_files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--collections", "imported-author",
@@ -45,7 +45,7 @@ class ExportArchivesTest extends AbstractTest {
     @Test
     void contentShouldAlwaysBeIncluded(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
-            "export_archives",
+            "export_archive_files",
             "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--path", tempDir.toFile().getAbsolutePath(),
@@ -56,7 +56,7 @@ class ExportArchivesTest extends AbstractTest {
 
         // Import the file back in to verify its contents.
         run(
-            "import_archives",
+            "import_archive_files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--collections", "imported-author",
