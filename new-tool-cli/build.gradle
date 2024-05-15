@@ -51,6 +51,9 @@ dependencies {
   // For testing custom commands with a 3rd party connector.
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
+  // For configuring two-way SSL in tests.
+  testImplementation "com.marklogic:ml-app-deployer:4.7.0"
+
   shadowDependencies "org.jcommander:jcommander:1.83"
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 }

@@ -3,12 +3,16 @@ package com.marklogic.newtool;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
+import com.marklogic.mgmt.ManageClient;
+import com.marklogic.mgmt.ManageConfig;
 import com.marklogic.newtool.cli.Main;
+import com.marklogic.rest.util.RestTemplateUtil;
 import com.marklogic.spark.ConnectorException;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,15 +46,27 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     @Override
     protected DatabaseClient getDatabaseClient() {
         if (databaseClient == null) {
-            Properties props = new Properties();
-            try {
-                props.load(new ClassPathResource("test.properties").getInputStream());
-            } catch (IOException e) {
-                fail("Unable to read from test.properties: " + e.getMessage());
-            }
-            databaseClient = DatabaseClientFactory.newClient(propertyName -> props.get(propertyName));
+            databaseClient = newDatabaseClient(null);
         }
         return databaseClient;
+    }
+
+    protected final DatabaseClient newDatabaseClient(String database) {
+        Properties props = loadTestProperties();
+        if (database != null) {
+            props.setProperty("marklogic.client.database", database);
+        }
+        return DatabaseClientFactory.newClient(propertyName -> props.get(propertyName));
+    }
+
+    protected final Properties loadTestProperties() {
+        Properties props = new Properties();
+        try {
+            props.load(new ClassPathResource("test.properties").getInputStream());
+        } catch (IOException e) {
+            fail("Unable to read from test.properties: " + e.getMessage());
+        }
+        return props;
     }
 
     @Override
@@ -117,7 +133,21 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         SparkException ex = assertThrows(SparkException.class, () -> r.run());
         assertTrue(ex.getCause() instanceof ConnectorException,
             "Expect the Spark-thrown SparkException to wrap our ConnectorException, which is an exception that we " +
-                "intentionally throw when an error condition is detected.");
+                "intentionally throw when an error condition is detected. Actual exception: " + ex.getCause());
         return (ConnectorException) ex.getCause();
+    }
+
+    protected final ManageClient newManageClient() {
+        Properties props = loadTestProperties();
+        // Forcing usage of the deprecated Apache HttpClient to avoid classpath issues with the relocated OkHttp classes
+        // in our connector jar.
+        ManageConfig manageConfig = new ManageConfig(props.getProperty("marklogic.client.host"), 8002,
+            props.getProperty("marklogic.client.username"),
+            props.getProperty("marklogic.client.password")
+        );
+        RestTemplate restTemplate = RestTemplateUtil.newRestTemplate(manageConfig, RestTemplateUtil.DEFAULT_CONFIGURERS);
+        ManageClient manageClient = new ManageClient(restTemplate);
+        manageClient.setManageConfig(manageConfig);
+        return manageClient;
     }
 }
