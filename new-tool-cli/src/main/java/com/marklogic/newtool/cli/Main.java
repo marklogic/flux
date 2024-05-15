@@ -46,7 +46,7 @@ public class Main {
             System.err.println("Invalid command name: " + args[0]);
             System.err.println(String.format("To see all commands, run '%s' with no arguments.", PROGRAM_NAME));
         } catch (ParameterException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println(determineErrorMessageForParameterException(ex));
             System.err.println(String.format("To see usage for the command, run '%s help %s'.", PROGRAM_NAME, args[0]));
         } catch (Exception ex) {
             for (String arg : args) {
@@ -148,6 +148,26 @@ public class Main {
             message = ex.getCause().getCause().getMessage();
         }
         return message;
+    }
+
+    private static String determineErrorMessageForParameterException(ParameterException ex) {
+        String message = ex.getMessage();
+        if (message.startsWith("Dynamic parameter expected a value of the form a=b")) {
+            return "Options specified via '-C' or '-P' must have a form of -Ckey=value or -Pkey=value.";
+        }
+        boolean isInvalidParameterMessage = message.indexOf("'") > -1 && message.contains(" but no main parameter");
+        if (isInvalidParameterMessage) {
+            // JCommander's message for an invalid parameter is e.g.
+            // "Was passed main parameter '--not-a-real-param' but no main parameter was defined in your arg class."
+            // That is unlikely to make any sense to a user, so it's massaged here.
+            message = message.substring(message.indexOf("'"));
+            int pos = message.indexOf(" but no main parameter");
+            if (pos != -1) {
+                String paramName = message.substring(0, pos);
+                return String.format("Invalid option: %s", paramName);
+            }
+        }
+        return ex.getMessage();
     }
 
     public Object getSelectedCommand() {

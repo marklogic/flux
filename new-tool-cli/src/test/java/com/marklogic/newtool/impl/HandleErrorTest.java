@@ -3,31 +3,52 @@ package com.marklogic.newtool.impl;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 /**
- * Having issues with capturing logs written by log4j2. So for now, these are just for manual testing - i.e. look at
- * the logs to see how the errors are being displayed.
- * <p>
- * Note that each test will also show the "An illegal reflective access operation has occurred" warning that occurs
+ * Note that some tests will print a "An illegal reflective access operation has occurred" warning that occurs
  * when running on Spark on Java 9 or higher. Our ETL tool prevents this, so you can ignore it when analyzing the
  * logging in these tests.
  */
-// Suppressing Sonar warnings about tests not having assertions as that is not yet possible with this test.
-@SuppressWarnings("java:S2699")
 class HandleErrorTest extends AbstractTest {
 
     @Test
     void invalidCommand() {
-        run(
-            "not_a_real_command",
-            "--connectionString", makeConnectionString()
+        assertStderrContains(
+            () -> run("not_a_real_command", "--connectionString", makeConnectionString()),
+            "Invalid command name: not_a_real_command"
+        );
+    }
+
+    @Test
+    void invalidParam() {
+        assertStderrContains(
+            () -> run("import_files", "--not-a-real-param"),
+            "Invalid option: '--not-a-real-param'"
+        );
+    }
+
+    @Test
+    void invalidParamWithSingleQuotesInIt() {
+        assertStderrContains(
+            () -> run("import_files", "-not-a-'real'-param"),
+            "Invalid option: '-not-a-'real'-param'"
+        );
+    }
+
+    @Test
+    void badDynamicOption() {
+        assertStderrContains(
+            () -> run("import_files", "-CnoValue"),
+            "Options specified via '-C' or '-P' must have a form of -Ckey=value or -Pkey=value."
         );
     }
 
     @Test
     void missingRequiredParam() {
-        run(
-            "import_files",
-            "--connectionString", makeConnectionString()
+        assertStderrContains(
+            () -> run("import_files", "--connectionString", makeConnectionString()),
+            "The following option is required: [--path]"
         );
     }
 
@@ -36,50 +57,59 @@ class HandleErrorTest extends AbstractTest {
      */
     @Test
     void sparkFailure() {
-        run(
-            "import_files",
-            "--path", "/not/valid",
-            "--connectionString", makeConnectionString()
+        assertStderrContains(
+            () -> run(
+                "import_files",
+                "--path", "/not/valid",
+                "--connectionString", makeConnectionString()
+            ),
+            "Command failed, cause: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
         );
     }
 
-    /**
-     * Shows the logging for when the command fails and stops execution.
-     */
     @Test
     void abortOnWriteFailure() {
-        run(
-            "import_files",
-            "--path", "src/test/resources/mixed-files/hello*",
-            "--repartition", "2",
-            "--connectionString", makeConnectionString(),
-            "--permissions", "invalid-role,read,rest-writer,update",
-            "--abortOnWriteFailure"
+        assertStderrContains(
+            () -> run(
+                "import_files",
+                "--path", "src/test/resources/mixed-files/hello*",
+                "--repartition", "2",
+                "--connectionString", makeConnectionString(),
+                "--permissions", "invalid-role,read,rest-writer,update",
+                "--abortOnWriteFailure"
+            ),
+            "Command failed, cause: Local message: failed to apply resource at documents"
         );
     }
 
     @Test
     void abortOnWriteFailureAndShowStacktrace() {
-        run(
-            "import_files",
-            "--path", "src/test/resources/mixed-files/hello*",
-            "--repartition", "2",
-            "--connectionString", makeConnectionString(),
-            "--permissions", "invalid-role,read,rest-writer,update",
-            "--stacktrace",
-            "--abortOnWriteFailure"
+        assertStderrContains(
+            () -> run(
+                "import_files",
+                "--path", "src/test/resources/mixed-files/hello*",
+                "--repartition", "2",
+                "--connectionString", makeConnectionString(),
+                "--permissions", "invalid-role,read,rest-writer,update",
+                "--stacktrace",
+                "--abortOnWriteFailure"
+            ),
+            "com.marklogic.spark.ConnectorException: Local message: failed to apply resource at documents"
         );
     }
 
     @Test
-    void dontAbortOnFailure() {
-        run(
+    void dontAbortOnWriteFailure() {
+        String stderr = runAndReturnStderr(() -> run(
             "import_files",
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",
             "--connectionString", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update"
-        );
+        ));
+
+        assertFalse(stderr.contains("Command failed"), "The command should not have failed since it defaults to not " +
+            "aborting on a write failure.");
     }
 }
