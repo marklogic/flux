@@ -42,6 +42,19 @@ class ParquetFilesExporterTest extends AbstractTest {
         verifyFiles(tempDir);
     }
 
+    @Test
+    void pathOnly(@TempDir Path tempDir) {
+        NT.exportParquetFiles()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY)
+            .limit(1)
+            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .execute();
+
+        File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".parquet"));
+        assertEquals(1, files.length);
+    }
+
     private void verifyFiles(Path tempDir) {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".gz.parquet"));
         assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --fileCount is 2, and the " +

@@ -78,12 +78,18 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public T connection(Consumer consumer) {
         consumer.accept(getConnectionParams());
-        return (T)this;
+        return (T) this;
     }
 
     @Override
     public T connectionString(String connectionString) {
         getConnectionParams().connectionString(connectionString);
-        return (T)this;
+        return (T) this;
+    }
+
+    @Override
+    public T limit(int limit) {
+        commonParams.setLimit(limit);
+        return (T) this;
     }
 }

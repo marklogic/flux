@@ -98,4 +98,10 @@ public class ExportArchivesCommand extends AbstractCommand<ArchiveFilesExporter>
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public ArchiveFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

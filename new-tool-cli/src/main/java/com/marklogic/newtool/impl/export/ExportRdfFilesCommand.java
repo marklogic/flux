@@ -197,4 +197,10 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public RdfFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

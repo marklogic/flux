@@ -65,4 +65,10 @@ public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<Avr
         consumer.accept(writeParams);
         return this;
     }
+
+    @Override
+    public AvroFilesExporter writeFiles(String path) {
+        writeParams.path(path);
+        return this;
+    }
 }

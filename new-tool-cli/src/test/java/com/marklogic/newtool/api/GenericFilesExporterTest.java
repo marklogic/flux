@@ -30,6 +30,19 @@ class GenericFilesExporterTest extends AbstractTest {
     }
 
     @Test
+    void pathOnly(@TempDir Path tempDir) {
+        NT.exportGenericFiles()
+            .connectionString(makeConnectionString())
+            .readDocuments(options -> options.collections("author"))
+            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .execute();
+
+        File dir = tempDir.toFile();
+        File authorsDir = new File(dir, "author");
+        assertEquals(15, authorsDir.listFiles().length);
+    }
+
+    @Test
     void prettyPrint(@TempDir Path tempDir) throws IOException {
         NT.exportGenericFiles()
             .connectionString(makeConnectionString())

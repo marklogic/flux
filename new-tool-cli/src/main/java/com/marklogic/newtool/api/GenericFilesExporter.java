@@ -21,4 +21,6 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
     GenericFilesExporter readDocuments(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
 
     GenericFilesExporter writeFiles(Consumer<WriteGenericFilesOptions> consumer);
+
+    GenericFilesExporter writeFiles(String path);
 }

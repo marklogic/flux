@@ -31,12 +31,11 @@ class AvroFilesExporterTest extends AbstractTest {
         NT.exportAvroFiles()
             .connectionString(makeConnectionString())
             .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeFiles(options -> options
-                .path(tempDir.toFile().getAbsolutePath())
-                .fileCount(1))
+            .writeFiles(tempDir.toFile().getAbsolutePath())
             .execute();
 
-        verifyFiles(tempDir);
+        File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
+        assertEquals(1, files.length);
     }
 
     private void verifyFiles(Path tempDir) {
