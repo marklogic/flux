@@ -116,6 +116,15 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         return new String(outputStream.toByteArray());
     }
 
+    protected final void assertStderrContains(Runnable r, String expectedContentInStderr) {
+        final String stderr = runAndReturnStderr(r);
+        logger.info("Captured stderr:\n{}", stderr);
+        assertTrue(
+            stderr.contains(expectedContentInStderr),
+            String.format("Unexpected stderr; did not find '%s'; actual stderr: %s", expectedContentInStderr, stderr)
+        );
+    }
+
     /**
      * Useful for when testing the results of a command can be easily done by using our Spark connector.
      *
