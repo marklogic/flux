@@ -46,6 +46,10 @@ public abstract class NT {
         return new ExportJdbcCommand();
     }
 
+    public static JsonLinesFilesExporter exportJsonLinesFiles() {
+        return new ExportJsonLinesFilesCommand();
+    }
+
     public static OrcFilesExporter exportOrcFiles() {
         return new ExportOrcFilesCommand();
     }
