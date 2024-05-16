@@ -3,6 +3,9 @@ package com.marklogic.newtool.impl;
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.NtException;
+import com.marklogic.spark.ConnectorException;
+import org.apache.spark.SparkException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,30 +35,44 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
 
     @Override
     public final Optional<Preview> execute(SparkSession session) {
-        configParams.entrySet().stream().forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
-
-        String host = getConnectionParams().getSelectedHost();
-        if (host != null && logger.isInfoEnabled()) {
-            logger.info("Will connect to MarkLogic host: {}", host);
+        try {
+            configParams.entrySet().stream().forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
+            if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
+                logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());
+            }
+            long start = System.currentTimeMillis();
+            Dataset<Row> dataset = loadDataset(session, session.read());
+            dataset = commonParams.applyParams(dataset);
+            if (commonParams.isPreviewRequested()) {
+                return Optional.of(commonParams.makePreview(dataset));
+            }
+            applyWriter(session, dataset.write());
+            if (logger.isInfoEnabled()) {
+                logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+            }
+        } catch (ConnectorException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            handleException(ex);
         }
-
-        long start = System.currentTimeMillis();
-
-        DataFrameReader reader = session.read();
-        Dataset<Row> dataset = loadDataset(session, reader);
-
-        dataset = commonParams.applyParams(dataset);
-        if (commonParams.isPreviewRequested()) {
-            return Optional.of(commonParams.makePreview(dataset));
-        }
-
-        DataFrameWriter<Row> writer = dataset.write();
-        applyWriter(session, writer);
-        if (logger.isInfoEnabled()) {
-            logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
-        }
-
         return Optional.empty();
+    }
+
+    private void handleException(Exception ex) {
+        if (ex.getCause() instanceof ConnectorException) {
+            // Our connector exceptions are expected to be helpful and friendly to the user.
+            throw (ConnectorException) ex.getCause();
+        }
+        if (ex instanceof SparkException && ex.getCause() != null) {
+            if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
+                // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
+                // wrapped SparkException that has a more useful error
+                throw new NtException(ex.getCause().getCause());
+            }
+            // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
+            throw new NtException(ex.getCause());
+        }
+        throw new NtException(ex);
     }
 
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);

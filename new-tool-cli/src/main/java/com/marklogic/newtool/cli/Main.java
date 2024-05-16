@@ -13,7 +13,6 @@ import com.marklogic.newtool.impl.custom.CustomImportCommand;
 import com.marklogic.newtool.impl.export.*;
 import com.marklogic.newtool.impl.importdata.*;
 import com.marklogic.newtool.impl.reprocess.ReprocessCommand;
-import org.apache.spark.SparkException;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +53,7 @@ public class Main {
                     ex.printStackTrace();
                 }
             }
-            if (ex instanceof SparkException && ex.getCause() != null) {
-                String message = extractExceptionMessage((SparkException) ex);
-                System.err.println(String.format("%nCommand failed, cause: %s", message));
-            } else {
-                System.err.println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
-            }
+            System.err.println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
         }
     }
 
@@ -137,17 +131,6 @@ public class Main {
             return null;
         }
         return commander.getCommands().get(this.selectedCommandName).getObjects().get(0);
-    }
-
-    private static String extractExceptionMessage(SparkException ex) {
-        // The SparkException message typically has a stacktrace in it that is not likely to be helpful.
-        String message = ex.getCause().getMessage();
-        if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
-            // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
-            // wrapped SparkException that has a more useful error.
-            message = ex.getCause().getCause().getMessage();
-        }
-        return message;
     }
 
     private static String determineErrorMessageForParameterException(ParameterException ex) {

@@ -5,10 +5,9 @@ import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.junit5.AbstractMarkLogicTest;
 import com.marklogic.mgmt.ManageClient;
 import com.marklogic.mgmt.ManageConfig;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.cli.Main;
 import com.marklogic.rest.util.RestTemplateUtil;
-import com.marklogic.spark.ConnectorException;
-import org.apache.spark.SparkException;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
@@ -138,12 +137,8 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         return sparkSession;
     }
 
-    protected final ConnectorException assertThrowsConnectorException(Runnable r) {
-        SparkException ex = assertThrows(SparkException.class, () -> r.run());
-        assertTrue(ex.getCause() instanceof ConnectorException,
-            "Expect the Spark-thrown SparkException to wrap our ConnectorException, which is an exception that we " +
-                "intentionally throw when an error condition is detected. Actual exception: " + ex.getCause());
-        return (ConnectorException) ex.getCause();
+    protected final NtException assertThrowsNtException(Runnable r) {
+        return assertThrows(NtException.class, () -> r.run());
     }
 
     protected final ManageClient newManageClient() {

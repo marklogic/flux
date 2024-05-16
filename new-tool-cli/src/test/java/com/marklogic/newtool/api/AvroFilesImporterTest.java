@@ -37,7 +37,7 @@ class AvroFilesImporterTest extends AbstractTest {
                 .collections("avro-test")
                 .uriTemplate("/avro/{color}.json"));
 
-        SchemaParseException ex = assertThrows(SchemaParseException.class, () -> importer.execute());
+        NtException ex = assertThrowsNtException(() -> importer.execute());
         assertTrue(ex.getMessage().contains("Unrecognized token"), "Unexpected error: " + ex.getMessage() + "; " +
             "verifying that the additionalOptions map is processed, which should cause an error due to the " +
             "invalid Avro schema.");
