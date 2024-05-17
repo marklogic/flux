@@ -36,7 +36,7 @@ class OrcFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test"));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> importer.execute());
+        NtException ex = assertThrowsNtException(() -> importer.execute());
         assertEquals("For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
             "invalid value for the ORC 'mergeSchema' option.");
     }

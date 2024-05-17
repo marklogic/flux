@@ -2,7 +2,6 @@ package com.marklogic.newtool.api;
 
 import com.marklogic.newtool.AbstractTest;
 import com.marklogic.spark.ConnectorException;
-import org.apache.spark.sql.AnalysisException;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -71,7 +70,7 @@ class GenericFilesImporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .readFiles("path/doesnt/exist");
 
-        AnalysisException ex = assertThrows(AnalysisException.class, () -> command.execute());
+        NtException ex = assertThrowsNtException(() -> command.execute());
         assertTrue(ex.getMessage().contains("Path does not exist"),
             "Unexpected message: " + ex.getMessage() + ". And I'm not sure we want this Spark-specific " +
                 "exception to escape. Think we need for AbstractCommand to catch Throwable and look for a " +
@@ -88,7 +87,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .abortOnWriteFailure(true)
                 .permissionsString("not-a-real-role,update"));
 
-        ConnectorException ex = assertThrowsConnectorException(() -> command.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, () -> command.execute());
         assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
 }
