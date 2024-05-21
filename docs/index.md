@@ -27,6 +27,7 @@ NT has the following system requirements:
 
 * Java 11 or higher.
 * MarkLogic 10.0-9 or higher.
+* A [MarkLogic REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. 
 
 Earlier versions of MarkLogic 9 and 10 will support any features not involving Optic queries.
 Additionally, the latest version of MarkLogic 11 is recommended if possible.

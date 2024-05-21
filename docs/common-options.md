@@ -18,7 +18,7 @@ Every command in NT will need to connect to a MarkLogic database, either for rea
 Generally, you must include at least the following information for each command:
 
 - The name of a MarkLogic host.
-- The port of a MarkLogic app server connected to the database you wish to interact with.
+- The port of a [MarkLogic REST API app server](https://docs.marklogic.com/guide/rest-dev) connected to the database you wish to interact with.
 - Authentication information.
 
 For the common use case of using digest or basic authentication with a MarkLogic app server, you can use the 
@@ -49,6 +49,7 @@ All available connection options are shown in the table below:
 | --keyStorePath | File path for a key store for two-way SSL connections. |
 | --keyStoreType | Type of the key store identified by '--keyStorePath'; defaults to `JKS`. |
 | --password | Password when using `DIGEST` or `BASIC` authentication. |
+| --port | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
 | --samlToken | Token to be used with `SAML` authentication. |
 | --sslHostnameVerifier | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
 | --sslProtocol | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store or trust store is configured, defaults to `TLSv1.2`. |
