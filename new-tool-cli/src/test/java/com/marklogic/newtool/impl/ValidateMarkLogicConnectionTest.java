@@ -39,16 +39,28 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     }
 
     @Test
-    void badClientUri() {
+    void badConnectionString() {
         String output = runAndReturnStderr(() -> run(
             "import_files",
             "--path", "src/test/resources/mixed-files",
             "--connectionString", "admin-missing-password@localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --connectionString"),
+        assertTrue(output.contains("Invalid value for --connectionString; must be username:password@host:port"),
             "Unexpected output: " + output + "; this test also confirms that the ETL tool is overriding " +
                 "error messages from the connector so that CLI option names appear instead of connector " +
                 "option names. This is also confirmed by ErrorMessagesTest.");
+    }
+
+    @Test
+    void connectionStringWithoutUserOrPassword() {
+        String output = runAndReturnStderr(() -> run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files",
+            "--connectionString", "localhost:8003"
+        ));
+
+        assertTrue(output.contains("Invalid value for --connectionString; must be username:password@host:port"),
+            "Unexpected output: " + output);
     }
 }
