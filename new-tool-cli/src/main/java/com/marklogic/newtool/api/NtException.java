@@ -6,6 +6,10 @@ package com.marklogic.newtool.api;
  */
 public class NtException extends RuntimeException {
 
+    public NtException(String message) {
+        super(message);
+    }
+
     public NtException(Throwable cause) {
         super(cause.getMessage(), cause);
     }

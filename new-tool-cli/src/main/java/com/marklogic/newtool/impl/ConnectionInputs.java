@@ -2,6 +2,7 @@ package com.marklogic.newtool.impl;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.api.SslHostnameVerifier;
 import com.marklogic.spark.Options;
 
@@ -42,8 +43,16 @@ public abstract class ConnectionInputs {
     public String getSelectedHost() {
         if (connectionString != null) {
             // TBD Ideally reuse this logic from the connector.
+            final String errorMessage = "Invalid value for --connectionString; must be username:password@host:port";
             String[] parts = connectionString.split("@");
-            return parts[1].split(":")[0];
+            if (parts.length != 2) {
+                throw new NtException(errorMessage);
+            }
+            parts = parts[1].split(":");
+            if (parts.length != 2) {
+                throw new NtException(errorMessage);
+            }
+            return parts[0];
         }
         return host;
     }
