@@ -14,6 +14,8 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
         ReadXmlFilesOptions uriNamespace(String uriNamespace);
 
         ReadXmlFilesOptions compressionType(CompressionType compressionType);
+
+        ReadXmlFilesOptions partitions(Integer partitions);
     }
 
     AggregateXmlFilesImporter readFiles(Consumer<ReadXmlFilesOptions> consumer);
