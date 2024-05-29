@@ -15,6 +15,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--username", "someuser",
             "--password", "someword",
             "--path", "src/test/resources/mixed-files/hello*",
+            "--partitions", "6",
             "--documentType", "XML",
             "--abortOnWriteFailure",
             "--batchSize", "50",
@@ -37,6 +38,10 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.CLIENT_PORT, "8001",
             Options.CLIENT_USERNAME, "someuser",
             Options.CLIENT_PASSWORD, "someword"
+        );
+
+        assertOptions(command.getReadParams().makeOptions(),
+            Options.READ_NUM_PARTITIONS, "6"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),

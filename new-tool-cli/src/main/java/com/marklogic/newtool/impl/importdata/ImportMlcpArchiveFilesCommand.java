@@ -44,17 +44,27 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
         private String categories;
 
+        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        private Integer partitions;
+
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "mlcp_archive",
-                Options.READ_ARCHIVES_CATEGORIES, categories
+                Options.READ_ARCHIVES_CATEGORIES, categories,
+                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
             );
         }
 
         @Override
         public ReadMlcpArchiveFilesOptions categories(String... categories) {
             this.categories = Stream.of(categories).collect(Collectors.joining(","));
+            return this;
+        }
+
+        @Override
+        public ReadMlcpArchiveFilesOptions partitions(Integer partitions) {
+            this.partitions = partitions;
             return this;
         }
     }

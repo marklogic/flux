@@ -42,17 +42,27 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
         @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
         private CompressionType compressionType;
 
+        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        private Integer partitions;
+
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "rdf",
-                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
+                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
+                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
             );
         }
 
         @Override
         public ReadRdfFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
+            return this;
+        }
+
+        @Override
+        public ReadRdfFilesOptions partitions(Integer partitions) {
+            this.partitions = partitions;
             return this;
         }
     }

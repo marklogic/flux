@@ -66,10 +66,14 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         )
         private CompressionType compressionType;
 
+        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        private Integer partitions;
+
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(
                 super.makeOptions(),
+                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null,
                 Options.READ_AGGREGATES_XML_ELEMENT, element,
                 Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
                 Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement,
@@ -105,6 +109,12 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         @Override
         public ReadXmlFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
+            return this;
+        }
+
+        @Override
+        public ReadXmlFilesOptions partitions(Integer partitions) {
+            this.partitions = partitions;
             return this;
         }
     }

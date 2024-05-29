@@ -6,6 +6,7 @@ public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImpor
 
     interface ReadMlcpArchiveFilesOptions extends ReadFilesOptions<ReadMlcpArchiveFilesOptions> {
         ReadMlcpArchiveFilesOptions categories(String... categories);
+        ReadMlcpArchiveFilesOptions partitions(Integer partitions);
     }
 
     MlcpArchiveFilesImporter readFiles(Consumer<ReadMlcpArchiveFilesOptions> consumer);

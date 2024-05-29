@@ -6,6 +6,7 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
 
     interface ReadArchiveFilesOptions extends ReadFilesOptions<ReadArchiveFilesOptions> {
         ReadArchiveFilesOptions categories(String... categories);
+        ReadArchiveFilesOptions partitions(Integer partitions);
     }
 
     ArchiveFilesImporter readFiles(Consumer<ReadArchiveFilesOptions> consumer);
