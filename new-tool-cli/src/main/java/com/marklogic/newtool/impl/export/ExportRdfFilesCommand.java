@@ -165,11 +165,15 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Parameter(names = "--graphOverride", description = "Semantic graph to include in each file. Only allowed when '--format' is 'nq' or 'trig'.")
         private String graphOverride;
 
+        @Parameter(names = "--gzip", description = "GZIP each file.")
+        private boolean gzip;
+
         @Override
         public Map<String, String> get() {
             return OptionsUtil.makeOptions(
                 Options.WRITE_RDF_FILES_FORMAT, format,
-                Options.WRITE_RDF_FILES_GRAPH, graphOverride
+                Options.WRITE_RDF_FILES_GRAPH, graphOverride,
+                Options.WRITE_FILES_COMPRESSION, gzip ? "gzip" : null
             );
         }
 
@@ -182,6 +186,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Override
         public WriteRdfFilesOptions graphOverride(String graphOverride) {
             this.graphOverride = graphOverride;
+            return this;
+        }
+
+        @Override
+        public WriteRdfFilesOptions gzip() {
+            this.gzip = true;
             return this;
         }
     }
