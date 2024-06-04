@@ -254,6 +254,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     protected final CopyWriteDocumentsParams writeParams = new CopyWriteDocumentsParams();
 
     @Override
+    public void execute() {
+        outputConnectionParams.validateConnectionString("output connection string");
+        super.execute();
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
