@@ -90,4 +90,13 @@ class GenericFilesImporterTest extends AbstractTest {
         ConnectorException ex = assertThrows(ConnectorException.class, () -> command.execute());
         assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
+
+    @Test
+    void missingPath() {
+        GenericFilesImporter importer = NT.importGenericFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

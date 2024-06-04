@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JsonFilesImporterTest extends AbstractTest {
@@ -33,6 +34,14 @@ class JsonFilesImporterTest extends AbstractTest {
             assertTrue(doc.has("firstName"));
             assertTrue(doc.has("lastName"));
         });
+    }
 
+    @Test
+    void missingPath() {
+        JsonFilesImporter importer = NT.importJsonFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

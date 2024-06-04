@@ -29,4 +29,13 @@ class ParquetFilesImporterTest extends AbstractTest {
             "to merge the schemas of the different Parquet files it finds. Without that option, orange.json will " +
             "not have a 'hex' field.");
     }
+
+    @Test
+    void missingPath() {
+        ParquetFilesImporter importer = NT.importParquetFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

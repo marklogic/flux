@@ -25,4 +25,13 @@ class MlcpArchiveFilesImporterTest extends AbstractTest {
                 "of categories, no collections should be assigned to URI: " + uri);
         });
     }
+
+    @Test
+    void missingPath() {
+        MlcpArchiveFilesImporter importer = NT.importMlcpArchiveFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }
