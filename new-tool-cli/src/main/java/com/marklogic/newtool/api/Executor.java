@@ -7,7 +7,19 @@ import java.util.function.Consumer;
  */
 public interface Executor<T extends Executor> {
 
+    /**
+     * Execute this executor instance with a default Spark session.
+     */
     void execute();
+
+    /**
+     * Execute this executor with a user-defined Spark session.
+     *
+     * @param sparkSession must be an instance of {@code org.apache.spark.sql.SparkSession}. The Spark type is not used
+     *                     here to avoid adding the Spark API and all of its dependencies to the compile-time
+     *                     classpath of clients.
+     */
+    void executeWithSession(Object sparkSession);
 
     /**
      * @param consumer Provided by the caller to configure the given options object.

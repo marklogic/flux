@@ -93,6 +93,14 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     @Override
+    public void executeWithSession(Object sparkSession) {
+        if (!(sparkSession instanceof SparkSession)) {
+            throw new NtException("The session object must be an instance of org.apache.spark.sql.SparkSession");
+        }
+        execute((SparkSession) sparkSession);
+    }
+
+    @Override
     public T connection(Consumer consumer) {
         consumer.accept(getConnectionParams());
         return (T) this;
