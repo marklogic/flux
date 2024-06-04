@@ -1,5 +1,7 @@
 package com.marklogic.newtool.impl;
 
+import com.marklogic.newtool.api.NtException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,16 @@ public abstract class OptionsUtil {
     public static Map<String, String> addOptions(Map<String, String> options, String... keysAndValues) {
         options.putAll(makeOptions(keysAndValues));
         return options;
+    }
+
+    public static void validateRequiredOptions(Map<String, String> options, String... optionNamesAndMessages) {
+        for (int i = 0; i < optionNamesAndMessages.length; i += 2) {
+            String key = optionNamesAndMessages[i];
+            String value = options.get(key);
+            if (value == null || value.trim().length() == 0) {
+                throw new NtException(optionNamesAndMessages[i + 1]);
+            }
+        }
     }
 
     private OptionsUtil() {
