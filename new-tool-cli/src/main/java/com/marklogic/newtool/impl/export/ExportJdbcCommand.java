@@ -25,6 +25,14 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     private WriteJdbcParams writeParams = new WriteJdbcParams();
 
     @Override
+    protected void validateDuringApiUsage() {
+        OptionsUtil.validateRequiredOptions(writeParams.makeOptions(),
+            "url", "Must specify a JDBC URL",
+            "dbtable", "Must specify a table"
+        );
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())

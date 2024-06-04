@@ -93,7 +93,16 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public void execute() {
         connectionParams.validateConnectionString("connection string");
+        validateDuringApiUsage();
         execute(SparkUtil.buildSparkSession());
+    }
+
+    /**
+     * Because we cannot reuse validation expressed via JCommander annotations - such as "required=true" - some
+     * subclasses may need to perform their own validation when the user is using the API.
+     */
+    protected void validateDuringApiUsage() {
+        // Intended to be overridden by subclass as needed.
     }
 
     @Override

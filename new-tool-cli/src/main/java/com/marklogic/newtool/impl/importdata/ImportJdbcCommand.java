@@ -23,6 +23,14 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
+    protected void validateDuringApiUsage() {
+        OptionsUtil.validateRequiredOptions(readParams.makeOptions(),
+            "url", "Must specify a JDBC URL",
+            "query", "Must specify a query"
+        );
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         Dataset<Row> dataset = session.read().format("jdbc")
             .options(readParams.makeOptions())

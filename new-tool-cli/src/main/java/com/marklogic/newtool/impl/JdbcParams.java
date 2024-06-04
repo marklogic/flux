@@ -12,7 +12,7 @@ public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
     @Parameter(names = "--jdbcUrl", required = true, description = "The JDBC URL to connect to.")
     private String url;
 
-    @Parameter(names = "--jdbcDriver", required = true, description = "The class name of the JDBC driver to use.")
+    @Parameter(names = "--jdbcDriver", description = "The class name of the JDBC driver to use.")
     private String driver;
 
     @Parameter(names = "--jdbcUser", description = "The user to authenticate as, if not specified in the JDBC URL.")
