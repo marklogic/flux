@@ -29,6 +29,8 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
         WriteRdfFilesOptions format(String format);
 
         WriteRdfFilesOptions graphOverride(String graphOverride);
+
+        WriteRdfFilesOptions gzip();
     }
 
     RdfFilesExporter readTriples(Consumer<ReadTriplesDocumentsOptions> consumer);
