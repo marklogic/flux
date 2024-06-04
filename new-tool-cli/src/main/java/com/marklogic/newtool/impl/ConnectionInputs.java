@@ -4,6 +4,8 @@ import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
 import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.api.SslHostnameVerifier;
+import com.marklogic.spark.ConnectionString;
+import com.marklogic.spark.ConnectorException;
 import com.marklogic.spark.Options;
 
 import java.util.Map;
@@ -42,19 +44,22 @@ public abstract class ConnectionInputs {
 
     public String getSelectedHost() {
         if (connectionString != null) {
-            // TBD Ideally reuse this logic from the connector.
-            final String errorMessage = "Invalid value for --connectionString; must be username:password@host:port";
-            String[] parts = connectionString.split("@");
-            if (parts.length != 2) {
-                throw new NtException(errorMessage);
-            }
-            parts = parts[1].split(":");
-            if (parts.length != 2) {
-                throw new NtException(errorMessage);
-            }
-            return parts[0];
+            return new ConnectionString(connectionString, "--connectionString").getHost();
         }
         return host;
+    }
+
+    /**
+     * Used by the API to eagerly fail on an invalid connection string and provide a meaningful error message.
+     */
+    public void validateConnectionString(String inputNameForErrorMessage) {
+        if (connectionString != null && connectionString.trim().length() > 0) {
+            try {
+                new ConnectionString(connectionString, inputNameForErrorMessage);
+            } catch (ConnectorException e) {
+                throw new NtException(e.getMessage());
+            }
+        }
     }
 
     public Map<String, String> makeOptions() {

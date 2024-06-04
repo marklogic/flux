@@ -87,8 +87,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         return commonParams;
     }
 
+    /**
+     * Entry point for using commands via the API instead of the CLI.
+     */
     @Override
     public void execute() {
+        connectionParams.validateConnectionString("connection string");
         execute(SparkUtil.buildSparkSession());
     }
 
