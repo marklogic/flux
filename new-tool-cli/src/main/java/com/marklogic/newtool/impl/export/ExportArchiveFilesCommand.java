@@ -25,6 +25,11 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     private WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
     @Override
+    protected void validateDuringApiUsage() {
+        writeParams.validatePath();
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         final Integer fileCount = writeParams.getFileCount();
         if (fileCount != null && fileCount > 0) {

@@ -60,4 +60,14 @@ class GenericFilesExporterTest extends AbstractTest {
         assertTrue(content.startsWith("{\n"), "The content should be pretty-printed and thus have a newline " +
             "after the first opening brace; actual content: " + content);
     }
+
+    @Test
+    void missingPath() {
+        GenericFilesExporter exporter = NT.exportGenericFiles()
+            .connectionString(makeConnectionString())
+            .readDocuments(options -> options.collections("author"));
+
+        NtException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify a file path", ex.getMessage());
+    }
 }

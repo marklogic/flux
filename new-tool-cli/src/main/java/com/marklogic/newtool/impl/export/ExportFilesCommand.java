@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.newtool.api.CompressionType;
 import com.marklogic.newtool.api.GenericFilesExporter;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.api.ReadDocumentsOptions;
 import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.OptionsUtil;
@@ -24,6 +25,11 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
     @ParametersDelegate
     protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
+
+    @Override
+    protected void validateDuringApiUsage() {
+        writeParams.validatePath();
+    }
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
@@ -70,6 +76,12 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
                 Options.WRITE_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.WRITE_FILES_PRETTY_PRINT, prettyPrint != null ? prettyPrint.toString() : null
             );
+        }
+
+        public void validatePath() {
+            if (path == null || path.trim().length() == 0) {
+                throw new NtException("Must specify a file path");
+            }
         }
 
         @Override

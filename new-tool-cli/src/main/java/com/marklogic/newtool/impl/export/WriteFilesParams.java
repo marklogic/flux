@@ -2,6 +2,7 @@ package com.marklogic.newtool.impl.export;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.api.WriteFilesOptions;
 import com.marklogic.newtool.impl.S3Params;
 
@@ -29,6 +30,12 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
 
     public Integer getFileCount() {
         return fileCount;
+    }
+
+    public void validatePath() {
+        if (path == null || path.trim().length() == 0) {
+            throw new NtException("Must specify a file path");
+        }
     }
 
     @Override

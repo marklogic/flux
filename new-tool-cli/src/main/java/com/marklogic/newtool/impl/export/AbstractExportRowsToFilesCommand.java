@@ -26,6 +26,11 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
     protected abstract String getWriteFormat();
 
     @Override
+    protected void validateDuringApiUsage() {
+        getWriteFilesParams().validatePath();
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         final Integer fileCount = getWriteFilesParams().getFileCount();
         if (fileCount != null && fileCount > 0) {

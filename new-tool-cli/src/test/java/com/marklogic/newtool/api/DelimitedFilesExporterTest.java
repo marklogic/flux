@@ -49,4 +49,14 @@ class DelimitedFilesExporterTest extends AbstractTest {
         File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
         assertEquals(1, files.length);
     }
+
+    @Test
+    void missingPath() {
+        DelimitedFilesExporter exporter = NT.exportDelimitedFiles()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY);
+
+        NtException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify a file path", ex.getMessage());
+    }
 }

@@ -38,6 +38,16 @@ class AvroFilesExporterTest extends AbstractTest {
         assertEquals(1, files.length);
     }
 
+    @Test
+    void missingPath() {
+        AvroFilesExporter exporter = NT.exportAvroFiles()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY);
+
+        NtException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify a file path", ex.getMessage());
+    }
+
     private void verifyFiles(Path tempDir) {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
         assertEquals(1, files.length);
