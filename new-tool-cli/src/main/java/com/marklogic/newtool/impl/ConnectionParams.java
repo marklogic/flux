@@ -1,41 +1,20 @@
 package com.marklogic.newtool.impl;
 
-import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
 import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.SslHostnameVerifier;
 
-import java.util.Map;
-
-@Parameters(parametersValidators = ConnectionParams.class)
-public class ConnectionParams extends ConnectionInputs implements IParametersValidator, ConnectionOptions {
-
-    @Override
-    public void validate(Map<String, Object> parameters) throws ParameterException {
-        if (parameters.get("--connectionString") == null && parameters.get("--preview") == null) {
-            if (parameters.get("--host") == null) {
-                throw new ParameterException("Must specify a MarkLogic host via --host or --connectionString.");
-            }
-            if (parameters.get("--port") == null) {
-                throw new ParameterException("Must specify a MarkLogic app server port via --port or --connectionString.");
-            }
-
-            String authType = (String) parameters.get("--authType");
-            boolean isDigestOrBasicAuth = authType == null || ("digest".equalsIgnoreCase(authType) || "basic".equalsIgnoreCase(authType));
-            if (isDigestOrBasicAuth && parameters.get("--username") == null) {
-                throw new ParameterException("Must specify a MarkLogic user via --username when using 'BASIC' or 'DIGEST' authentication.");
-            }
-        }
-    }
+@Parameters(parametersValidators = ConnectionParamsValidator.class)
+public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     @Override
     @Parameter(
         names = {"--connectionString"},
-        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
+        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
+        validateWith = ConnectionStringValidator.class
     )
     public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;
