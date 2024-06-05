@@ -1,6 +1,7 @@
 package com.marklogic.newtool.impl.reprocess;
 
 import com.beust.jcommander.*;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.api.Reprocessor;
 import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.OptionsUtil;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Parameters(
     commandDescription = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.",
@@ -26,6 +28,13 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
     @ParametersDelegate
     protected WriteParams writeParams = new WriteParams();
+
+    @Override
+    protected void validateDuringApiUsage() {
+        readParams.validateReader();
+        readParams.validatePartitionReader();
+        writeParams.validateWriter();
+    }
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
@@ -168,6 +177,24 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             description = "Define variables to be sent to the code for reading data; e.g. '--readVar var1=value1'."
         )
         private List<String> readVars = new ArrayList<>();
+
+        public void validateReader() {
+            Map<String, String> options = get();
+            if (Stream.of(Options.READ_INVOKE, Options.READ_JAVASCRIPT, Options.READ_JAVASCRIPT_FILE,
+                Options.READ_XQUERY, Options.READ_XQUERY_FILE).noneMatch(options::containsKey)) {
+                throw new NtException("Must specify either JavaScript code, XQuery code, or an invokable module for reading from MarkLogic");
+            }
+        }
+
+        public void validatePartitionReader() {
+            Map<String, String> options = get();
+            long count = Stream.of(Options.READ_PARTITIONS_JAVASCRIPT, Options.READ_PARTITIONS_JAVASCRIPT_FILE,
+                    Options.READ_PARTITIONS_XQUERY, Options.READ_PARTITIONS_XQUERY_FILE, Options.READ_PARTITIONS_INVOKE)
+                .filter(options::containsKey).count();
+            if (count > 1) {
+                throw new NtException("Can only specify one approach for defining partitions that are sent to the code for reading from MarkLogic");
+            }
+        }
 
         @Override
         public Map<String, String> get() {
@@ -327,6 +354,14 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             description = "The number of values sent to the code for writing data in a single call."
         )
         private Integer batchSize = 1;
+
+        public void validateWriter() {
+            Map<String, String> options = get();
+            if (Stream.of(Options.WRITE_INVOKE, Options.WRITE_JAVASCRIPT, Options.WRITE_JAVASCRIPT_FILE,
+                Options.WRITE_XQUERY, Options.WRITE_XQUERY_FILE).noneMatch(options::containsKey)) {
+                throw new NtException("Must specify either JavaScript code, XQuery code, or an invokable module for writing to MarkLogic");
+            }
+        }
 
         @Override
         public Map<String, String> get() {
