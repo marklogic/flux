@@ -1,5 +1,7 @@
 package com.marklogic.newtool.impl;
 
+import com.beust.jcommander.IParameterValidator;
+import com.beust.jcommander.ParameterException;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
 import com.marklogic.newtool.api.NtException;
@@ -15,6 +17,13 @@ import java.util.Map;
  * with parameter annotations.
  */
 public abstract class ConnectionInputs {
+
+    public static class ConnectionStringValidator implements IParameterValidator {
+        @Override
+        public void validate(String name, String value) throws ParameterException {
+            new ConnectionString(value, name);
+        }
+    }
 
     protected String connectionString;
     protected String host;

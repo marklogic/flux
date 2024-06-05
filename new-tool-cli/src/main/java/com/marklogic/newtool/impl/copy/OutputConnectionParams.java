@@ -1,22 +1,56 @@
 package com.marklogic.newtool.impl.copy;
 
+import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.newtool.api.AuthenticationType;
 import com.marklogic.newtool.api.ConnectionOptions;
 import com.marklogic.newtool.api.SslHostnameVerifier;
 import com.marklogic.newtool.impl.ConnectionInputs;
+import com.marklogic.newtool.impl.ConnectionParamsValidator;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
- * Defines all inputs with a "--output" prefix so it can be used in {@code CopyCommand} without conflicting with
+ * Defines all inputs with a "--output" prefix so that it can be used in {@code CopyCommand} without conflicting with
  * the args in {@code ConnectionParams}.
  */
-class OutputConnectionParams extends ConnectionInputs implements ConnectionOptions {
+@Parameters(parametersValidators = OutputConnectionParams.class)
+public class OutputConnectionParams extends ConnectionInputs implements ConnectionOptions, IParametersValidator {
+
+    @Override
+    public void validate(Map<String, Object> parameters) throws ParameterException {
+        if (atLeastOutputConnectionParameterExists(parameters)) {
+            new ConnectionParamsValidator(true).validate(parameters);
+        }
+    }
+
+    /**
+     * The user has the option not to provide any output connection params, in which case the "Copy" command will use
+     * the normal connection params for the target database.
+     */
+    private boolean atLeastOutputConnectionParameterExists(Map<String, Object> params) {
+        for (Method method : getClass().getMethods()) {
+            Parameter param = method.getAnnotation(Parameter.class);
+            if (param != null) {
+                for (String name : param.names()) {
+                    if (params.get(name) != null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     @Parameter(
         names = {"--outputConnectionString"},
-        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
+        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
+        validateWith = ConnectionStringValidator.class
     )
     public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;

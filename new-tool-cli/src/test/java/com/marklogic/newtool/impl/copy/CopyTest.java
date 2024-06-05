@@ -63,6 +63,59 @@ class CopyTest extends AbstractTest {
         assertDirectoryCount("/copied/", 15);
     }
 
+    @Test
+    void badConnectionString() {
+        assertStderrContains(() -> run(
+            "copy",
+            "--collections", "author",
+            "--connectionString", makeConnectionString(),
+            "--outputConnectionString", "not@valid"
+        ), "Invalid value for --outputConnectionString; must be username:password@host:port/optionalDatabaseName");
+    }
+
+    @Test
+    void missingHost() {
+        assertStderrContains(() -> run(
+            "copy",
+            "--collections", "author",
+            "--connectionString", makeConnectionString(),
+            "--outputPort", "8000"
+        ), "Must specify a MarkLogic host via --outputHost or --outputConnectionString.");
+    }
+
+    @Test
+    void missingPort() {
+        assertStderrContains(() -> run(
+            "copy",
+            "--collections", "author",
+            "--connectionString", makeConnectionString(),
+            "--outputHost", "localhost"
+        ), "Must specify a MarkLogic app server port via --outputPort or --outputConnectionString.");
+    }
+
+    @Test
+    void missingUsername() {
+        assertStderrContains(() -> run(
+            "copy",
+            "--collections", "author",
+            "--connectionString", makeConnectionString(),
+            "--outputHost", "localhost",
+            "--outputPort", "8000"
+        ), "Must specify a MarkLogic user via --outputUsername when using 'BASIC' or 'DIGEST' authentication.");
+    }
+
+    @Test
+    void missingPassword() {
+        assertStderrContains(() -> run(
+            "copy",
+            "--collections", "author",
+            "--connectionString", makeConnectionString(),
+            "--outputHost", "localhost",
+            "--outputPort", "8000",
+            "--outputUsername", "someone"
+        ), "Must specify a password via --outputPassword when using 'BASIC' or 'DIGEST' authentication.");
+    }
+
     private void assertDirectoryCount(String directoryPrefix, int expectedCount) {
         QueryManager queryManager = getDatabaseClient().newQueryManager();
         StructuredQueryDefinition query = queryManager.newStructuredQueryBuilder().directory(true, directoryPrefix);
