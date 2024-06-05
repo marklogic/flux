@@ -19,7 +19,7 @@ public interface Executor<T extends Executor> {
      *                     here to avoid adding the Spark API and all of its dependencies to the compile-time
      *                     classpath of clients.
      */
-    void executeWithSession(Object sparkSession);
+    T withSparkSession(Object sparkSession);
 
     /**
      * @param consumer Provided by the caller to configure the given options object.
@@ -40,4 +40,9 @@ public interface Executor<T extends Executor> {
      * @return instance of this executor
      */
     T limit(int limit);
+
+    /**
+     * @return the count of rows to be read by this executor from its data source.
+     */
+    long count();
 }

@@ -27,4 +27,8 @@ public class Preview {
         // Not truncating at all. For now, users can drop columns if their values are too long.
         datasetPreview.show(numberRows, Integer.MAX_VALUE, vertical);
     }
+
+    public Dataset<Row> getDataset() {
+        return dataset;
+    }
 }
