@@ -28,6 +28,10 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
+    public boolean hasAtLeastOnePath() {
+        return paths != null && !paths.isEmpty();
+    }
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (abortOnReadFailure != null && abortOnReadFailure) {

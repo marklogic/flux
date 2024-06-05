@@ -3,6 +3,8 @@ package com.marklogic.newtool.api;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class RdfFilesImporterTest extends AbstractTest {
 
     private static final String DEFAULT_MARKLOGIC_GRAPH = "http://marklogic.com/semantics#default-graph";
@@ -53,4 +55,12 @@ class RdfFilesImporterTest extends AbstractTest {
         assertCollectionSize(DEFAULT_MARKLOGIC_GRAPH, 2);
     }
 
+    @Test
+    void missingPath() {
+        RdfFilesImporter importer = NT.importRdfFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

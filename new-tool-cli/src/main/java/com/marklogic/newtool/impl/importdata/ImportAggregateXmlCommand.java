@@ -120,6 +120,14 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
     }
 
     @Override
+    protected void validateDuringApiUsage() {
+        super.validateDuringApiUsage();
+        OptionsUtil.validateRequiredOptions(readParams.makeOptions(),
+            Options.READ_AGGREGATES_XML_ELEMENT, "Must specify an aggregate XML element name"
+        );
+    }
+
+    @Override
     public AggregateXmlFilesImporter readFiles(Consumer<ReadXmlFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;

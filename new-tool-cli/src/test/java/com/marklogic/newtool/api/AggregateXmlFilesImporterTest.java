@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class AggregateXmlFilesImporterTest extends AbstractTest {
 
     @Test
@@ -47,5 +49,34 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
             .execute();
 
         assertCollectionSize("zipped-person", 3);
+    }
+
+    @Test
+    void missingElement() {
+        AggregateXmlFilesImporter importer = NT.importAggregateXmlFiles()
+            .connectionString(makeConnectionString())
+            .readFiles(options -> options
+                .paths("src/test/resources/xml-file/single-xml.zip"))
+            .writeDocuments(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("zipped-person"));
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify an aggregate XML element name", ex.getMessage());
+    }
+
+    @Test
+    void missingPath() {
+        AggregateXmlFilesImporter importer = NT.importAggregateXmlFiles()
+            .connectionString(makeConnectionString())
+            .readFiles(options -> options
+                .compressionType(CompressionType.ZIP)
+                .element("person"))
+            .writeDocuments(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("zipped-person"));
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

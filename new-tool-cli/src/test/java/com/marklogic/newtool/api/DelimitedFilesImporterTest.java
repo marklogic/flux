@@ -28,4 +28,13 @@ class DelimitedFilesImporterTest extends AbstractTest {
         assertEquals(1, doc.get("_c0").asInt(), "If no header row is present, Spark will name columns starting " +
             "with '_c0'.");
     }
+
+    @Test
+    void missingPath() {
+        DelimitedFilesImporter importer = NT.importDelimitedFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

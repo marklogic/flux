@@ -40,4 +40,13 @@ class OrcFilesImporterTest extends AbstractTest {
         assertEquals("For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
             "invalid value for the ORC 'mergeSchema' option.");
     }
+
+    @Test
+    void missingPath() {
+        OrcFilesImporter importer = NT.importOrcFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

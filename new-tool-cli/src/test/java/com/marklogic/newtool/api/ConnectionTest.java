@@ -36,7 +36,8 @@ class ConnectionTest extends AbstractTest {
     @Test
     void nullHost() {
         GenericFilesImporter importer = NT.importGenericFiles()
-            .connection(options -> options.port(8000).username("doesnt").password("matter"));
+            .connection(options -> options.port(8000).username("doesnt").password("matter"))
+            .readFiles("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: No host provided", ex.getMessage(),
@@ -47,7 +48,8 @@ class ConnectionTest extends AbstractTest {
     @Test
     void zeroPort() {
         GenericFilesImporter importer = NT.importGenericFiles()
-            .connection(options -> options.host("localhost").username("doesnt").password("matter"));
+            .connection(options -> options.host("localhost").username("doesnt").password("matter"))
+            .readFiles("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: unexpected port: 0", ex.getMessage());
@@ -56,7 +58,8 @@ class ConnectionTest extends AbstractTest {
     @Test
     void nullUsername() {
         GenericFilesImporter importer = NT.importGenericFiles()
-            .connection(options -> options.host("localhost").port(8000).password("something"));
+            .connection(options -> options.host("localhost").port(8000).password("something"))
+            .readFiles("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: username must be of type String", ex.getMessage());
@@ -65,7 +68,8 @@ class ConnectionTest extends AbstractTest {
     @Test
     void nullPassword() {
         GenericFilesImporter importer = NT.importGenericFiles()
-            .connection(options -> options.host("localhost").port(8000).username("something"));
+            .connection(options -> options.host("localhost").port(8000).username("something"))
+            .readFiles("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: password must be of type String", ex.getMessage());

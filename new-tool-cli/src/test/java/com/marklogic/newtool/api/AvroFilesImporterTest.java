@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AvroFilesImporterTest extends AbstractTest {
 
@@ -43,4 +42,12 @@ class AvroFilesImporterTest extends AbstractTest {
             "invalid Avro schema.");
     }
 
+    @Test
+    void missingPath() {
+        AvroFilesImporter importer = NT.importAvroFiles()
+            .connectionString(makeConnectionString());
+
+        NtException ex = assertThrowsNtException(() -> importer.execute());
+        assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
 }

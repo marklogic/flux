@@ -1,6 +1,7 @@
 package com.marklogic.newtool.impl.importdata;
 
 import com.marklogic.newtool.api.Executor;
+import com.marklogic.newtool.api.NtException;
 import com.marklogic.newtool.impl.AbstractCommand;
 import org.apache.spark.sql.*;
 
@@ -22,6 +23,13 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
     protected abstract <P extends ReadFilesParams> P getReadParams();
 
     protected abstract Supplier<Map<String, String>> getWriteParams();
+
+    @Override
+    protected void validateDuringApiUsage() {
+        if (!getReadParams().hasAtLeastOnePath()) {
+            throw new NtException("Must specify one or more file paths");
+        }
+    }
 
     @Override
     protected final Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
