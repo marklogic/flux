@@ -51,4 +51,14 @@ class ArchiveFilesExporterTest extends AbstractTest {
         File[] files = tempDir.toFile().listFiles();
         assertEquals(1, files.length);
     }
+
+    @Test
+    void missingPath() {
+        ArchiveFilesExporter exporter = NT.exportArchiveFiles()
+            .connectionString(makeConnectionString())
+            .readDocuments(options -> options.collections("author").categories("content", "collections", "permissions"));
+
+        NtException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify a file path", ex.getMessage());
+    }
 }

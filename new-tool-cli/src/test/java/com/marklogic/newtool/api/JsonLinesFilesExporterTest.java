@@ -6,6 +6,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class JsonLinesFilesExporterTest extends AbstractTest {
 
     @Test
@@ -28,5 +30,15 @@ class JsonLinesFilesExporterTest extends AbstractTest {
             .execute();
 
         assertCollectionSize("imported-json-lines", 15);
+    }
+
+    @Test
+    void missingPath() {
+        JsonLinesFilesExporter exporter = NT.exportJsonLinesFiles()
+            .connectionString(makeConnectionString())
+            .readRows(READ_AUTHORS_OPTIC_QUERY);
+
+        NtException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify a file path", ex.getMessage());
     }
 }
