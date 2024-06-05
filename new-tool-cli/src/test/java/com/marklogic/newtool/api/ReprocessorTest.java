@@ -29,4 +29,37 @@ class ReprocessorTest extends AbstractTest {
             assertEquals("my value", doc.get("theValue").asText());
         }
     }
+
+    @Test
+    void noReader() {
+        Reprocessor r = NT.reprocess()
+            .connectionString(makeConnectionString())
+            .writeItems(options -> options.invoke("/writeDocument.sjs"));
+
+        NtException ex = assertThrowsNtException(() -> r.execute());
+        assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for reading from MarkLogic", ex.getMessage());
+    }
+
+    @Test
+    void twoPartitionReaders() {
+        Reprocessor r = NT.reprocess()
+            .connectionString(makeConnectionString())
+            .readItems(options -> options.invoke("anything.sjs")
+                .partitionsJavascript("something")
+                .partitionsXquery("something else"))
+            .writeItems(options -> options.invoke("/writeDocument.sjs"));
+
+        NtException ex = assertThrowsNtException(() -> r.execute());
+        assertEquals("Can only specify one approach for defining partitions that are sent to the code for reading from MarkLogic", ex.getMessage());
+    }
+
+    @Test
+    void noWriter() {
+        Reprocessor r = NT.reprocess()
+            .connectionString(makeConnectionString())
+            .readItems(options -> options.invoke("anything"));
+
+        NtException ex = assertThrowsNtException(() -> r.execute());
+        assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for writing to MarkLogic", ex.getMessage());
+    }
 }
