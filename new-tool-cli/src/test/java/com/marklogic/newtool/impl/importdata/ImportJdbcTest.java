@@ -65,6 +65,24 @@ class ImportJdbcTest extends AbstractTest {
         verifyTenCustomersWereImported();
     }
 
+    @Test
+    void allCustomers() {
+        run(
+            "import_jdbc",
+            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
+            "--query", "select * from customer",
+            "--connectionString", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "customer",
+            "--repartition", "2",
+            // Just verifying that these work without causing any errors.
+            "--totalThreadCount", "16",
+            "--batchSize", "10"
+        );
+
+        assertCollectionSize("customer", 599);
+    }
+
     private void verifyTenCustomersWereImported() {
         assertCollectionSize("customer", 10);
         JsonNode doc = readJsonDocument("/customer/1.json");

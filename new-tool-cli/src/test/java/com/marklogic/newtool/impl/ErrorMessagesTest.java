@@ -12,8 +12,8 @@ class ErrorMessagesTest {
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");
-        assertEquals(14, bundle.keySet().size(),
-            "Expecting 14 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
+        assertEquals(15, bundle.keySet().size(),
+            "Expecting 15 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
         assertEquals("--connectionString", bundle.getString(Options.CLIENT_URI));
@@ -27,6 +27,7 @@ class ErrorMessagesTest {
         assertEquals("--graphOverride", bundle.getString(Options.WRITE_GRAPH_OVERRIDE));
         assertEquals("--jsonRootName", bundle.getString(Options.WRITE_JSON_ROOT_NAME));
         assertEquals("--threadCount", bundle.getString(Options.WRITE_THREAD_COUNT));
+        assertEquals("--totalThreadCount", bundle.getString(Options.WRITE_TOTAL_THREAD_COUNT));
         assertEquals("--transformParams", bundle.getString(Options.WRITE_TRANSFORM_PARAMS));
         assertEquals("--uriTemplate", bundle.getString(Options.WRITE_URI_TEMPLATE));
         assertEquals("--xmlRootName", bundle.getString(Options.WRITE_XML_ROOT_NAME));

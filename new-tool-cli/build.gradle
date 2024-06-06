@@ -109,6 +109,8 @@ sonar {
   properties {
     property "sonar.projectKey", "spark-etl"
     property "sonar.host.url", "http://localhost:9000"
+    // Avoids a warning from Gradle.
+    property "sonar.gradle.skipCompile", "true"
   }
 }
 
