@@ -32,6 +32,25 @@ class ImportFilesTest extends AbstractTest {
         verifyDocsWereWritten(uris.length, uris);
     }
 
+    @Test
+    void documentType() {
+        run(
+            "import_files",
+            "--path", "src/test/resources/mixed-files/hello.xml",
+            "--connectionString", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--uriReplace", ".*/mixed-files,''",
+            "--uriSuffix", ".unknown",
+            "--documentType", "xml"
+        );
+
+        String kind = getDatabaseClient().newServerEval()
+            .xquery("xdmp:node-kind(doc('/hello.xml.unknown')/node())")
+            .evalAs(String.class);
+        assertEquals("element", kind);
+    }
+
     /**
      * preview = show the first N rows from the reader, and don't invoke the writer.
      */
@@ -191,7 +210,7 @@ class ImportFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run (
+        String stderr = runAndReturnStderr(() -> run(
             "import_files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--abortOnReadFailure",
