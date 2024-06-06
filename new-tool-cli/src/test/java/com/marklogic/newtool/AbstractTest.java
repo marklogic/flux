@@ -85,7 +85,9 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     }
 
     /**
-     * Handy method for running anything and returning everything written to stdout.
+     * Handy method for running anything and returning everything written to stdout - except that this is
+     * proving to be very fragile, as sometimes nothing gets written to the byte stream. An individual test that uses
+     * this will work fine, but then it may fail when run in the entire suite. Not yet known why.
      */
     protected final String runAndReturnStdout(Runnable r) {
         System.out.flush();
