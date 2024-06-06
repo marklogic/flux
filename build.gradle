@@ -2,7 +2,7 @@ subprojects {
   apply plugin: "java-library"
 
   group = "com.marklogic"
-  version = "0.3-SNAPSHOT"
+  version = "1.0-alpha2"
 
   java {
     sourceCompatibility = 11
