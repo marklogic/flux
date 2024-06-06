@@ -27,6 +27,23 @@ class ImportParquetFilesTest extends AbstractTest {
     }
 
     @Test
+    void count() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import_parquet_files",
+            "--count",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connectionString", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "parquet-test"
+        ));
+
+        assertCollectionSize("No data should be written when --count is included",
+            "parquet-test", 0);
+        assertFalse(stderr.contains("Command failed"), "No error should have occurred; the count of rows read should " +
+            "have been logged, which we unfortunately don't yet know how to make assertions against.");
+    }
+
+    @Test
     void jsonRootName() {
         run(
             "import_parquet_files",

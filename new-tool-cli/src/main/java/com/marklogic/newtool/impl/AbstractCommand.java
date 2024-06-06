@@ -33,6 +33,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     )
     private Map<String, String> configParams = new HashMap<>();
 
+    private SparkSession sparkSession;
+
     @Override
     public final Optional<Preview> execute(SparkSession session) {
         try {
@@ -43,12 +45,15 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = loadDataset(session, session.read());
             dataset = commonParams.applyParams(dataset);
-            if (commonParams.isPreviewRequested()) {
+            if (commonParams.isCount()) {
+                logger.info("Count of rows read: {}", dataset.count());
+            } else if (commonParams.isPreviewRequested()) {
                 return Optional.of(commonParams.makePreview(dataset));
-            }
-            applyWriter(session, dataset.write());
-            if (logger.isInfoEnabled()) {
-                logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+            } else {
+                applyWriter(session, dataset.write());
+                if (logger.isInfoEnabled()) {
+                    logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+                }
             }
         } catch (ConnectorException ex) {
             throw ex;
@@ -79,11 +84,11 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
 
     protected abstract void applyWriter(SparkSession session, DataFrameWriter<Row> writer);
 
-    public ConnectionParams getConnectionParams() {
+    public final ConnectionParams getConnectionParams() {
         return connectionParams;
     }
 
-    public CommonParams getCommonParams() {
+    protected final CommonParams getCommonParams() {
         return commonParams;
     }
 
@@ -92,9 +97,18 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
      */
     @Override
     public void execute() {
+        doExecute();
+    }
+
+    /**
+     * Extracted so that it can be reused by {@code count()} and any future API methods that want access to the Dataset.
+     *
+     * @return
+     */
+    private Optional<Preview> doExecute() {
         connectionParams.validateConnectionString("connection string");
         validateDuringApiUsage();
-        execute(SparkUtil.buildSparkSession());
+        return execute(this.sparkSession != null ? this.sparkSession : SparkUtil.buildSparkSession());
     }
 
     /**
@@ -106,11 +120,20 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     @Override
-    public void executeWithSession(Object sparkSession) {
+    public T withSparkSession(Object sparkSession) {
         if (!(sparkSession instanceof SparkSession)) {
             throw new NtException("The session object must be an instance of org.apache.spark.sql.SparkSession");
         }
-        execute((SparkSession) sparkSession);
+        this.sparkSession = (SparkSession) sparkSession;
+        return (T) this;
+    }
+
+    @Override
+    public long count() {
+        // The actual preview value doesn't matter; we set this so that we can get back the Dataset without
+        // writing any data.
+        getCommonParams().setPreview(Integer.MAX_VALUE);
+        return doExecute().get().getDataset().count();
     }
 
     @Override

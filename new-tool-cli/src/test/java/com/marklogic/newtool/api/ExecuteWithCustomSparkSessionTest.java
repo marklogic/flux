@@ -27,7 +27,8 @@ class ExecuteWithCustomSparkSessionTest extends AbstractTest {
             .writeDocuments(options -> options
                 .collections("custom-session")
                 .permissionsString(DEFAULT_PERMISSIONS))
-            .executeWithSession(session);
+            .withSparkSession(session)
+            .execute();
 
         assertTrue(testListener.events.size() > 0, "This verifies that our custom Spark session is used instead of " +
             "a default one. We don't care how many Spark events are captured. We just need proof that our custom listener " +
@@ -42,8 +43,8 @@ class ExecuteWithCustomSparkSessionTest extends AbstractTest {
             .writeDocuments(options -> options
                 .collections("custom-session")
                 .permissionsString(DEFAULT_PERMISSIONS));
-
-        NtException ex = assertThrowsNtException(() -> importer.executeWithSession("This will cause an error"));
+        
+        NtException ex = assertThrowsNtException(() -> importer.withSparkSession("This will cause an error"));
         assertEquals("The session object must be an instance of org.apache.spark.sql.SparkSession", ex.getMessage());
     }
 

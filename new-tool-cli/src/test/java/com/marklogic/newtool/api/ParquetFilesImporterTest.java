@@ -31,6 +31,20 @@ class ParquetFilesImporterTest extends AbstractTest {
     }
 
     @Test
+    void count() {
+        long count = NT.importParquetFiles()
+            .connectionString(makeConnectionString())
+            .readFiles(options -> options
+                .paths("src/test/resources/parquet/related/*.parquet")
+                .additionalOptions(Map.of("mergeSchema", "true")))
+            .writeDocuments(options -> options.collections("parquet-test"))
+            .count();
+
+        assertEquals(6, count);
+        assertCollectionSize("parquet-test", 0);
+    }
+
+    @Test
     void missingPath() {
         ParquetFilesImporter importer = NT.importParquetFiles()
             .connectionString(makeConnectionString());

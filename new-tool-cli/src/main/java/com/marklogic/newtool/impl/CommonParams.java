@@ -16,6 +16,9 @@ public class CommonParams {
     @Parameter(names = "--limit", description = "Number of rows to read from the data source.")
     private Integer limit;
 
+    @Parameter(names = "--count", description = "Show a count of rows to be read from the data source without writing any of the rows.")
+    private boolean count;
+
     @Parameter(names = "--preview", description = "Show up to the first N rows of data read by the command.")
     private Integer preview;
 
@@ -51,55 +54,27 @@ public class CommonParams {
         return new Preview(dataset, preview, previewColumnsToDrop, vertical);
     }
 
-    public boolean isPreviewRequested() {
-        return preview != null;
+    public void setCount(boolean count) {
+        this.count = count;
     }
 
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    public Integer getPreview() {
-        return preview;
+    public boolean isCount() {
+        return count;
     }
 
     public void setPreview(Integer preview) {
         this.preview = preview;
     }
 
-    public List<String> getPreviewColumnsToDrop() {
-        return previewColumnsToDrop;
+    public boolean isPreviewRequested() {
+        return preview != null;
     }
 
-    public void setPreviewColumnsToDrop(List<String> previewColumnsToDrop) {
-        this.previewColumnsToDrop = previewColumnsToDrop;
-    }
-
-    public Boolean getPreviewVertical() {
-        return previewVertical;
-    }
-
-    public void setPreviewVertical(Boolean previewVertical) {
-        this.previewVertical = previewVertical;
-    }
-
-    public Integer getRepartition() {
-        return repartition;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public void setRepartition(Integer repartition) {
         this.repartition = repartition;
-    }
-
-    public Boolean getShowStacktrace() {
-        return showStacktrace;
-    }
-
-    public void setShowStacktrace(Boolean showStacktrace) {
-        this.showStacktrace = showStacktrace;
     }
 }
