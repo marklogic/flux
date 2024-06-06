@@ -59,6 +59,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private Integer threadCount = 4;
 
     @Parameter(
+        names = "--totalThreadCount",
+        description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
+    )
+    private Integer totalThreadCount;
+
+    @Parameter(
         names = "--transform",
         description = "Name of a MarkLogic REST API transform to apply to each document."
     )
@@ -111,6 +117,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_PERMISSIONS, permissions,
             Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
             Options.WRITE_THREAD_COUNT, threadCount != null ? threadCount.toString() : null,
+            Options.WRITE_TOTAL_THREAD_COUNT, totalThreadCount != null ? totalThreadCount.toString() : null,
             Options.WRITE_TRANSFORM_NAME, transform,
             Options.WRITE_TRANSFORM_PARAMS, transformParams,
             Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
@@ -171,6 +178,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T threadCount(int threadCount) {
         this.threadCount = threadCount;
+        return (T) this;
+    }
+
+    @Override
+    public T totalThreadCount(int totalThreadCount) {
+        this.totalThreadCount = totalThreadCount;
         return (T) this;
     }
 

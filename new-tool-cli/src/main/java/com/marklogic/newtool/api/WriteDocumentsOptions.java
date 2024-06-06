@@ -18,6 +18,8 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T threadCount(int threadCount);
 
+    T totalThreadCount(int totalThreadCount);
+
     T transform(String transform);
 
     T transformParams(String delimitedNamesAndValues);
