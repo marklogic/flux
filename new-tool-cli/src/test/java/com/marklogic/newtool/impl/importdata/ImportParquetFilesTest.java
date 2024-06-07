@@ -12,7 +12,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void defaultSettingsSingleFile() {
         run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -29,7 +29,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void count() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--count",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connectionString", makeConnectionString(),
@@ -46,7 +46,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -62,7 +62,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void defaultSettingsMultipleFileDifferentSchema_mergeTrue() {
         run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/related/*.parquet",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -89,7 +89,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void invalidParquetFile() {
         String stderr = runAndReturnStderr(() ->
-            run("import_parquet_files",
+            run("import-parquet-files",
                 "--path", "src/test/resources/parquet/individual/invalid.parquet",
                 "--preview", "10",
                 "--abortOnReadFailure"
@@ -108,7 +108,7 @@ class ImportParquetFilesTest extends AbstractTest {
     void badConfigurationItem() {
         String stderr = runAndReturnStderr(() ->
             run(
-                "import_parquet_files",
+                "import-parquet-files",
                 "--path", "src/test/resources/parquet/individual/cars.parquet",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
@@ -124,7 +124,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/avro/colors.avro",
             // Without mergeSchema=true, Spark will throw an error of "Unable to infer schema for Parquet". This seems
@@ -143,7 +143,7 @@ class ImportParquetFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/avro/colors.avro",
             "--abortOnReadFailure",

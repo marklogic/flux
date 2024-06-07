@@ -9,7 +9,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void test() {
         ImportFilesCommand command = (ImportFilesCommand) getCommand(
-            "import_files",
+            "import-files",
             "--host", "somehost",
             "--port", "8001",
             "--username", "someuser",

@@ -17,7 +17,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) throws IOException {
         run(
-            "export_delimited_files",
+            "export-delimited-files",
             "--connectionString", makeConnectionString(),
             "--partitions", "1",
             "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",
@@ -38,7 +38,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
     @Test
     void headerRemovedViaDynamicParam(@TempDir Path tempDir) throws IOException {
         run(
-            "export_delimited_files",
+            "export-delimited-files",
             "--connectionString", makeConnectionString(),
             "--partitions", "1",
             "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",

@@ -18,10 +18,10 @@ them either to files or to another database via JDBC.
 
 The following commands all support executing an Optic query and exporting the matching rows to an external data source:
 
-- `export_avro_files`
-- `export_jdbc`
-- `export_orc_files`
-- `export_parquet_files`
+- `export-avro-files`
+- `export-jdbc`
+- `export-orc-files`
+- `export-parquet-files`
 
 An Optic query is specified via the `--query` option. The query must be defined using the 
 [Optic DSL](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_46710) and must being with `op.fromView`. The 
@@ -39,7 +39,7 @@ performance of your export command, please see the
 
 ## Exporting to JDBC
 
-The `export_jdbc` command writes rows retrieved by an Optic query to a table in an external database via a JDBC 
+The `export-jdbc` command writes rows retrieved by an Optic query to a table in an external database via a JDBC 
 driver specific to the database. 
 
 ### JDBC driver installation
@@ -50,7 +50,7 @@ NT.
 
 ### Configuring a JDBC connection
 
-The `export_jdbc` command requires that you specify connection details for the database you wish to write to via JDBC.
+The `export-jdbc` command requires that you specify connection details for the database you wish to write to via JDBC.
 Connection details are specified via the following options:
 
 - `--jdbcUrl` is required and specifies the JDBC connection URL.
@@ -61,11 +61,11 @@ Connection details are specified via the following options:
 ### Exporting to a table
 
 Once you have installed your database's JDBC driver and determined your JDBC connection details, you can use 
-`export_jdbc` to export all rows matching an Optic query to a table in the external database. The following shows 
+`export-jdbc` to export all rows matching an Optic query to a table in the external database. The following shows 
 a notional example of doing so:
 
 ```
-./bin/nt export_jdbc --connectionString user:password@localhost:8000 \
+./bin/nt export-jdbc --connectionString user:password@localhost:8000 \
   --query "op.fromView('example', 'employee', '')" \
   --jdbcUrl "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
   --jdbcDriver "org.postgresql.Driver" \
@@ -78,21 +78,21 @@ Rows selected via an Optic query can be exported to either Avro, ORC, or Parquet
 
 ### Avro
 
-The `export_avro_files` command writes one or more Avro files to the directory specified by the `--path` option. This
+The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Avro files. You can include any of the 
 [Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` dynamic option to
 control how Avro content is written. Dynamic options are expressed as `-PoptionName=optionValue`.
 
 ### ORC
 
-The `export_orc_files` command writes one or more ORC files to the directory specified by the `--path` option. This
+The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing ORC files. You can include any of the
 [Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` dynamic option to
 control how ORC content is written. Dynamic options are expressed as `-PoptionName=optionValue`.
 
 ### Parquet
 
-The `export_parquet_files` command writes one or more Parquet files to the directory specified by the `--path` option. This
+The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Parquet files. You can include any of the
 [Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` dynamic option to
 control how Parquet content is written. Dynamic options are expressed as `-PoptionName=optionValue`.

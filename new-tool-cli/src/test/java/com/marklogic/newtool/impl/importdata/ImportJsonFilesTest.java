@@ -15,7 +15,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void objectFilesAndArrayOfObjectsFile() {
         run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/json-files",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -46,7 +46,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonLines() {
         run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--jsonLines",
             "--connectionString", makeConnectionString(),
@@ -64,7 +64,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--jsonLines",
             "--connectionString", makeConnectionString(),
@@ -81,7 +81,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonLinesWithCustomDelimiter() {
         run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/delimited-files/custom-delimiter-json.txt",
             "--jsonLines",
             "-PlineSep=:\n",
@@ -112,7 +112,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void zipOfJsonObjectFiles() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/json-files/object-files/objects.zip",
             "--compression", "zip",
             "--connectionString", makeConnectionString(),
@@ -130,7 +130,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--jsonLines",
@@ -152,7 +152,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_json_files",
+            "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--jsonLines",

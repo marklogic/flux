@@ -14,7 +14,7 @@ class ExportJsonLinesFilesTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) throws Exception {
         run(
-            "export_json_lines_files",
+            "export-json-lines-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--fileCount", "2",
@@ -26,7 +26,7 @@ class ExportJsonLinesFilesTest extends AbstractTest {
 
         // Import in to verify.
         run(
-            "import_json_files",
+            "import-json-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--jsonLines",
             "--connectionString", makeConnectionString(),

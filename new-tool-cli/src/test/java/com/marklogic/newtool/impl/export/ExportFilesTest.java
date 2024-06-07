@@ -23,7 +23,7 @@ class ExportFilesTest extends AbstractTest {
     @Test
     void exportToRegularFiles(@TempDir Path tempDir) throws Exception {
         run(
-            "export_files",
+            "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--collections", "author",
@@ -51,7 +51,7 @@ class ExportFilesTest extends AbstractTest {
     @Test
     void exportViaUris(@TempDir Path tempDir) {
         run(
-            "export_files",
+            "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--uris", "/author/author1.json\n/author/author2.json"
@@ -66,7 +66,7 @@ class ExportFilesTest extends AbstractTest {
     @Test
     void exportToZips(@TempDir Path tempDir) {
         run(
-            "export_files",
+            "export-files",
             "--partitionsPerForest", "1",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
@@ -101,7 +101,7 @@ class ExportFilesTest extends AbstractTest {
     @Test
     void exportToZipsWithRepartition(@TempDir Path tempDir) {
         run(
-            "export_files",
+            "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
             "--connectionString", makeConnectionString(),
@@ -116,7 +116,7 @@ class ExportFilesTest extends AbstractTest {
     @Test
     void exportToGZippedFiles(@TempDir Path tempDir) {
         run(
-            "export_files",
+            "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "gzip",
             "--connectionString", makeConnectionString(),
@@ -138,7 +138,7 @@ class ExportFilesTest extends AbstractTest {
     void exportWithNoQuery(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> {
             run(
-                "export_files",
+                "export-files",
                 "--path", tempDir.toFile().getAbsolutePath(),
                 "--compression", "gzip",
                 "--connectionString", makeConnectionString()

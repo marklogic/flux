@@ -12,7 +12,7 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void test() {
         ImportOrcFilesCommand command = (ImportOrcFilesCommand) getCommand(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "/doesnt/matter",
             "-PmergeSchema=true",
             "-Cspark.sql.parquet.filterPushdown=false",

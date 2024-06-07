@@ -12,7 +12,7 @@ class ImportAvroFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void test() {
         ImportAvroFilesCommand command = (ImportAvroFilesCommand) getCommand(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "/doesnt/matter",
             "-PdatetimeRebaseMode=CORRECTED",
             "-Cspark.sql.parquet.filterPushdown=false",

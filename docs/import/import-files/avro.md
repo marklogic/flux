@@ -16,11 +16,11 @@ NT can import Avro files, with each row being written as a document in MarkLogic
 
 ## Usage
 
-The `import_avro_files` command is used to read Avro files and write the contents of each file as one or more JSON
+The `import-avro-files` command is used to read Avro files and write the contents of each file as one or more JSON
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import_avro_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/nt import-avro-files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 
@@ -37,6 +37,6 @@ specify a namespace for the root element that will then be inherited by every ch
 
 ## Advanced options
 
-The `import_avro_files` command reuses Spark's support for reading Avro files. You can include any of
+The `import-avro-files` command reuses Spark's support for reading Avro files. You can include any of
 the [Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` dynamic option
 to control how Avro content is read. Dynamic options are expressed as `-PoptionName=optionValue`.

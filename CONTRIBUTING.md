@@ -130,16 +130,16 @@ You can test an invalid command name:
 
 You can forget a required argument:
 
-    ./nt/bin/nt import_files
+    ./nt/bin/nt import-files
 
 You can cause an error from Spark:
 
-    ./nt/bin/nt import_files --path invalid-path
+    ./nt/bin/nt import-files --path invalid-path
 
 You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --abortOnWriteFailure \
@@ -150,7 +150,7 @@ You can cause a failure with MarkLogic that caused the command to stop:
 You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --permissions "invalid-role,read,new-tool-role,update" \
@@ -162,7 +162,7 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
 You can cause a failure and tell the command to keep executing by not including `--abortOnWriteFailure`:
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'"
@@ -239,7 +239,7 @@ cluster:
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar \
-import_files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
+import-files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
 ```
 
 After spark-submit completes, you can refresh <http://localhost:8080> to see evidence of the completed application.
@@ -253,7 +253,7 @@ to something you can access :
 $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
-import_files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
+import-files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
 ```
 
 ### Testing with AWS EMR

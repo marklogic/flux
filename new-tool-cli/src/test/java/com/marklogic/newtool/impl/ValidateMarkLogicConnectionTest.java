@@ -13,7 +13,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     @Test
     void noHost() {
         assertStderrContains(
-            () -> run("import_files", "--path", "src/test/resources/mixed-files"),
+            () -> run("import-files", "--path", "src/test/resources/mixed-files"),
             "Must specify a MarkLogic host via --host or --connectionString."
         );
     }
@@ -21,7 +21,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     @Test
     void noPort() {
         assertStderrContains(
-            () -> run("import_files", "--path", "src/test/resources/mixed-files", "--host", getDatabaseClient().getHost()),
+            () -> run("import-files", "--path", "src/test/resources/mixed-files", "--host", getDatabaseClient().getHost()),
             "Must specify a MarkLogic app server port via --port or --connectionString."
         );
     }
@@ -29,7 +29,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     @Test
     void noUsername() {
         assertStderrContains(() -> run(
-                "import_files",
+                "import-files",
                 "--path", "src/test/resources/mixed-files",
                 "--host", getDatabaseClient().getHost(),
                 "--port", Integer.toString(getDatabaseClient().getPort())
@@ -41,7 +41,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     @Test
     void badConnectionString() {
         String output = runAndReturnStderr(() -> run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files",
             "--connectionString", "admin-missing-password@localhost:8003"
         ));
@@ -55,7 +55,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     @Test
     void connectionStringWithoutUserOrPassword() {
         String output = runAndReturnStderr(() -> run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files",
             "--connectionString", "localhost:8003"
         ));

@@ -16,7 +16,7 @@ class ExportParquetFilesTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) {
         run(
-            "export_parquet_files",
+            "export-parquet-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath()
@@ -27,7 +27,7 @@ class ExportParquetFilesTest extends AbstractTest {
 
         // Read the files back in to ensure we get 15 rows
         run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -40,7 +40,7 @@ class ExportParquetFilesTest extends AbstractTest {
     @Test
     void saveMode(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
-            "export_parquet_files",
+            "export-parquet-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath(),
@@ -54,7 +54,7 @@ class ExportParquetFilesTest extends AbstractTest {
     @Test
     void dynamicParameter(@TempDir Path tempDir) {
         run(
-            "export_parquet_files",
+            "export-parquet-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",

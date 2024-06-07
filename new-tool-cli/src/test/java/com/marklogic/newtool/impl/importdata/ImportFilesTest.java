@@ -21,7 +21,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void test() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -35,7 +35,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void documentType() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello.xml",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -58,7 +58,7 @@ class ImportFilesTest extends AbstractTest {
     @Disabled("Another stdout test that runs fine by itself, but fails when the suite is run.")
     void preview() {
         String stdout = runAndReturnStdout(() -> run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files",
             "--preview", "2",
             "--previewDrop", "content", "modificationTime",
@@ -90,7 +90,7 @@ class ImportFilesTest extends AbstractTest {
         FileCopyUtils.copy(options.getBytes(), optionsFile);
 
         run(
-            "import_files",
+            "import-files",
             "@" + optionsFile.getAbsolutePath(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files"
@@ -102,7 +102,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void zipTest() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -117,7 +117,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void zipCaseSensitivityTest() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -132,7 +132,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void gzipTest() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--connectionString", makeConnectionString(),
             "--collections", "files",
@@ -147,7 +147,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void fileOptionsFilter() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -162,7 +162,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void fileOptionsRecursiveFileLookupDefault() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -177,7 +177,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void fileOptionsRecursiveFileLookupFalse() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -193,7 +193,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void invalidGzippedFile() {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--connectionString", makeConnectionString(),
@@ -211,7 +211,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString(),

@@ -65,7 +65,7 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
     @Test
     void dynamicParam() {
         run(
-            "export_jdbc",
+            "export-jdbc",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
@@ -84,7 +84,7 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
 
     private void exportFifteenAuthorsWithMode(String saveMode) {
         run(
-            "export_jdbc",
+            "export-jdbc",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,

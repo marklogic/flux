@@ -16,11 +16,11 @@ NT can import ORC files, with each row being written as a document in MarkLogic.
 
 ## Usage
 
-The `import_orc_files` command is used to read ORC files and write the contents of each file as one or more JSON
+The `import-orc-files` command is used to read ORC files and write the contents of each file as one or more JSON
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import_orc_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/nt import-orc-files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 
@@ -37,7 +37,7 @@ specify a namespace for the root element that will then be inherited by every ch
 
 ## Advanced options
 
-The `import_orc_files` command reuses Spark's support for reading ORC files. You can include any of
+The `import-orc-files` command reuses Spark's support for reading ORC files. You can include any of
 the [Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` dynamic option
 to control how Avro content is read. Dynamic options are expressed as `-PoptionName=optionValue`.
 

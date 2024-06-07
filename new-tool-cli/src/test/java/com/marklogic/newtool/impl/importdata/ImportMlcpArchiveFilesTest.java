@@ -16,7 +16,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     @Test
     void allMetadata() {
         run(
-            "import_mlcp_archive_files",
+            "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--connectionString", makeConnectionString()
         );
@@ -40,7 +40,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     @Test
     void subsetOfMetadata() {
         run(
-            "import_mlcp_archive_files",
+            "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--categories", "collections,permissions",
             "--connectionString", makeConnectionString()
@@ -63,7 +63,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     @Test
     void invalidFileDontAbort() {
         run(
-            "import_mlcp_archive_files",
+            "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--connectionString", makeConnectionString()
@@ -77,7 +77,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     @Test
     void invalidFileAbort() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_mlcp_archive_files",
+            "import-mlcp-archive-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString()

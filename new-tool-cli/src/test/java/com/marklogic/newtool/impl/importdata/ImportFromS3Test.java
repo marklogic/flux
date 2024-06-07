@@ -19,7 +19,7 @@ class ImportFromS3Test extends AbstractTest {
         final String path = "s3a://changeme";
 
         String stdout = runAndReturnStdout(() -> run(
-            "import_files",
+            "import-files",
             "--path", path,
             "--preview", "10",
             "--previewDrop", "content", "modificationTime",

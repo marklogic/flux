@@ -9,7 +9,7 @@ class ImportAggregateXmlFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void numPartitions() {
         ImportAggregateXmlCommand command = (ImportAggregateXmlCommand) getCommand(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file",
             "--preview", "10",
             "--element", "anything",

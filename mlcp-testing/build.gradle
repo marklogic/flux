@@ -69,7 +69,7 @@ task mlcpImportRdf(type: Exec) {
 task ntImportRdf(type: Exec) {
   description = "Intended to run against a local Caddy load balancer."
   workingDir = "../nt/"
-  commandLine "./bin/nt", "import_rdf_files",
+  commandLine "./bin/nt", "import-rdf-files",
     "--connectionString", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",
@@ -81,7 +81,7 @@ task ntImportRdf(type: Exec) {
 task ntDirectImportRdf(type: Exec) {
   description = "For testing without a load balancer."
   workingDir = "../nt/"
-  commandLine "./bin/nt", "import_rdf_files",
+  commandLine "./bin/nt", "import-rdf-files",
     "--connectionString", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",

@@ -17,7 +17,7 @@ class OverrideSparkConfTest extends AbstractTest {
     @Disabled("Another disabled test due to runAndReturnStdout not being reliable; should work fine when run manually.")
     void overriddenTimeZone() {
         String stdout = runAndReturnStdout(() -> run(
-            "import_orc_files",
+            "import-orc-files",
             "-Cspark.sql.session.timeZone=America/Los_Angeles",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--preview", "1"

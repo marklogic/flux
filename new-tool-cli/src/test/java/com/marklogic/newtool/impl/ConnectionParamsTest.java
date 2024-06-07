@@ -11,7 +11,7 @@ class ConnectionParamsTest extends AbstractOptionsTest {
         // Any command will work for this test, as all are assumed to extend AbstractCommand
         // and thus have an instance of ConnectionParams.
         ImportFilesCommand command = (ImportFilesCommand) getCommand(
-            "import_files",
+            "import-files",
             "--path", "/doesnt/matter/for-this-test",
             "--connectionString", "user:password@host:8000",
             "--host", "localhost",

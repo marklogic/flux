@@ -23,7 +23,7 @@ NT.
 
 ## Configuring a JDBC connection
 
-The `import_jdbc` command requires that you specify connection details for the database you wish to read from via JDBC.
+The `import-jdbc` command requires that you specify connection details for the database you wish to read from via JDBC.
 Connection details are specified via the following options:
 
 - `--jdbcUrl` is required and specifies the JDBC connection URL.
@@ -36,7 +36,7 @@ Connection details are specified via the following options:
 To import all rows in a table, use the `--query` option with a SQL query selecting all rows (connection details for 
 MarkLogic are omitted for brevity):
 
-    ./bin/nt import_jdbc --query "SELECT * FROM customer" 
+    ./bin/nt import-jdbc --query "SELECT * FROM customer" 
 
 The SQL query can contain any syntax supported by your database. 
 
@@ -72,7 +72,7 @@ on the needs of an application, it may be beneficial for payments to be stored i
 following options would be used to achieve that (connection details are omitted for brevity):
 
 ```
-./bin/nt import_jdbc \
+./bin/nt import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --groupBy customer_id \
     --aggregate "payments=payment_id;amount;payment_date"
@@ -91,6 +91,6 @@ related objects.
 
 ## Advanced options
 
-The `import_jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of
+The `import-jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of
 the [Spark JDBC options](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html) via the `-P` dynamic option
 to control how JDBC is used. Dynamic options are expressed as `-PoptionName=optionValue`.

@@ -53,9 +53,9 @@ Unix; if you are on Windows, substitute `./bin/nt` with `bin/nt`):
     ./bin/nt
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
-command. To see the usage for a particular command, such as `import_files`, run:
+command. To see the usage for a particular command, such as `import-files`, run:
 
-    ./bin/nt help import_files
+    ./bin/nt help import-files
 
 Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connectionString`
 or `--host` and `--port` be specified so that the tool knows which MarkLogic cluster to connect to. 
@@ -64,7 +64,7 @@ The `--connectionString` option provides a succinct way of defining the host, po
 app server you connect to requires basic or digest authentication. Its value is of the form 
 `(user):(password)@(host):(port)`. For example:
 
-    ./bin/nt import_files --connectionString "my-user:my-secret@localhost:8000" ...
+    ./bin/nt import-files --connectionString "my-user:my-secret@localhost:8000" ...
 
 Options can also be read from a file; see the [Common Options](common-options.md) guide for more information.
 
@@ -76,7 +76,7 @@ accessible via a JDBC driver. The example project contains a gzipped CSV file ge
 demonstrated:
 
 ```
-./bin/nt import_delimited_files \
+./bin/nt import-delimited-files \
     --path ../data/employees.csv.gz \
     --connectionString "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
@@ -89,7 +89,7 @@ collection in the `nt-example-content` database now has 1000 JSON documents, one
 
 ### Importing via JDBC
 
-The `import_jdbc` command in NT supports reading rows from any database with a supported JDBC driver. Similar to other
+The `import-jdbc` command in NT supports reading rows from any database with a supported JDBC driver. Similar to other
 tools that support JDBC access, you must first add your database's JDBC driver to the NT classpath by adding the JDBC
 driver jar to the `./ext` directory in the NT installation. 
 
@@ -97,7 +97,7 @@ The following shows a notional example of reading rows from a Postgres database 
 requires a separate Postgres database; it is only included for reference):
 
 ```
-./bin/nt import_jdbc \
+./bin/nt import-jdbc \
     --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
     --jdbcDriver "org.postgresql.Driver" \
     --query "select * from customer" \
@@ -118,7 +118,7 @@ to select rows. The following shows an example of exporting the 1000 employee do
 
 ```
 mkdir export
-./bin/nt export_files \
+./bin/nt export-files \
     --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --path export \
@@ -137,7 +137,7 @@ The following command shows a collection, a string query, and a structured query
 in 4 JSON documents being written to `./export/employee`:
 
 ```
-./bin/nt export_files \
+./bin/nt export-files \
     --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --stringQuery Engineering \
@@ -159,7 +159,7 @@ The following shows an example of exporting to S3 with a fictitious bucket name.
 bucket, ensuring that your AWS credentials give you access to writing to the bucket:
 
 ```
-./bin/nt export_files \
+./bin/nt export-files \
     --connectionString "nt-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
@@ -175,7 +175,7 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 
 ```
 mkdir export/parquet
-./bin/nt export_parquet_files \
+./bin/nt export-parquet-files \
     --connectionString "nt-user:password@localhost:8004" \
     --path export/parquet \
     --query "op.fromView('Example', 'Employees', '')" 
@@ -186,7 +186,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 `./ext` directory of your NT installation:
 
 ```
-./bin/nt export_jdbc \
+./bin/nt export-jdbc \
     --connectionString "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
@@ -203,7 +203,7 @@ number of records to read and display, but without writing the data anywhere. Th
 command can preview 10 rows read from MarkLogic without writing any data to files:
 
 ```
-./bin/nt export_parquet_files \
+./bin/nt export-parquet-files \
     --connectionString "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --path export/parquet \

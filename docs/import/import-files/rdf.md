@@ -17,14 +17,14 @@ NT can import a variety of RDF files in a fashion similar to that of
 
 ## Usage
 
-The `import_rdf_files` command is used read RDF data from a variety of RDF file types and write one or more 
+The `import-rdf-files` command is used read RDF data from a variety of RDF file types and write one or more 
 [managed triples documents](https://docs.marklogic.com/guide/semantics/loading) in MarkLogic. Each managed triples 
 document is an XML document containing up to 100 semantic triples. 
 
 To import RDF files, you must specify at least one `--path` option along with connection information for the MarkLogic 
 database you wish to write to:
 
-    ./bin/nt import_rdf_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/nt import-rdf-files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Supported files types
 
