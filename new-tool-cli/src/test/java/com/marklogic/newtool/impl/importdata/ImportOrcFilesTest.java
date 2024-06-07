@@ -1,8 +1,6 @@
 package com.marklogic.newtool.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.client.document.JSONDocumentManager;
-import com.marklogic.client.io.StringHandle;
 import com.marklogic.newtool.AbstractTest;
 import org.junit.jupiter.api.Test;
 
@@ -105,10 +103,9 @@ class ImportOrcFilesTest extends AbstractTest {
     }
 
     private void verifyDocContent(String uri) {
-        JSONDocumentManager documentManager = getDatabaseClient().newJSONDocumentManager();
-        String docContent = documentManager.read(uri).next().getContent(new StringHandle()).toString();
-        assertTrue(docContent.contains("CitationID"));
-        assertTrue(docContent.contains("LastName"));
-        assertTrue(docContent.contains("ForeName"));
+        JsonNode doc = readJsonDocument(uri);
+        assertTrue(doc.has("CitationID"));
+        assertTrue(doc.has("LastName"));
+        assertTrue(doc.has("ForeName"));
     }
 }

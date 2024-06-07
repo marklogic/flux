@@ -10,9 +10,9 @@ public class SparkUtil {
     }
 
     public static SparkSession buildSparkSession() {
-        // Will make these hardcoded strings configurable soon.
         return SparkSession.builder()
             .master("local[*]")
+            // These can be overridden via the "-C" CLI option.
             .config("spark.ui.showConsoleProgress", "true")
             .config("spark.sql.session.timeZone", "UTC")
             .getOrCreate();
