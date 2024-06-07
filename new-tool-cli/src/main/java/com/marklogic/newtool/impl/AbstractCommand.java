@@ -133,7 +133,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         // The actual preview value doesn't matter; we set this so that we can get back the Dataset without
         // writing any data.
         getCommonParams().setPreview(Integer.MAX_VALUE);
-        return doExecute().get().getDataset().count();
+        Optional<Preview> preview = doExecute();
+        return preview.isPresent() ? preview.get().getDataset().count() : 0;
     }
 
     @Override

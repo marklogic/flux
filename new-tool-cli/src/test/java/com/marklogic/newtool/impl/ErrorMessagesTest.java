@@ -12,8 +12,8 @@ class ErrorMessagesTest {
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");
-        assertEquals(13, bundle.keySet().size(),
-            "Expecting 13 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
+        assertEquals(14, bundle.keySet().size(),
+            "Expecting 14 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
         assertEquals("--connectionString", bundle.getString(Options.CLIENT_URI));
@@ -21,6 +21,7 @@ class ErrorMessagesTest {
         assertEquals("--partitionsPerForest", bundle.getString(Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST));
         assertEquals("--partitions", bundle.getString(Options.READ_NUM_PARTITIONS));
         assertEquals("--batchSize", bundle.getString(Options.WRITE_BATCH_SIZE));
+        assertEquals("--documentType", bundle.getString(Options.WRITE_DOCUMENT_TYPE));
         assertEquals("--documentType", bundle.getString(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE));
         assertEquals("--graph", bundle.getString(Options.WRITE_GRAPH));
         assertEquals("--graphOverride", bundle.getString(Options.WRITE_GRAPH_OVERRIDE));

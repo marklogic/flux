@@ -22,7 +22,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     @Override
     protected String getReadFormat() {
-        return (readParams.compressionType != null) ? MARKLOGIC_CONNECTOR : "binaryFile";
+        return MARKLOGIC_CONNECTOR;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_FILE_ROWS_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
             );
         }
     }
