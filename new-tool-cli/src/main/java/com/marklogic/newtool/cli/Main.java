@@ -3,6 +3,7 @@ package com.marklogic.newtool.cli;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
+import com.marklogic.newtool.impl.AbstractCommand;
 import com.marklogic.newtool.impl.Command;
 import com.marklogic.newtool.impl.Preview;
 import com.marklogic.newtool.impl.SparkUtil;
@@ -74,7 +75,7 @@ public class Main {
                 logger.info("Executing command: {}", selectedCommandName);
             }
             Command command = (Command) selectedCommand;
-            SparkSession session = buildSparkSession();
+            SparkSession session = buildSparkSession(command);
             if (logger.isDebugEnabled()) {
                 logger.debug("Spark master URL: {}", session.sparkContext().master());
             }
@@ -85,8 +86,14 @@ public class Main {
         }
     }
 
-    protected SparkSession buildSparkSession() {
-        return SparkUtil.buildSparkSession();
+    protected SparkSession buildSparkSession(Command selectedCommand) {
+        String masterUrl = null;
+        if (selectedCommand instanceof AbstractCommand) {
+            masterUrl = ((AbstractCommand) selectedCommand).getCommonParams().getSparkMasterUrl();
+        }
+        return masterUrl != null && masterUrl.trim().length() > 0 ?
+            SparkUtil.buildSparkSession(masterUrl) :
+            SparkUtil.buildSparkSession();
     }
 
     private JCommander buildCommander() {
