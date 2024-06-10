@@ -140,32 +140,32 @@ You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
 ./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connectionString "new-tool-user:password@localhost:8000" \
+  --connection-string "new-tool-user:password@localhost:8000" \
   --repartition 1 \
-  --abortOnWriteFailure \
+  --abort-on-write-failure \
   --permissions "invalid-role,read,new-tool-role,update" \
-  --uriReplace ".*/mixed-files,'/test'"
+  --uri-replace ".*/mixed-files,'/test'"
 ```
 
 You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
 
 ```
 ./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connectionString "new-tool-user:password@localhost:8000" \
+  --connection-string "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --permissions "invalid-role,read,new-tool-role,update" \
-  --uriReplace ".*/mixed-files,'/test'" \
-  --abortOnWriteFailure \
+  --uri-replace ".*/mixed-files,'/test'" \
+  --abort-on-write-failure \
   --stacktrace
 ```
 
-You can cause a failure and tell the command to keep executing by not including `--abortOnWriteFailure`:
+You can cause a failure and tell the command to keep executing by not including `--abort-on-write-failure`:
 
 ```
 ./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connectionString "new-tool-user:password@localhost:8000" \
+  --connection-string "new-tool-user:password@localhost:8000" \
   --permissions "invalid-role,read,new-tool-role,update" \
-  --uriReplace ".*/mixed-files,'/test'"
+  --uri-replace ".*/mixed-files,'/test'"
 ```
 
 ## Testing with a load balancer
@@ -181,13 +181,13 @@ owned by the performance team. Feel free to adjust this config locally as needed
 Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
 
 ```
-./nt/bin/nt copy --connectionString "admin:admin@localhost:8006" \
+./nt/bin/nt copy --connection-string "admin:admin@localhost:8006" \
   --collections "address_small" \
-  --batchSize 500 \
+  --batch-size 500 \
   --limit 10000 \
   --categories content,metadata \
-  --outputConnectionString "admin:admin@localhost:8007" \
-  --outputThreadCount 3 --partitionsPerForest 1 --outputBatchSize 200
+  --output-connection-string "admin:admin@localhost:8007" \
+  --output-thread-count 3 --partitions-per-forest 1 --output-batch-size 200
 ```
 
 ## Testing against a separate Spark cluster
@@ -239,7 +239,7 @@ cluster:
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar \
-import-files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
+import-files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --preview-drop content
 ```
 
 After spark-submit completes, you can refresh <http://localhost:8080> to see evidence of the completed application.
@@ -253,7 +253,7 @@ to something you can access :
 $SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
-import-files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
+import-files --path "s3a://changeme/*.*" --preview 10 --preview-drop content
 ```
 
 ### Testing with AWS EMR
@@ -279,11 +279,11 @@ Once your cluster is created, you'll add a "Step" in order to run spark-submit:
 3. For "Spark-submit options", enter `--class com.marklogic.newtool.cli.Submit`.
 4. For "Arguments", enter the CLI command all the args you would normally enter when using the CLI.
 
-If your CLI command will be accessing S3, you most likely should not include `--s3AddCredentials`. The EMR EC2 instance
+If your CLI command will be accessing S3, you most likely should not include `--s3-add-credentials`. The EMR EC2 instance
 will already have access to the S3 buckets per the "EC2 instance profile" you configured while creating your cluster.
 
 Additionally, if your CLI command is accessing an S3 bucket in a region other than the one that EMR is running in,
-you can add `--s3Endpoint s3.us-east-1.amazon.com` as an argument, replacing "us-east-1" with the region that the
+you can add `--s3-endpoint s3.us-east-1.amazon.com` as an argument, replacing "us-east-1" with the region that the
 S3 buckets is in.
 
 After adding your step, it will run. It typically takes about 30s for the step to run, and it may take a minute or so

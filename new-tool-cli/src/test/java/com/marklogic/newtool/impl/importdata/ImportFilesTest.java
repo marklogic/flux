@@ -23,10 +23,10 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uriReplace", ".*/mixed-files,''"
+            "--uri-replace", ".*/mixed-files,''"
         );
 
         verifyDocsWereWritten(uris.length, uris);
@@ -37,12 +37,12 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello.xml",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uriReplace", ".*/mixed-files,''",
-            "--uriSuffix", ".unknown",
-            "--documentType", "xml"
+            "--uri-replace", ".*/mixed-files,''",
+            "--uri-suffix", ".unknown",
+            "--document-type", "xml"
         );
 
         String kind = getDatabaseClient().newServerEval()
@@ -61,8 +61,8 @@ class ImportFilesTest extends AbstractTest {
             "import-files",
             "--path", "src/test/resources/mixed-files",
             "--preview", "2",
-            "--previewDrop", "content", "modificationTime",
-            "--previewVertical"
+            "--preview-drop", "content", "modificationTime",
+            "--preview-vertical"
         ));
 
         String message = "Unexpected output to stdout: " + stdout;
@@ -83,9 +83,9 @@ class ImportFilesTest extends AbstractTest {
         File optionsFile = new File(tempDir.toFile(), "options.txt");
         String options = "--path\n" +
             "src/test/resources/mixed-files/hello*\n" +
-            "--connectionString\n" +
+            "--connection-string\n" +
             makeConnectionString() + "\n" +
-            "--uriReplace\n" +
+            "--uri-replace\n" +
             ".*/mixed-files,''";
         FileCopyUtils.copy(options.getBytes(), optionsFile);
 
@@ -104,10 +104,10 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uriReplace", ".*/mixed-files,''",
+            "--uri-replace", ".*/mixed-files,''",
             "--compression", "zip"
         );
 
@@ -119,10 +119,10 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uriReplace", ".*/mixed-files,''",
+            "--uri-replace", ".*/mixed-files,''",
             "--compression", "ZIp"
         );
 
@@ -134,10 +134,10 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriReplace", ".*/mixed-files,''",
+            "--uri-replace", ".*/mixed-files,''",
             "--compression", "gzip"
         );
 
@@ -149,10 +149,10 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uriReplace", ".*/mixed-files,''",
+            "--uri-replace", ".*/mixed-files,''",
             "--filter", "*.json"
         );
 
@@ -164,11 +164,11 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--filter", "*.json",
-            "--uriReplace", ".*/mixed-files,''"
+            "--uri-replace", ".*/mixed-files,''"
         );
 
         assertCollectionSize("files", 2);
@@ -179,12 +179,12 @@ class ImportFilesTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--filter", "*.json",
-            "--recursiveFileLookup", "false",
-            "--uriReplace", ".*/mixed-files,''"
+            "--recursive-file-lookup", "false",
+            "--uri-replace", ".*/mixed-files,''"
         );
 
         assertCollectionSize("files", 1);
@@ -196,10 +196,10 @@ class ImportFilesTest extends AbstractTest {
             "import-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriReplace", ".*/mixed-files,''",
+            "--uri-replace", ".*/mixed-files,''",
             "--compression", "gzip"
         );
 
@@ -213,14 +213,14 @@ class ImportFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
             "--compression", "gzip"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abortReadOnFailure, " +
+        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abort-read-on-failure, " +
             "the command should fail when it encounters an invalid gzipped file.");
         assertCollectionSize("files", 0);
     }

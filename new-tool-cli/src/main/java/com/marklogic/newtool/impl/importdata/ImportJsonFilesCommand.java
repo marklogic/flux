@@ -40,7 +40,7 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
     public static class ReadJsonFilesParams extends ReadFilesParams<ReadJsonFilesOptions> implements ReadJsonFilesOptions {
 
         @Parameter(
-            names = "--jsonLines",
+            names = "--json-lines",
             description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
         )
         private Boolean jsonLines;

@@ -24,7 +24,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     public static class Validator extends AtLeastOneValidator {
         public Validator() {
-            super("--graphs", "--query", "--uris", "--stringQuery", "--collections", "--directory");
+            super("--graphs", "--query", "--uris", "--string-query", "--collections", "--directory");
         }
     }
 
@@ -58,10 +58,10 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
     public static class ReadTriplesParams implements Supplier<Map<String, String>>, RdfFilesExporter.ReadTriplesDocumentsOptions {
 
         @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
-            "with --collections, --directory, and --stringQuery. If specified, --query will be ignored.")
+            "with --collections, --directory, and --string-query. If specified, --query will be ignored.")
         private String uris;
 
-        @Parameter(names = "--stringQuery", description = "A query utilizing the MarkLogic search grammar; " +
+        @Parameter(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
             "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
         private String stringQuery;
 
@@ -81,10 +81,10 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Parameter(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
         private String options;
 
-        @Parameter(names = "--batchSize", description = "Number of documents to retrieve in each call to MarkLogic.")
+        @Parameter(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
         private Integer batchSize = 100;
 
-        @Parameter(names = "--partitionsPerForest", description = "Number of partition readers to create for each forest.")
+        @Parameter(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
         private Integer partitionsPerForest = 4;
 
         @Override
@@ -162,7 +162,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Parameter(names = "--format", description = "RDF file format; supported values are 'nq', 'nt', 'rdfthrift', 'trig', 'trix', and 'ttl'.")
         private String format = "ttl";
 
-        @Parameter(names = "--graphOverride", description = "Semantic graph to include in each file. Only allowed when '--format' is 'nq' or 'trig'.")
+        @Parameter(names = "--graph-override", description = "Semantic graph to include in each file. Only allowed when '--format' is 'nq' or 'trig'.")
         private String graphOverride;
 
         @Parameter(names = "--gzip", description = "GZIP each file.")

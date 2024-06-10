@@ -16,13 +16,13 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
 
-    @Parameter(names = "--abortOnReadFailure", description = "Causes the command to abort when it fails to read a file.")
+    @Parameter(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
     private Boolean abortOnReadFailure = false;
 
     @Parameter(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
     private String filter;
 
-    @Parameter(names = "--recursiveFileLookup", arity = 1, description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
+    @Parameter(names = "--recursive-file-lookup", arity = 1, description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
     private Boolean recursiveFileLookup = true;
 
     @ParametersDelegate

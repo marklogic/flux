@@ -12,7 +12,7 @@ class CustomExportDocumentsTest extends AbstractTest {
     void test() {
         run(
             "custom-export-documents",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author",
             "--target", "marklogic",
             String.format("-P%s=%s", Options.CLIENT_URI, makeConnectionString()),

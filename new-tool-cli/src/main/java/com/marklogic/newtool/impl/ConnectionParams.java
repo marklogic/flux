@@ -12,7 +12,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = {"--connectionString"},
+        names = {"--connection-string"},
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
         validateWith = ConnectionStringValidator.class
     )
@@ -43,7 +43,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--basePath",
+        names = "--base-path",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
     public ConnectionOptions basePath(String basePath) {
@@ -62,7 +62,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Parameter(
-        names = "--connectionType",
+        names = "--connection-type",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
     )
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
@@ -77,7 +77,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--disableGzippedResponses",
+        names = "--disable-gzipped-responses",
         description = "If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
     )
     public ConnectionOptions disableGzippedResponses(Boolean disableGzippedResponses) {
@@ -87,7 +87,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--authType",
+        names = "--auth-type",
         description = "Type of authentication to use."
     )
     public ConnectionOptions authenticationType(AuthenticationType authType) {
@@ -118,8 +118,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--certificateFile",
-        description = "File path for a key store to be used for 'CERTIFICATE' authentication."
+        names = "--certificate-file",
+        description = "File path for a keystore to be used for 'CERTIFICATE' authentication."
     )
     public ConnectionOptions certificateFile(String certificateFile) {
         this.certificateFile = certificateFile;
@@ -128,8 +128,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--certificatePassword",
-        description = "Password for the key store referenced by '--certificateFile'."
+        names = "--certificate-password",
+        description = "Password for the keystore referenced by '--certificate-file'."
     )
     public ConnectionOptions certificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
@@ -138,7 +138,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--cloudApiKey",
+        names = "--cloud-api-key",
         description = "API key for authenticating with a MarkLogic Cloud cluster."
     )
     public ConnectionOptions cloudApiKey(String cloudApiKey) {
@@ -148,7 +148,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--kerberosPrincipal",
+        names = "--kerberos-principal",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
     public ConnectionOptions kerberosPrincipal(String kerberosPrincipal) {
@@ -158,7 +158,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--samlToken",
+        names = "--saml-token",
         description = "Token to be used with 'SAML' authentication."
     )
     public ConnectionOptions samlToken(String samlToken) {
@@ -168,9 +168,9 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--sslProtocol",
-        description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store " +
-            "or trust store is configured, defaults to 'TLSv1.2'."
+        names = "--ssl-protocol",
+        description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
+            "or truststore is configured, defaults to 'TLSv1.2'."
     )
     public ConnectionOptions sslProtocol(String sslProtocol) {
         this.sslProtocol = sslProtocol;
@@ -179,7 +179,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--sslHostnameVerifier",
+        names = "--ssl-hostname-verifier",
         description = "Hostname verification strategy when connecting via SSL."
     )
     public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
@@ -189,8 +189,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--keyStorePath",
-        description = "File path for a key store for two-way SSL connections."
+        names = "--keystore-path",
+        description = "File path for a keystore for two-way SSL connections."
     )
     public ConnectionOptions keyStorePath(String keyStorePath) {
         this.keyStorePath = keyStorePath;
@@ -199,8 +199,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--keyStorePassword",
-        description = "Password for the key store identified by '--keyStorePath'."
+        names = "--keystore-password",
+        description = "Password for the keystore identified by '--keystore-path'."
     )
     public ConnectionOptions keyStorePassword(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
@@ -209,8 +209,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--keyStoreType",
-        description = "Type of the key store identified by '--keyStorePath'; defaults to 'JKS'."
+        names = "--keystore-type",
+        description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions keyStoreType(String keyStoreType) {
         this.keyStoreType = keyStoreType;
@@ -219,8 +219,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--keyStoreAlgorithm",
-        description = "Algorithm of the key store identified by '--keyStorePath'; defaults to 'SunX509'."
+        names = "--keystore-algorithm",
+        description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions keyStoreAlgorithm(String keyStoreAlgorithm) {
         this.keyStoreAlgorithm = keyStoreAlgorithm;
@@ -229,8 +229,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--trustStorePath",
-        description = "File path for a trust store for establishing trust with the certificate used by the MarkLogic app server."
+        names = "--truststore-path",
+        description = "File path for a truststore for establishing trust with the certificate used by the MarkLogic app server."
     )
     public ConnectionOptions trustStorePath(String trustStorePath) {
         this.trustStorePath = trustStorePath;
@@ -239,8 +239,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--trustStorePassword",
-        description = "Password for the trust store identified by '--trustStorePath'."
+        names = "--truststore-password",
+        description = "Password for the truststore identified by '--truststore-path'."
     )
     public ConnectionOptions trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
@@ -249,8 +249,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--trustStoreType",
-        description = "Type of the trust store identified by '--trustStorePath'; defaults to 'JKS'."
+        names = "--truststore-type",
+        description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions trustStoreType(String trustStoreType) {
         this.trustStoreType = trustStoreType;
@@ -259,8 +259,8 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @Parameter(
-        names = "--trustStoreAlgorithm",
-        description = "Algorithm of the trust store identified by '--trustStorePath'; defaults to 'SunX509'."
+        names = "--truststore-algorithm",
+        description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;

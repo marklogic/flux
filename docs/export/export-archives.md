@@ -25,13 +25,13 @@ The following options then control which documents are selected to be exported:
 
 | Option | Description | 
 | --- |--- |
-| --stringQuery | A string query utilizing MarkLogic's search grammar. |
+| --string-query | A string query utilizing MarkLogic's search grammar. |
 | --query | A structured, serialized CTS, or combined query expressed as JSON or XML. |
 | --options | Name of a REST API search options document; typically used with a string query. |
 | --collections | Comma-delimited sequence of collection names. |
 | --directory | A database directory for constraining on URIs. |
 
-You must specify at least one of `--stringQuery`, `--query`, `--collections`, or `--directory`. You may specify any
+You must specify at least one of `--string-query`, `--query`, `--collections`, or `--directory`. You may specify any
 combination of those options as well.
 
 You must then use the `--path` option to specify a directory to write archive files to.
@@ -58,5 +58,5 @@ to each document before it is written to an archive. A transform is configured v
 | Option | Description | 
 | --- | --- |
 | --transform | Name of a MarkLogic REST transform to apply to the document before writing it. |
-| --transformParams | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
-| --transformParamsDelimiter | Delimiter for `--transformParams`; typically set when a value contains a comma. |
+| --transform-params | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
+| --transform-params-delimiter | Delimiter for `--transform-params`; typically set when a value contains a comma. |

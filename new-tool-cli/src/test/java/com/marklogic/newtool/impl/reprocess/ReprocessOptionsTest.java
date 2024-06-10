@@ -13,12 +13,12 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readInvoke() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readInvoke", "/my/invoke.sjs",
-            "--readPartitionsInvoke", "/my/other-invoke.sjs",
-            "--readVar", "param1=value1",
-            "--readVar", "param2=spaces work!",
-            "--writeInvoke", "/my/invoke.sjs"
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--read-partitions-invoke", "/my/other-invoke.sjs",
+            "--read-var", "param1=value1",
+            "--read-var", "param2=spaces work!",
+            "--write-invoke", "/my/invoke.sjs"
         );
 
         assertOptions(command.readParams.get(),
@@ -32,15 +32,15 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeInvoke() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readInvoke", "/my/invoke.sjs",
-            "--writeInvoke", "/my/invoke.sjs",
-            "--externalVariableName", "MY_VAR",
-            "--externalVariableDelimiter", ";",
-            "--abortOnWriteFailure",
-            "--batchSize", "123",
-            "--writeVar", "param1=value1",
-            "--writeVar", "param2=spaces work!"
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--write-invoke", "/my/invoke.sjs",
+            "--external-variable-name", "MY_VAR",
+            "--external-variable-delimiter", ";",
+            "--abort-on-write-failure",
+            "--batch-size", "123",
+            "--write-var", "param1=value1",
+            "--write-var", "param2=spaces work!"
         );
 
         assertOptions(command.writeParams.get(),
@@ -57,10 +57,10 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readJavascript() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readJavascript", "fn.currentDate()",
-            "--readPartitionsJavascript", "console.log('')",
-            "--writeJavascript", "fn.currentDate()"
+            "--connection-string", "user:password@host:8000",
+            "--read-javascript", "fn.currentDate()",
+            "--read-partitions-javascript", "console.log('')",
+            "--write-javascript", "fn.currentDate()"
         );
 
         assertOptions(command.readParams.get(),
@@ -72,9 +72,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeJavascript() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readJavascript", "fn.currentDate()",
-            "--writeJavascript", "fn.currentDate()"
+            "--connection-string", "user:password@host:8000",
+            "--read-javascript", "fn.currentDate()",
+            "--write-javascript", "fn.currentDate()"
         );
 
         assertOptions(command.writeParams.get(),
@@ -85,10 +85,10 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readXquery() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readXquery", "fn:current-date()",
-            "--readPartitionsXquery", "xdmp:log('')",
-            "--writeXquery", "fn:current-date()"
+            "--connection-string", "user:password@host:8000",
+            "--read-xquery", "fn:current-date()",
+            "--read-partitions-xquery", "xdmp:log('')",
+            "--write-xquery", "fn:current-date()"
         );
 
         assertOptions(command.readParams.get(),
@@ -100,9 +100,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeXquery() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readXquery", "fn:current-date()",
-            "--writeXquery", "fn:current-date()"
+            "--connection-string", "user:password@host:8000",
+            "--read-xquery", "fn:current-date()",
+            "--write-xquery", "fn:current-date()"
         );
 
         assertOptions(command.writeParams.get(),
@@ -113,10 +113,10 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readJavascriptFile() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readJavascriptFile", "my-code.js",
-            "--readPartitionsJavascriptFile", "path/my-partitions.js",
-            "--writeJavascript", "fn.currentDate()"
+            "--connection-string", "user:password@host:8000",
+            "--read-javascript-file", "my-code.js",
+            "--read-partitions-javascript-file", "path/my-partitions.js",
+            "--write-javascript", "fn.currentDate()"
         );
 
         assertOptions(command.readParams.get(),
@@ -128,10 +128,10 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void readXqueryFile() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readXqueryFile", "my-code.xqy",
-            "--readPartitionsXqueryFile", "path/my-partitions.xqy",
-            "--writeJavascript", "fn.currentDate()"
+            "--connection-string", "user:password@host:8000",
+            "--read-xquery-file", "my-code.xqy",
+            "--read-partitions-xquery-file", "path/my-partitions.xqy",
+            "--write-javascript", "fn.currentDate()"
         );
 
         assertOptions(command.readParams.get(),
@@ -143,9 +143,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeJavascriptFile() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readJavascript", "doesn't matter",
-            "--writeJavascriptFile", "my-code.js"
+            "--connection-string", "user:password@host:8000",
+            "--read-javascript", "doesn't matter",
+            "--write-javascript-file", "my-code.js"
         );
 
         assertOptions(command.writeParams.get(),
@@ -156,9 +156,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     @Test
     void writeXqueryFile() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connectionString", "user:password@host:8000",
-            "--readJavascript", "doesn't matter",
-            "--writeXqueryFile", "my-code.xqy"
+            "--connection-string", "user:password@host:8000",
+            "--read-javascript", "doesn't matter",
+            "--write-xquery-file", "my-code.xqy"
         );
 
         assertOptions(command.writeParams.get(),

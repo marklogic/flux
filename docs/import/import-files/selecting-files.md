@@ -32,10 +32,10 @@ NT can read files from S3 via a path expression of the form `s3a://bucket-name/o
 
 In most cases, NT must use your AWS credentials to access an S3 bucket. NT uses the AWS SDK to fetch credentials from 
 [locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html). 
-To enable this, include the `--s3AddCredentials` option:
+To enable this, include the `--s3-add-credentials` option:
 
 ```
-./bin/nt import-files --path "s3a://my-bucket/some/path" --s3AddCredentials
+./bin/nt import-files --path "s3a://my-bucket/some/path" --s3-add-credentials
 ```
 
 ## Ignoring child directories
@@ -43,7 +43,7 @@ To enable this, include the `--s3AddCredentials` option:
 By default, child directories of each directory specified by `--path` are included. To prevent this, include the following
 option:
 
-    --recursiveFileLookup false
+    --recursive-file-lookup false
 
 ## Filtering files
 

@@ -14,7 +14,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     void noHost() {
         assertStderrContains(
             () -> run("import-files", "--path", "src/test/resources/mixed-files"),
-            "Must specify a MarkLogic host via --host or --connectionString."
+            "Must specify a MarkLogic host via --host or --connection-string."
         );
     }
 
@@ -22,7 +22,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     void noPort() {
         assertStderrContains(
             () -> run("import-files", "--path", "src/test/resources/mixed-files", "--host", getDatabaseClient().getHost()),
-            "Must specify a MarkLogic app server port via --port or --connectionString."
+            "Must specify a MarkLogic app server port via --port or --connection-string."
         );
     }
 
@@ -43,10 +43,10 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
         String output = runAndReturnStderr(() -> run(
             "import-files",
             "--path", "src/test/resources/mixed-files",
-            "--connectionString", "admin-missing-password@localhost:8003"
+            "--connection-string", "admin-missing-password@localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --connectionString; must be username:password@host:port"),
+        assertTrue(output.contains("Invalid value for --connection-string; must be username:password@host:port"),
             "Unexpected output: " + output + "; this test also confirms that the ETL tool is overriding " +
                 "error messages from the connector so that CLI option names appear instead of connector " +
                 "option names. This is also confirmed by ErrorMessagesTest.");
@@ -57,10 +57,10 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
         String output = runAndReturnStderr(() -> run(
             "import-files",
             "--path", "src/test/resources/mixed-files",
-            "--connectionString", "localhost:8003"
+            "--connection-string", "localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --connectionString; must be username:password@host:port"),
+        assertTrue(output.contains("Invalid value for --connection-string; must be username:password@host:port"),
             "Unexpected output: " + output);
     }
 }

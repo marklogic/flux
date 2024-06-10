@@ -53,12 +53,12 @@ public class ConnectionParamsValidator implements IParametersValidator {
         final String password;
 
         ParamNames(boolean isOutput) {
-            connectionString = isOutput ? "--outputConnectionString" : "--connectionString";
-            host = isOutput ? "--outputHost" : "--host";
-            port = isOutput ? "--outputPort" : "--port";
-            authType = isOutput ? "--outputAuthType" : "--authType";
-            username = isOutput ? "--outputUsername" : "--username";
-            password = isOutput ? "--outputPassword" : "--password";
+            connectionString = isOutput ? "--output-connection-string" : "--connection-string";
+            host = isOutput ? "--output-host" : "--host";
+            port = isOutput ? "--output-port" : "--port";
+            authType = isOutput ? "--output-auth-type" : "--auth-type";
+            username = isOutput ? "--output-username" : "--username";
+            password = isOutput ? "--output-password" : "--password";
         }
     }
 }

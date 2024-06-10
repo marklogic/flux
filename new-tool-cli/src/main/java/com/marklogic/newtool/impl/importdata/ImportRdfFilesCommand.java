@@ -73,7 +73,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
             "triples will be added to the default MarkLogic graph - http://marklogic.com/semantics#default-graph . ")
         private String graph;
 
-        @Parameter(names = "--graphOverride", description = "Specify the graph URI for each triple to be included in, " +
+        @Parameter(names = "--graph-override", description = "Specify the graph URI for each triple to be included in, " +
             "even if is already associated with a graph.")
         private String graphOverride;
 

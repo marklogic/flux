@@ -48,7 +48,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = {"--outputConnectionString"},
+        names = {"--output-connection-string"},
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
         validateWith = ConnectionStringValidator.class
     )
@@ -59,7 +59,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = {"--outputHost"},
+        names = {"--output-host"},
         description = "The MarkLogic host to connect to."
     )
     public ConnectionOptions host(String host) {
@@ -69,7 +69,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputPort",
+        names = "--output-port",
         description = "Port of a MarkLogic REST API app server to connect to."
     )
     public ConnectionOptions port(int port) {
@@ -79,7 +79,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputBasePath",
+        names = "--output-base-path",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
     public ConnectionOptions basePath(String basePath) {
@@ -89,7 +89,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputDatabase",
+        names = "--output-database",
         description = "Name of a database to connect if it differs from the one associated with the app server identified by 'port'."
     )
     public ConnectionOptions database(String database) {
@@ -98,7 +98,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Parameter(
-        names = "--outputConnectionType",
+        names = "--output-connection-type",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
     )
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
@@ -120,7 +120,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputAuthType",
+        names = "--output-auth-type",
         description = "Type of authentication to use."
     )
     public ConnectionOptions authenticationType(AuthenticationType authType) {
@@ -130,7 +130,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputUsername",
+        names = "--output-username",
         description = "Username when using 'DIGEST' or 'BASIC' authentication."
     )
     public ConnectionOptions username(String username) {
@@ -140,7 +140,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputPassword",
+        names = "--output-password",
         description = "Password when using 'DIGEST' or 'BASIC' authentication.",
         password = true
     )
@@ -151,8 +151,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputCertificateFile",
-        description = "File path for a key store to be used for 'CERTIFICATE' authentication."
+        names = "--output-certificate-file",
+        description = "File path for a keystore to be used for 'CERTIFICATE' authentication."
     )
     public ConnectionOptions certificateFile(String certificateFile) {
         this.certificateFile = certificateFile;
@@ -161,8 +161,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputCertificatePassword",
-        description = "Password for the key store referenced by '--certificateFile'."
+        names = "--output-certificate-password",
+        description = "Password for the keystore referenced by '--certificate-file'."
     )
     public ConnectionOptions certificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
@@ -171,7 +171,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputCloudApiKey",
+        names = "--output-cloud-api-key",
         description = "API key for authenticating with a MarkLogic Cloud cluster."
     )
     public ConnectionOptions cloudApiKey(String cloudApiKey) {
@@ -181,7 +181,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputKerberosPrincipal",
+        names = "--output-kerberos-principal",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
     public ConnectionOptions kerberosPrincipal(String kerberosPrincipal) {
@@ -191,7 +191,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputSamlToken",
+        names = "--output-saml-token",
         description = "Token to be used with 'SAML' authentication."
     )
     public ConnectionOptions samlToken(String samlToken) {
@@ -201,9 +201,9 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputSslProtocol",
-        description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store " +
-            "or trust store is configured, defaults to 'TLSv1.2'."
+        names = "--output-ssl-protocol",
+        description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
+            "or truststore is configured, defaults to 'TLSv1.2'."
     )
     public ConnectionOptions sslProtocol(String sslProtocol) {
         this.sslProtocol = sslProtocol;
@@ -212,7 +212,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputSslHostnameVerifier",
+        names = "--output-ssl-hostname-verifier",
         description = "Hostname verification strategy when connecting via SSL."
     )
     public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
@@ -222,8 +222,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputKeyStorePath",
-        description = "File path for a key store for two-way SSL connections."
+        names = "--output-keystore-path",
+        description = "File path for a keystore for two-way SSL connections."
     )
     public ConnectionOptions keyStorePath(String keyStorePath) {
         this.keyStorePath = keyStorePath;
@@ -232,8 +232,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputKeyStorePassword",
-        description = "Password for the key store identified by '--keyStorePath'."
+        names = "--output-keystore-password",
+        description = "Password for the keystore identified by '--keystore-path'."
     )
     public ConnectionOptions keyStorePassword(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
@@ -242,8 +242,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputKeyStoreType",
-        description = "Type of the key store identified by '--keyStorePath'; defaults to 'JKS'."
+        names = "--output-keystore-type",
+        description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions keyStoreType(String keyStoreType) {
         this.keyStoreType = keyStoreType;
@@ -252,8 +252,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputKeyStoreAlgorithm",
-        description = "Algorithm of the key store identified by '--keyStorePath'; defaults to 'SunX509'."
+        names = "--output-keystore-algorithm",
+        description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions keyStoreAlgorithm(String keyStoreAlgorithm) {
         this.keyStoreAlgorithm = keyStoreAlgorithm;
@@ -262,8 +262,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputTrustStorePath",
-        description = "File path for a trust store for establishing trust with the certificate used by the MarkLogic app server."
+        names = "--output-truststore-path",
+        description = "File path for a truststore for establishing trust with the certificate used by the MarkLogic app server."
     )
     public ConnectionOptions trustStorePath(String trustStorePath) {
         this.trustStorePath = trustStorePath;
@@ -272,8 +272,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputTrustStorePassword",
-        description = "Password for the trust store identified by '--trustStorePath'."
+        names = "--output-truststore-password",
+        description = "Password for the truststore identified by '--truststore-path'."
     )
     public ConnectionOptions trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
@@ -282,8 +282,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputTrustStoreType",
-        description = "Type of the trust store identified by '--trustStorePath'; defaults to 'JKS'."
+        names = "--output-truststore-type",
+        description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions trustStoreType(String trustStoreType) {
         this.trustStoreType = trustStoreType;
@@ -292,8 +292,8 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @Override
     @Parameter(
-        names = "--outputTrustStoreAlgorithm",
-        description = "Algorithm of the trust store identified by '--trustStorePath'; defaults to 'SunX509'."
+        names = "--output-truststore-algorithm",
+        description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;

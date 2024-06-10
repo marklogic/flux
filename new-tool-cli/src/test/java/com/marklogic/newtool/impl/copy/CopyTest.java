@@ -16,10 +16,10 @@ class CopyTest extends AbstractTest {
             "copy",
             "--categories", "content",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputCollections", "author-copies",
-            "--outputUriPrefix", "/copied",
-            "--outputPermissions", DEFAULT_PERMISSIONS
+            "--connection-string", makeConnectionString(),
+            "--output-collections", "author-copies",
+            "--output-uri-prefix", "/copied",
+            "--output-permissions", DEFAULT_PERMISSIONS
         );
 
         assertCollectionSize("author", 15);
@@ -33,10 +33,10 @@ class CopyTest extends AbstractTest {
             "copy",
             "--categories", "content",
             "--uris", "/author/author1.json\n/author/author2.json",
-            "--connectionString", makeConnectionString(),
-            "--outputCollections", "author-copies",
-            "--outputUriPrefix", "/copied",
-            "--outputPermissions", DEFAULT_PERMISSIONS
+            "--connection-string", makeConnectionString(),
+            "--output-collections", "author-copies",
+            "--output-uri-prefix", "/copied",
+            "--output-permissions", DEFAULT_PERMISSIONS
         );
 
         assertCollectionSize("author", 15);
@@ -49,13 +49,13 @@ class CopyTest extends AbstractTest {
         run(
             "copy",
             "--collections", "author",
-            "--partitionsPerForest", "1",
+            "--partitions-per-forest", "1",
             "--categories", "content,metadata",
-            "--connectionString", makeConnectionString(),
-            "--outputConnectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
+            "--output-connection-string", makeConnectionString(),
             // No need to specify permissions since they are included via "--categories".
-            "--outputCollections", "author-copies",
-            "--outputUriPrefix", "/copied"
+            "--output-collections", "author-copies",
+            "--output-uri-prefix", "/copied"
         );
 
         assertCollectionSize("author", 15);
@@ -68,9 +68,9 @@ class CopyTest extends AbstractTest {
         assertStderrContains(() -> run(
             "copy",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputConnectionString", "not@valid"
-        ), "Invalid value for --outputConnectionString; must be username:password@host:port/optionalDatabaseName");
+            "--connection-string", makeConnectionString(),
+            "--output-connection-string", "not@valid"
+        ), "Invalid value for --output-connection-string; must be username:password@host:port/optionalDatabaseName");
     }
 
     @Test
@@ -78,9 +78,9 @@ class CopyTest extends AbstractTest {
         assertStderrContains(() -> run(
             "copy",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputPort", "8000"
-        ), "Must specify a MarkLogic host via --outputHost or --outputConnectionString.");
+            "--connection-string", makeConnectionString(),
+            "--output-port", "8000"
+        ), "Must specify a MarkLogic host via --output-host or --output-connection-string.");
     }
 
     @Test
@@ -88,9 +88,9 @@ class CopyTest extends AbstractTest {
         assertStderrContains(() -> run(
             "copy",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputHost", "localhost"
-        ), "Must specify a MarkLogic app server port via --outputPort or --outputConnectionString.");
+            "--connection-string", makeConnectionString(),
+            "--output-host", "localhost"
+        ), "Must specify a MarkLogic app server port via --output-port or --output-connection-string.");
     }
 
     @Test
@@ -98,10 +98,10 @@ class CopyTest extends AbstractTest {
         assertStderrContains(() -> run(
             "copy",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputHost", "localhost",
-            "--outputPort", "8000"
-        ), "Must specify a MarkLogic user via --outputUsername when using 'BASIC' or 'DIGEST' authentication.");
+            "--connection-string", makeConnectionString(),
+            "--output-host", "localhost",
+            "--output-port", "8000"
+        ), "Must specify a MarkLogic user via --output-username when using 'BASIC' or 'DIGEST' authentication.");
     }
 
     @Test
@@ -109,11 +109,11 @@ class CopyTest extends AbstractTest {
         assertStderrContains(() -> run(
             "copy",
             "--collections", "author",
-            "--connectionString", makeConnectionString(),
-            "--outputHost", "localhost",
-            "--outputPort", "8000",
-            "--outputUsername", "someone"
-        ), "Must specify a password via --outputPassword when using 'BASIC' or 'DIGEST' authentication.");
+            "--connection-string", makeConnectionString(),
+            "--output-host", "localhost",
+            "--output-port", "8000",
+            "--output-username", "someone"
+        ), "Must specify a password via --output-password when using 'BASIC' or 'DIGEST' authentication.");
     }
 
     private void assertDirectoryCount(String directoryPrefix, int expectedCount) {

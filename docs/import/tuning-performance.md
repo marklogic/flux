@@ -9,13 +9,13 @@ When writing to MarkLogic, the two main settings within NT that affect performan
 cluster itself is configured, such as index settings and number of hosts) are the batch size - the number of documents
 sent in a request to MarkLogic - and the number of threads used to send requests to MarkLogic.
 
-Batch size is configured via the `--batchSize` option, which defaults to a value of 200. Depending on the size of
+Batch size is configured via the `--batch-size` option, which defaults to a value of 200. Depending on the size of
 your documents, you may find improved performance by raising this value significantly for smaller documents, such as 500
 or even 1000.
 
 For the number of threads used to send requests to MarkLogic, two factors come into play. The product of the
-number of partitions and the value of the `--threadCount` option determines how many total threads will be used to send
-requests. For example, if the import command uses 4 partitions to read data and `--threadCount` is set to 4 (its
+number of partitions and the value of the `--thread-count` option determines how many total threads will be used to send
+requests. For example, if the import command uses 4 partitions to read data and `--thread-count` is set to 4 (its
 default value), 16 total threads will send requests to MarkLogic.
 
 The number of partitions is determined by how data is read and differs across the various import commands.
@@ -35,10 +35,10 @@ by placing a load balancer in front of MarkLogic or by configuring direct connec
 
 The rule of thumb can thus be expressed as:
 
-    Number of partitions * Value of --threadCount <= Number of hosts * number of app server threads
+    Number of partitions * Value of --thread-count <= Number of hosts * number of app server threads
 
 ### Direct connections to each host
 
 In a scenario where NT can connect directly to each host in your MarkLogic cluster without a load balancer being 
-present, you can set the `--connectionType` option to a value of `direct`. NT will then effectively act as a load 
+present, you can set the `--connection-type` option to a value of `direct`. NT will then effectively act as a load 
 balancer by distributing work across each host in the cluster. 

@@ -53,7 +53,7 @@ public abstract class ConnectionInputs {
 
     public String getSelectedHost() {
         if (connectionString != null) {
-            return new ConnectionString(connectionString, "--connectionString").getHost();
+            return new ConnectionString(connectionString, "--connection-string").getHost();
         }
         return host;
     }

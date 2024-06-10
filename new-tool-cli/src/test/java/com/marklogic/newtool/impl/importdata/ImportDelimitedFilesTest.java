@@ -18,10 +18,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
-            "--uriTemplate", "/delimited/{number}.json"
+            "--uri-template", "/delimited/{number}.json"
         );
 
         assertCollectionSize("delimited-test", 3);
@@ -35,10 +35,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--jsonRootName", "myData",
-            "--uriTemplate", "/delimited/{/myData/number}.json"
+            "--json-root-name", "myData",
+            "--uri-template", "/delimited/{/myData/number}.json"
         );
 
         JsonNode doc = readJsonDocument("/delimited/1.json");
@@ -50,10 +50,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv.gz",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
-            "--uriTemplate", "/delimited/{number}.json"
+            "--uri-template", "/delimited/{number}.json"
         );
 
         assertCollectionSize("delimited-test", 3);
@@ -68,10 +68,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Psep=;",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
-            "--uriTemplate", "/delimited/{number}.json"
+            "--uri-template", "/delimited/{number}.json"
         );
 
         assertCollectionSize("delimited-test", 3);
@@ -86,10 +86,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/no-header.csv",
             "-Pheader=false",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-header",
-            "--uriTemplate", "/no-header/{_c0}.json"
+            "--uri-template", "/no-header/{_c0}.json"
         );
 
         assertCollectionSize("no-header", 2);
@@ -108,10 +108,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "-PinferSchema=false",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-schema-inference",
-            "--uriTemplate", "/delimited/{number}.json"
+            "--uri-template", "/delimited/{number}.json"
         );
 
         assertCollectionSize("no-schema-inference", 3);
@@ -136,7 +136,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
                 "--path", "src/test/resources/delimited-files/three-rows.csv",
                 "--limit", "1",
                 "--preview", "3",
-                "--previewVertical"
+                "--preview-vertical"
             );
         });
 
@@ -151,7 +151,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test"
         ));
@@ -184,15 +184,15 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test"
         ));
 
         assertCollectionSize("delimited-test", 0);
         assertTrue(stderr.contains("Command failed, cause: [MALFORMED_RECORD_IN_PARSING]"), "The command should " +
-            "have failed due to --abortOnReadFailure being included. This should result in the 'mode' option being " +
+            "have failed due to --abort-on-read-failure being included. This should result in the 'mode' option being " +
             "set to FAILFAST.");
     }
 

@@ -22,9 +22,9 @@ Generally, you must include at least the following information for each command:
 - Authentication information.
 
 For the common use case of using digest or basic authentication with a MarkLogic app server, you can use the 
-`--connectionString` option to specify the host, port, username, and password in a single concise option:
+`--connection-string` option to specify the host, port, username, and password in a single concise option:
 
-    --connectionString user:password@host:port
+    --connection-string user:password@host:port
 
 For other authentication mechanisms, you must use the `--host` and `--port` options to define the host and port for 
 your MarkLogic app server. 
@@ -33,30 +33,30 @@ All available connection options are shown in the table below:
 
 | Option | Description | 
 | --- | --- |
-| --authType | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
-| --basePath | Path to prepend to each call to a MarkLogic REST API app server. |
-| --certificateFile | File path for a key store to be used for 'CERTIFICATE' authentication. |
-| --certificatePassword | Password for the key store referenced by '--certificateFile'. |
-| --connectionString |  Defines a connection string as user:password@host:port; only usable when using `DIGEST` or `BASIC` authentication. |
-| --cloudApiKey | API key for authenticating with a MarkLogic Cloud cluster. |
-| --connectionType |  Defines whether connections can be made directly to each host in the MarkLogic cluster. Possible values are `DIRECT` and `GATEWAY`. |
+| --auth-type | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
+| --base-path | Path to prepend to each call to a MarkLogic REST API app server. |
+| --certificate-file | File path for a keystore to be used for 'CERTIFICATE' authentication. |
+| --certificate-password | Password for the keystore referenced by '--certificate-file'. |
+| --connection-string |  Defines a connection string as user:password@host:port; only usable when using `DIGEST` or `BASIC` authentication. |
+| --cloud-api-key | API key for authenticating with a MarkLogic Cloud cluster. |
+| --connection-type |  Defines whether connections can be made directly to each host in the MarkLogic cluster. Possible values are `DIRECT` and `GATEWAY`. |
 | --database | Name of a database to connect if it differs from the one associated with the app server identified by '--port'. |
-| --disableGzippedResponses | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
+| --disable-gzipped-responses | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
 | --host | The MarkLogic host to connect to. |
-| --kerberosPrincipal | Principal to be used with `KERBEROS` authentication. |
-| --keyStoreAlgorithm |  Algorithm of the key store identified by '--keyStorePath'; defaults to `SunX509`. |
-| --keyStorePassword | Password for the key store identified by '--keyStorePath'. |
-| --keyStorePath | File path for a key store for two-way SSL connections. |
-| --keyStoreType | Type of the key store identified by '--keyStorePath'; defaults to `JKS`. |
+| --kerberos-principal | Principal to be used with `KERBEROS` authentication. |
+| --keystore-algorithm |  Algorithm of the keystore identified by '--keystore-path'; defaults to `SunX509`. |
+| --keystore-password | Password for the keystore identified by '--keystore-path'. |
+| --keystore-path | File path for a keystore for two-way SSL connections. |
+| --keystore-type | Type of the keystore identified by '--keystore-path'; defaults to `JKS`. |
 | --password | Password when using `DIGEST` or `BASIC` authentication. |
 | --port | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
-| --samlToken | Token to be used with `SAML` authentication. |
-| --sslHostnameVerifier | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
-| --sslProtocol | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a key store or trust store is configured, defaults to `TLSv1.2`. |
-| --trustStoreAlgorithm | Algorithm of the trust store identified by '--trustStorePath'; defaults to `SunX509`. |
-| --trustStorePassword | Password for the trust store identified by '--trustStorePath'. |
-| --trustStorePath | File path for a trust store for establishing trust with the certificate used by the MarkLogic app server. |
-| --trustStoreType | Type of the trust store identified by '--trustStorePath'; defaults to `JKS`. |
+| --saml-token | Token to be used with `SAML` authentication. |
+| --ssl-hostname-verifier | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
+| --ssl-protocol | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore or truststore is configured, defaults to `TLSv1.2`. |
+| --truststore-algorithm | Algorithm of the truststore identified by '--truststore-path'; defaults to `SunX509`. |
+| --truststore-password | Password for the truststore identified by '--truststore-path'. |
+| --truststore-path | File path for a truststore for establishing trust with the certificate used by the MarkLogic app server. |
+| --truststore-type | Type of the truststore identified by '--truststore-path'; defaults to `JKS`. |
 | --username | Username when using `DIGEST` or `BASIC` authentication. |
 
 
@@ -93,17 +93,17 @@ you can preview an import without writing any of the data to MarkLogic:
 For commands that read from a source other than MarkLogic, you are not required to specify any MarkLogic connection
 information when including `--preview` since no connection needs to be made to MarkLogic.
 
-The number after `--preview` specifies how many records to show. You can use `--previewDrop` to specify potentially
-verbose columns to drop from the preview. And you can use `--previewVertical` to see the results a vertical display
+The number after `--preview` specifies how many records to show. You can use `--preview-drop` to specify potentially
+verbose columns to drop from the preview. And you can use `--preview-vertical` to see the results a vertical display
 instead of in a table:
 
 ```
 ./bin/nt import-parquet-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --path export/parquet \
     --preview 10 \
-    --previewDrop job_title,department
-    --previewVertical
+    --preview-drop job_title,department
+    --preview-vertical
 ```
 
 Note that in the case of previewing an import, NT will show the data as it has been read, which consists of a set of
@@ -120,10 +120,10 @@ The following shows an example of only importing the first 10 rows from a delimi
 ```
 ./bin/nt import-delimited-files \
     --path ../data/employees.csv.gz \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections employee \
-    --uriTemplate "/employee/{id}.json" \
+    --uri-template "/employee/{id}.json" \
     --limit 10
 ```
 

@@ -15,8 +15,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void useOutputParamsForConnection() {
         CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connectionString", "test:test@test:8000",
-            "--outputConnectionString", "user:password@host:8000",
+            "--connection-string", "test:test@test:8000",
+            "--output-connection-string", "user:password@host:8000",
             "--collections", "anything"
         );
 
@@ -29,7 +29,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void useRegularConnectionParamsIfNoOutputConnectionParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connectionString", "test:test@test:8000",
+            "--connection-string", "test:test@test:8000",
             "--collections", "anything"
         );
 
@@ -42,22 +42,22 @@ class CopyOptionsTest extends AbstractOptionsTest {
     @Test
     void allWriteParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connectionString", "someone:word@somehost:7000",
+            "--connection-string", "someone:word@somehost:7000",
             "--collections", "anything",
-            "--outputAbortOnWriteFailure",
-            "--outputBatchSize", "123",
-            "--outputCollections", "c1,c2",
-            "--outputFailedDocumentsPath", "/my/failures",
-            "--outputPermissions", "rest-reader,read,qconsole-user,update",
-            "--outputTemporalCollection", "t1",
-            "--outputThreadCount", "7",
-            "--outputTransform", "transform1",
-            "--outputTransformParams", "p1;v1;p2;v2",
-            "--outputTransformParamsDelimiter", ";",
-            "--outputUriPrefix", "/prefix/",
-            "--outputUriReplace", ".*data,''",
-            "--outputUriSuffix", ".xml",
-            "--outputUriTemplate", "/{example}.xml"
+            "--output-abort-on-write-failure",
+            "--output-batch-size", "123",
+            "--output-collections", "c1,c2",
+            "--output-failed-documents-path", "/my/failures",
+            "--output-permissions", "rest-reader,read,qconsole-user,update",
+            "--output-temporal-collection", "t1",
+            "--output-thread-count", "7",
+            "--output-transform", "transform1",
+            "--output-transform-params", "p1;v1;p2;v2",
+            "--output-transform-params-delimiter", ";",
+            "--output-uri-prefix", "/prefix/",
+            "--output-uri-replace", ".*data,''",
+            "--output-uri-suffix", ".xml",
+            "--output-uri-template", "/{example}.xml"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -82,32 +82,32 @@ class CopyOptionsTest extends AbstractOptionsTest {
     void allOutputConnectionParams() {
         CopyCommand command = (CopyCommand) getCommand(
             "copy",
-            "--connectionString", "someone:word@somehost:7000",
+            "--connection-string", "someone:word@somehost:7000",
             "--collections", "anything",
-            "--outputConnectionString", "user:password@host:8000",
-            "--outputHost", "localhost",
-            "--outputPort", "8123",
-            "--outputBasePath", "/path",
-            "--outputDatabase", "somedb",
-            "--outputConnectionType", "direct",
-            "--outputAuthType", "basic",
-            "--outputUsername", "jane",
-            "--outputPassword", "secret",
-            "--outputCertificateFile", "my.jks",
-            "--outputCertificatePassword", "pwd123",
-            "--outputCloudApiKey", "key123",
-            "--outputKerberosPrincipal", "prince123",
-            "--outputSamlToken", "my-token",
-            "--outputSslProtocol", "TLSv1.3",
-            "--outputSslHostnameVerifier", "STRICT",
-            "--outputKeyStorePath", "key.jks",
-            "--outputKeyStorePassword", "keypass",
-            "--outputKeyStoreType", "JKS",
-            "--outputKeyStoreAlgorithm", "SunX509",
-            "--outputTrustStorePath", "trust.jks",
-            "--outputTrustStorePassword", "trustpass",
-            "--outputTrustStoreType", "PKCS",
-            "--outputTrustStoreAlgorithm", "SunX510"
+            "--output-connection-string", "user:password@host:8000",
+            "--output-host", "localhost",
+            "--output-port", "8123",
+            "--output-base-path", "/path",
+            "--output-database", "somedb",
+            "--output-connection-type", "direct",
+            "--output-auth-type", "basic",
+            "--output-username", "jane",
+            "--output-password", "secret",
+            "--output-certificate-file", "my.jks",
+            "--output-certificate-password", "pwd123",
+            "--output-cloud-api-key", "key123",
+            "--output-kerberos-principal", "prince123",
+            "--output-saml-token", "my-token",
+            "--output-ssl-protocol", "TLSv1.3",
+            "--output-ssl-hostname-verifier", "STRICT",
+            "--output-keystore-path", "key.jks",
+            "--output-keystore-password", "keypass",
+            "--output-keystore-type", "JKS",
+            "--output-keystore-algorithm", "SunX509",
+            "--output-truststore-path", "trust.jks",
+            "--output-truststore-password", "trustpass",
+            "--output-truststore-type", "PKCS",
+            "--output-truststore-algorithm", "SunX510"
         );
 
         assertOptions(command.makeOutputConnectionOptions(),

@@ -64,10 +64,10 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @Parameter(names = "--compression", description = "Set to 'ZIP' to write one zip file per partition, or to 'GZIP' to GZIP each document file.")
         private CompressionType compressionType;
 
-        @Parameter(names = "--prettyPrint", description = "Pretty-print the contents of JSON and XML files.")
+        @Parameter(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")
         private Boolean prettyPrint;
 
-        @Parameter(names = "--zipFileCount", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
+        @Parameter(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
         private Integer zipFileCount;
 
         @Override

@@ -16,12 +16,12 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-xml",
-            "--uriTemplate", "/delimited/{number}.xml",
-            "--xmlRootName", "myDelimitedText",
-            "--xmlNamespace", "csv.org"
+            "--uri-template", "/delimited/{number}.xml",
+            "--xml-root-name", "myDelimitedText",
+            "--xml-namespace", "csv.org"
         );
 
         assertCollectionSize("delimited-xml", 3);
@@ -34,17 +34,17 @@ class ImportRowsAsXmlTest extends AbstractTest {
     void jdbc() {
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL,
-            "--jdbcUser", PostgresUtil.USER,
-            "--jdbcPassword", PostgresUtil.PASSWORD,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/customer/{customer_id}.xml",
+            "--uri-template", "/customer/{customer_id}.xml",
             "--collections", "jdbc-customer",
-            "--xmlRootName", "CUSTOMER",
-            "--xmlNamespace", "org:example"
+            "--xml-root-name", "CUSTOMER",
+            "--xml-namespace", "org:example"
         );
 
         assertCollectionSize("jdbc-customer", 10);
@@ -58,12 +58,12 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "--xmlRootName", "myParquet",
-            "--xmlNamespace", "parquet.org",
-            "--uriTemplate", "/parquet/{model}.xml"
+            "--xml-root-name", "myParquet",
+            "--xml-namespace", "parquet.org",
+            "--uri-template", "/parquet/{model}.xml"
         );
 
         assertCollectionSize("parquet-test", 32);
@@ -77,12 +77,12 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import-avro-files",
             "--path", "src/test/resources/avro/*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "--uriTemplate", "/avro/{color}.xml",
-            "--xmlRootName", "myAvro",
-            "--xmlNamespace", "avro.org"
+            "--uri-template", "/avro/{color}.xml",
+            "--xml-root-name", "myAvro",
+            "--xml-namespace", "avro.org"
         );
 
         assertCollectionSize("avro-test", 6);
@@ -96,12 +96,12 @@ class ImportRowsAsXmlTest extends AbstractTest {
         run(
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-test",
-            "--uriTemplate", "/orc/{ForeName}",
-            "--xmlRootName", "myOrc",
-            "--xmlNamespace", "orc.org"
+            "--uri-template", "/orc/{ForeName}",
+            "--xml-root-name", "myOrc",
+            "--xml-namespace", "orc.org"
         );
 
         assertCollectionSize("orc-test", 15);

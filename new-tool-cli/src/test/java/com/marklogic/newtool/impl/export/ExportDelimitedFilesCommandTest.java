@@ -18,11 +18,11 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
     void test(@TempDir Path tempDir) throws IOException {
         run(
             "export-delimited-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--partitions", "1",
             "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--fileCount", "1"
+            "--file-count", "1"
         );
 
         File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
@@ -39,12 +39,12 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
     void headerRemovedViaDynamicParam(@TempDir Path tempDir) throws IOException {
         run(
             "export-delimited-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--partitions", "1",
             "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",
             "--path", tempDir.toFile().getAbsolutePath(),
             "-Pheader=false",
-            "--fileCount", "1"
+            "--file-count", "1"
         );
 
         File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));

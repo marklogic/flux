@@ -66,10 +66,10 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
     void dynamicParam() {
         run(
             "export-jdbc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", "this should be overwritten by the dynamic param",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", "this should be overwritten by the dynamic param",
             "--table", EXPORTED_TABLE_NAME,
             "-Pdriver=" + PostgresUtil.DRIVER
         );
@@ -85,10 +85,10 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
     private void exportFifteenAuthorsWithMode(String saveMode) {
         run(
             "export-jdbc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--table", EXPORTED_TABLE_NAME,
             "--mode", saveMode
         );

@@ -24,23 +24,23 @@ will be used as the root of an XML document written to MarkLogic. The `--namespa
 has an associated namespace:
 
 ```
-./bin/nt import-aggregate-xml-files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/nt import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
     --element employee --namespace org:example
 ```
 
 ## Controlling document URIs
 
 In addition to the options for controlling URIs described in the [common import features guide](../common-import-features.md), 
-you can use the `--uriElement` and `--uriNamespace` options to identify an element in each XML document whose value should
+you can use the `--uri-element` and `--uri-namespace` options to identify an element in each XML document whose value should
 be included in the URI:
 
 ```
-./bin/nt import-aggregate-xml-files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/nt import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
     --element employee --namespace org:example \
-    --uriElement employee ID --namespace org:example
+    --uri-element employee ID --namespace org:example
 ```
 
-You may still wish to use options like `--uriPrefix` and `--uriSuffix` to make the URI more self-describing. 
+You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make the URI more self-describing. 
 
 ## Compressed XML files
 

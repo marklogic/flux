@@ -17,7 +17,7 @@ class ExportParquetFilesTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         run(
             "export-parquet-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath()
         );
@@ -29,7 +29,7 @@ class ExportParquetFilesTest extends AbstractTest {
         run(
             "import-parquet-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test"
         );
@@ -41,7 +41,7 @@ class ExportParquetFilesTest extends AbstractTest {
     void saveMode(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
             "export-parquet-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath(),
             "--mode", SaveMode.ERRORIFEXISTS.name()
@@ -55,16 +55,16 @@ class ExportParquetFilesTest extends AbstractTest {
     void dynamicParameter(@TempDir Path tempDir) {
         run(
             "export-parquet-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",
-            "--fileCount", "2",
+            "--file-count", "2",
             "--path", tempDir.toFile().getAbsolutePath(),
             "-Pcompression=gzip"
         );
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".gz.parquet"));
-        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --fileCount is 2, and the " +
+        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --file-count is 2, and the " +
             "-Pcompression option should tell Spark Parquet to use gzip instead of snappy.");
     }
 }

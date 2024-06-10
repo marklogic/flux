@@ -25,11 +25,11 @@ class ExportFilesTest extends AbstractTest {
         run(
             "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author",
             // Including this simply to verify that it doesn't cause an error. Its impact is only going to be seen
             // in performance tests.
-            "--batchSize", "5"
+            "--batch-size", "5"
         );
 
         File dir = tempDir.toFile();
@@ -53,7 +53,7 @@ class ExportFilesTest extends AbstractTest {
         run(
             "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--uris", "/author/author1.json\n/author/author2.json"
         );
 
@@ -67,10 +67,10 @@ class ExportFilesTest extends AbstractTest {
     void exportToZips(@TempDir Path tempDir) {
         run(
             "export-files",
-            "--partitionsPerForest", "1",
+            "--partitions-per-forest", "1",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author"
         );
 
@@ -104,13 +104,13 @@ class ExportFilesTest extends AbstractTest {
             "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author",
-            "--zipFileCount", "5"
+            "--zip-file-count", "5"
         );
 
         File dir = tempDir.toFile();
-        assertEquals(5, dir.listFiles().length, "Should have 5 zip files instead of 3 due to the use of --zipFileCount.");
+        assertEquals(5, dir.listFiles().length, "Should have 5 zip files instead of 3 due to the use of --zip-file-count.");
     }
 
     @Test
@@ -119,7 +119,7 @@ class ExportFilesTest extends AbstractTest {
             "export-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--compression", "gzip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author"
         );
 
@@ -141,12 +141,12 @@ class ExportFilesTest extends AbstractTest {
                 "export-files",
                 "--path", tempDir.toFile().getAbsolutePath(),
                 "--compression", "gzip",
-                "--connectionString", makeConnectionString()
+                "--connection-string", makeConnectionString()
             );
         });
 
         assertTrue(
-            stderr.contains("Must specify at least one of the following options: [--query, --uris, --stringQuery, --collections, --directory]."),
+            stderr.contains("Must specify at least one of the following options: [--query, --uris, --string-query, --collections, --directory]."),
             "Unexpected stderr: " + stderr
         );
     }

@@ -17,7 +17,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
-    @Parameter(names = "--fileCount", description = "Specifies how many files should be written; also an alias for '--repartition'.")
+    @Parameter(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
     protected Integer fileCount;
 
     public String getPath() {

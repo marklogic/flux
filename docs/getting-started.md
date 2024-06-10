@@ -57,14 +57,14 @@ command. To see the usage for a particular command, such as `import-files`, run:
 
     ./bin/nt help import-files
 
-Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connectionString`
+Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connection-string`
 or `--host` and `--port` be specified so that the tool knows which MarkLogic cluster to connect to. 
 
-The `--connectionString` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
+The `--connection-string` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
 app server you connect to requires basic or digest authentication. Its value is of the form 
 `(user):(password)@(host):(port)`. For example:
 
-    ./bin/nt import-files --connectionString "my-user:my-secret@localhost:8000" ...
+    ./bin/nt import-files --connection-string "my-user:my-secret@localhost:8000" ...
 
 Options can also be read from a file; see the [Common Options](common-options.md) guide for more information.
 
@@ -78,10 +78,10 @@ demonstrated:
 ```
 ./bin/nt import-delimited-files \
     --path ../data/employees.csv.gz \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections employee \
-    --uriTemplate "/employee/{id}.json"
+    --uri-template "/employee/{id}.json"
 ```
 
 By accessing your [MarkLogic qconsole](https://docs.marklogic.com/guide/qconsole), you can see that the `employee`
@@ -98,10 +98,10 @@ requires a separate Postgres database; it is only included for reference):
 
 ```
 ./bin/nt import-jdbc \
-    --jdbcUrl "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
-    --jdbcDriver "org.postgresql.Driver" \
+    --jdbc-url "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
+    --jdbc-driver "org.postgresql.Driver" \
     --query "select * from customer" \
-    --connectionString "new-tool-user:password@localhost:8004" \
+    --connection-string "new-tool-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections customer
 ```
@@ -119,18 +119,18 @@ to select rows. The following shows an example of exporting the 1000 employee do
 ```
 mkdir export
 ./bin/nt export-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --path export \
     --compression zip \
-    --zipFileCount 1
+    --zip-file-count 1
 ```
 
 The above command specifies a collection of documents to export. You can also use the `--query` option to specify a
 [structured query](https://docs.marklogic.com/guide/search-dev/structured-query), 
 [serialized CTS query](https://docs.marklogic.com/guide/rest-dev/search#id_30577), or 
 [complex query](https://docs.marklogic.com/guide/rest-dev/search#id_69918), either as JSON or XML. You can also use 
-`--stringQuery` to leverage MarkLogic's 
+`--string-query` to leverage MarkLogic's 
 [search grammar](https://docs.marklogic.com/guide/search-dev/string-query) for selecting documents. 
 
 The following command shows a collection, a string query, and a structured query used together, resulting 
@@ -138,12 +138,12 @@ in 4 JSON documents being written to `./export/employee`:
 
 ```
 ./bin/nt export-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
-    --stringQuery Engineering \
+    --string-query Engineering \
     --query '{"query": {"value-query": {"json-property": "job_title", "text": "Junior Executive"}}}' \
     --path export \
-    --prettyPrint
+    --pretty-print
 ```
 
 See [the Export guide](export/export.md) for more information.
@@ -151,7 +151,7 @@ See [the Export guide](export/export.md) for more information.
 ### Exporting to S3
 
 NT allows for data to be exported to S3, with the same approach working for importing data as well. You can 
-reference an S3 bucket path via the `s3a://` prefix. The `--s3AddCredentials` option will then use the AWS SDK to access your
+reference an S3 bucket path via the `s3a://` prefix. The `--s3-add-credentials` option will then use the AWS SDK to access your
 AWS credentials; please see the 
 [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for information on how to configure your credentials. 
 
@@ -160,12 +160,12 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
 
 ```
 ./bin/nt export-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
-    --zipFileCount 1 \
+    --zip-file-count 1 \
     --path s3a://bucket-name-changeme \
-    --s3AddCredentials
+    --s3-add-credentials
 ```
 
 ### Exporting rows
@@ -176,7 +176,7 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 ```
 mkdir export/parquet
 ./bin/nt export-parquet-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --path export/parquet \
     --query "op.fromView('Example', 'Employees', '')" 
 ```
@@ -187,10 +187,10 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 
 ```
 ./bin/nt export-jdbc \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
-    --jdbcUrl "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
-    --jdbcDriver "org.postgresql.Driver" \
+    --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
+    --jdbc-driver "org.postgresql.Driver" \
     --table employees \
     --mode overwrite
 ```
@@ -204,7 +204,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 
 ```
 ./bin/nt export-parquet-files \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --path export/parquet \
     --preview 10
@@ -220,9 +220,9 @@ documents:
 
 ```
 ./bin/nt reprocess \
-    --connectionString "nt-user:password@localhost:8004" \
-    --readJavascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
-    --writeJavascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
+    --connection-string "nt-user:password@localhost:8004" \
+    --read-javascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
+    --write-javascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
 
 In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. 
@@ -241,9 +241,9 @@ MarkLogic instance:
 
 ```
 ./bin/nt copy \
-    --connectionString "nt-user:password@localhost:8004" \
+    --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
-    --outputConnectionString "nt-user:password@localhost:8000"
+    --output-connection-string "nt-user:password@localhost:8000"
 ```
 
 For more information, please see the [Copying guide](copy.md).
