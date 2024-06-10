@@ -23,7 +23,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "        where c.customer_id = 1";
 
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", query,
@@ -72,7 +72,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506";
 
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", query,
@@ -117,7 +117,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "where f.film_id = 1";
 
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", query,

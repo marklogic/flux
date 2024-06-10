@@ -16,7 +16,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void defaultSettings() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -33,7 +33,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -48,7 +48,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void gzip() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv.gz",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -65,7 +65,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void customDelimiter() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Psep=;",
             "--connectionString", makeConnectionString(),
@@ -83,7 +83,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void noHeader() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/no-header.csv",
             "-Pheader=false",
             "--connectionString", makeConnectionString(),
@@ -105,7 +105,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void dontInferSchema() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "-PinferSchema=false",
             "--connectionString", makeConnectionString(),
@@ -132,7 +132,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     void limitAndPreview() {
         String stdout = runAndReturnStdout(() -> {
             run(
-                "import_delimited_files",
+                "import-delimited-files",
                 "--path", "src/test/resources/delimited-files/three-rows.csv",
                 "--limit", "1",
                 "--preview", "3",
@@ -148,7 +148,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--connectionString", makeConnectionString(),
@@ -181,7 +181,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--abortOnReadFailure",

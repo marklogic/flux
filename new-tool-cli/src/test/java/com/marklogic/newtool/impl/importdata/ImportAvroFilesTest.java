@@ -12,7 +12,7 @@ class ImportAvroFilesTest extends AbstractTest {
     @Test
     void defaultSettingsMultipleFiles() {
         run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/avro/*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -32,7 +32,7 @@ class ImportAvroFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/avro/*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -47,7 +47,7 @@ class ImportAvroFilesTest extends AbstractTest {
     @Test
     void ignoreExtension() {
         run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/avro/*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -66,7 +66,7 @@ class ImportAvroFilesTest extends AbstractTest {
     void badConfigurationItem() {
         String stderr = runAndReturnStderr(() ->
             run(
-                "import_avro_files",
+                "import-avro-files",
                 "--path", "src/test/resources/avro/*",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
@@ -82,7 +82,7 @@ class ImportAvroFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/avro/colors.avro",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--connectionString", makeConnectionString(),
@@ -98,7 +98,7 @@ class ImportAvroFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString(),

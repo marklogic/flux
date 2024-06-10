@@ -23,7 +23,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParam() {
         assertStderrContains(
-            () -> run("import_files", "--not-a-real-param"),
+            () -> run("import-files", "--not-a-real-param"),
             "Invalid option: '--not-a-real-param'"
         );
     }
@@ -31,7 +31,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParamWithSingleQuotesInIt() {
         assertStderrContains(
-            () -> run("import_files", "-not-a-'real'-param"),
+            () -> run("import-files", "-not-a-'real'-param"),
             "Invalid option: '-not-a-'real'-param'"
         );
     }
@@ -39,7 +39,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void badDynamicOption() {
         assertStderrContains(
-            () -> run("import_files", "-CnoValue"),
+            () -> run("import-files", "-CnoValue"),
             "Options specified via '-C' or '-P' must have a form of -Ckey=value or -Pkey=value."
         );
     }
@@ -47,7 +47,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void missingRequiredParam() {
         assertStderrContains(
-            () -> run("import_files", "--connectionString", makeConnectionString()),
+            () -> run("import-files", "--connectionString", makeConnectionString()),
             "The following option is required: [--path]"
         );
     }
@@ -59,7 +59,7 @@ class HandleErrorTest extends AbstractTest {
     void sparkFailure() {
         assertStderrContains(
             () -> run(
-                "import_files",
+                "import-files",
                 "--path", "/not/valid",
                 "--connectionString", makeConnectionString()
             ),
@@ -71,7 +71,7 @@ class HandleErrorTest extends AbstractTest {
     void abortOnWriteFailure() {
         assertStderrContains(
             () -> run(
-                "import_files",
+                "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
                 "--connectionString", makeConnectionString(),
@@ -86,7 +86,7 @@ class HandleErrorTest extends AbstractTest {
     void abortOnWriteFailureAndShowStacktrace() {
         assertStderrContains(
             () -> run(
-                "import_files",
+                "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
                 "--connectionString", makeConnectionString(),
@@ -101,7 +101,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void dontAbortOnWriteFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",

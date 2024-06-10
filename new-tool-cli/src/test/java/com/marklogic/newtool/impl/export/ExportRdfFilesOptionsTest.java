@@ -13,7 +13,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void test() {
         ExportRdfFilesCommand command = (ExportRdfFilesCommand) getCommand(
-            "export_rdf_files",
+            "export-rdf-files",
             "--connectionString", "test:test@host:8000",
             "--uris", "/a1.json\n/a2.json",
             "--stringQuery", "hello",

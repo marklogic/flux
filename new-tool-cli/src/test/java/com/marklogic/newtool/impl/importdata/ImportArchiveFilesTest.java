@@ -15,7 +15,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     @Test
     void allMetadata() {
         run(
-            "import_archive_files",
+            "import-archive-files",
             "--path", "src/test/resources/archive-files",
             "--uriReplace", ".*archive.zip,''",
             "--connectionString", makeConnectionString()
@@ -40,7 +40,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     @Test
     void subsetOfMetadata() {
         run(
-            "import_archive_files",
+            "import-archive-files",
             "--path", "src/test/resources/archive-files",
             "--categories", "collections,permissions",
             "--uriReplace", ".*archive.zip,''",
@@ -64,7 +64,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailureByDefault() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_archive_files",
+            "import-archive-files",
             "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--connectionString", makeConnectionString()
@@ -79,7 +79,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_archive_files",
+            "import-archive-files",
             "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--abortOnReadFailure",

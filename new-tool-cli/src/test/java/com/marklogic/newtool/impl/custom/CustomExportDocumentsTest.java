@@ -11,7 +11,7 @@ class CustomExportDocumentsTest extends AbstractTest {
     @Test
     void test() {
         run(
-            "custom_export_documents",
+            "custom-export-documents",
             "--connectionString", makeConnectionString(),
             "--collections", "author",
             "--target", "marklogic",

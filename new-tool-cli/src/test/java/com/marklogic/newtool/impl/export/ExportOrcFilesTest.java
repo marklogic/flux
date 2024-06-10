@@ -15,7 +15,7 @@ class ExportOrcFilesTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) {
         run(
-            "export_orc_files",
+            "export-orc-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "4",
@@ -28,7 +28,7 @@ class ExportOrcFilesTest extends AbstractTest {
 
         // Read the files back in to ensure we get 15 rows
         run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -41,7 +41,7 @@ class ExportOrcFilesTest extends AbstractTest {
     @Test
     void dynamicParameter(@TempDir Path tempDir) {
         run(
-            "export_orc_files",
+            "export-orc-files",
             "--connectionString", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "1",

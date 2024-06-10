@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Parameters(commandDescription = "Read local, HDFS, and S3 archive files created via the 'export_archive_files' command and write the documents in each archive to MarkLogic.")
+@Parameters(commandDescription = "Read local, HDFS, and S3 archive files created via the 'export-archive-files' command and write the documents in each archive to MarkLogic.")
 public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<ArchiveFilesImporter> implements ArchiveFilesImporter {
 
     @ParametersDelegate

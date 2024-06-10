@@ -9,7 +9,7 @@ class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void numPartitions() {
         ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
-            "import_mlcp_archive_files",
+            "import-mlcp-archive-files",
             "--path", "src/test/resources/archive-files",
             "--preview", "10",
             "--partitions", "7"

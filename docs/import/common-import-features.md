@@ -41,13 +41,13 @@ option:
 The `--uriTemplate` option allows you to configure a URI based on a JSON representation of each row that a command
 reads from its associated data source. This option is supported for the following commands:
 
-- `import_avro_files`
-- `import_delimited_files`
-- `import_files`, but only for JSON files and JSON entries in zip files.
-- `import_jdbc`
-- `import_json_files`
-- `import_orc_files`
-- `import_parquet_files`
+- `import-avro-files`
+- `import-delimited-files`
+- `import-files`, but only for JSON files and JSON entries in zip files.
+- `import-jdbc`
+- `import-json-files`
+- `import-orc-files`
+- `import-parquet-files`
 
 By default, each of the above commands will write each record that it reads as a JSON document to MarkLogic. A URI 
 template is applied against that JSON representation of each record. This is true even when electing to write XML 

@@ -17,14 +17,14 @@ NT can split large XML files - called "aggregate XML files" - in the same fashio
 
 ## Usage
 
-The `import_aggregate_xml_files` command supports creating many XML documents based on a particular XML element name and
+The `import-aggregate-xml-files` command supports creating many XML documents based on a particular XML element name and
 optional namespace. In addition to a least one required `--path` option and connection information for the MarkLogic 
 database you wish to write to, you must specify the `--element` option to identify the name of the XML element that 
 will be used as the root of an XML document written to MarkLogic. The `--namespace` option is used if that XML element
 has an associated namespace:
 
 ```
-./bin/nt import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/nt import-aggregate-xml-files --path /path/to/files --connectionString user:password@localhost:8000 \
     --element employee --namespace org:example
 ```
 
@@ -35,7 +35,7 @@ you can use the `--uriElement` and `--uriNamespace` options to identify an eleme
 be included in the URI:
 
 ```
-./bin/nt import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/nt import-aggregate-xml-files --path /path/to/files --connectionString user:password@localhost:8000 \
     --element employee --namespace org:example \
     --uriElement employee ID --namespace org:example
 ```

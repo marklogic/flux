@@ -14,7 +14,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
     @Test
     void delimitedText() {
         run(
-            "import_delimited_files",
+            "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -33,7 +33,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
     @Test
     void jdbc() {
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL,
             "--jdbcUser", PostgresUtil.USER,
             "--jdbcPassword", PostgresUtil.PASSWORD,
@@ -56,7 +56,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
     @Test
     void parquet() {
         run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -75,7 +75,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
     @Test
     void avro() {
         run(
-            "import_avro_files",
+            "import-avro-files",
             "--path", "src/test/resources/avro/*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -94,7 +94,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
     @Test
     void orc() {
         run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,

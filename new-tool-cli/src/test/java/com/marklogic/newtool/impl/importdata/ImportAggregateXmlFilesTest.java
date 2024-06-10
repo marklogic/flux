@@ -18,7 +18,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void elementIsRequired() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--connectionString", makeConnectionString()
         ));
@@ -29,7 +29,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void withElement() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
             "--connectionString", makeConnectionString(),
@@ -47,7 +47,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void withElementAndNamespace() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people-with-namespace.xml",
             "--element", "person",
             "--namespace", "org:example",
@@ -66,7 +66,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void withAllOptions() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people-with-namespace.xml",
             "--element", "person",
             "--namespace", "org:example",
@@ -86,7 +86,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void importZippedXml() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -101,7 +101,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void importZippedXmlWithElement() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--element", "person",
             "--connectionString", makeConnectionString(),
@@ -119,7 +119,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void importMultipleZippedXml() throws FileNotFoundException {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/multiple-xmls.zip",
             "--element", "",
             "--connectionString", makeConnectionString(),
@@ -137,7 +137,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void importGzippedXml() {
         run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml.gz",
             "--element", "person",
             "--connectionString", makeConnectionString(),
@@ -156,7 +156,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailureByDefault() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
@@ -173,7 +173,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_aggregate_xml_files",
+            "import-aggregate-xml-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--abortOnReadFailure",
             "--element", "person",

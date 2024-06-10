@@ -19,5 +19,5 @@ In most cases, NT must use your AWS credentials to access an S3 bucket. NT uses 
 To enable this, include the `--s3AddCredentials` option:
 
 ```
-./bin/nt export_files --path "s3a://my-bucket/some/path" --s3AddCredentials
+./bin/nt export-files --path "s3a://my-bucket/some/path" --s3AddCredentials
 ```

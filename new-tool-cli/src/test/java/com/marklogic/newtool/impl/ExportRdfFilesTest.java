@@ -16,7 +16,7 @@ class ExportRdfFilesTest extends AbstractTest {
     @Test
     void importThenExportThenImport(@TempDir Path tempDir) {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -24,7 +24,7 @@ class ExportRdfFilesTest extends AbstractTest {
         );
 
         run(
-            "export_rdf_files",
+            "export-rdf-files",
             "--connectionString", makeConnectionString(),
             "--graphs", "my-triples",
             "--path", tempDir.toFile().getAbsolutePath(),
@@ -38,7 +38,7 @@ class ExportRdfFilesTest extends AbstractTest {
 
         // And import them again to make sure we get the expected amount, but in a different collection.
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -57,7 +57,7 @@ class ExportRdfFilesTest extends AbstractTest {
     @Test
     void missingQueryInput(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
-            "export_rdf_files",
+            "export-rdf-files",
             "--connectionString", makeConnectionString(),
             "--path", tempDir.toFile().getAbsolutePath()
         ));

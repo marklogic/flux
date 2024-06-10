@@ -9,7 +9,7 @@ class ImportRdfFilesOptionsTest extends AbstractOptionsTest {
     @Test
     void numPartitions() {
         ImportRdfFilesCommand command = (ImportRdfFilesCommand) getCommand(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf",
             "--preview", "10",
             "--partitions", "4"

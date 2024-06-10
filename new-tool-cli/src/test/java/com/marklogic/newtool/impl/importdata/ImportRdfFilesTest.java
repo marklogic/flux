@@ -12,7 +12,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void noGraph() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -32,7 +32,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void withGraph() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -46,7 +46,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void withGraphOverride() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/three-quads.trig",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -68,7 +68,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void gzippedFile() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale2.ttl.gz",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -84,7 +84,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void zipContainingEachFileType() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/rdf/each-rdf-file-type.zip",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -109,7 +109,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void invalidFileDontAbort() {
         run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
             "--connectionString", makeConnectionString(),
@@ -124,7 +124,7 @@ class ImportRdfFilesTest extends AbstractTest {
     @Test
     void invalidFileAbort() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_rdf_files",
+            "import-rdf-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString(),

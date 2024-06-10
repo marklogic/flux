@@ -14,7 +14,7 @@ class ImportJdbcTest extends AbstractTest {
     @Test
     void tenCustomers() {
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL,
             "--jdbcUser", PostgresUtil.USER,
             "--jdbcPassword", PostgresUtil.PASSWORD,
@@ -32,7 +32,7 @@ class ImportJdbcTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL,
             "--jdbcUser", PostgresUtil.USER,
             "--jdbcPassword", PostgresUtil.PASSWORD,
@@ -52,7 +52,7 @@ class ImportJdbcTest extends AbstractTest {
     @Test
     void tenCustomersWithUserAndPasswordInUrl() {
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--jdbcDriver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
@@ -68,7 +68,7 @@ class ImportJdbcTest extends AbstractTest {
     @Test
     void allCustomers() {
         run(
-            "import_jdbc",
+            "import-jdbc",
             "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
             "--query", "select * from customer",
             "--connectionString", makeConnectionString(),

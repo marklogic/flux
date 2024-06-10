@@ -17,7 +17,7 @@ class CustomImportTest extends AbstractTest {
     @Test
     void parquet() {
         run(
-            "custom_import",
+            "custom-import",
             "--source", "parquet",
             "-Ppath=src/test/resources/parquet/individual/cars.parquet",
             "--connectionString", makeConnectionString(),
@@ -37,7 +37,7 @@ class CustomImportTest extends AbstractTest {
     @Test
     void avro() {
         run(
-            "custom_import",
+            "custom-import",
             "--source", "avro",
             "-Ppath=src/test/resources/avro",
             "--connectionString", makeConnectionString(),
@@ -55,7 +55,7 @@ class CustomImportTest extends AbstractTest {
     @Test
     void csvWithDynamicParam() {
         run(
-            "custom_import",
+            "custom-import",
             "--source", "csv",
             "-Ppath=src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Pdelimiter=;",
@@ -77,7 +77,7 @@ class CustomImportTest extends AbstractTest {
     @Test
     void sparkXml() {
         run(
-            "custom_import",
+            "custom-import",
             // "xml" is associated with the external Spark XML connector from Databricks.
             "--source", "xml",
             "-Ppath=src/test/resources/xml-file/people.xml",

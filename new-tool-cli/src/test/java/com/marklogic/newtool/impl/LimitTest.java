@@ -26,7 +26,7 @@ class LimitTest extends AbstractTest {
 
     private void importFiles(int limit) {
         run(
-            "import_files",
+            "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,

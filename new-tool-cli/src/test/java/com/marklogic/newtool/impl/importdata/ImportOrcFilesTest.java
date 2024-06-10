@@ -12,7 +12,7 @@ class ImportOrcFilesTest extends AbstractTest {
     @Test
     void orcFileTest() {
         run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -26,7 +26,7 @@ class ImportOrcFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -42,7 +42,7 @@ class ImportOrcFilesTest extends AbstractTest {
     @Test
     void orcFileWithCompressionTest() {
         run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--connectionString", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -58,7 +58,7 @@ class ImportOrcFilesTest extends AbstractTest {
     void badConfigurationItem() {
         String stderr = runAndReturnStderr(() ->
             run(
-                "import_orc_files",
+                "import-orc-files",
                 "--path", "src/test/resources/orc-files",
                 "--connectionString", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
@@ -74,7 +74,7 @@ class ImportOrcFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_orc_files",
+            "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--path", "src/test/resources/avro/colors.avro",
             "--connectionString", makeConnectionString(),
@@ -90,7 +90,7 @@ class ImportOrcFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import_parquet_files",
+            "import-parquet-files",
             "--path", "src/test/resources/avro/colors.avro",
             "--abortOnReadFailure",
             "--connectionString", makeConnectionString(),
