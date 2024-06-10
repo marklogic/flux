@@ -1,5 +1,6 @@
 package com.marklogic.newtool.cli;
 
+import com.marklogic.newtool.impl.Command;
 import org.apache.spark.sql.SparkSession;
 
 /**
@@ -17,7 +18,7 @@ public class Submit extends Main {
     }
 
     @Override
-    protected SparkSession buildSparkSession() {
+    protected SparkSession buildSparkSession(Command selectedCommand) {
         return SparkSession.builder().getOrCreate();
     }
 }

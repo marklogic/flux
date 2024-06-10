@@ -88,7 +88,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         return connectionParams;
     }
 
-    protected final CommonParams getCommonParams() {
+    public final CommonParams getCommonParams() {
         return commonParams;
     }
 

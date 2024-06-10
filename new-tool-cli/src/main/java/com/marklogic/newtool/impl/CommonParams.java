@@ -36,6 +36,11 @@ public class CommonParams {
     @Parameter(names = "--stacktrace", description = "If included and a command fails, the stacktrace will be printed.")
     private Boolean showStacktrace;
 
+    // Hidden for now since showing it for every command in its "help" seems confusing for most users that will likely
+    // never need to know about this.
+    @Parameter(names = "--master-url", description = "Specify the Spark master URL for connecting to a Spark cluster.", hidden = false)
+    private String sparkMasterUrl = "local[*]";
+
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit != null) {
             dataset = dataset.limit(limit);
@@ -76,5 +81,9 @@ public class CommonParams {
 
     public void setRepartition(Integer repartition) {
         this.repartition = repartition;
+    }
+
+    public String getSparkMasterUrl() {
+        return sparkMasterUrl;
     }
 }

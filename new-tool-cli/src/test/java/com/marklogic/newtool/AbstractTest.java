@@ -40,6 +40,9 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         if (sparkSession != null) {
             sparkSession.close();
         }
+        if (!SparkSession.getActiveSession().isEmpty()) {
+            SparkSession.getActiveSession().get().close();
+        }
     }
 
     @Override
