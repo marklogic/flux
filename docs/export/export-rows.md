@@ -31,7 +31,7 @@ provides additional guidance on how to write an Optic query.
 You must also specify connection information for the MarkLogic database you wish to query. Please see the 
 [guide on common options](../common-options.md) for instructions on doing so.
 
-The `--batchSize` and `--partitions` query are used to tune performance by controlling how many rows are retrieved in
+The `--batch-size` and `--partitions` query are used to tune performance by controlling how many rows are retrieved in
 a single call to MarkLogic and how many requests are made in parallel. It is recommended to first test your command
 without setting these options to see if the performance is acceptable. When you are ready to attempt to optimize the 
 performance of your export command, please see the 
@@ -53,10 +53,10 @@ NT.
 The `export-jdbc` command requires that you specify connection details for the database you wish to write to via JDBC.
 Connection details are specified via the following options:
 
-- `--jdbcUrl` is required and specifies the JDBC connection URL.
-- `--jdbcDriver` is required specifies the main class name of the JDBC driver.
-- `--jdbcUser` specifies an optional user to authenticate as (this may already be specified via `--jdbcUrl`).
-- `--jdbcPassword` specifies an optional password to authenticate with (this may already be specified via `--jdbcUrl`).
+- `--jdbc-url` is required and specifies the JDBC connection URL.
+- `--jdbc-driver` is required specifies the main class name of the JDBC driver.
+- `--jdbc-user` specifies an optional user to authenticate as (this may already be specified via `--jdbc-url`).
+- `--jdbc-password` specifies an optional password to authenticate with (this may already be specified via `--jdbc-url`).
 
 ### Exporting to a table
 
@@ -65,10 +65,10 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 a notional example of doing so:
 
 ```
-./bin/nt export-jdbc --connectionString user:password@localhost:8000 \
+./bin/nt export-jdbc --connection-string user:password@localhost:8000 \
   --query "op.fromView('example', 'employee', '')" \
-  --jdbcUrl "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
-  --jdbcDriver "org.postgresql.Driver" \
+  --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
+  --jdbc-driver "org.postgresql.Driver" \
   --table "marklogic-employee-data"
 ```
 

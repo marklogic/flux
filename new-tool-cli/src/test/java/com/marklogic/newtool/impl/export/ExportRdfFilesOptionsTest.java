@@ -14,19 +14,19 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ExportRdfFilesCommand command = (ExportRdfFilesCommand) getCommand(
             "export-rdf-files",
-            "--connectionString", "test:test@host:8000",
+            "--connection-string", "test:test@host:8000",
             "--uris", "/a1.json\n/a2.json",
-            "--stringQuery", "hello",
+            "--string-query", "hello",
             "--query", "<query/>",
             "--graphs", "g1,g2",
             "--collections", "c1,c2",
             "--directory", "/dir/",
             "--options", "my-options",
-            "--batchSize", "50",
-            "--partitionsPerForest", "2",
+            "--batch-size", "50",
+            "--partitions-per-forest", "2",
             "--path", "anywhere",
             "--format", "trig",
-            "--graphOverride", "use-this-graph"
+            "--graph-override", "use-this-graph"
         );
 
         Map<String, String> options = command.readParams.get();

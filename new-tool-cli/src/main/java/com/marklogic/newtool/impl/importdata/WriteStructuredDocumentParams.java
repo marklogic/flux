@@ -13,20 +13,20 @@ import java.util.Map;
 public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStructuredDocumentsOptions> implements WriteStructuredDocumentsOptions {
 
     @Parameter(
-        names = "--jsonRootName",
+        names = "--json-root-name",
         description = "Name of a root field to add to each JSON document."
     )
     private String jsonRootName;
 
     @Parameter(
-        names = "--xmlRootName",
+        names = "--xml-root-name",
         description = "Causes XML documents to be written instead of JSON, with the documents having a root element with this name."
     )
     private String xmlRootName;
 
     @Parameter(
-        names = "--xmlNamespace",
-        description = "Namespace for the root element of XML documents as specified by '--xmlRootName'."
+        names = "--xml-namespace",
+        description = "Namespace for the root element of XML documents as specified by '--xml-root-name'."
     )
     private String xmlNamespace;
 

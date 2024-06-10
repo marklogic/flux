@@ -18,7 +18,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
         run(
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
-            "--connectionString", makeConnectionString()
+            "--connection-string", makeConnectionString()
         );
 
         for (String uri : getUrisInCollection("collection1", 2)) {
@@ -43,7 +43,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--categories", "collections,permissions",
-            "--connectionString", makeConnectionString()
+            "--connection-string", makeConnectionString()
         );
 
         for (String uri : getUrisInCollection("collection1", 2)) {
@@ -66,7 +66,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--connectionString", makeConnectionString()
+            "--connection-string", makeConnectionString()
         );
 
         assertCollectionSize("The error from the non-MLCP-archive file goodbye.zip should have been logged " +
@@ -79,8 +79,8 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString()
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString()
         ));
 
         assertTrue(stderr.contains("Command failed, cause: Unable to read metadata for entry: goodbye.json"),

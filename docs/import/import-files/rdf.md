@@ -24,7 +24,7 @@ document is an XML document containing up to 100 semantic triples.
 To import RDF files, you must specify at least one `--path` option along with connection information for the MarkLogic 
 database you wish to write to:
 
-    ./bin/nt import-rdf-files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/nt import-rdf-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Supported files types
 
@@ -48,11 +48,11 @@ specified within the quad.
 To specify a different graph for every triple (which will not apply to quads), use the `--graph` option. 
 
 To specify a graph for both triples and quads - thus overriding the graph associated with each quad - use the 
-`--graphOverride` option. 
+`--graph-override` option. 
 
 Note that the set of collections specified via the `--collections` option does not have any impact on the graph. You 
 are free to specify as many collections as you want in addition to the graph you choose via `--graph` or 
-`--graphOverride`. 
+`--graph-override`. 
 
 ## Compressed files
 

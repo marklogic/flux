@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * <p>
  * For the "missing value" tests, turns out that since our connector throws a good exception, we don't need any
  * additional support in the API. It's really just the connection string that we need to validate right away so that
- * we can provide an error message that doesn't include "--connectionString" in it.
+ * we can provide an error message that doesn't include "--connection-string" in it.
  */
 class ConnectionTest extends AbstractTest {
 

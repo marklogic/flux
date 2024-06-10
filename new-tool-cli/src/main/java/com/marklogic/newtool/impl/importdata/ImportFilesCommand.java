@@ -87,7 +87,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private DocumentType documentType;
 
         @Override
-        @Parameter(names = "--documentType", description = "Forces a type for any document with an unrecognized URI extension.")
+        @Parameter(names = "--document-type", description = "Forces a type for any document with an unrecognized URI extension.")
         public WriteGenericDocumentsOptions documentType(DocumentType documentType) {
             this.documentType = documentType;
             return this;

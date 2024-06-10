@@ -11,13 +11,13 @@ import org.apache.hadoop.conf.Configuration;
 public class S3Params {
 
     @Parameter(
-        names = "--s3AddCredentials",
+        names = "--s3-add-credentials",
         description = "Add credentials retrieved via the AWS SDK to the Spark context for use when accessing S3."
     )
     private boolean addCredentials;
 
     @Parameter(
-        names = "--s3Endpoint",
+        names = "--s3-endpoint",
         description = "Define the S3 endpoint for any operations involving S3; typically used when a " +
             "process like AWS EMR must access an S3 bucket in a separate region."
     )

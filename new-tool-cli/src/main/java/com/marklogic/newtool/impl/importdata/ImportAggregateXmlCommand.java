@@ -51,12 +51,12 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         )
         private String namespace;
 
-        @Parameter(names = "--uriElement",
+        @Parameter(names = "--uri-element",
             description = "Specifies the local name of the element used for creating URIs."
         )
         private String uriElement;
 
-        @Parameter(names = "--uriNamespace",
+        @Parameter(names = "--uri-namespace",
             description = "Specifies the namespace of the element used for creating URIs."
         )
         private String uriNamespace;

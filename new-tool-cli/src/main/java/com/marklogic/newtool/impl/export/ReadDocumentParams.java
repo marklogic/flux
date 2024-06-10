@@ -19,16 +19,16 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
 
     public static class Validator extends AtLeastOneValidator {
         public Validator() {
-            super("--query", "--uris", "--stringQuery", "--collections", "--directory");
+            super("--query", "--uris", "--string-query", "--collections", "--directory");
         }
     }
 
-    @Parameter(names = "--stringQuery", description = "A query utilizing the MarkLogic search grammar; " +
+    @Parameter(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
         "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
     private String stringQuery;
 
     @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
-        "with --collections, --directory, and --stringQuery. If specified, --query will be ignored.")
+        "with --collections, --directory, and --string-query. If specified, --query will be ignored.")
     private String uris;
 
     @Parameter(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
@@ -47,16 +47,16 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     @Parameter(names = "--transform", description = "Name of a MarkLogic REST API transform to apply to each matching document.")
     private String transform;
 
-    @Parameter(names = "--transformParams", description = "Comma-delimited sequence of transform parameter names and values - e.g. param1,value1,param2,value2.")
+    @Parameter(names = "--transform-params", description = "Comma-delimited sequence of transform parameter names and values - e.g. param1,value1,param2,value2.")
     private String transformParams;
 
-    @Parameter(names = "--transformParamsDelimiter", description = "Delimiter for transform parameters; defaults to a comma.")
+    @Parameter(names = "--transform-params-delimiter", description = "Delimiter for transform parameters; defaults to a comma.")
     private String transformParamsDelimiter;
 
-    @Parameter(names = "--batchSize", description = "Number of documents to retrieve in each call to MarkLogic.")
+    @Parameter(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
     private Integer batchSize = 500;
 
-    @Parameter(names = "--partitionsPerForest", description = "Number of partition readers to create for each forest.")
+    @Parameter(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
     private Integer partitionsPerForest = 4;
 
     public Map<String, String> makeOptions() {

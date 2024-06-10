@@ -14,10 +14,10 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
-            "--uriTemplate", "/orc-test/{LastName}.json"
+            "--uri-template", "/orc-test/{LastName}.json"
         );
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);
@@ -28,11 +28,11 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriPrefix", "/orc-test",
-            "--jsonRootName", "myOrcData",
-            "--uriTemplate", "/orc/{/myOrcData/LastName}.json"
+            "--uri-prefix", "/orc-test",
+            "--json-root-name", "myOrcData",
+            "--uri-template", "/orc/{/myOrcData/LastName}.json"
         );
 
         JsonNode doc = readJsonDocument("/orc/Humbee.json");
@@ -44,10 +44,10 @@ class ImportOrcFilesTest extends AbstractTest {
         run(
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "compression-test",
-            "--uriTemplate", "/orc-compressed-test{LastName}.json",
+            "--uri-template", "/orc-compressed-test{LastName}.json",
             "-Pcompression=snappy"
         );
 
@@ -60,7 +60,7 @@ class ImportOrcFilesTest extends AbstractTest {
             run(
                 "import-orc-files",
                 "--path", "src/test/resources/orc-files",
-                "--connectionString", makeConnectionString(),
+                "--connection-string", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -77,7 +77,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--path", "src/test/resources/avro/colors.avro",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-data"
         ));
@@ -92,8 +92,8 @@ class ImportOrcFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-parquet-files",
             "--path", "src/test/resources/avro/colors.avro",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

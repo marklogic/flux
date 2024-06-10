@@ -14,10 +14,10 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import-avro-files",
             "--path", "src/test/resources/avro/*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "--uriTemplate", "/avro/{color}.json"
+            "--uri-template", "/avro/{color}.json"
         );
 
         assertCollectionSize("avro-test", 6);
@@ -34,10 +34,10 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import-avro-files",
             "--path", "src/test/resources/avro/*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--jsonRootName", "myAvroData",
-            "--uriTemplate", "/avro/{/myAvroData/color}.json"
+            "--json-root-name", "myAvroData",
+            "--uri-template", "/avro/{/myAvroData/color}.json"
         );
 
         JsonNode doc = readJsonDocument("/avro/blue.json");
@@ -49,11 +49,11 @@ class ImportAvroFilesTest extends AbstractTest {
         run(
             "import-avro-files",
             "--path", "src/test/resources/avro/*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
             "-PignoreExtension=false",
-            "--uriTemplate", "/avro/{color}.json"
+            "--uri-template", "/avro/{color}.json"
         );
 
         assertCollectionSize("avro-test", 3);
@@ -68,7 +68,7 @@ class ImportAvroFilesTest extends AbstractTest {
             run(
                 "import-avro-files",
                 "--path", "src/test/resources/avro/*",
-                "--connectionString", makeConnectionString(),
+                "--connection-string", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -85,7 +85,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "import-avro-files",
             "--path", "src/test/resources/avro/colors.avro",
             "--path", "src/test/resources/json-files/array-of-objects.json",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-data"
         ));
@@ -100,8 +100,8 @@ class ImportAvroFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-avro-files",
             "--path", "src/test/resources/json-files/array-of-objects.json",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

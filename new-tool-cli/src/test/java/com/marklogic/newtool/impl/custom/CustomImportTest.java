@@ -20,12 +20,12 @@ class CustomImportTest extends AbstractTest {
             "custom-import",
             "--source", "parquet",
             "-Ppath=src/test/resources/parquet/individual/cars.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "--xmlRootName", "my-parquet",
-            "--xmlNamespace", "org:example",
-            "--uriTemplate", "/parquet/{model}.xml"
+            "--xml-root-name", "my-parquet",
+            "--xml-namespace", "org:example",
+            "--uri-template", "/parquet/{model}.xml"
         );
         assertCollectionSize("parquet-test", 32);
 
@@ -40,11 +40,11 @@ class CustomImportTest extends AbstractTest {
             "custom-import",
             "--source", "avro",
             "-Ppath=src/test/resources/avro",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "--uriTemplate", "/avro/{/avroData/color}.json",
-            "--jsonRootName", "avroData"
+            "--uri-template", "/avro/{/avroData/color}.json",
+            "--json-root-name", "avroData"
         );
 
         assertCollectionSize("avro-test", 6);
@@ -60,10 +60,10 @@ class CustomImportTest extends AbstractTest {
             "-Ppath=src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Pdelimiter=;",
             "-Pheader=true",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "csv-test",
-            "--uriTemplate", "/csv/{number}.json"
+            "--uri-template", "/csv/{number}.json"
         );
 
         assertCollectionSize("csv-test", 3);
@@ -82,10 +82,10 @@ class CustomImportTest extends AbstractTest {
             "--source", "xml",
             "-Ppath=src/test/resources/xml-file/people.xml",
             "-ProwTag=person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "spark-data",
-            "--uriTemplate", "/company/{company}.json"
+            "--uri-template", "/company/{company}.json"
         );
 
         assertCollectionSize("spark-data", 3);

@@ -17,10 +17,10 @@ class ImportJsonFilesTest extends AbstractTest {
         run(
             "import-json-files",
             "--path", "src/test/resources/json-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "json-objects",
-            "--uriTemplate", "/json-object/{number}.json",
+            "--uri-template", "/json-object/{number}.json",
             "--filter", "*.json"
         );
 
@@ -48,11 +48,11 @@ class ImportJsonFilesTest extends AbstractTest {
         run(
             "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
-            "--jsonLines",
-            "--connectionString", makeConnectionString(),
+            "--json-lines",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
-            "--uriTemplate", "/delimited/{lastName}.json"
+            "--uri-template", "/delimited/{lastName}.json"
         );
 
         assertCollectionSize("delimited-json-test", 3);
@@ -66,12 +66,12 @@ class ImportJsonFilesTest extends AbstractTest {
         run(
             "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
-            "--jsonLines",
-            "--connectionString", makeConnectionString(),
+            "--json-lines",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
-            "--jsonRootName", "myData",
-            "--uriTemplate", "/delimited/{/myData/lastName}.json"
+            "--json-root-name", "myData",
+            "--uri-template", "/delimited/{/myData/lastName}.json"
         );
 
         JsonNode doc = readJsonDocument("/delimited/lastName-1.json");
@@ -83,12 +83,12 @@ class ImportJsonFilesTest extends AbstractTest {
         run(
             "import-json-files",
             "--path", "src/test/resources/delimited-files/custom-delimiter-json.txt",
-            "--jsonLines",
+            "--json-lines",
             "-PlineSep=:\n",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "custom-delimited-test",
-            "--uriTemplate", "/custom/delimited/{firstName}.json"
+            "--uri-template", "/custom/delimited/{firstName}.json"
         );
 
         assertCollectionSize("custom-delimited-test", 3);
@@ -105,7 +105,7 @@ class ImportJsonFilesTest extends AbstractTest {
      * <p>
      * So for zip files, the best we can do is use our own reader, which is limited to reading each file as a "file row"
      * and then writing it as a document to MarkLogic. Which means that a user cannot use a feature like
-     * "--uriTemplate", as that depends on having values in columns that can be referenced by the template. We will
+     * "--uri-template", as that depends on having values in columns that can be referenced by the template. We will
      * hopefully be enhancing this in a future story - specifically, by enhancing the URI template feature to work on
      * file rows and document rows.
      */
@@ -115,10 +115,10 @@ class ImportJsonFilesTest extends AbstractTest {
             "import-files",
             "--path", "src/test/resources/json-files/object-files/objects.zip",
             "--compression", "zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "zipped-objects",
-            "--uriReplace", ".*object-files,''"
+            "--uri-replace", ".*object-files,''"
         );
 
         JsonNode doc = readJsonDocument("/objects.zip/object3.json");
@@ -133,8 +133,8 @@ class ImportJsonFilesTest extends AbstractTest {
             "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--jsonLines",
-            "--connectionString", makeConnectionString(),
+            "--json-lines",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
         ));
@@ -155,16 +155,16 @@ class ImportJsonFilesTest extends AbstractTest {
             "import-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--jsonLines",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--json-lines",
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
         ));
 
         assertCollectionSize("delimited-json-test", 0);
         assertTrue(stderr.contains("Command failed, cause: Invalid UTF-8 start"), "The command should have failed " +
-            "due to the invalid single-xml.zip file being included along with --abortOnReadFailure being " +
+            "due to the invalid single-xml.zip file being included along with --abort-on-read-failure being " +
             "included as well; actual stderr: " + stderr);
     }
 

@@ -28,7 +28,7 @@ class LimitTest extends AbstractTest {
         run(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", COLLECTION,
             "--limit", Integer.toString(limit)

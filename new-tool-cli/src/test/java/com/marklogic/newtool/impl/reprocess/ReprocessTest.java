@@ -17,11 +17,11 @@ class ReprocessTest extends AbstractTest {
     void test() {
         run(
             "reprocess",
-            "--connectionString", makeConnectionString(),
-            "--readJavascript", "var collection; cts.uris(null, null, cts.collectionQuery(collection))",
-            "--readVar", "collection=author",
-            "--writeInvoke", "/writeDocument.sjs",
-            "--writeVar", "theValue=my value"
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "var collection; cts.uris(null, null, cts.collectionQuery(collection))",
+            "--read-var", "collection=author",
+            "--write-invoke", "/writeDocument.sjs",
+            "--write-var", "theValue=my value"
         );
 
         // reprocess-test is the collection used by writeDocument.sjs.
@@ -38,8 +38,8 @@ class ReprocessTest extends AbstractTest {
     void previewDoesntRequireWriteParam() {
         String stdout = runAndReturnStdout(() -> run(
             "reprocess",
-            "--connectionString", makeConnectionString(),
-            "--readJavascript", "cts.uris(null, null, cts.collectionQuery('author'))",
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "cts.uris(null, null, cts.collectionQuery('author'))",
             "--preview", "2"
         ));
 
@@ -52,11 +52,11 @@ class ReprocessTest extends AbstractTest {
     void missingReadParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--connectionString", makeConnectionString()
+            "--connection-string", makeConnectionString()
         ));
 
         assertTrue(
-            stderr.contains("Must specify one of --readInvoke, --readJavascript, --readXquery, --readJavascriptFile, or --readXqueryFile."),
+            stderr.contains("Must specify one of --read-invoke, --read-javascript, --read-xquery, --read-javascript-file, or --read-xquery-file."),
             "Unexpected stderr: " + stderr
         );
     }
@@ -65,12 +65,12 @@ class ReprocessTest extends AbstractTest {
     void missingWriteParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--connectionString", makeConnectionString(),
-            "--readJavascript", "fn.currentDate()"
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "fn.currentDate()"
         ));
 
         assertTrue(
-            stderr.contains("Must specify one of --writeInvoke, --writeJavascript, --writeXquery, --writeJavascriptFile, or --writeXqueryFile."),
+            stderr.contains("Must specify one of --write-invoke, --write-javascript, --write-xquery, --write-javascript-file, or --write-xquery-file."),
             "Unexpected stderr: " + stderr
         );
     }
@@ -79,16 +79,16 @@ class ReprocessTest extends AbstractTest {
     void moreThanOnePartitionParam() {
         String stderr = runAndReturnStderr(() -> run(
             "reprocess",
-            "--connectionString", makeConnectionString(),
-            "--readJavascript", "doesn't matter",
-            "--writeJavascript", "doesn't matter",
-            "--readPartitionsJavascript", "doesn't matter",
-            "--readPartitionsJavascriptFile", "doesn't matter"
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "doesn't matter",
+            "--write-javascript", "doesn't matter",
+            "--read-partitions-javascript", "doesn't matter",
+            "--read-partitions-javascript-file", "doesn't matter"
         ));
 
         assertTrue(
-            stderr.contains("Can only specify one of --readPartitionsInvoke, --readPartitionsJavascript, " +
-                "--readPartitionsXquery, --readPartitionsJavascriptFile, or --readPartitionsXqueryFile."),
+            stderr.contains("Can only specify one of --read-partitions-invoke, --read-partitions-javascript, " +
+                "--read-partitions-xquery, --read-partitions-javascript-file, or --read-partitions-xquery-file."),
             "Unexpected stderr: " + stderr
         );
     }

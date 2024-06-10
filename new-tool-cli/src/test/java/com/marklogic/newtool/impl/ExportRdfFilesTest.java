@@ -18,18 +18,18 @@ class ExportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples"
         );
 
         run(
             "export-rdf-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--graphs", "my-triples",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--format", "nq",
-            "--fileCount", "1"
+            "--file-count", "1"
         );
 
         File[] files = tempDir.toFile().listFiles();
@@ -40,7 +40,7 @@ class ExportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "more-triples"
         );
@@ -58,12 +58,12 @@ class ExportRdfFilesTest extends AbstractTest {
     void missingQueryInput(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
             "export-rdf-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--path", tempDir.toFile().getAbsolutePath()
         ));
 
         assertTrue(stderr.contains("Must specify at least one of the following options: " +
-                "[--graphs, --query, --uris, --stringQuery, --collections, --directory]."),
+                "[--graphs, --query, --uris, --string-query, --collections, --directory]."),
             "Unexpected stderr: " + stderr);
     }
 }

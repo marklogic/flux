@@ -65,13 +65,13 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
             description = "A SQL query used to read data from the JDBC data source.")
         private String query;
 
-        @Parameter(names = "--groupBy", description = "Name of a column to group the rows by before constructing documents.")
+        @Parameter(names = "--group-by", description = "Name of a column to group the rows by before constructing documents.")
         private String groupBy;
 
         @Parameter(
             names = "--aggregate",
             description = "Define an aggregation of multiple columns into a new column. Each aggregation must be of the " +
-                "the form newColumnName=column1;column2;etc. Requires the user of --groupBy."
+                "the form newColumnName=column1;column2;etc. Requires the user of --group-by."
         )
         private List<String> aggregationExpressions = new ArrayList<>();
 

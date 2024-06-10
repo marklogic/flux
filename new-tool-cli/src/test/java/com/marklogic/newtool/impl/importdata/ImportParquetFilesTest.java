@@ -14,10 +14,10 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "--uriTemplate", "/parquet/{model}.json"
+            "--uri-template", "/parquet/{model}.json"
         );
 
         assertCollectionSize("parquet-test", 32);
@@ -32,7 +32,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "import-parquet-files",
             "--count",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test"
         ));
@@ -48,11 +48,11 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "--jsonRootName", "car",
-            "--uriTemplate", "/parquet/{/car/model}.json"
+            "--json-root-name", "car",
+            "--uri-template", "/parquet/{/car/model}.json"
         );
 
         JsonNode doc = readJsonDocument("/parquet/Toyota Corolla.json");
@@ -64,11 +64,11 @@ class ImportParquetFilesTest extends AbstractTest {
         run(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/related/*.parquet",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
             "-PmergeSchema=true",
-            "--uriTemplate", "/parquet/{color}.json"
+            "--uri-template", "/parquet/{color}.json"
         );
 
         assertCollectionSize("parquet-test", 6);
@@ -92,7 +92,7 @@ class ImportParquetFilesTest extends AbstractTest {
             run("import-parquet-files",
                 "--path", "src/test/resources/parquet/individual/invalid.parquet",
                 "--preview", "10",
-                "--abortOnReadFailure"
+                "--abort-on-read-failure"
             )
         );
 
@@ -110,7 +110,7 @@ class ImportParquetFilesTest extends AbstractTest {
             run(
                 "import-parquet-files",
                 "--path", "src/test/resources/parquet/individual/cars.parquet",
-                "--connectionString", makeConnectionString(),
+                "--connection-string", makeConnectionString(),
                 "--permissions", DEFAULT_PERMISSIONS,
                 "-Cspark.sql.parquet.filterPushdown=invalid-value"
             )
@@ -130,7 +130,7 @@ class ImportParquetFilesTest extends AbstractTest {
             // Without mergeSchema=true, Spark will throw an error of "Unable to infer schema for Parquet". This seems
             // to occur if there's at least one bad file. With mergeSchema=true,
             "-PmergeSchema=true",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-cars"
         ));
@@ -146,11 +146,11 @@ class ImportParquetFilesTest extends AbstractTest {
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/avro/colors.avro",
-            "--abortOnReadFailure",
+            "--abort-on-read-failure",
             // This is kept here to ensure the command fails because it could read the Avro file and not because
             // Spark could not infer a schema.
             "-PmergeSchema=true",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         ));
 

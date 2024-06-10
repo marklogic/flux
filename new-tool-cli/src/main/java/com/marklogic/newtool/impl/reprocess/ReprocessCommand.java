@@ -64,7 +64,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         private void validateReadParams(Map<String, Object> params) {
             String[] readParams = new String[]{
-                "--readInvoke", "--readJavascript", "--readXquery", "--readJavascriptFile", "--readXqueryFile"
+                "--read-invoke", "--read-javascript", "--read-xquery", "--read-javascript-file", "--read-xquery-file"
             };
             if (getCountOfNonNullParams(params, readParams) != 1) {
                 throw new ParameterException(makeErrorMessage("Must specify one of ", readParams));
@@ -73,8 +73,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         private void validatePartitionParams(Map<String, Object> params) {
             String[] partitionParams = new String[]{
-                "--readPartitionsInvoke", "--readPartitionsJavascript", "--readPartitionsXquery",
-                "--readPartitionsJavascriptFile", "--readPartitionsXqueryFile"
+                "--read-partitions-invoke", "--read-partitions-javascript", "--read-partitions-xquery",
+                "--read-partitions-javascript-file", "--read-partitions-xquery-file"
             };
             if (getCountOfNonNullParams(params, partitionParams) > 1) {
                 throw new ParameterException(makeErrorMessage("Can only specify one of ", partitionParams));
@@ -86,7 +86,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 return;
             }
             String[] writeParams = new String[]{
-                "--writeInvoke", "--writeJavascript", "--writeXquery", "--writeJavascriptFile", "--writeXqueryFile"
+                "--write-invoke", "--write-javascript", "--write-xquery", "--write-javascript-file", "--write-xquery-file"
             };
             if (getCountOfNonNullParams(params, writeParams) != 1) {
                 throw new ParameterException(makeErrorMessage("Must specify one of ", writeParams));
@@ -113,68 +113,68 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
     public static class ReadParams implements Supplier<Map<String, String>>, ReadOptions {
 
         @Parameter(
-            names = {"--readInvoke"},
+            names = {"--read-invoke"},
             description = "The path to a module to invoke for reading data; the module must be in your application’s modules database."
         )
         private String readInvoke;
 
         @Parameter(
-            names = {"--readJavascript"},
+            names = {"--read-javascript"},
             description = "JavaScript code to execute for reading data."
         )
         private String readJavascript;
 
         @Parameter(
-            names = {"--readJavascriptFile"},
+            names = {"--read-javascript-file"},
             description = "Local file containing JavaScript code to execute for reading data."
         )
         private String readJavascriptFile;
 
         @Parameter(
-            names = {"--readXquery"},
+            names = {"--read-xquery"},
             description = "XQuery code to execute for reading data."
         )
         private String readXquery;
 
         @Parameter(
-            names = {"--readXqueryFile"},
+            names = {"--read-xquery-file"},
             description = "Local file containing XQuery code to execute for reading data."
         )
         private String readXqueryFile;
 
         @Parameter(
-            names = {"--readPartitionsInvoke"},
+            names = {"--read-partitions-invoke"},
             description = "The path to a module to invoke to define partitions that are sent to your custom code for reading; the module must be in your application’s modules database."
         )
         private String readPartitionsInvoke;
 
         @Parameter(
-            names = {"--readPartitionsJavascript"},
+            names = {"--read-partitions-javascript"},
             description = "JavaScript code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsJavascript;
 
         @Parameter(
-            names = {"--readPartitionsJavascriptFile"},
+            names = {"--read-partitions-javascript-file"},
             description = "Local file containing JavaScript code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsJavascriptFile;
 
         @Parameter(
-            names = {"--readPartitionsXquery"},
+            names = {"--read-partitions-xquery"},
             description = "XQuery code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsXquery;
 
         @Parameter(
-            names = {"--readPartitionsXqueryFile"},
+            names = {"--read-partitions-xquery-file"},
             description = "Local file containing XQuery code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsXqueryFile;
 
         @Parameter(
-            names = "--readVar", variableArity = true,
-            description = "Define variables to be sent to the code for reading data; e.g. '--readVar var1=value1'."
+            names = "--read-var", variableArity = true,
+            description = "Define variables to be sent to the code for reading data; e.g. '--read-var var1=value1'."
         )
         private List<String> readVars = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 readVars.forEach(readVar -> {
                     int pos = readVar.indexOf("=");
                     if (pos < 0) {
-                        throw new IllegalArgumentException("Value of --readVar argument must be 'varName=varValue'; invalid value: " + readVar);
+                        throw new IllegalArgumentException("Value of --read-var argument must be 'varName=varValue'; invalid value: " + readVar);
                     }
                     options.put(Options.READ_VARS_PREFIX + readVar.substring(0, pos), readVar.substring(pos + 1));
                 });
@@ -296,61 +296,61 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
     public static class WriteParams implements Supplier<Map<String, String>>, WriteOptions {
 
         @Parameter(
-            names = {"--writeInvoke"},
+            names = {"--write-invoke"},
             description = "The path to a module to invoke for writing data; the module must be in your application’s modules database."
         )
         private String writeInvoke;
 
         @Parameter(
-            names = {"--writeJavascript"},
+            names = {"--write-javascript"},
             description = "JavaScript code to execute for writing data."
         )
         private String writeJavascript;
 
         @Parameter(
-            names = {"--writeJavascriptFile"},
+            names = {"--write-javascript-file"},
             description = "Local file containing JavaScript code to execute for writing data."
         )
         private String writeJavascriptFile;
 
         @Parameter(
-            names = {"--writeXquery"},
+            names = {"--write-xquery"},
             description = "XQuery code to execute for writing data."
         )
         private String writeXquery;
 
         @Parameter(
-            names = {"--writeXqueryFile"},
+            names = {"--write-xquery-file"},
             description = "Local file containing XQuery code to execute for writing data."
         )
         private String writeXqueryFile;
 
         @Parameter(
-            names = {"--externalVariableName"},
+            names = {"--external-variable-name"},
             description = "Name of the external variable in the custom code for writing that will be populated with each value read from MarkLogic."
         )
         private String externalVariableName = "URI";
 
         @Parameter(
-            names = {"--externalVariableDelimiter"},
+            names = {"--external-variable-delimiter"},
             description = "Delimiter used when multiple values are included in the external variable in the code for writing."
         )
         private String externalVariableDelimiter = ",";
 
         @Parameter(
-            names = "--writeVar", variableArity = true,
-            description = "Define variables to be sent to the code for writing data; e.g. '--writeVar var1=value1'."
+            names = "--write-var", variableArity = true,
+            description = "Define variables to be sent to the code for writing data; e.g. '--write-var var1=value1'."
         )
         private List<String> writeVars = new ArrayList<>();
 
         @Parameter(
-            names = "--abortOnWriteFailure",
+            names = "--abort-on-write-failure",
             description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
         )
         private Boolean abortOnWriteFailure;
 
         @Parameter(
-            names = "--batchSize",
+            names = "--batch-size",
             description = "The number of values sent to the code for writing data in a single call."
         )
         private Integer batchSize = 1;
@@ -381,7 +381,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 writeVars.forEach(writeVar -> {
                     int pos = writeVar.indexOf("=");
                     if (pos < 0) {
-                        throw new IllegalArgumentException("Value of --writeVar argument must be 'varName=varValue'; invalid value: " + writeVar);
+                        throw new IllegalArgumentException("Value of --write-var argument must be 'varName=varValue'; invalid value: " + writeVar);
                     }
                     options.put(Options.WRITE_VARS_PREFIX + writeVar.substring(0, pos), writeVar.substring(pos + 1));
                 });

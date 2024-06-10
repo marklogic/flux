@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
 
-    @Parameter(names = "--jdbcUrl", required = true, description = "The JDBC URL to connect to.")
+    @Parameter(names = "--jdbc-url", required = true, description = "The JDBC URL to connect to.")
     private String url;
 
-    @Parameter(names = "--jdbcDriver", description = "The class name of the JDBC driver to use.")
+    @Parameter(names = "--jdbc-driver", description = "The class name of the JDBC driver to use.")
     private String driver;
 
-    @Parameter(names = "--jdbcUser", description = "The user to authenticate as, if not specified in the JDBC URL.")
+    @Parameter(names = "--jdbc-user", description = "The user to authenticate as, if not specified in the JDBC URL.")
     private String user;
 
-    @Parameter(names = "--jdbcPassword", description = "The password to user for authentication, if not specified in the JDBC URL.")
+    @Parameter(names = "--jdbc-password", description = "The password to user for authentication, if not specified in the JDBC URL.")
     private String password;
 
     @DynamicParameter(

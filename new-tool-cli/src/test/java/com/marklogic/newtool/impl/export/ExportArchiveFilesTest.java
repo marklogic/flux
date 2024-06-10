@@ -15,9 +15,9 @@ class ExportArchiveFilesTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         run(
             "export-archive-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author",
-            "--fileCount", "1",
+            "--file-count", "1",
             "--path", tempDir.toFile().getAbsolutePath()
         );
 
@@ -29,9 +29,9 @@ class ExportArchiveFilesTest extends AbstractTest {
         run(
             "import-archive-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "imported-author",
-            "--uriPrefix", "/imported"
+            "--uri-prefix", "/imported"
         );
 
         assertCollectionSize("Being able to read these URIs verifies that the metadata was exported and imported " +
@@ -46,7 +46,7 @@ class ExportArchiveFilesTest extends AbstractTest {
     void contentShouldAlwaysBeIncluded(@TempDir Path tempDir) {
         String stderr = runAndReturnStderr(() -> run(
             "export-archive-files",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "author",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--categories", "collections,permissions"
@@ -58,9 +58,9 @@ class ExportArchiveFilesTest extends AbstractTest {
         run(
             "import-archive-files",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--collections", "imported-author",
-            "--uriPrefix", "/imported"
+            "--uri-prefix", "/imported"
         );
 
         assertCollectionSize("The export command should always include content, even when --categories is used " +

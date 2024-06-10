@@ -22,20 +22,20 @@ The `import-files` command is used to import a set of files into MarkLogic, with
 document. You must specify at least one `--path` option along with connection information for the MarkLogic database
 you wish to write to. For example:
 
-    ./bin/nt import-files --path /path/to/files --connectionString user:password@localhost:8000
+    ./bin/nt import-files --path /path/to/files --connection-string user:password@localhost:8000
 
 ## Controlling document URIs
 
 Each document will have an initial URI based on the absolute path of the associated file. See 
 [common import features](../common-import-features.md) for details on adjusting this URI. In particular, the 
-`--uriReplace` option is often useful for removing most of the absolute path to produce a concise, self-describing
+`--uri-replace` option is often useful for removing most of the absolute path to produce a concise, self-describing
 URI. 
 
 ## Specifying a document type
 
 The type of each document written to MarkLogic is determined by the file extension found in the URI along with the
 set of [MIME types configured in MarkLogic](https://docs.marklogic.com/admin-help/mimetype). For unrecognized file
-extensions, or URIs that do not have a file extension, you can force a document type via the `--documentType` option.
+extensions, or URIs that do not have a file extension, you can force a document type via the `--document-type` option.
 The value of this option must be one of `JSON`, `XML`, or `TEXT`.
 
 ## Importing Gzip files
@@ -48,5 +48,5 @@ with a value of `GZIP`. You can also import Gzip files as-is - i.e. without deco
 
 To import each entry in a ZIP file as a separate document, include the `--compression` option with a value of `ZIP`.
 Each document will have an initial URI based on both the absolute path of the ZIP file and the name of the ZIP entry. 
-You can also use the `--documentType` option as described above to force a document type for any entry that has a file
+You can also use the `--document-type` option as described above to force a document type for any entry that has a file
 extension not recognized by MarkLogic.

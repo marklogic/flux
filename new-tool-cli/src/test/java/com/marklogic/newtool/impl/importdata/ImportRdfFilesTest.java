@@ -14,7 +14,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples"
         );
@@ -34,7 +34,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--graph", "my-graph"
         );
@@ -48,14 +48,14 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/three-quads.trig",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--graphOverride", "my-other-graph"
+            "--graph-override", "my-other-graph"
         );
 
         assertCollectionSize(
             "All the quads in three-quads.trig should be added to the same managed triples document; their graphs " +
-                "should be ignored in favor of the --graphOverride value.", "my-other-graph", 2
+                "should be ignored in favor of the --graph-override value.", "my-other-graph", 2
         );
 
         // Make sure nothing got written to any of the other possible graphs.
@@ -70,7 +70,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/englishlocale2.ttl.gz",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--compression", "gzip"
         );
@@ -86,7 +86,7 @@ class ImportRdfFilesTest extends AbstractTest {
         run(
             "import-rdf-files",
             "--path", "src/test/resources/rdf/each-rdf-file-type.zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "all-my-rdf",
             "--compression", "zip"
@@ -112,7 +112,7 @@ class ImportRdfFilesTest extends AbstractTest {
             "import-rdf-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--path", "src/test/resources/rdf/englishlocale.ttl",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples"
         );
@@ -126,8 +126,8 @@ class ImportRdfFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-rdf-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
-            "--abortOnReadFailure",
-            "--connectionString", makeConnectionString(),
+            "--abort-on-read-failure",
+            "--connection-string", makeConnectionString(),
             "--collections", "my-triples"
         ));
 

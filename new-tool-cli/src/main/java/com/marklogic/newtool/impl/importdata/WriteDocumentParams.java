@@ -17,13 +17,13 @@ import java.util.stream.Stream;
 public class WriteDocumentParams<T extends WriteDocumentsOptions> implements WriteDocumentsOptions<T>, Supplier<Map<String, String>> {
 
     @Parameter(
-        names = "--abortOnWriteFailure",
+        names = "--abort-on-write-failure",
         description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
     )
     private Boolean abortOnWriteFailure;
 
     @Parameter(
-        names = "--batchSize",
+        names = "--batch-size",
         description = "The number of documents written in a call to MarkLogic."
     )
     private Integer batchSize = 200;
@@ -35,7 +35,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String collections;
 
     @Parameter(
-        names = "--failedDocumentsPath",
+        names = "--failed-documents-path",
         description = "File path for writing an archive file containing failed documents and their metadata."
     )
     private String failedDocumentsPath;
@@ -47,19 +47,19 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String permissions;
 
     @Parameter(
-        names = "--temporalCollection",
+        names = "--temporal-collection",
         description = "Name of a temporal collection to assign to each document."
     )
     private String temporalCollection;
 
     @Parameter(
-        names = "--threadCount",
+        names = "--thread-count",
         description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic."
     )
     private Integer threadCount = 4;
 
     @Parameter(
-        names = "--totalThreadCount",
+        names = "--total-thread-count",
         description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
     )
     private Integer totalThreadCount;
@@ -71,38 +71,38 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String transform;
 
     @Parameter(
-        names = "--transformParams",
+        names = "--transform-params",
         description = "Comma-delimited string of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
     )
     private String transformParams;
 
     @Parameter(
-        names = "--transformParamsDelimiter",
-        description = "Delimiter to use instead of a comma for the '--transformParams' parameter."
+        names = "--transform-params-delimiter",
+        description = "Delimiter to use instead of a comma for the '--transform-params' parameter."
     )
     private String transformParamsDelimiter;
 
     @Parameter(
-        names = "--uriPrefix",
+        names = "--uri-prefix",
         description = "String to prepend to each document URI."
     )
     private String uriPrefix;
 
     @Parameter(
-        names = "--uriReplace",
+        names = "--uri-replace",
         description = "Modify the URI for a document via a comma-delimited list of regular expression " +
             "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
     )
     private String uriReplace;
 
     @Parameter(
-        names = "--uriSuffix",
+        names = "--uri-suffix",
         description = "String to append to each document URI."
     )
     private String uriSuffix;
 
     @Parameter(
-        names = "--uriTemplate",
+        names = "--uri-template",
         description = "String defining a template for constructing each document URI. " +
             "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
     )

@@ -15,7 +15,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidCommand() {
         assertStderrContains(
-            () -> run("not_a_real_command", "--connectionString", makeConnectionString()),
+            () -> run("not_a_real_command", "--connection-string", makeConnectionString()),
             "Invalid command name: not_a_real_command"
         );
     }
@@ -47,7 +47,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void missingRequiredParam() {
         assertStderrContains(
-            () -> run("import-files", "--connectionString", makeConnectionString()),
+            () -> run("import-files", "--connection-string", makeConnectionString()),
             "The following option is required: [--path]"
         );
     }
@@ -61,7 +61,7 @@ class HandleErrorTest extends AbstractTest {
             () -> run(
                 "import-files",
                 "--path", "/not/valid",
-                "--connectionString", makeConnectionString()
+                "--connection-string", makeConnectionString()
             ),
             "Command failed, cause: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
         );
@@ -74,9 +74,9 @@ class HandleErrorTest extends AbstractTest {
                 "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
-                "--connectionString", makeConnectionString(),
+                "--connection-string", makeConnectionString(),
                 "--permissions", "invalid-role,read,rest-writer,update",
-                "--abortOnWriteFailure"
+                "--abort-on-write-failure"
             ),
             "Command failed, cause: Local message: failed to apply resource at documents"
         );
@@ -89,10 +89,10 @@ class HandleErrorTest extends AbstractTest {
                 "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
-                "--connectionString", makeConnectionString(),
+                "--connection-string", makeConnectionString(),
                 "--permissions", "invalid-role,read,rest-writer,update",
                 "--stacktrace",
-                "--abortOnWriteFailure"
+                "--abort-on-write-failure"
             ),
             "com.marklogic.spark.ConnectorException: Local message: failed to apply resource at documents"
         );
@@ -105,7 +105,7 @@ class HandleErrorTest extends AbstractTest {
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update"
         ));
 

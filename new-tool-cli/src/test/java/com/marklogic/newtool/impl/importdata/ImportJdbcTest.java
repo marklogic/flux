@@ -15,14 +15,14 @@ class ImportJdbcTest extends AbstractTest {
     void tenCustomers() {
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL,
-            "--jdbcUser", PostgresUtil.USER,
-            "--jdbcPassword", PostgresUtil.PASSWORD,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/customer/{customer_id}.json",
+            "--uri-template", "/customer/{customer_id}.json",
             "--collections", "customer"
         );
 
@@ -33,15 +33,15 @@ class ImportJdbcTest extends AbstractTest {
     void jsonRootName() {
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL,
-            "--jdbcUser", PostgresUtil.USER,
-            "--jdbcPassword", PostgresUtil.PASSWORD,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--jsonRootName", "customer",
-            "--uriTemplate", "/customer/{/customer/customer_id}.json",
+            "--json-root-name", "customer",
+            "--uri-template", "/customer/{/customer/customer_id}.json",
             "--collections", "customer"
         );
 
@@ -53,12 +53,12 @@ class ImportJdbcTest extends AbstractTest {
     void tenCustomersWithUserAndPasswordInUrl() {
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/customer/{customer_id}.json",
+            "--uri-template", "/customer/{customer_id}.json",
             "--collections", "customer"
         );
 
@@ -69,15 +69,15 @@ class ImportJdbcTest extends AbstractTest {
     void allCustomers() {
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--query", "select * from customer",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "customer",
             "--repartition", "2",
             // Just verifying that these work without causing any errors.
-            "--totalThreadCount", "16",
-            "--batchSize", "10"
+            "--total-thread-count", "16",
+            "--batch-size", "10"
         );
 
         assertCollectionSize("customer", 599);

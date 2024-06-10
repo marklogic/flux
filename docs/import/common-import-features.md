@@ -22,23 +22,23 @@ command reads. You can use the following command line options to control the URI
 
 | Option | Description | 
 | --- | --- |
-| --uriPrefix | A prefix to apply to each URI. |
-| --uriSuffix | A suffix to apply to each URI. |
-| --uriReplace | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
-| --uriTemplate | Template for each URI containing one or more column names. |
+| --uri-prefix | A prefix to apply to each URI. |
+| --uri-suffix | A suffix to apply to each URI. |
+| --uri-replace | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
+| --uri-template | Template for each URI containing one or more column names. |
 
 ### Replacing URI contents
 
-When importing data from files where the initial URI is based on an absolute file path, the `--uriReplace` option can 
+When importing data from files where the initial URI is based on an absolute file path, the `--uri-replace` option can 
 be used to remove much of the file path from the URI, though this is not required. For example, if you import files 
 from a path of `/path/to/my/data` and you only want to include `/data` in your URIs, you would include the following 
 option:
 
-    --uriReplace ".*/data,'/data'"
+    --uri-replace ".*/data,'/data'"
 
 ### Configuring URIs via a template
 
-The `--uriTemplate` option allows you to configure a URI based on a JSON representation of each row that a command
+The `--uri-template` option allows you to configure a URI based on a JSON representation of each row that a command
 reads from its associated data source. This option is supported for the following commands:
 
 - `import-avro-files`
@@ -60,15 +60,15 @@ to either a top-level field name in the JSON representation of a record, or it m
 For example, consider an employee data source where the JSON representation of each record from that data source has 
 top-level fields of `id` and `last_name`. You could configure a URI for each document using the following option:
 
-    --uriTemplate "/employee/{id}/{last_name}.json"
+    --uri-template "/employee/{id}/{last_name}.json"
 
-A JSON Pointer expression is useful in conjunction with the optional `--jsonRootName` option for defining a root field
+A JSON Pointer expression is useful in conjunction with the optional `--json-root-name` option for defining a root field
 name in each JSON document. For example, using the above example, you may want each employee document to have a single
 root field of "employee" so that each document is more self-describing. The URI template will be evaluated against a
 JSON document with this root field applied, so you would need to use JSON Pointer expressions to refer to the `id` and 
 `last_name` values:
 
-    --jsonRootName employee --uriTemplate "/employee/{/employee/id}/{/employee/last_name}.json"
+    --json-root-name employee --uri-template "/employee/{/employee/id}/{/employee/last_name}.json"
 
 ## Configuring document metadata
 
@@ -86,14 +86,14 @@ Each of the above types of metadata can be configured via the following options:
 | --- | --- |
 | --collections | Comma-delimited list of collection names to add to each document. |
 | --permissions | Comma-delimited list of MarkLogic role names and capabilities - e.g. `rest-reader,read,rest-writer,update`. |
-| --temporalCollection | Name of a MarkLogic temporal collection to assign to each document. |
+| --temporal-collection | Name of a MarkLogic temporal collection to assign to each document. |
 
 The following shows an example of each option:
 
 ```
 --collections employees,imported-data \
 --permissions my-reader-role,read,my-writer-role,update \
---temporalCollection my-temporal-data
+--temporal-collection my-temporal-data
 ```
 
 ## Transforming content
@@ -104,5 +104,5 @@ to each document before it is written. A transform is configured via the followi
 | Option | Description | 
 | --- | --- |
 | --transform | Name of a MarkLogic REST transform to apply to the document before writing it. |
-| --transformParams | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
-| --transformParamsDelimiter | Delimiter for `--transformParams`; typically set when a value contains a comma. |
+| --transform-params | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
+| --transform-params-delimiter | Delimiter for `--transform-params`; typically set when a value contains a comma. |

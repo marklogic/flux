@@ -20,7 +20,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
-            "--connectionString", makeConnectionString()
+            "--connection-string", makeConnectionString()
         ));
         assertTrue(stderr.contains("The following option is required: [--element]"),
             "Unexpected stderr: " + stderr);
@@ -32,10 +32,10 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withElement-test",
-            "--uriReplace", ".*/xml-file,''"
+            "--uri-replace", ".*/xml-file,''"
         );
 
         assertCollectionSize("withElement-test", 3);
@@ -51,10 +51,10 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/xml-file/people-with-namespace.xml",
             "--element", "person",
             "--namespace", "org:example",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withElementAndNamespace-test",
-            "--uriReplace", ".*/xml-file,''"
+            "--uri-replace", ".*/xml-file,''"
         );
 
         assertCollectionSize("withElementAndNamespace-test", 3);
@@ -70,9 +70,9 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/xml-file/people-with-namespace.xml",
             "--element", "person",
             "--namespace", "org:example",
-            "--uriElement", "name",
-            "--uriNamespace", "org:example",
-            "--connectionString", makeConnectionString(),
+            "--uri-element", "name",
+            "--uri-namespace", "org:example",
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withAllOptions-test"
         );
@@ -88,12 +88,12 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         run(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importZippedXml-test",
             "--compression", "zip",
             "--element", "",
-            "--uriReplace", ".*/single-xml.zip,''"
+            "--uri-replace", ".*/single-xml.zip,''"
         );
         assertCollectionSize("importZippedXml-test", 1);
     }
@@ -104,10 +104,10 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--element", "person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importZippedXmlWithElement-test",
-            "--uriElement", "name",
+            "--uri-element", "name",
             "--compression", "zip"
         );
         assertCollectionSize("importZippedXmlWithElement-test", 3);
@@ -122,11 +122,11 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/multiple-xmls.zip",
             "--element", "",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importMultipleZippedXml-test",
             "--compression", "zip",
-            "--uriReplace", ".*/temp,''"
+            "--uri-replace", ".*/temp,''"
         );
         assertCollectionSize("importMultipleZippedXml-test", 3);
         verifyDocContents("/hello.xml", "src/test/resources/xml-file/temp/hello.xml");
@@ -140,11 +140,11 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml.gz",
             "--element", "person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "importGzippedXml-test",
             "--compression", "gzip",
-            "--uriElement", "name"
+            "--uri-element", "name"
         );
 
         assertCollectionSize("importGzippedXml-test", 3);
@@ -160,7 +160,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/xml-file/people.xml",
             "--element", "person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
         ));
@@ -175,15 +175,15 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--abortOnReadFailure",
+            "--abort-on-read-failure",
             "--element", "person",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
         ));
 
         assertTrue(stderr.contains("Command failed, cause: Unable to read XML from file"),
-            "With --abortOnReadFailure included, the command should fail if it cannot read a file; stderr: " + stderr);
+            "With --abort-on-read-failure included, the command should fail if it cannot read a file; stderr: " + stderr);
         assertCollectionSize("agg-xml", 0);
     }
 

@@ -24,14 +24,14 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", query,
-            "--groupBy", "customer_id",
+            "--group-by", "customer_id",
             "--aggregate", "payments=payment_id;amount;payment_date",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/customer/{customer_id}.json"
+            "--uri-template", "/customer/{customer_id}.json"
         );
 
         JsonNode doc = readJsonDocument("/customer/1.json");
@@ -73,15 +73,15 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", query,
-            "--groupBy", "customer_id",
+            "--group-by", "customer_id",
             "--aggregate", "payments=payment_id;amount",
             "--aggregate", "rentals=rental_id;inventory_id",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/customer/{customer_id}.json"
+            "--uri-template", "/customer/{customer_id}.json"
         );
 
         JsonNode doc = readJsonDocument("/customer/1.json");
@@ -118,14 +118,14 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
         run(
             "import-jdbc",
-            "--jdbcUrl", PostgresUtil.URL_WITH_AUTH,
-            "--jdbcDriver", PostgresUtil.DRIVER,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", query,
-            "--groupBy", "film_id",
+            "--group-by", "film_id",
             "--aggregate", "actor_ids=actor_id",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uriTemplate", "/film/{film_id}.json"
+            "--uri-template", "/film/{film_id}.json"
         );
 
         JsonNode film = readJsonDocument("/film/1.json");

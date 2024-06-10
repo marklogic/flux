@@ -17,7 +17,7 @@ class CustomExportRowsTest extends AbstractTest {
     void sparkXml(@TempDir Path tempDir) throws IOException {
         run(
             "custom-export-rows",
-            "--connectionString", makeConnectionString(),
+            "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--target", "xml",
             "--repartition", "1",

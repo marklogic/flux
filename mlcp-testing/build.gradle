@@ -70,37 +70,37 @@ task ntImportRdf(type: Exec) {
   description = "Intended to run against a local Caddy load balancer."
   workingDir = "../nt/"
   commandLine "./bin/nt", "import-rdf-files",
-    "--connectionString", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
+    "--connection-string", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",
-    "--connectionType", "gateway",
-    "--threadCount", "64",
-    "--batchSize", "100"
+    "--connection-type", "gateway",
+    "--thread-count", "64",
+    "--batch-size", "100"
 }
 
 task ntDirectImportRdf(type: Exec) {
   description = "For testing without a load balancer."
   workingDir = "../nt/"
   commandLine "./bin/nt", "import-rdf-files",
-    "--connectionString", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--connection-string", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
     "--path", rdfFile,
     "--permissions", "rest-reader,read,rest-writer,update",
-    "--connectionType", "direct",
-    "--threadCount", "64",
-    "--batchSize", "100"
+    "--connection-type", "direct",
+    "--thread-count", "64",
+    "--batch-size", "100"
 }
 
 task ntCopy(type: Exec) {
   workingDir = "../nt/"
   commandLine "./bin/nt", "copy",
-    "--connectionString", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--connection-string", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
     "--collections", "address_small",
-    "--batchSize", "500",
+    "--batch-size", "500",
     // results in 24 threads total, assuming 3 forests and 4 partitions per forests, which means 12 partitions.
-    "--outputThreadCount", "2",
-    "--outputBatchSize", "500",
-    "--outputPermissions", "rest-reader,read,rest-writer,update",
-    "--outputConnectionString", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
+    "--output-thread-count", "2",
+    "--output-batch-size", "500",
+    "--output-permissions", "rest-reader,read,rest-writer,update",
+    "--output-connection-string", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
 }
 
 task mlcpCopy(type: JavaExec) {
@@ -145,12 +145,12 @@ task ntTwoWaySSL(type: Exec) {
     "then run this task to ensure that two-way SSL works."
   workingDir = "../nt/"
   commandLine "./bin/nt", "copy",
-    "--connectionString", "rest-writer:x@localhost:8012",
+    "--connection-string", "rest-writer:x@localhost:8012",
     "--collections", "zipcode",
-    "--keyStorePath", "../mlcp-testing/keyStore.jks",
-    "--keyStorePassword", "password",
-    "--trustStorePath", "../mlcp-testing/trustStore.jks",
-    "--trustStorePassword", "password",
-    "--sslHostnameVerifier", "any",
+    "--keystore-path", "../mlcp-testing/keyStore.jks",
+    "--keystore-password", "password",
+    "--truststore-path", "../mlcp-testing/trustStore.jks",
+    "--truststore-password", "password",
+    "--ssl-hostname-verifier", "any",
     "--preview", "10"
 }

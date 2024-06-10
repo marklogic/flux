@@ -15,13 +15,13 @@ public class ReadRowsParams implements ReadRowsOptions {
     @Parameter(names = "--query", description = "The Optic DSL query for retrieving rows; must use op.fromView as an accessor.")
     private String query;
 
-    @Parameter(names = "--batchSize", description = "Approximate number of rows to retrieve in each call to MarkLogic; defaults to 100000.")
+    @Parameter(names = "--batch-size", description = "Approximate number of rows to retrieve in each call to MarkLogic; defaults to 100000.")
     private Integer batchSize;
 
     // Not yet showing this in usage as it is confusing for a typical user to understand and would only need to be
     // set if push down aggregation is producing incorrect results. See the MarkLogic Spark connector documentation
     // for more information.
-    @Parameter(names = "--disableAggregationPushDown", hidden = true)
+    @Parameter(names = "--disable-aggregation-push-down", hidden = true)
     private Boolean disableAggregationPushDown;
 
     @Parameter(names = "--partitions", description = "Number of partitions to create when reading rows from MarkLogic. " +

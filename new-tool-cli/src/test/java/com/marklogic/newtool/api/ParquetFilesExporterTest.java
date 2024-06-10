@@ -57,7 +57,7 @@ class ParquetFilesExporterTest extends AbstractTest {
 
     private void verifyFiles(Path tempDir) {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".gz.parquet"));
-        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --fileCount is 2, and the " +
+        assertEquals(2, files.length, "Expecting 2 gzipped Parquet files since --file-count is 2, and the " +
             "-Pcompression option should tell Spark Parquet to use gzip instead of snappy.");
     }
 }

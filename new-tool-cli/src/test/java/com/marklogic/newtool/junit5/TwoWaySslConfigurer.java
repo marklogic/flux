@@ -270,7 +270,7 @@ public class TwoWaySslConfigurer {
 
     /**
      * Retrieves the server certificate associated with the certificate template for this test and stores it in the
-     * key store so that the key store can also act as a trust store.
+     * keystore so that the keystore can also act as a truststore.
      *
      * @param tempDir
      * @throws Exception

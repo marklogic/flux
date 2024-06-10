@@ -26,10 +26,10 @@ NT.
 The `import-jdbc` command requires that you specify connection details for the database you wish to read from via JDBC.
 Connection details are specified via the following options:
 
-- `--jdbcUrl` is required and specifies the JDBC connection URL.
-- `--jdbcDriver` is required specifies the main class name of the JDBC driver.
-- `--jdbcUser` specifies an optional user to authenticate as (this may already be specified via `--jdbcUrl`).
-- `--jdbcPassword` specifies an optional password to authenticate with (this may already be specified via `--jdbcUrl`).
+- `--jdbc-url` is required and specifies the JDBC connection URL.
+- `--jdbc-driver` is required specifies the main class name of the JDBC driver.
+- `--jdbc-user` specifies an optional user to authenticate as (this may already be specified via `--jdbc-url`).
+- `--jdbc-password` specifies an optional password to authenticate with (this may already be specified via `--jdbc-url`).
 
 ## Importing data
 
@@ -44,13 +44,13 @@ The SQL query can contain any syntax supported by your database.
 
 By default, each column a row will become a top-level field in the JSON document written to
 MarkLogic. It is often useful to have a single "root" field in a JSON document so that it is more self-describing. It
-can help with indexing purposes in MarkLogic as well. To include a JSON root field, use the `--jsonRootName` option with
+can help with indexing purposes in MarkLogic as well. To include a JSON root field, use the `--json-root-name` option with
 a value for the name of the root field. The data read from a row will then be nested under this root field.
 
 ## Creating XML documents
 
-To create an XML document for each row instead of a JSON document, include the `--xmlRootName`
-option to specify the name of the root element in each XML document. You can optionally include `--xmlNamespace` to
+To create an XML document for each row instead of a JSON document, include the `--xml-root-name`
+option to specify the name of the root element in each XML document. You can optionally include `--xml-namespace` to
 specify a namespace for the root element that will then be inherited by every child element as well.
 
 ## Aggregating rows
@@ -62,7 +62,7 @@ structures that better represent complex entities.
 To facilitate producing hierarchical documents with multiple sets of related data, the following options can be used
 to combine multiple rows from a SQL query (which typically will include one or more joins) into hierarchical documents:
 
-- `--groupBy` specifies a column name to group rows by; this is typically the column used in a join.
+- `--group-by` specifies a column name to group rows by; this is typically the column used in a join.
 - `--aggregate` specifies a string of the form `new_column_name=column1;column2;column3`. The `new_column_name` column
   will contain an array of objects, with each object having columns of `column`, `column2`, and `column3`.
 
@@ -74,7 +74,7 @@ following options would be used to achieve that (connection details are omitted 
 ```
 ./bin/nt import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
-    --groupBy customer_id \
+    --group-by customer_id \
     --aggregate "payments=payment_id;amount;payment_date"
 ```
 
