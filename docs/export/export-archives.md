@@ -5,7 +5,7 @@ parent: Exporting Data
 nav_order: 4
 ---
 
-NT can export documents with their metadata as "archive files" - ZIP files that contain an entry for each document
+Flux can export documents with their metadata as "archive files" - ZIP files that contain an entry for each document
 and another entry for the XML metadata file associated with each document. Archive files can then be imported via 
 the `import-archive-files` command, providing a convenient mechanism for storing data and later importing it into a separate
 database.

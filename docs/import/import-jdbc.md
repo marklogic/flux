@@ -5,7 +5,7 @@ parent: Importing Data
 nav_order: 3
 ---
 
-NT supports importing data from any database that offers a JDBC driver. You can select rows from a table or via a 
+Flux supports importing data from any database that offers a JDBC driver. You can select rows from a table or via a 
 SQL query, and each row will be written as a new document in MarkLogic. Additionally, you can aggregate related rows
 together to form hierarchical documents that are written to MarkLogic. 
 
@@ -18,8 +18,8 @@ together to form hierarchical documents that are written to MarkLogic.
 ## JDBC driver installation
 
 To import data from a database, you must obtain the database's JDBC driver JAR file and add it to the `./ext` directory
-location in the NT installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of 
-NT.
+location in the Flux installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of
+Flux.
 
 ## Configuring a JDBC connection
 

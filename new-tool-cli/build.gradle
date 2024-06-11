@@ -60,12 +60,12 @@ dependencies {
 
 distributions {
   main {
-    distributionBaseName = "nt"
+    distributionBaseName = "flux"
   }
 }
 
 application {
-  mainClass = "com.marklogic.newtool.cli.Main"
+  mainClass = "com.marklogic.flux.cli.Main"
   // Removes warnings due to Spark performing "illegal reflective access".
   applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
                                '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',
@@ -75,20 +75,20 @@ application {
 // Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.
 startScripts {
   unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
-  applicationName = "nt"
+  applicationName = "flux"
 }
 
 tasks.register("deleteTool", Delete) {
-  delete "../nt"
+  delete "../flux"
 }
 tasks.register("buildTool", Copy) {
-  from layout.buildDirectory.dir("install/nt")
-  into "../nt"
+  from layout.buildDirectory.dir("install/flux")
+  into "../flux"
 }
 buildTool.dependsOn installDist, deleteTool
 
 tasks.register("buildToolForGettingStarted", Copy) {
-  description = "For testing NT with the getting-started example project."
+  description = "For testing Flux with the getting-started example project."
   from layout.buildDirectory.dir("install")
   into "../examples/getting-started"
 }
@@ -130,7 +130,7 @@ publishing {
       from components.java
       pom {
         name = "${group}:${project.name}"
-        description = "Spark ETL for MarkLogic"
+        description = "Flux ETL for MarkLogic"
         packaging = "jar"
         url = "https://github.com/marklogic/${project.name}"
         scm {

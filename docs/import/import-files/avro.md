@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 8
 ---
 
-NT can import Avro files, with each row being written as a document in MarkLogic.
+Flux can import Avro files, with each row being written as a document in MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }

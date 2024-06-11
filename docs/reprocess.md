@@ -4,7 +4,7 @@ title: Reprocessing Data
 nav_order: 5
 ---
 
-NT supports reprocessing data already in MarkLogic by using custom code to query for data and custom code to process
+Flux supports reprocessing data already in MarkLogic by using custom code to query for data and custom code to process
 retrieved data. Reprocessing data typically involves writing data back to MarkLogic, but you are free to execute any
 custom code you wish both when querying and processing data. 
 
@@ -74,7 +74,7 @@ The following shows a simple example of including a variable in both the reader 
 
 ## Defining reader partitions
 
-NT will send a single request to MarkLogic to execute your reader code. If your reader returns a large amount of data 
+Flux will send a single request to MarkLogic to execute your reader code. If your reader returns a large amount of data 
 and is at risk of timing out, or if you seek better performance by breaking your query into many smaller queries, you 
 can use one of the following options to define partitions for your reader:
 

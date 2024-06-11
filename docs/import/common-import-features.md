@@ -5,7 +5,7 @@ parent: Importing Data
 nav_order: 1
 ---
 
-Regardless from where an NT import command reads data, it will ultimately write one or more documents to MarkLogic.
+Regardless from where an Flux import command reads data, it will ultimately write one or more documents to MarkLogic.
 The sections below detail the common features for writing documents that are available for every import command, unless
 otherwise noted by the documentation for that command.
 
