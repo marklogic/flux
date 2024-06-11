@@ -40,14 +40,14 @@ You will now be able to import this repository's project into Intellij and run t
 
 ## Building the distribution locally
 
-If you would like to test our the NT distribution - as either a tar or zip - perform the following steps:
+If you would like to test our the Flux distribution - as either a tar or zip - perform the following steps:
 
 1. Run either `./gradlew distTar` or `./gradlew distZip`.
 2. Move the file created at `./new-tool-cli/build/distributions` to a desired location.
 3. Extract the file. 
 4. `cd` into the extracted directory.
 
-You can now run `./bin/nt` to test out various commands. 
+You can now run `./bin/flux` to test out various commands. 
 
 ## Running the tests
 
@@ -126,20 +126,20 @@ reporting, they are not necessarily helpful. Support for trying each document in
 
 You can test an invalid command name:
 
-    ./nt/bin/nt not_a_real_command
+    ./nt/bin/flux not_a_real_command
 
 You can forget a required argument:
 
-    ./nt/bin/nt import_files
+    ./nt/bin/flux import_files
 
 You can cause an error from Spark:
 
-    ./nt/bin/nt import_files --path invalid-path
+    ./nt/bin/flux import_files --path invalid-path
 
 You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/flux import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --abortOnWriteFailure \
@@ -150,7 +150,7 @@ You can cause a failure with MarkLogic that caused the command to stop:
 You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/flux import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --repartition 1 \
   --permissions "invalid-role,read,new-tool-role,update" \
@@ -162,7 +162,7 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
 You can cause a failure and tell the command to keep executing by not including `--abortOnWriteFailure`:
 
 ```
-./nt/bin/nt import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
+./nt/bin/flux import_files --path "new-tool-cli/src/test/resources/mixed-files/*" \
   --connectionString "new-tool-user:password@localhost:8000" \
   --permissions "invalid-role,read,new-tool-role,update" \
   --uriReplace ".*/mixed-files,'/test'"
@@ -172,7 +172,7 @@ You can cause a failure and tell the command to keep executing by not including 
 
 The `docker-compose.yml` file includes an instance of a 
 [Caddy load balancer](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). This is useful for any kind 
-of performance testing, as you typically want NT (and our Spark connector) to connect to a load balancer that can 
+of performance testing, as you typically want Flux (and our Spark connector) to connect to a load balancer that can 
 both distribute load and handle retrying failed connections. 
 
 The `./caddy/config/Caddyfile` configuration file has some default config in it for communicating with a 3-node cluster
@@ -181,7 +181,7 @@ owned by the performance team. Feel free to adjust this config locally as needed
 Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
 
 ```
-./nt/bin/nt copy --connectionString "admin:admin@localhost:8006" \
+./nt/bin/flux copy --connectionString "admin:admin@localhost:8006" \
   --collections "address_small" \
   --batchSize 500 \
   --limit 10000 \
@@ -237,7 +237,7 @@ of `--path`, as an absolute path is needed, and of course change the value of `-
 cluster:
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
+$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar \
 import_files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --previewDrop content
 ```
@@ -250,7 +250,7 @@ previewing an import of files from an S3 bucket by including the AWS SDK as pack
 to something you can access :
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.newtool.cli.Submit \
+$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
 import_files --path "s3a://changeme/*.*" --preview 10 --previewDrop content
@@ -276,7 +276,7 @@ Once your cluster is created, you'll add a "Step" in order to run spark-submit:
 
 1. Choose "Spark application" for the type of job.
 2. For "JAR location", select the assembly jar that you uploaded to S3.
-3. For "Spark-submit options", enter `--class com.marklogic.newtool.cli.Submit`.
+3. For "Spark-submit options", enter `--class com.marklogic.flux.cli.Submit`.
 4. For "Arguments", enter the CLI command all the args you would normally enter when using the CLI.
 
 If your CLI command will be accessing S3, you most likely should not include `--s3AddCredentials`. The EMR EC2 instance

@@ -5,7 +5,7 @@ parent: Exporting Data
 nav_order: 3
 ---
 
-NT can export rows retrieved via the [MarkLogic Optic API](https://docs.marklogic.com/guide/app-dev/OpticAPI), writing
+Flux can export rows retrieved via the [MarkLogic Optic API](https://docs.marklogic.com/guide/app-dev/OpticAPI), writing
 them either to files or to another database via JDBC.
 
 ## Table of contents
@@ -45,8 +45,7 @@ driver specific to the database.
 ### JDBC driver installation
 
 To export rows to a database, you must obtain the database's JDBC driver JAR file and add it to the `./ext` directory
-location in the NT installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of
-NT.
+location in the Flux installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of Flux.
 
 ### Configuring a JDBC connection
 
@@ -65,7 +64,7 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 a notional example of doing so:
 
 ```
-./bin/nt export_jdbc --connectionString user:password@localhost:8000 \
+./bin/flux export_jdbc --connectionString user:password@localhost:8000 \
   --query "op.fromView('example', 'employee', '')" \
   --jdbcUrl "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
   --jdbcDriver "org.postgresql.Driver" \

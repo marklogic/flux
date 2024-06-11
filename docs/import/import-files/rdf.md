@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 6
 ---
 
-NT can import a variety of RDF files in a fashion similar to that of 
+Flux can import a variety of RDF files in a fashion similar to that of 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/loading-triples.html).
 
 ## Table of contents
@@ -24,11 +24,11 @@ document is an XML document containing up to 100 semantic triples.
 To import RDF files, you must specify at least one `--path` option along with connection information for the MarkLogic 
 database you wish to write to:
 
-    ./bin/nt import_rdf_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_rdf_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Supported files types
 
-NT supports the same [RDF data formats](https://docs.marklogic.com/guide/semantics/loading#id_70682) as
+Flux supports the same [RDF data formats](https://docs.marklogic.com/guide/semantics/loading#id_70682) as
 MarkLogic server does, which are listed below:
 
 - RDF/JSON
@@ -56,4 +56,4 @@ are free to specify as many collections as you want in addition to the graph you
 
 ## Compressed files
 
-NT supports Gzip and ZIP RDF files. Simply include the `--compression` option with a value of `GZIP` or `ZIP`. 
+Flux supports Gzip and ZIP RDF files. Simply include the `--compression` option with a value of `GZIP` or `ZIP`. 

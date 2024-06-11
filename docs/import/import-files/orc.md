@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 9
 ---
 
-NT can import ORC files, with each row being written as a document in MarkLogic.
+Flux can import ORC files, with each row being written as a document in MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -20,7 +20,7 @@ The `import_orc_files` command is used to read ORC files and write the contents 
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import_orc_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_orc_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 

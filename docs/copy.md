@@ -4,7 +4,7 @@ title: Copying Data
 nav_order: 6
 ---
 
-NT supports copying documents and their associated metadata from one database to another.
+Flux supports copying documents and their associated metadata from one database to another.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -41,7 +41,7 @@ The following shows an example of copying documents from a collection to a diffe
 cluster:
 
 ```
-./bin/nt copy \
+./bin/flux copy \
   --connectionString "user:password@localhost:8000" \
   --collections "example" \
   --outputConnectionString "user:password@localhost:8000" \

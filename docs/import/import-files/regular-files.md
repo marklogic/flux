@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 2
 ---
 
-NT can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
+Flux can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
 "regular files" is used in this context to refer to files that do not require any special processing
 other than potentially decompressing the files.
 
@@ -22,7 +22,7 @@ The `import_files` command is used to import a set of files into MarkLogic, with
 document. You must specify at least one `--path` option along with connection information for the MarkLogic database
 you wish to write to. For example:
 
-    ./bin/nt import_files --path /path/to/files --connectionString user:password@localhost:8000
+    ./bin/flux import_files --path /path/to/files --connectionString user:password@localhost:8000
 
 ## Controlling document URIs
 

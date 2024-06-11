@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 5
 ---
 
-NT can import JSON files - both files containing JSON objects and arrays and also files conforming to the 
+Flux can import JSON files - both files containing JSON objects and arrays and also files conforming to the 
 [JSON Lines format](https://jsonlines.org/).
 
 ## Table of contents
@@ -24,11 +24,11 @@ this behavior for an array of JSON objects, use the `import_files` command inste
 
 You must specify at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
-    ./bin/nt import_json_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_json_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Importing JSON Lines files
 
-If your files conform to the JSON Lines format, include the `--jsonLines` option with no value. NT will then attempt
+If your files conform to the JSON Lines format, include the `--jsonLines` option with no value. Flux will then attempt
 to read each line as a separate JSON object and write it to MarkLogic as a document.
 
 ## Specifying a JSON root name

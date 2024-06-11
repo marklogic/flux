@@ -4,7 +4,7 @@ title: Common Options
 nav_order: 3
 ---
 
-This guide describes options common to every command in NT.
+This guide describes options common to every command in Flux.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -14,7 +14,7 @@ This guide describes options common to every command in NT.
 
 ## Connecting to MarkLogic
 
-Every command in NT will need to connect to a MarkLogic database, either for reading data or writing data or both. 
+Every command in Flux will need to connect to a MarkLogic database, either for reading data or writing data or both. 
 Generally, you must include at least the following information for each command:
 
 - The name of a MarkLogic host.
@@ -62,7 +62,7 @@ All available connection options are shown in the table below:
 
 ## Reading options from a file
 
-NT supports reading options from a file, similar to MLCP. In a text file, put each option name and value on separate
+Flux supports reading options from a file, similar to MLCP. In a text file, put each option name and value on separate
 lines:
 
 ```
@@ -75,17 +75,17 @@ etc...
 
 You then reference the file via the `@` symbol followed by a filename:
 
-    ./bin/nt import_files @my-options.txt
+    ./bin/flux import_files @my-options.txt
 
 You can reference multiple files this way and also include options on the command line too.
 
 ## Previewing data
 
-The `--preview` option works on every command in NT. For example, given a set of Parquet files in a directory, 
+The `--preview` option works on every command in Flux. For example, given a set of Parquet files in a directory, 
 you can preview an import without writing any of the data to MarkLogic:
 
 ```
-./bin/nt import_parquet_files \
+./bin/flux import_parquet_files \
     --path export/parquet \
     --preview 10
 ```
@@ -98,7 +98,7 @@ verbose columns to drop from the preview. And you can use `--previewVertical` to
 instead of in a table:
 
 ```
-./bin/nt import_parquet_files \
+./bin/flux import_parquet_files \
     --connectionString "nt-user:password@localhost:8004" \
     --path export/parquet \
     --preview 10 \
@@ -106,7 +106,7 @@ instead of in a table:
     --previewVertical
 ```
 
-Note that in the case of previewing an import, NT will show the data as it has been read, which consists of a set of
+Note that in the case of previewing an import, Flux will show the data as it has been read, which consists of a set of
 Spark rows with columns. The data is not shown as a set of documents yet, as the transformation of rows to documents 
 occurs when the data is written to MarkLogic.
 
@@ -118,7 +118,7 @@ are correct. The `--limit` option will achieve this by limiting the number of ro
 The following shows an example of only importing the first 10 rows from a delimited file:
 
 ```
-./bin/nt import_delimited_files \
+./bin/flux import_delimited_files \
     --path ../data/employees.csv.gz \
     --connectionString "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
@@ -129,11 +129,11 @@ The following shows an example of only importing the first 10 rows from a delimi
 
 ## Repartitioning
 
-When NT reads data from a data source, it does so via one or more "partitions" that allows for data to be read in 
+When Flux reads data from a data source, it does so via one or more "partitions" that allows for data to be read in 
 parallel. The number of partitions depends on the type of data source and may be configurable depending on which 
 command you are running. 
 
-When NT writes the data it has read, a separate worker is created for each partition, thereby allowing for data to be
+When Flux writes the data it has read, a separate worker is created for each partition, thereby allowing for data to be
 written in parallel. 
 
 You can adjust the number of partitions and thus the number of workers used for writing data via the `--repartition` 
@@ -143,7 +143,7 @@ are written via `--repartition`.
 
 ## Viewing a stacktrace
 
-When a command fails, NT will stop execution of the command and display an error message. If you wish to see the 
+When a command fails, Flux will stop execution of the command and display an error message. If you wish to see the 
 underlying stacktrace associated with the error, run the command with the `--stacktrace` option included. This is 
 included primarily for debugging purposes, as the stacktrace may be fairly long with only a small portion of it 
-potentially being helpful. The initial error message displayed by NT is intended to be as helpful as possible. 
+potentially being helpful. The initial error message displayed by Flux is intended to be as helpful as possible. 

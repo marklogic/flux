@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 7
 ---
 
-NT can import archive files containing documents and their associated metadata. This includes archives written via 
+Flux can import archive files containing documents and their associated metadata. This includes archives written via 
 the [`export_archive_files` command](../../export/export-archives.md) as well as archives written by 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/loading-content-and-metadata-from-an-archive.html), 
 which are hereafter referred to as "MLCP archives".
@@ -23,7 +23,7 @@ The `import_archive_files` command will import the documents and metadata files 
 `export_archive_files` command. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import_archive_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_archive_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Importing MLCP archives
 
@@ -32,7 +32,7 @@ You can also import
 that were produced via the `EXPORT` command in MLCP. The `import_mlcp_archive_files` command is used instead, and it also
 requires at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
-    ./bin/nt import_mlcp_archive_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_mlcp_archive_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Restricting metadata
 

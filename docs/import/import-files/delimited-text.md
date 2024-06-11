@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 3
 ---
 
-NT can import rows from delimited text files, with each row being written as a document to MarkLogic.
+Flux can import rows from delimited text files, with each row being written as a document to MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -20,7 +20,7 @@ The `import_delimited_files` command is used to read delimited text files. The c
 the delimiter for each row value. You must specify at least one `--path` option along with connection information 
 for the MarkLogic database you wish to write to:
 
-    ./bin/nt import_delimited_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_delimited_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 
@@ -45,4 +45,4 @@ The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for
 example:
 
-    ./bin/nt import_delimited_files -Pheader=false -PescapeQuotes=false ....
+    ./bin/flux import_delimited_files -Pheader=false -PescapeQuotes=false ....

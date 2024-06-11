@@ -4,7 +4,7 @@ title: Reprocessing Data
 nav_order: 5
 ---
 
-NT supports reprocessing data already in MarkLogic by using custom code to query for data and custom code to process
+Flux supports reprocessing data already in MarkLogic by using custom code to query for data and custom code to process
 retrieved data. Reprocessing data typically involves writing data back to MarkLogic, but you are free to execute any
 custom code you wish both when querying and processing data. 
 
@@ -48,7 +48,7 @@ you wish to reprocess.
 The following shows a simple example of querying a collection for its URIs and logging each one:
 
 ```
-./bin/nt reprocess --connectionString user:password@localhost:8000 \
+./bin/flux reprocess --connectionString user:password@localhost:8000 \
   --readJavascript "cts.uris(null, null, cts.collectionQuery('example'))"
   --writeJavascript "var URI; console.log(URI)"
 ```
@@ -65,7 +65,7 @@ with each value being of the same form.
 The following shows a simple example of including a variable in both the reader and writer:
 
 ```
-./bin/nt reprocess --connectionString user:password@localhost:8000 \
+./bin/flux reprocess --connectionString user:password@localhost:8000 \
   --readJavascript "var collection; cts.uris(null, null, cts.collectionQuery(collection))"
   --readVar "collection=example"
   --writeJavascript "var URI; var exampleVariable; console.log([URI, exampleVariable])"
@@ -74,7 +74,7 @@ The following shows a simple example of including a variable in both the reader 
 
 ## Defining reader partitions
 
-NT will send a single request to MarkLogic to execute your reader code. If your reader returns a large amount of data 
+Flux will send a single request to MarkLogic to execute your reader code. If your reader returns a large amount of data 
 and is at risk of timing out, or if you seek better performance by breaking your query into many smaller queries, you 
 can use one of the following options to define partitions for your reader:
 
@@ -91,7 +91,7 @@ Partition values can thus be anything you want. A common use case is to partitio
 MarkLogic database. The following shows an example of partitions based on forests:
 
 ```
-./bin/nt reprocess --connectionString user:password@localhost:8000 \
+./bin/flux reprocess --connectionString user:password@localhost:8000 \
   --readPartitionsJavascript "xdmp.databaseForests(xdmp.database())"
   --readJavascript "cts.uris(null, null, cts.collectionQuery('example'), 0, [PARTITION])"
   --writeJavascript "var URI; console.log(URI)"

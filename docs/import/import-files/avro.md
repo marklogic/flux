@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 8
 ---
 
-NT can import Avro files, with each row being written as a document in MarkLogic.
+Flux can import Avro files, with each row being written as a document in MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -20,7 +20,7 @@ The `import_avro_files` command is used to read Avro files and write the content
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import_avro_files --path /path/to/files --connectionString "user:password@localhost:8000"
+    ./bin/flux import_avro_files --path /path/to/files --connectionString "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 

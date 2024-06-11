@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 4
 ---
 
-NT can split large XML files - called "aggregate XML files" - in the same fashion as 
+Flux can split large XML files - called "aggregate XML files" - in the same fashion as 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/splitting-large-xml-files-into-multiple-documents.html). 
 
 ## Table of contents
@@ -24,7 +24,7 @@ will be used as the root of an XML document written to MarkLogic. The `--namespa
 has an associated namespace:
 
 ```
-./bin/nt import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/flux import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
     --element employee --namespace org:example
 ```
 
@@ -35,7 +35,7 @@ you can use the `--uriElement` and `--uriNamespace` options to identify an eleme
 be included in the URI:
 
 ```
-./bin/nt import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
+./bin/flux import_aggregate_xml_files --path /path/to/files --connectionString user:password@localhost:8000 \
     --element employee --namespace org:example \
     --uriElement employee ID --namespace org:example
 ```
@@ -44,5 +44,5 @@ You may still wish to use options like `--uriPrefix` and `--uriSuffix` to make t
 
 ## Compressed XML files
 
-NT supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
+Flux supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
 `ZIP`. 

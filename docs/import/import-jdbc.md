@@ -5,7 +5,7 @@ parent: Importing Data
 nav_order: 3
 ---
 
-NT supports importing data from any database that offers a JDBC driver. You can select rows from a table or via a 
+Flux supports importing data from any database that offers a JDBC driver. You can select rows from a table or via a 
 SQL query, and each row will be written as a new document in MarkLogic. Additionally, you can aggregate related rows
 together to form hierarchical documents that are written to MarkLogic. 
 
@@ -18,8 +18,7 @@ together to form hierarchical documents that are written to MarkLogic.
 ## JDBC driver installation
 
 To import data from a database, you must obtain the database's JDBC driver JAR file and add it to the `./ext` directory
-location in the NT installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of 
-NT.
+location in the Flux installation directory. Any JAR file placed in the `./ext` directory is added to the classpath of Flux.
 
 ## Configuring a JDBC connection
 
@@ -36,7 +35,7 @@ Connection details are specified via the following options:
 To import all rows in a table, use the `--query` option with a SQL query selecting all rows (connection details for 
 MarkLogic are omitted for brevity):
 
-    ./bin/nt import_jdbc --query "SELECT * FROM customer" 
+    ./bin/flux import_jdbc --query "SELECT * FROM customer" 
 
 The SQL query can contain any syntax supported by your database. 
 
@@ -72,7 +71,7 @@ on the needs of an application, it may be beneficial for payments to be stored i
 following options would be used to achieve that (connection details are omitted for brevity):
 
 ```
-./bin/nt import_jdbc \
+./bin/flux import_jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --groupBy customer_id \
     --aggregate "payments=payment_id;amount;payment_date"
