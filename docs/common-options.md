@@ -75,7 +75,7 @@ etc...
 
 You then reference the file via the `@` symbol followed by a filename:
 
-    ./bin/nt import-files @my-options.txt
+    ./bin/flux import-files @my-options.txt
 
 You can reference multiple files this way and also include options on the command line too.
 
@@ -85,7 +85,7 @@ The `--preview` option works on every command in Flux. For example, given a set 
 you can preview an import without writing any of the data to MarkLogic:
 
 ```
-./bin/nt import-parquet-files \
+./bin/flux import-parquet-files \
     --path export/parquet \
     --preview 10
 ```
@@ -98,7 +98,7 @@ verbose columns to drop from the preview. And you can use `--preview-vertical` t
 instead of in a table:
 
 ```
-./bin/nt import-parquet-files \
+./bin/flux import-parquet-files \
     --connection-string "nt-user:password@localhost:8004" \
     --path export/parquet \
     --preview 10 \
@@ -118,7 +118,7 @@ are correct. The `--limit` option will achieve this by limiting the number of ro
 The following shows an example of only importing the first 10 rows from a delimited file:
 
 ```
-./bin/nt import-delimited-files \
+./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
     --connection-string "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \

@@ -1,1 +1,2 @@
-include "new-tool-cli", "test-app"
+include "flux-cli", "test-app"
+rootProject.name = "flux"

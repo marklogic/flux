@@ -1,0 +1,158 @@
+plugins {
+  id 'net.saliman.properties' version '1.5.2'
+  id "application"
+  id "jacoco"
+  id "org.sonarqube" version "4.4.1.3373"
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id 'maven-publish'
+  id 'signing'
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+configurations {
+  // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
+  shadowDependencies
+}
+
+dependencies {
+  implementation("org.apache.spark:spark-sql_2.12:3.4.1") {
+    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
+    exclude module: "rocksdbjni"
+  }
+  implementation "org.jcommander:jcommander:1.83"
+
+  implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
+
+  // hadoop-aws depends on aws-java-sdk-bundle, which clocks in as a single 380mb jar. We only need the S3 portion of
+  // the AWS SDK, so the bundle is excluded in favor of the S3 API in the SDK.
+  implementation("org.apache.hadoop:hadoop-aws:3.3.6") {
+    exclude module: "aws-java-sdk-bundle"
+  }
+  implementation "com.amazonaws:aws-java-sdk-s3:1.12.367"
+
+  implementation "org.apache.hadoop:hadoop-client:3.3.6"
+
+  // Spark doesn't include Avro support by default, so need to bring this in.
+  implementation "org.apache.spark:spark-avro_2.12:3.4.1"
+
+  testImplementation("com.marklogic:marklogic-junit5:1.4.0") {
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.dataformat"
+  }
+
+  // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
+  testImplementation "org.springframework:spring-jdbc:5.3.31"
+  testImplementation "org.postgresql:postgresql:42.6.0"
+
+  // For testing custom commands with a 3rd party connector.
+  testImplementation "com.databricks:spark-xml_2.12:0.18.0"
+
+  // For configuring two-way SSL in tests.
+  testImplementation "com.marklogic:ml-app-deployer:4.7.0"
+
+  shadowDependencies "org.jcommander:jcommander:1.83"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
+}
+
+distributions {
+  main {
+    distributionBaseName = "flux"
+  }
+}
+
+application {
+  mainClass = "com.marklogic.flux.cli.Main"
+  // Removes warnings due to Spark performing "illegal reflective access".
+  applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
+                               '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+                               '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED']
+}
+
+// Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.
+startScripts {
+  unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
+  applicationName = "flux"
+}
+
+tasks.register("deleteTool", Delete) {
+  delete "../flux"
+}
+tasks.register("buildTool", Copy) {
+  from layout.buildDirectory.dir("install/flux")
+  into "../flux"
+}
+buildTool.dependsOn installDist, deleteTool
+
+tasks.register("buildToolForGettingStarted", Copy) {
+  description = "For testing Flux with the getting-started example project."
+  from layout.buildDirectory.dir("install")
+  into "../examples/getting-started"
+}
+buildToolForGettingStarted.dependsOn installDist
+
+test {
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.required = true
+  }
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "flux"
+    property "sonar.host.url", "http://localhost:9000"
+    // Avoids a warning from Gradle.
+    property "sonar.gradle.skipCompile", "true"
+  }
+}
+
+// See https://imperceptiblethoughts.com/shadow/configuration/dependencies/ .
+shadowJar {
+  configurations = [project.configurations.shadowDependencies]
+}
+
+// Publishing setup - see https://docs.gradle.org/current/userguide/publishing_setup.html .
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+publishing {
+  publications {
+    mainJava(MavenPublication) {
+      from components.java
+      pom {
+        name = "${group}:${project.name}"
+        description = "Flux ETL for MarkLogic"
+        packaging = "jar"
+        url = "https://github.com/marklogic/${project.name}"
+        scm {
+          url = "git@github.com:marklogic/${project.name}.git"
+          connection = "scm:git@github.com:marklogic/${project.name}.git"
+          developerConnection = "scm:git@github.com:marklogic/${project.name}.git"
+        }
+      }
+    }
+  }
+}
+
+// Per https://docs.gradle.org/current/userguide/signing_plugin.html#sec:conditional_signing .
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+signing {
+  required { isReleaseVersion }
+  sign publishing.publications.mainJava
+}
+
+// Multiple shadow plugin users have requested the ability to not have the shadow jar published by default. This
+// does the trick for that. See https://docs.gradle.org/current/userguide/publishing_customization.html .
+// Also see https://github.com/johnrengelman/shadow/issues/586#issuecomment-70837559 for the shadow jar issue.
+components.java.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
+  skip()
+}

@@ -1,7 +1,7 @@
 pipeline{
   agent none
   options {
-    checkoutToSubdirectory 'spark-etl'
+    checkoutToSubdirectory 'flux'
     buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '')
   }
   environment{
@@ -15,7 +15,7 @@ pipeline{
       agent{ label 'devExpLinuxPool'}
       steps{
         sh label:'mlsetup', script: '''#!/bin/bash
-          cd $WORKSPACE/spark-etl;
+          cd $WORKSPACE/flux;
           sudo /usr/local/sbin/mladmin stop;
           sudo /usr/local/sbin/mladmin remove;
           docker-compose up -d --build;
@@ -37,23 +37,23 @@ pipeline{
           export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
           export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
           export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
-          cd $WORKSPACE/spark-etl;
+          cd $WORKSPACE/flux;
           ./gradlew -i  mlDeploy;
           wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
           unzip dvdrental.zip -d docker/postgres/ ;
-          docker exec -i new_tool-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
-          docker exec -i  new_tool-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
-          cd $WORKSPACE/spark-etl/;
-          ./gradlew --refresh-dependencies clean test || true;
+          docker exec -i flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
+          docker exec -i  flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
+          cd $WORKSPACE/flux/flux-cli;
+          ../gradlew --refresh-dependencies clean test || true;
         '''
         junit '**/*.xml'
       }
       post{
         always{
           sh label:'mlcleanup', script: '''#!/bin/bash
-            cd $WORKSPACE/spark-etl;
-            sudo /usr/local/sbin/mladmin delete $WORKSPACE/spark-etl/docker/marklogic/logs/;
-            docker exec -i --privileged --user root new_tool-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
+            cd $WORKSPACE/flux;
+            sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
+            docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
             docker-compose rm -fsv || true;
             echo "y" | docker volume prune --filter all=1 || true;
           '''
@@ -71,7 +71,7 @@ pipeline{
             export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
             export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
             export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
-            cd $WORKSPACE/spark-etl;
+            cd $WORKSPACE/flux;
             ./gradlew clean;
             ./gradlew distZip;
           '''
@@ -81,7 +81,7 @@ pipeline{
             "files": [
               {
                 "pattern": "${WORKSPACE}/**/build/**/*.zip",
-                "target": "ml-generic-dev-tierpoint/spark-etl/",
+                "target": "ml-generic-dev-tierpoint/flux/",
                 "props": "build.number=${BUILD_NUMBER};build.name=${JOB_NAME}"
               }
              ]

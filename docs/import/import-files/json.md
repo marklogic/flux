@@ -24,7 +24,7 @@ this behavior for an array of JSON objects, use the `import-files` command inste
 
 You must specify at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
-    ./bin/nt import-json-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-json-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Importing JSON Lines files
 

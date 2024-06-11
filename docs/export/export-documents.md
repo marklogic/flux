@@ -19,7 +19,7 @@ The `export-files` command is used to select documents in a MarkLogic database a
 You must specify a `--path` option for where files should be written along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt export-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux export-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 The following options then control which documents are selected to be exported:
 
@@ -67,7 +67,7 @@ the following command below from the [Getting Started guide](getting-started.md)
 
 ```
 rm export/*.zip
-./bin/nt export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip
 ```
@@ -81,7 +81,7 @@ from each forest in your database:
 
 ```
 rm export/*.zip
-./bin/nt export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip \
     --partitions-per-forest 1
@@ -94,7 +94,7 @@ writing data, regardless of how many were used to read the data:
 
 ```
 rm export/*.zip
-./bin/nt export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip \
     --repartition 1

@@ -47,15 +47,15 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 ## Usage
 
 You can run the tool without any options to see the list of available commands (all examples will assume the use of
-Unix; if you are on Windows, substitute `./bin/nt` with `bin/nt`):
+Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`):
 
     cd nt
-    ./bin/nt
+    ./bin/flux
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
 command. To see the usage for a particular command, such as `import-files`, run:
 
-    ./bin/nt help import-files
+    ./bin/flux help import-files
 
 Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connection-string`
 or `--host` and `--port` be specified so that the tool knows which MarkLogic cluster to connect to. 
@@ -64,7 +64,7 @@ The `--connection-string` option provides a succinct way of defining the host, p
 app server you connect to requires basic or digest authentication. Its value is of the form 
 `(user):(password)@(host):(port)`. For example:
 
-    ./bin/nt import-files --connection-string "my-user:my-secret@localhost:8000" ...
+    ./bin/flux import-files --connection-string "my-user:my-secret@localhost:8000" ...
 
 Options can also be read from a file; see the [Common Options](common-options.md) guide for more information.
 
@@ -76,7 +76,7 @@ accessible via a JDBC driver. The example project contains a gzipped CSV file ge
 demonstrated:
 
 ```
-./bin/nt import-delimited-files \
+./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
     --connection-string "nt-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
@@ -97,11 +97,11 @@ The following shows a notional example of reading rows from a Postgres database 
 requires a separate Postgres database; it is only included for reference):
 
 ```
-./bin/nt import-jdbc \
+./bin/flux import-jdbc \
     --jdbc-url "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
     --query "select * from customer" \
-    --connection-string "new-tool-user:password@localhost:8004" \
+    --connection-string "flux-user:password@localhost:8004" \
     --permissions nt-role,read,nt-role,update \
     --collections customer
 ```
@@ -118,7 +118,7 @@ to select rows. The following shows an example of exporting the 1000 employee do
 
 ```
 mkdir export
-./bin/nt export-files \
+./bin/flux export-files \
     --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --path export \
@@ -137,7 +137,7 @@ The following command shows a collection, a string query, and a structured query
 in 4 JSON documents being written to `./export/employee`:
 
 ```
-./bin/nt export-files \
+./bin/flux export-files \
     --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --string-query Engineering \
@@ -159,7 +159,7 @@ The following shows an example of exporting to S3 with a fictitious bucket name.
 bucket, ensuring that your AWS credentials give you access to writing to the bucket:
 
 ```
-./bin/nt export-files \
+./bin/flux export-files \
     --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
@@ -175,7 +175,7 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 
 ```
 mkdir export/parquet
-./bin/nt export-parquet-files \
+./bin/flux export-parquet-files \
     --connection-string "nt-user:password@localhost:8004" \
     --path export/parquet \
     --query "op.fromView('Example', 'Employees', '')" 
@@ -186,7 +186,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 `./ext` directory of your Flux installation:
 
 ```
-./bin/nt export-jdbc \
+./bin/flux export-jdbc \
     --connection-string "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
@@ -203,7 +203,7 @@ number of records to read and display, but without writing the data anywhere. Th
 command can preview 10 rows read from MarkLogic without writing any data to files:
 
 ```
-./bin/nt export-parquet-files \
+./bin/flux export-parquet-files \
     --connection-string "nt-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --path export/parquet \
@@ -219,7 +219,7 @@ processing data in MarkLogic. The following shows an example of adding a new col
 documents:
 
 ```
-./bin/nt reprocess \
+./bin/flux reprocess \
     --connection-string "nt-user:password@localhost:8004" \
     --read-javascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
     --write-javascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
@@ -240,7 +240,7 @@ The following shows how to copy the 1000 employee documents to the out-of-the-bo
 MarkLogic instance:
 
 ```
-./bin/nt copy \
+./bin/flux copy \
     --connection-string "nt-user:password@localhost:8004" \
     --collections employee \
     --output-connection-string "nt-user:password@localhost:8000"

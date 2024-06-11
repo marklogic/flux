@@ -1,0 +1,7 @@
+{
+  "user-name": "flux-user",
+  "password": "password",
+  "role": [
+    "flux-role"
+  ]
+}

@@ -41,7 +41,7 @@ The following shows an example of copying documents from a collection to a diffe
 cluster:
 
 ```
-./bin/nt copy \
+./bin/flux copy \
   --connection-string "user:password@localhost:8000" \
   --collections "example" \
   --output-connection-string "user:password@localhost:8000" \
