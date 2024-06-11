@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 7
 ---
 
-NT can import archive files containing documents and their associated metadata. This includes archives written via 
+Flux can import archive files containing documents and their associated metadata. This includes archives written via 
 the [`export-archive-files` command](../../export/export-archives.md) as well as archives written by 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/loading-content-and-metadata-from-an-archive.html), 
 which are hereafter referred to as "MLCP archives".

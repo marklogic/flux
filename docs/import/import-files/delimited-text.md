@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 3
 ---
 
-NT can import rows from delimited text files, with each row being written as a document to MarkLogic.
+Flux can import rows from delimited text files, with each row being written as a document to MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }

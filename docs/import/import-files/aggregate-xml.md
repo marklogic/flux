@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 4
 ---
 
-NT can split large XML files - called "aggregate XML files" - in the same fashion as 
+Flux can split large XML files - called "aggregate XML files" - in the same fashion as 
 [MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/splitting-large-xml-files-into-multiple-documents.html). 
 
 ## Table of contents
@@ -44,5 +44,5 @@ You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make
 
 ## Compressed XML files
 
-NT supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
+Flux supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
 `ZIP`. 

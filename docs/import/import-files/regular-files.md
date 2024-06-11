@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 2
 ---
 
-NT can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
+Flux can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
 "regular files" is used in this context to refer to files that do not require any special processing
 other than potentially decompressing the files.
 

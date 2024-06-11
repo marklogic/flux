@@ -28,9 +28,9 @@ directory:
 
 ## Reading from S3
 
-NT can read files from S3 via a path expression of the form `s3a://bucket-name/optional/path`.
+Flux can read files from S3 via a path expression of the form `s3a://bucket-name/optional/path`.
 
-In most cases, NT must use your AWS credentials to access an S3 bucket. NT uses the AWS SDK to fetch credentials from 
+In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux uses the AWS SDK to fetch credentials from 
 [locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html). 
 To enable this, include the `--s3-add-credentials` option:
 

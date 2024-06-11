@@ -5,7 +5,7 @@ parent: Importing Data
 nav_order: 4
 ---
 
-When writing to MarkLogic, the two main settings within NT that affect performance (i.e. ignoring how the MarkLogic
+When writing to MarkLogic, the two main settings within Flux that affect performance (i.e. ignoring how the MarkLogic
 cluster itself is configured, such as index settings and number of hosts) are the batch size - the number of documents
 sent in a request to MarkLogic - and the number of threads used to send requests to MarkLogic.
 
@@ -19,7 +19,7 @@ requests. For example, if the import command uses 4 partitions to read data and 
 default value), 16 total threads will send requests to MarkLogic.
 
 The number of partitions is determined by how data is read and differs across the various import commands.
-NT will log the number of partitions for each import command as shown below:
+Flux will log the number of partitions for each import command as shown below:
 
     INFO com.marklogic.spark: Number of partitions: 1
 
@@ -39,6 +39,6 @@ The rule of thumb can thus be expressed as:
 
 ### Direct connections to each host
 
-In a scenario where NT can connect directly to each host in your MarkLogic cluster without a load balancer being 
-present, you can set the `--connection-type` option to a value of `direct`. NT will then effectively act as a load 
+In a scenario where Flux can connect directly to each host in your MarkLogic cluster without a load balancer being 
+present, you can set the `--connection-type` option to a value of `direct`. Flux will then effectively act as a load 
 balancer by distributing work across each host in the cluster. 

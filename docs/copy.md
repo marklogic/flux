@@ -4,7 +4,7 @@ title: Copying Data
 nav_order: 6
 ---
 
-NT supports copying documents and their associated metadata from one database to another.
+Flux supports copying documents and their associated metadata from one database to another.
 
 ## Table of contents
 {: .no_toc .text-delta }

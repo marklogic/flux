@@ -4,7 +4,7 @@ title: Getting Started
 nav_order: 2
 ---
 
-This guide describes how to get started with NT with some examples demonstrating its functionality. 
+This guide describes how to get started with Flux with some examples demonstrating its functionality. 
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -16,16 +16,16 @@ This guide describes how to get started with NT with some examples demonstrating
 
 The examples in this guide, along with examples found throughout this documentation, depend on a small application in the 
 `./examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
-a MarkLogic instance and that NT will be run from the `./examples/getting-started` directory as well. However, you are 
-free to install NT anywhere and use the examples as a reference for running NT on your own data. 
+a MarkLogic instance and that Flux will be run from the `./examples/getting-started` directory as well. However, you are 
+free to install Flux anywhere and use the examples as a reference for running Flux on your own data. 
 
-### Obtaining NT
+### Obtaining Flux
 
-NT can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases), 
+Flux can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases), 
 from the [internal Wiki](https://wiki.marklogic.com/display/PM/Spark+ETL+0.1+Release), or built locally. 
 If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
 
-After downloading or building NT, extract it into the `./examples/getting-started` directory in this repository to 
+After downloading or building Flux, extract it into the `./examples/getting-started` directory in this repository to 
 test it with the examples. 
 
 ### Deploying the example application
@@ -70,9 +70,9 @@ Options can also be read from a file; see the [Common Options](common-options.md
 
 ## Importing data
 
-NT allows for data to be imported from a variety of data sources, such as a local filesystem, S3, or any database 
+Flux allows for data to be imported from a variety of data sources, such as a local filesystem, S3, or any database 
 accessible via a JDBC driver. The example project contains a gzipped CSV file generated via 
-[Mockaroo](https://mockaroo.com/). Run the following to load this file, allowing for other NT capabilities to be 
+[Mockaroo](https://mockaroo.com/). Run the following to load this file, allowing for other Flux capabilities to be 
 demonstrated:
 
 ```
@@ -89,9 +89,9 @@ collection in the `nt-example-content` database now has 1000 JSON documents, one
 
 ### Importing via JDBC
 
-The `import-jdbc` command in NT supports reading rows from any database with a supported JDBC driver. Similar to other
-tools that support JDBC access, you must first add your database's JDBC driver to the NT classpath by adding the JDBC
-driver jar to the `./ext` directory in the NT installation. 
+The `import-jdbc` command in Flux supports reading rows from any database with a supported JDBC driver. Similar to other
+tools that support JDBC access, you must first add your database's JDBC driver to the Flux classpath by adding the JDBC
+driver jar to the `./ext` directory in the Flux installation. 
 
 The following shows a notional example of reading rows from a Postgres database (this example will not work as it 
 requires a separate Postgres database; it is only included for reference):
@@ -111,7 +111,7 @@ thus producing hierarchical documents with nested data structures.
 
 ## Exporting data 
 
-NT supports several commands for exporting data from MarkLogic, either as documents or rows, to a variety of 
+Flux supports several commands for exporting data from MarkLogic, either as documents or rows, to a variety of 
 destinations. Commands that export documents support a variety of queries, while commands that export rows use the
 [MarkLogic Optic API](https://docs.marklogic.com/guide/app-dev/OpticAPI)
 to select rows. The following shows an example of exporting the 1000 employee documents to a single zip file:
@@ -150,7 +150,7 @@ See [the Export guide](export/export.md) for more information.
 
 ### Exporting to S3
 
-NT allows for data to be exported to S3, with the same approach working for importing data as well. You can 
+Flux allows for data to be exported to S3, with the same approach working for importing data as well. You can 
 reference an S3 bucket path via the `s3a://` prefix. The `--s3-add-credentials` option will then use the AWS SDK to access your
 AWS credentials; please see the 
 [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for information on how to configure your credentials. 
@@ -170,7 +170,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
 
 ### Exporting rows
 
-NT allows for exporting rows from MarkLogic via an Optic query and writing the data to a variety of row-oriented 
+Flux allows for exporting rows from MarkLogic via an Optic query and writing the data to a variety of row-oriented 
 destinations, such as Parquet files or an RDBMS. The following demonstrates writing rows to Parquet files: 
 
 ```
@@ -183,7 +183,7 @@ mkdir export/parquet
 
 You can also export rows via JDBC. Like the example above for importing via JDBC, this is a notional example only. 
 Change the details in it to match your database and JDBC driver, ensuring that the JDBC driver jar is in the 
-`./ext` directory of your NT installation:
+`./ext` directory of your Flux installation:
 
 ```
 ./bin/nt export-jdbc \
@@ -198,7 +198,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 ## Previewing commands
 
 For many data movement use cases, it can be helpful to see a preview of the data read from a particular source before
-any processing occurs to write that data to a destination. NT supports this via a `--preview` option that accepts a 
+any processing occurs to write that data to a destination. Flux supports this via a `--preview` option that accepts a 
 number of records to read and display, but without writing the data anywhere. The following example shows how an export 
 command can preview 10 rows read from MarkLogic without writing any data to files:
 
@@ -214,7 +214,7 @@ See the [Common Options guide](common-options.md) for more information.
 
 ## Reprocessing data
 
-The `reprocess` command in NT allows for custom code - either JavaScript or XQuery - to be executed for selecting and
+The `reprocess` command in Flux allows for custom code - either JavaScript or XQuery - to be executed for selecting and
 processing data in MarkLogic. The following shows an example of adding a new collection to each of the employee
 documents:
 
@@ -231,7 +231,7 @@ For more information, please see the [Reprocessing guide](reprocess.md).
 
 ## Copying data
 
-The `copy` command in NT is similar to the commands for exporting data, but instead allows you to read documents
+The `copy` command in Flux is similar to the commands for exporting data, but instead allows you to read documents
 from one database and write them to another. When copying, you may want to include metadata for each document - 
 collections, permissions, quality, properties, and metadata values. This is accomplished via the `--categories`
 option, with the default value of `content,metadata` returning both the document and all of its metadata.

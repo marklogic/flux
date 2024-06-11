@@ -5,7 +5,7 @@ parent: Exporting Data
 nav_order: 2
 ---
 
-NT can export documents to files, with each document being written as a separate file and optionally compressed.
+Flux can export documents to files, with each document being written as a separate file and optionally compressed.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -57,9 +57,9 @@ written to a single ZIP file. See the next section on "Understanding partitions"
 
 ## Understanding partitions
 
-As NT is built on top of Apache Spark, it is heavily influenced by how Spark
+As Flux is built on top of Apache Spark, it is heavily influenced by how Spark
 [defines and manages partitions](https://sparkbyexamples.com/spark/spark-partitioning-understanding/). Within the
-context of NT, partitions can be thought of as "workers", with each worker operating in parallel on a different subset
+context of Flux, partitions can be thought of as "workers", with each worker operating in parallel on a different subset
 of data. Generally, more partitions allow for more parallel work and thus improved performance.
 
 When exporting documents to files, the number of partitions impacts how many files will be written. For example, run
@@ -72,7 +72,7 @@ rm export/*.zip
     --path export --compression zip
 ```
 
-The `./export` directory will have 12 zip files in it. This count is due to how NT reads data from MarkLogic,
+The `./export` directory will have 12 zip files in it. This count is due to how Flux reads data from MarkLogic,
 which involves creating 4 partitions by default per forest in the MarkLogic database. The example application has 3
 forests in its content database, and thus 12 partitions are created, resulting in 12 separate zip files.
 
