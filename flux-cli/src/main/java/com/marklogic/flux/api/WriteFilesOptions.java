@@ -9,4 +9,8 @@ public interface WriteFilesOptions<T extends WriteFilesOptions> {
     T s3AddCredentials();
 
     T s3Endpoint(String endpoint);
+
+    T s3AccessKeyId(String accessKeyId);
+
+    T s3SecretAccessKey(String secretAccessKey);
 }

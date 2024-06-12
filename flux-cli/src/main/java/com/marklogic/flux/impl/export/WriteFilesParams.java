@@ -51,6 +51,23 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     @Override
+    public T s3AccessKeyId(String accessKeyId) {
+        s3Params.setAccessKeyId(accessKeyId);
+        return (T)this;
+    }
+
+    @Override
+    public T s3SecretAccessKey(String secretAccessKey) {
+        s3Params.setSecretAccessKey(secretAccessKey);
+        return (T)this;
+    }
+
+    @Override
+    public Map<String, String> get() {
+        return Map.of();
+    }
+
+    @Override
     public T s3Endpoint(String endpoint) {
         s3Params.setEndpoint(endpoint);
         return (T) this;

@@ -12,5 +12,9 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T s3AddCredentials();
 
+    T s3AccessKeyId(String accessKeyId);
+
+    T s3SecretAccessKey(String secretAccessKey);
+
     T s3Endpoint(String endpoint);
 }
