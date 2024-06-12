@@ -9,6 +9,8 @@ public interface CustomImporter extends Executor<CustomImporter> {
         CustomReadOptions source(String source);
         CustomReadOptions additionalOptions(Map<String, String> additionalOptions);
         CustomReadOptions s3AddCredentials();
+        CustomReadOptions s3AccessKeyId(String accessKeyId);
+        CustomReadOptions s3SecretAccessKey(String secretAccessKey);
         CustomReadOptions s3Endpoint(String endpoint);
     }
 

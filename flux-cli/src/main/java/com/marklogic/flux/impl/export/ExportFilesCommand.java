@@ -115,6 +115,18 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         @Override
+        public WriteGenericFilesOptions s3AccessKeyId(String accessKeyId) {
+            s3Params.setAccessKeyId(accessKeyId);
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions s3SecretAccessKey(String secretAccessKey) {
+            s3Params.setSecretAccessKey(secretAccessKey);
+            return this;
+        }
+
+        @Override
         public WriteGenericFilesOptions s3Endpoint(String endpoint) {
             s3Params.setEndpoint(endpoint);
             return this;

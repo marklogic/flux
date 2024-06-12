@@ -64,6 +64,18 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
         }
 
         @Override
+        public CustomExportWriteOptions s3AccessKeyId(String accessKeyId) {
+            this.s3Params.setAccessKeyId(accessKeyId);
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions s3SecretAccessKey(String secretAccessKey) {
+            this.s3Params.setSecretAccessKey(secretAccessKey);
+            return this;
+        }
+
+        @Override
         public CustomExportWriteOptions s3Endpoint(String endpoint) {
             this.s3Params.setEndpoint(endpoint);
             return this;

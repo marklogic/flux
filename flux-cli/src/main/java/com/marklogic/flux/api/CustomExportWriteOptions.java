@@ -12,5 +12,9 @@ public interface CustomExportWriteOptions {
 
     CustomExportWriteOptions s3AddCredentials();
 
+    CustomExportWriteOptions s3AccessKeyId(String accessKeyId);
+
+    CustomExportWriteOptions s3SecretAccessKey(String secretAccessKey);
+
     CustomExportWriteOptions s3Endpoint(String endpoint);
 }

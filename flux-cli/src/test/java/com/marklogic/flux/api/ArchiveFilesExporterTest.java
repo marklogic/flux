@@ -17,9 +17,7 @@ class ArchiveFilesExporterTest extends AbstractTest {
         Flux.exportArchiveFiles()
             .connectionString(makeConnectionString())
             .from(options -> options.collections("author").categories("content", "collections", "permissions"))
-            .to(options -> options.path(tempDir.toFile().getAbsolutePath())
-                .fileCount(1)
-            )
+            .to(options -> options.path(tempDir.toFile().getAbsolutePath()).fileCount(1))
             .execute();
 
         File[] files = tempDir.toFile().listFiles();

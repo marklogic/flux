@@ -73,6 +73,18 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         }
 
         @Override
+        public CustomReadOptions s3AccessKeyId(String accessKeyId) {
+            this.s3Params.setAccessKeyId(accessKeyId);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions s3SecretAccessKey(String secretAccessKey) {
+            this.s3Params.setSecretAccessKey(secretAccessKey);
+            return this;
+        }
+
+        @Override
         public CustomReadOptions s3Endpoint(String endpoint) {
             this.s3Params.setEndpoint(endpoint);
             return this;

@@ -15,6 +15,10 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
 
         WriteGenericFilesOptions s3AddCredentials();
 
+        WriteGenericFilesOptions s3AccessKeyId(String accessKeyId);
+
+        WriteGenericFilesOptions s3SecretAccessKey(String secretAccessKey);
+
         WriteGenericFilesOptions s3Endpoint(String endpoint);
     }
 

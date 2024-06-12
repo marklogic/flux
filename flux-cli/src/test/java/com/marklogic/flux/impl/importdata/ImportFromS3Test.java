@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.api.Flux;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -28,5 +29,25 @@ class ImportFromS3Test extends AbstractTest {
 
         assertNotNull(stdout);
         logger.info("Results: {}", stdout);
+    }
+
+    @Disabled("Only intended for ad hoc testing by using explicit S3 auth values.")
+    @Test
+    void api() {
+        final String path = "s3a://changeme";
+
+        Flux.importGenericFiles()
+            .from(options -> options
+                .paths(path)
+                .s3AccessKeyId("changeme")
+                .s3SecretAccessKey("changeme"))
+            .connectionString(makeConnectionString())
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("s3-data"))
+            .execute();
+
+        int expectedCount = 15; // Change as needed.
+        assertCollectionSize("s3-data", expectedCount);
     }
 }
