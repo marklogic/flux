@@ -8,6 +8,9 @@ import com.marklogic.flux.impl.export.*;
 import com.marklogic.flux.impl.importdata.*;
 import com.marklogic.flux.impl.reprocess.ReprocessCommand;
 
+/**
+ * Entry point for executing Flux commands via the API.
+ */
 public abstract class Flux {
 
     public static DocumentCopier copyDocuments() {

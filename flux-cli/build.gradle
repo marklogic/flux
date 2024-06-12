@@ -58,6 +58,10 @@ dependencies {
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
 }
 
+javadoc {
+  include "com/marklogic/flux/api/**"
+}
+
 distributions {
   main {
     distributionBaseName = "flux"
