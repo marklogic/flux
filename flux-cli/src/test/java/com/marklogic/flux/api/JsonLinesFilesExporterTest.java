@@ -13,17 +13,17 @@ class JsonLinesFilesExporterTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) {
         Flux.exportJsonLinesFiles()
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
+            .from(READ_AUTHORS_OPTIC_QUERY)
             .connectionString(makeConnectionString())
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         Flux.importJsonFiles()
-            .readFiles(options -> options
+            .from(options -> options
                 .paths(tempDir.toFile().getAbsolutePath())
                 .jsonLines(true))
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/imported/{LastName}.json")
                 .collections("imported-json-lines"))
@@ -36,7 +36,7 @@ class JsonLinesFilesExporterTest extends AbstractTest {
     void missingPath() {
         JsonLinesFilesExporter exporter = Flux.exportJsonLinesFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY);
+            .from(READ_AUTHORS_OPTIC_QUERY);
 
         FluxException ex = assertThrowsNtException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());

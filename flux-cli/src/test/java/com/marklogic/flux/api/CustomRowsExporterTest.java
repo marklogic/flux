@@ -18,10 +18,10 @@ class CustomRowsExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) throws IOException {
         Flux.customExportRows()
             .connectionString(makeConnectionString())
-            .readRows(options -> options
+            .from(options -> options
                 .opticQuery(READ_AUTHORS_OPTIC_QUERY)
                 .partitions(1))
-            .writeRows(options -> options
+            .to(options -> options
                 .target("xml")
                 .additionalOptions(Map.of(
                     "path", tempDir.toFile().getAbsolutePath(),

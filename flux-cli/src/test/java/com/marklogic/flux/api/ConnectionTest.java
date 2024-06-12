@@ -37,7 +37,7 @@ class ConnectionTest extends AbstractTest {
     void nullHost() {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connection(options -> options.port(8000).username("doesnt").password("matter"))
-            .readFiles("src/test/resources");
+            .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: No host provided", ex.getMessage(),
@@ -49,7 +49,7 @@ class ConnectionTest extends AbstractTest {
     void zeroPort() {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connection(options -> options.host("localhost").username("doesnt").password("matter"))
-            .readFiles("src/test/resources");
+            .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: unexpected port: 0", ex.getMessage());
@@ -59,7 +59,7 @@ class ConnectionTest extends AbstractTest {
     void nullUsername() {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connection(options -> options.host("localhost").port(8000).password("something"))
-            .readFiles("src/test/resources");
+            .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: username must be of type String", ex.getMessage());
@@ -69,7 +69,7 @@ class ConnectionTest extends AbstractTest {
     void nullPassword() {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connection(options -> options.host("localhost").port(8000).username("something"))
-            .readFiles("src/test/resources");
+            .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
         assertEquals("Unable to connect to MarkLogic; cause: password must be of type String", ex.getMessage());
@@ -80,7 +80,7 @@ class ConnectionTest extends AbstractTest {
         DocumentCopier copier = Flux.copyDocuments()
             .connectionString(makeConnectionString())
             .outputConnectionString("not@valid:port")
-            .readDocuments(options -> options.collections("anything"));
+            .from(options -> options.collections("anything"));
 
         FluxException ex = assertThrowsNtException(() -> copier.execute());
         assertEquals(

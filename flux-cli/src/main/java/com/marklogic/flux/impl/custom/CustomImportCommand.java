@@ -80,13 +80,13 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
     }
 
     @Override
-    public CustomImporter readData(Consumer<CustomReadOptions> consumer) {
+    public CustomImporter from(Consumer<CustomReadOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public CustomImporter writeData(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public CustomImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

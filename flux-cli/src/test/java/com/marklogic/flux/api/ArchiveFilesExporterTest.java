@@ -16,8 +16,8 @@ class ArchiveFilesExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         Flux.exportArchiveFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author").categories("content", "collections", "permissions"))
-            .writeFiles(options -> options.path(tempDir.toFile().getAbsolutePath())
+            .from(options -> options.collections("author").categories("content", "collections", "permissions"))
+            .to(options -> options.path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
             )
             .execute();
@@ -28,9 +28,9 @@ class ArchiveFilesExporterTest extends AbstractTest {
 
         // Import the file back in to verify its contents.
         Flux.importArchiveFiles()
-            .readFiles(tempDir.toFile().getAbsolutePath())
+            .from(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.collections("imported-author").uriPrefix("/imported"))
+            .to(options -> options.collections("imported-author").uriPrefix("/imported"))
             .execute();
 
         assertCollectionSize("Being able to read these URIs verifies that the metadata was exported and imported " +
@@ -43,9 +43,9 @@ class ArchiveFilesExporterTest extends AbstractTest {
     void pathOnly(@TempDir Path tempDir) {
         Flux.exportArchiveFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author").categories("content", "collections", "permissions"))
+            .from(options -> options.collections("author").categories("content", "collections", "permissions"))
             .limit(1)
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         File[] files = tempDir.toFile().listFiles();
@@ -56,7 +56,7 @@ class ArchiveFilesExporterTest extends AbstractTest {
     void missingPath() {
         ArchiveFilesExporter exporter = Flux.exportArchiveFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author").categories("content", "collections", "permissions"));
+            .from(options -> options.collections("author").categories("content", "collections", "permissions"));
 
         FluxException ex = assertThrowsNtException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());

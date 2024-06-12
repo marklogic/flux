@@ -15,13 +15,13 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
     void uriElementAndNamespace() {
         Flux.importAggregateXmlFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/xml-file/people-with-namespace.xml")
                 .element("person")
                 .namespace("org:example")
                 .uriElement("name")
                 .uriNamespace("org:example"))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("with-all-options")
                 .uriSuffix(".xml"))
@@ -39,11 +39,11 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
     void zip() {
         Flux.importAggregateXmlFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/xml-file/single-xml.zip")
                 .compressionType(CompressionType.ZIP)
                 .element("person"))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"))
             .execute();
@@ -55,9 +55,9 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
     void missingElement() {
         AggregateXmlFilesImporter importer = Flux.importAggregateXmlFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/xml-file/single-xml.zip"))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 
@@ -69,10 +69,10 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
     void missingPath() {
         AggregateXmlFilesImporter importer = Flux.importAggregateXmlFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .compressionType(CompressionType.ZIP)
                 .element("person"))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 

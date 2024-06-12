@@ -454,13 +454,13 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
     }
 
     @Override
-    public Reprocessor readItems(Consumer<ReadOptions> consumer) {
+    public Reprocessor from(Consumer<ReadOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public Reprocessor writeItems(Consumer<WriteOptions> consumer) {
+    public Reprocessor to(Consumer<WriteOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

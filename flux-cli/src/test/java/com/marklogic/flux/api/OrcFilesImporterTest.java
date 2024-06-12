@@ -14,8 +14,8 @@ class OrcFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importOrcFiles()
             .connectionString(makeConnectionString())
-            .readFiles("src/test/resources/orc-files/authors.orc")
-            .writeDocuments(options -> options
+            .from("src/test/resources/orc-files/authors.orc")
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test")
                 .uriTemplate("/orc-test/{LastName}.json"))
@@ -28,11 +28,11 @@ class OrcFilesImporterTest extends AbstractTest {
     void badOption() {
         OrcFilesImporter importer = Flux.importOrcFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/orc-files/authors.orc")
                 .additionalOptions(Map.of("mergeSchema", "not-valid-value"))
             )
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test"));
 

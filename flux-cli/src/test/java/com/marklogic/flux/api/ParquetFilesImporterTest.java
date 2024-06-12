@@ -14,10 +14,10 @@ class ParquetFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importParquetFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/parquet/related/*.parquet")
                 .additionalOptions(Map.of("mergeSchema", "true")))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("parquet-test")
                 .uriTemplate("/parquet/{color}.json"))
@@ -34,10 +34,10 @@ class ParquetFilesImporterTest extends AbstractTest {
     void count() {
         long count = Flux.importParquetFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/parquet/related/*.parquet")
                 .additionalOptions(Map.of("mergeSchema", "true")))
-            .writeDocuments(options -> options.collections("parquet-test"))
+            .to(options -> options.collections("parquet-test"))
             .count();
 
         assertEquals(6, count);

@@ -14,7 +14,7 @@ class ArchiveFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importArchiveFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/archive-files")
                 .categories("content", "permissions"))
             .execute();

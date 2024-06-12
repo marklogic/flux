@@ -51,7 +51,7 @@ public interface Reprocessor extends Executor<Reprocessor> {
         WriteOptions batchSize(Integer batchSize);
     }
 
-    Reprocessor readItems(Consumer<ReadOptions> consumer);
+    Reprocessor from(Consumer<ReadOptions> consumer);
 
-    Reprocessor writeItems(Consumer<WriteOptions> consumer);
+    Reprocessor to(Consumer<WriteOptions> consumer);
 }

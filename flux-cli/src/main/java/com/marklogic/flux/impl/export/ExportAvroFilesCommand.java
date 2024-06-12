@@ -49,25 +49,25 @@ public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<Avr
     }
 
     @Override
-    public AvroFilesExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public AvroFilesExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public AvroFilesExporter readRows(String opticQuery) {
+    public AvroFilesExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public AvroFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
+    public AvroFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public AvroFilesExporter writeFiles(String path) {
+    public AvroFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

@@ -36,19 +36,19 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     }
 
     @Override
-    public GenericFilesImporter readFiles(Consumer<ReadGenericFilesOptions> consumer) {
+    public GenericFilesImporter from(Consumer<ReadGenericFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public GenericFilesImporter readFiles(String... paths) {
+    public GenericFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public GenericFilesImporter writeDocuments(Consumer<WriteGenericDocumentsOptions> consumer) {
+    public GenericFilesImporter to(Consumer<WriteGenericDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

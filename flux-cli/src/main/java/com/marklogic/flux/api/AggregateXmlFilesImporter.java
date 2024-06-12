@@ -18,9 +18,9 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
         ReadXmlFilesOptions partitions(Integer partitions);
     }
 
-    AggregateXmlFilesImporter readFiles(Consumer<ReadXmlFilesOptions> consumer);
+    AggregateXmlFilesImporter from(Consumer<ReadXmlFilesOptions> consumer);
 
-    AggregateXmlFilesImporter readFiles(String... paths);
+    AggregateXmlFilesImporter from(String... paths);
 
-    AggregateXmlFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    AggregateXmlFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

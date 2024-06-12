@@ -128,19 +128,19 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
     }
 
     @Override
-    public AggregateXmlFilesImporter readFiles(Consumer<ReadXmlFilesOptions> consumer) {
+    public AggregateXmlFilesImporter from(Consumer<ReadXmlFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public AggregateXmlFilesImporter readFiles(String... paths) {
+    public AggregateXmlFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public AggregateXmlFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    public AggregateXmlFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
         consumer.accept(writeParams);
         return this;
     }

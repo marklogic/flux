@@ -93,19 +93,19 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     }
 
     @Override
-    public ArchiveFilesExporter readDocuments(Consumer<ReadArchiveDocumentOptions> consumer) {
+    public ArchiveFilesExporter from(Consumer<ReadArchiveDocumentOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public ArchiveFilesExporter writeFiles(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer) {
+    public ArchiveFilesExporter to(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public ArchiveFilesExporter writeFiles(String path) {
+    public ArchiveFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

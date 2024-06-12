@@ -9,9 +9,9 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
         ReadArchiveFilesOptions partitions(Integer partitions);
     }
 
-    ArchiveFilesImporter readFiles(Consumer<ReadArchiveFilesOptions> consumer);
+    ArchiveFilesImporter from(Consumer<ReadArchiveFilesOptions> consumer);
 
-    ArchiveFilesImporter readFiles(String... paths);
+    ArchiveFilesImporter from(String... paths);
 
-    ArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    ArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

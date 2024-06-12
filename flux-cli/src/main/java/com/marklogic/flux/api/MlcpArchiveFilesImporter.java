@@ -9,9 +9,9 @@ public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImpor
         ReadMlcpArchiveFilesOptions partitions(Integer partitions);
     }
 
-    MlcpArchiveFilesImporter readFiles(Consumer<ReadMlcpArchiveFilesOptions> consumer);
+    MlcpArchiveFilesImporter from(Consumer<ReadMlcpArchiveFilesOptions> consumer);
 
-    MlcpArchiveFilesImporter readFiles(String... paths);
+    MlcpArchiveFilesImporter from(String... paths);
 
-    MlcpArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    MlcpArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

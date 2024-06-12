@@ -4,9 +4,9 @@ import java.util.function.Consumer;
 
 public interface AvroFilesImporter extends Executor<AvroFilesImporter> {
 
-    AvroFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer);
+    AvroFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
 
-    AvroFilesImporter readFiles(String... paths);
+    AvroFilesImporter from(String... paths);
 
-    AvroFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
+    AvroFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

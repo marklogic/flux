@@ -70,19 +70,19 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
     }
 
     @Override
-    public MlcpArchiveFilesImporter readFiles(Consumer<ReadMlcpArchiveFilesOptions> consumer) {
+    public MlcpArchiveFilesImporter from(Consumer<ReadMlcpArchiveFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public MlcpArchiveFilesImporter readFiles(String... paths) {
+    public MlcpArchiveFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public MlcpArchiveFilesImporter writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    public MlcpArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
         consumer.accept(writeParams);
         return this;
     }

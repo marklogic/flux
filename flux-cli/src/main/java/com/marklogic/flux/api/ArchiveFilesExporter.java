@@ -8,9 +8,9 @@ public interface ArchiveFilesExporter extends Executor<ArchiveFilesExporter> {
         ReadArchiveDocumentOptions categories(String... categories);
     }
 
-    ArchiveFilesExporter readDocuments(Consumer<ReadArchiveDocumentOptions> consumer);
+    ArchiveFilesExporter from(Consumer<ReadArchiveDocumentOptions> consumer);
 
-    ArchiveFilesExporter writeFiles(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer);
+    ArchiveFilesExporter to(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer);
 
-    ArchiveFilesExporter writeFiles(String path);
+    ArchiveFilesExporter to(String path);
 }

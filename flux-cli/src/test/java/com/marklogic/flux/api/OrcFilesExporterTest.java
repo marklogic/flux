@@ -16,8 +16,8 @@ class OrcFilesExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         Flux.exportOrcFiles()
             .connectionString(makeConnectionString())
-            .readRows(options -> options.opticQuery(READ_AUTHORS_OPTIC_QUERY))
-            .writeFiles(options -> options
+            .from(options -> options.opticQuery(READ_AUTHORS_OPTIC_QUERY))
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
                 .additionalOptions(Map.of("compression", "lz4"))
@@ -31,8 +31,8 @@ class OrcFilesExporterTest extends AbstractTest {
     void queryOnly(@TempDir Path tempDir) {
         Flux.exportOrcFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeFiles(options -> options
+            .from(READ_AUTHORS_OPTIC_QUERY)
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
                 .additionalOptions(Map.of("compression", "lz4"))
@@ -46,9 +46,9 @@ class OrcFilesExporterTest extends AbstractTest {
     void pathOnly(@TempDir Path tempDir) {
         Flux.exportOrcFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
+            .from(READ_AUTHORS_OPTIC_QUERY)
             .limit(1)
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".orc"));

@@ -4,11 +4,11 @@ import java.util.function.Consumer;
 
 public interface ParquetFilesExporter extends Executor<ParquetFilesExporter> {
 
-    ParquetFilesExporter readRows(Consumer<ReadRowsOptions> consumer);
+    ParquetFilesExporter from(Consumer<ReadRowsOptions> consumer);
 
-    ParquetFilesExporter readRows(String opticQuery);
+    ParquetFilesExporter from(String opticQuery);
 
-    ParquetFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+    ParquetFilesExporter to(Consumer<WriteSparkFilesOptions> consumer);
 
-    ParquetFilesExporter writeFiles(String path);
+    ParquetFilesExporter to(String path);
 }

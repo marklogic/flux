@@ -16,11 +16,11 @@ class JsonFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importJsonFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
                 .jsonLines(true)
                 .additionalOptions(Map.of("lineSep", ":\n")))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("custom-delimiter")
                 .uriTemplate("/custom-delimiter/{firstName}.json"))

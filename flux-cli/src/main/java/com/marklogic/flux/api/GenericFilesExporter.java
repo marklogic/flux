@@ -18,9 +18,9 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         WriteGenericFilesOptions s3Endpoint(String endpoint);
     }
 
-    GenericFilesExporter readDocuments(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
+    GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
 
-    GenericFilesExporter writeFiles(Consumer<WriteGenericFilesOptions> consumer);
+    GenericFilesExporter to(Consumer<WriteGenericFilesOptions> consumer);
 
-    GenericFilesExporter writeFiles(String path);
+    GenericFilesExporter to(String path);
 }

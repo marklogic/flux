@@ -33,9 +33,9 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
         WriteRdfFilesOptions gzip();
     }
 
-    RdfFilesExporter readTriples(Consumer<ReadTriplesDocumentsOptions> consumer);
+    RdfFilesExporter from(Consumer<ReadTriplesDocumentsOptions> consumer);
 
-    RdfFilesExporter writeFiles(Consumer<WriteRdfFilesOptions> consumer);
+    RdfFilesExporter to(Consumer<WriteRdfFilesOptions> consumer);
 
-    RdfFilesExporter writeFiles(String path);
+    RdfFilesExporter to(String path);
 }

@@ -12,9 +12,9 @@ class RdfFilesImporterTest extends AbstractTest {
     @Test
     void withGraph() {
         Flux.importRdfFiles()
-            .readFiles("src/test/resources/rdf/englishlocale.ttl")
+            .from("src/test/resources/rdf/englishlocale.ttl")
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .graph("my-graph"))
             .execute();
@@ -26,9 +26,9 @@ class RdfFilesImporterTest extends AbstractTest {
     @Test
     void withGraphOverride() {
         Flux.importRdfFiles()
-            .readFiles("src/test/resources/rdf/three-quads.trig")
+            .from("src/test/resources/rdf/three-quads.trig")
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .graphOverride("my-other-graph"))
             .execute();
@@ -45,11 +45,11 @@ class RdfFilesImporterTest extends AbstractTest {
     @Test
     void gzippedFile() {
         Flux.importRdfFiles()
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/rdf/englishlocale2.ttl.gz")
                 .compressionType(CompressionType.GZIP))
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS))
+            .to(options -> options.permissionsString(DEFAULT_PERMISSIONS))
             .execute();
 
         assertCollectionSize(DEFAULT_MARKLOGIC_GRAPH, 2);

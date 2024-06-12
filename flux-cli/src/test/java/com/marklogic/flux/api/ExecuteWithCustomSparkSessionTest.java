@@ -23,8 +23,8 @@ class ExecuteWithCustomSparkSessionTest extends AbstractTest {
 
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles("src/test/resources/mixed-files")
-            .writeDocuments(options -> options
+            .from("src/test/resources/mixed-files")
+            .to(options -> options
                 .collections("custom-session")
                 .permissionsString(DEFAULT_PERMISSIONS))
             .withSparkSession(session)
@@ -39,8 +39,8 @@ class ExecuteWithCustomSparkSessionTest extends AbstractTest {
     void notASparkSession() {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles("src/test/resources/mixed-files")
-            .writeDocuments(options -> options
+            .from("src/test/resources/mixed-files")
+            .to(options -> options
                 .collections("custom-session")
                 .permissionsString(DEFAULT_PERMISSIONS));
 

@@ -197,19 +197,19 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
     }
 
     @Override
-    public RdfFilesExporter readTriples(Consumer<ReadTriplesDocumentsOptions> consumer) {
+    public RdfFilesExporter from(Consumer<ReadTriplesDocumentsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public RdfFilesExporter writeFiles(Consumer<WriteRdfFilesOptions> consumer) {
+    public RdfFilesExporter to(Consumer<WriteRdfFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public RdfFilesExporter writeFiles(String path) {
+    public RdfFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

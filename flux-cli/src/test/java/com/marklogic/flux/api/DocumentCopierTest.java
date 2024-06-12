@@ -9,8 +9,8 @@ class DocumentCopierTest extends AbstractTest {
     void sameConnectionString() {
         Flux.copyDocuments()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author").categories("content"))
-            .writeDocuments(options -> options
+            .from(options -> options.collections("author").categories("content"))
+            .to(options -> options
                 .collections("author-copies")
                 .uriPrefix("/copied")
                 .permissionsString(DEFAULT_PERMISSIONS))
@@ -24,13 +24,13 @@ class DocumentCopierTest extends AbstractTest {
     void withOutputConnection() {
         Flux.copyDocuments()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author").categories("content"))
+            .from(options -> options.collections("author").categories("content"))
             .outputConnection(options -> options
                 .host(getDatabaseClient().getHost())
                 .port(getDatabaseClient().getPort())
                 .username(DEFAULT_USER)
                 .password(DEFAULT_PASSWORD))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .collections("author-copies")
                 .uriPrefix("/copied")
                 .permissionsString(DEFAULT_PERMISSIONS))

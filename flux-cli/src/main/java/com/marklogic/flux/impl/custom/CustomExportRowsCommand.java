@@ -29,19 +29,19 @@ public class CustomExportRowsCommand extends AbstractCustomExportCommand<CustomR
     }
 
     @Override
-    public CustomRowsExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public CustomRowsExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public CustomRowsExporter readRows(String opticQuery) {
+    public CustomRowsExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public CustomRowsExporter writeRows(Consumer<CustomExportWriteOptions> consumer) {
+    public CustomRowsExporter to(Consumer<CustomExportWriteOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

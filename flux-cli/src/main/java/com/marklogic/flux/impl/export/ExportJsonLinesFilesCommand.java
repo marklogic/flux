@@ -48,24 +48,24 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
     }
 
     @Override
-    public JsonLinesFilesExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public JsonLinesFilesExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public JsonLinesFilesExporter readRows(String opticQuery) {
-        return this.readRows(options -> options.opticQuery(opticQuery));
+    public JsonLinesFilesExporter from(String opticQuery) {
+        return this.from(options -> options.opticQuery(opticQuery));
     }
 
     @Override
-    public JsonLinesFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
+    public JsonLinesFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public JsonLinesFilesExporter writeFiles(String path) {
-        return this.writeFiles(options -> options.path(path));
+    public JsonLinesFilesExporter to(String path) {
+        return this.to(options -> options.path(path));
     }
 }

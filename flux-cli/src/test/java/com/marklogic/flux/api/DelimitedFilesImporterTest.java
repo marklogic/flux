@@ -14,10 +14,10 @@ class DelimitedFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importDelimitedFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/delimited-files/no-header.csv")
                 .additionalOptions(Map.of("header", "false")))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("no-header")
                 .uriTemplate("/no-header/{_c0}.json"))

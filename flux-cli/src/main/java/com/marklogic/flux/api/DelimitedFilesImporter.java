@@ -4,10 +4,10 @@ import java.util.function.Consumer;
 
 public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter> {
 
-    DelimitedFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer);
+    DelimitedFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
 
-    DelimitedFilesImporter readFiles(String... paths);
+    DelimitedFilesImporter from(String... paths);
 
-    DelimitedFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
+    DelimitedFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 
 }

@@ -14,7 +14,7 @@ class MlcpArchiveFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importMlcpArchiveFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/mlcp-archives")
                 .categories("content", "permissions"))
             .execute();

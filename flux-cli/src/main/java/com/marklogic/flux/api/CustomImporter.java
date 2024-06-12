@@ -12,7 +12,7 @@ public interface CustomImporter extends Executor<CustomImporter> {
         CustomReadOptions s3Endpoint(String endpoint);
     }
 
-    CustomImporter readData(Consumer<CustomReadOptions> consumer);
+    CustomImporter from(Consumer<CustomReadOptions> consumer);
 
-    CustomImporter writeData(Consumer<WriteStructuredDocumentsOptions> consumer);
+    CustomImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

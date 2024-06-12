@@ -10,9 +10,9 @@ public interface JdbcExporter extends Executor<JdbcExporter> {
         WriteRowsOptions saveMode(SaveMode saveMode);
     }
 
-    JdbcExporter readRows(Consumer<ReadRowsOptions> consumer);
+    JdbcExporter from(Consumer<ReadRowsOptions> consumer);
 
-    JdbcExporter readRows(String opticQuery);
+    JdbcExporter from(String opticQuery);
 
-    JdbcExporter writeRows(Consumer<WriteRowsOptions> consumer);
+    JdbcExporter to(Consumer<WriteRowsOptions> consumer);
 }

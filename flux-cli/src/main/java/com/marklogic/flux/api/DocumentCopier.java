@@ -8,11 +8,11 @@ public interface DocumentCopier extends Executor<DocumentCopier> {
         CopyReadDocumentsOptions categories(String... categories);
     }
 
-    DocumentCopier readDocuments(Consumer<CopyReadDocumentsOptions> consumer);
+    DocumentCopier from(Consumer<CopyReadDocumentsOptions> consumer);
 
     DocumentCopier outputConnection(Consumer<ConnectionOptions> consumer);
 
     DocumentCopier outputConnectionString(String connectionString);
 
-    DocumentCopier writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    DocumentCopier to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

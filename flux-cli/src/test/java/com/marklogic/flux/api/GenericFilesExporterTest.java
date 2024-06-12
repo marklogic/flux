@@ -18,8 +18,8 @@ class GenericFilesExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         Flux.exportGenericFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author"))
-            .writeFiles(options -> options
+            .from(options -> options.collections("author"))
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .compressionType(CompressionType.ZIP)
                 .zipFileCount(1))
@@ -33,8 +33,8 @@ class GenericFilesExporterTest extends AbstractTest {
     void pathOnly(@TempDir Path tempDir) {
         Flux.exportGenericFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author"))
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .from(options -> options.collections("author"))
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         File dir = tempDir.toFile();
@@ -46,8 +46,8 @@ class GenericFilesExporterTest extends AbstractTest {
     void prettyPrint(@TempDir Path tempDir) throws IOException {
         Flux.exportGenericFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.uris("/author/author1.json"))
-            .writeFiles(options -> options
+            .from(options -> options.uris("/author/author1.json"))
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .prettyPrint(true))
             .execute();
@@ -65,7 +65,7 @@ class GenericFilesExporterTest extends AbstractTest {
     void missingPath() {
         GenericFilesExporter exporter = Flux.exportGenericFiles()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author"));
+            .from(options -> options.collections("author"));
 
         FluxException ex = assertThrowsNtException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());

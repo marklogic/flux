@@ -49,25 +49,25 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
     }
 
     @Override
-    public ParquetFilesExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public ParquetFilesExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public ParquetFilesExporter readRows(String opticQuery) {
+    public ParquetFilesExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public ParquetFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
+    public ParquetFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public ParquetFilesExporter writeFiles(String path) {
+    public ParquetFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

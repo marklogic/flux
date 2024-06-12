@@ -14,8 +14,8 @@ class CustomDocumentsExporterTest extends AbstractTest {
     void test() {
         Flux.customExportDocuments()
             .connectionString(makeConnectionString())
-            .readDocuments(options -> options.collections("author"))
-            .writeDocuments(options -> options
+            .from(options -> options.collections("author"))
+            .to(options -> options
                 .target("marklogic")
                 .additionalOptions(Map.of(
                     Options.CLIENT_URI, makeConnectionString(),

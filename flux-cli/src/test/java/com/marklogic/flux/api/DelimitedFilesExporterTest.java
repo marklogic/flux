@@ -19,10 +19,10 @@ class DelimitedFilesExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) throws IOException {
         Flux.exportDelimitedFiles()
             .connectionString(makeConnectionString())
-            .readRows(options -> options
+            .from(options -> options
                 .opticQuery("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
                 .partitions(1))
-            .writeFiles(options -> options
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
                 .additionalOptions(Map.of("header", "false")))
@@ -41,9 +41,9 @@ class DelimitedFilesExporterTest extends AbstractTest {
     void pathOnly(@TempDir Path tempDir) {
         Flux.exportDelimitedFiles()
             .connectionString(makeConnectionString())
-            .readRows("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
+            .from("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
             .limit(1)
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
@@ -54,7 +54,7 @@ class DelimitedFilesExporterTest extends AbstractTest {
     void missingPath() {
         DelimitedFilesExporter exporter = Flux.exportDelimitedFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY);
+            .from(READ_AUTHORS_OPTIC_QUERY);
 
         FluxException ex = assertThrowsNtException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());
