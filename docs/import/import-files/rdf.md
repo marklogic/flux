@@ -42,8 +42,7 @@ MarkLogic server does, which are listed below:
 ## Specifying a graph
 
 By default, every triple loaded into MarkLogic will be added to the default MarkLogic semantic graph of 
-`https://github.com/marklogic/spark-etl/pull/73#pullrequestreview-2004167620`. Each RDF quad is loaded into the graph
-specified within the quad.
+`http://marklogic.com/semantics#default-graph`. Each RDF quad is loaded into the graph specified within the quad.
 
 To specify a different graph for every triple (which will not apply to quads), use the `--graph` option. 
 

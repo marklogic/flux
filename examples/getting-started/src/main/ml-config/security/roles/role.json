@@ -1,5 +1,5 @@
 {
-  "role-name": "nt-role",
+  "role-name": "flux-example-role",
   "role": [
     "rest-extension-user"
   ],

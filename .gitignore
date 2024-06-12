@@ -5,3 +5,7 @@ bin
 out
 .DS_Store
 gradle-local.properties
+flux/lib
+flux/ext
+flux/bin
+

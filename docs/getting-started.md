@@ -21,7 +21,7 @@ free to install Flux anywhere and use the examples as a reference for running Fl
 
 ### Obtaining Flux
 
-Flux can either be downloaded from [its GitHub releases page](https://github.com/marklogic/spark-etl/releases), 
+Flux can either be downloaded from [its GitHub releases page](https://github.com/marklogic/flux/releases), 
 from the [internal Wiki](https://wiki.marklogic.com/display/PM/Spark+ETL+0.1+Release), or built locally. 
 If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
 
@@ -39,7 +39,7 @@ Follow these steps to run the examples in this guide:
 5. Run `./gradlew -i mlDeploy` to deploy the example application.
 
 This will create a new REST API app server on port 8004 in your local MarkLogic installation, unless you modified the
-values of `mlHost` and `mlRestPort`. It also creates an "nt-user" MarkLogic user that has the necessary MarkLogic roles
+values of `mlHost` and `mlRestPort`. It also creates an "flux-example-user" MarkLogic user that has the necessary MarkLogic roles
 and privileges for running the examples in this guide. Finally, the application includes a 
 [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE) that creates a view in MarkLogic for the purpose
 of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.marklogic.com/guide/app-dev/OpticAPI).
@@ -49,7 +49,7 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 You can run the tool without any options to see the list of available commands (all examples will assume the use of
 Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`):
 
-    cd nt
+    cd flux
     ./bin/flux
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
@@ -78,14 +78,14 @@ demonstrated:
 ```
 ./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
-    --connection-string "nt-user:password@localhost:8004" \
-    --permissions nt-role,read,nt-role,update \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update \
     --collections employee \
     --uri-template "/employee/{id}.json"
 ```
 
 By accessing your [MarkLogic qconsole](https://docs.marklogic.com/guide/qconsole), you can see that the `employee`
-collection in the `nt-example-content` database now has 1000 JSON documents, one for each line in the gzipped CSV file. 
+collection in the `flux-example-content` database now has 1000 JSON documents, one for each line in the gzipped CSV file. 
 
 ### Importing via JDBC
 
@@ -101,8 +101,8 @@ requires a separate Postgres database; it is only included for reference):
     --jdbc-url "jdbc:postgresql://localhost/dvdrental?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
     --query "select * from customer" \
-    --connection-string "flux-user:password@localhost:8004" \
-    --permissions nt-role,read,nt-role,update \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update \
     --collections customer
 ```
 
@@ -119,7 +119,7 @@ to select rows. The following shows an example of exporting the 1000 employee do
 ```
 mkdir export
 ./bin/flux export-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
     --path export \
     --compression zip \
@@ -138,7 +138,7 @@ in 4 JSON documents being written to `./export/employee`:
 
 ```
 ./bin/flux export-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
     --string-query Engineering \
     --query '{"query": {"value-query": {"json-property": "job_title", "text": "Junior Executive"}}}' \
@@ -160,7 +160,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
 
 ```
 ./bin/flux export-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
     --compression zip \
     --zip-file-count 1 \
@@ -176,7 +176,7 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 ```
 mkdir export/parquet
 ./bin/flux export-parquet-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --path export/parquet \
     --query "op.fromView('Example', 'Employees', '')" 
 ```
@@ -187,7 +187,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 
 ```
 ./bin/flux export-jdbc \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
@@ -204,7 +204,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 
 ```
 ./bin/flux export-parquet-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --query "op.fromView('Example', 'Employees', '')" \
     --path export/parquet \
     --preview 10
@@ -220,7 +220,7 @@ documents:
 
 ```
 ./bin/flux reprocess \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --read-javascript "cts.uris(null, null, cts.collectionQuery('employee'))" \
     --write-javascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
@@ -241,9 +241,9 @@ MarkLogic instance:
 
 ```
 ./bin/flux copy \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
-    --output-connection-string "nt-user:password@localhost:8000"
+    --output-connection-string "flux-example-user:password@localhost:8000"
 ```
 
 For more information, please see the [Copying guide](copy.md).

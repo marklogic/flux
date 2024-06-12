@@ -67,7 +67,7 @@ the following command below from the [Getting Started guide](getting-started.md)
 
 ```
 rm export/*.zip
-./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string flux-example-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip
 ```
@@ -81,7 +81,7 @@ from each forest in your database:
 
 ```
 rm export/*.zip
-./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string flux-example-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip \
     --partitions-per-forest 1
@@ -94,7 +94,7 @@ writing data, regardless of how many were used to read the data:
 
 ```
 rm export/*.zip
-./bin/flux export-files --connection-string nt-user:password@localhost:8004 \
+./bin/flux export-files --connection-string flux-example-user:password@localhost:8004 \
     --collections employee \
     --path export --compression zip \
     --repartition 1

@@ -11,7 +11,7 @@ import java.nio.file.Path;
 
 class SslTest extends AbstractTest {
 
-    private static final String SERVER_NAME = "flux-ssl";
+    private static final String SERVER_NAME = "flux-test-ssl";
 
     @TempDir
     private Path tempDir;

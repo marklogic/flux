@@ -69,7 +69,7 @@ To configure the SonarQube service, perform the following steps:
 1. Go to http://localhost:9000 .
 2. Login as admin/admin. SonarQube will ask you to change this password; you can choose whatever you want ("password" works).
 3. Click on "Create project manually".
-4. Enter "spark-etl" for the Project Name; use that as the Project Key too.
+4. Enter "flux" for the Project Name; use that as the Project Key too.
 5. Enter "main" as the main branch name.
 6. Click on "Next".
 7. Click on "Use the global setting" and then "Create project".
@@ -90,7 +90,7 @@ following:
 
 When that completes, you will see a line like this near the end of the logging:
 
-    ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=spark-etl
+    ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=flux
 
 Click on that link. If it's the first time you've run the report, you'll see all issues. If you've run the report
 before, then SonarQube will show "New Code" by default. That's handy, as you can use that to quickly see any issues
@@ -140,10 +140,10 @@ You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
 ./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-user:password@localhost:8000" \
+  --connection-string "flux-test-user:password@localhost:8000" \
   --repartition 1 \
   --abort-on-write-failure \
-  --permissions "invalid-role,read,flux-role,update" \
+  --permissions "invalid-role,read,flux-test-role,update" \
   --uri-replace ".*/mixed-files,'/test'"
 ```
 
@@ -151,9 +151,9 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
 
 ```
 ./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-user:password@localhost:8000" \
+  --connection-string "flux-test-user:password@localhost:8000" \
   --repartition 1 \
-  --permissions "invalid-role,read,flux-role,update" \
+  --permissions "invalid-role,read,flux-test-role,update" \
   --uri-replace ".*/mixed-files,'/test'" \
   --abort-on-write-failure \
   --stacktrace
@@ -163,8 +163,8 @@ You can cause a failure and tell the command to keep executing by not including 
 
 ```
 ./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-user:password@localhost:8000" \
-  --permissions "invalid-role,read,flux-role,update" \
+  --connection-string "flux-test-user:password@localhost:8000" \
+  --permissions "invalid-role,read,flux-test-role,update" \
   --uri-replace ".*/mixed-files,'/test'"
 ```
 

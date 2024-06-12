@@ -99,7 +99,7 @@ instead of in a table:
 
 ```
 ./bin/flux import-parquet-files \
-    --connection-string "nt-user:password@localhost:8004" \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --path export/parquet \
     --preview 10 \
     --preview-drop job_title,department
@@ -120,8 +120,8 @@ The following shows an example of only importing the first 10 rows from a delimi
 ```
 ./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
-    --connection-string "nt-user:password@localhost:8004" \
-    --permissions nt-role,read,nt-role,update \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update \
     --collections employee \
     --uri-template "/employee/{id}.json" \
     --limit 10

@@ -1,5 +1,5 @@
-title: MarkLogic New Tool
-repository: marklogic/spark-etl
+title: MarkLogic Flux
+repository: marklogic/flux
 remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-remote-theme
@@ -10,8 +10,8 @@ logo: "/assets/ProgressMarkLogic_PrimaryLogo_Stacked.svg"
 
 # Aux links for the upper right navigation
 aux_links:
-  "marklogic/spark-etl":
-    - "https://github.com/marklogic/spark-etl"
+  "marklogic/flux":
+    - "https://github.com/marklogic/flux"
 
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: false
