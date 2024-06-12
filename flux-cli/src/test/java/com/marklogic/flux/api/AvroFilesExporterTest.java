@@ -15,10 +15,10 @@ class AvroFilesExporterTest extends AbstractTest {
     void test(@TempDir Path tempDir) {
         Flux.exportAvroFiles()
             .connectionString(makeConnectionString())
-            .readRows(options -> options
+            .from(options -> options
                 .opticQuery(READ_AUTHORS_OPTIC_QUERY)
                 .partitions(2))
-            .writeFiles(options -> options
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1))
             .execute();
@@ -30,8 +30,8 @@ class AvroFilesExporterTest extends AbstractTest {
     void queryOnly(@TempDir Path tempDir) {
         Flux.exportAvroFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeFiles(tempDir.toFile().getAbsolutePath())
+            .from(READ_AUTHORS_OPTIC_QUERY)
+            .to(tempDir.toFile().getAbsolutePath())
             .execute();
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
@@ -42,7 +42,7 @@ class AvroFilesExporterTest extends AbstractTest {
     void missingPath() {
         AvroFilesExporter exporter = Flux.exportAvroFiles()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY);
+            .from(READ_AUTHORS_OPTIC_QUERY);
 
         FluxException ex = assertThrowsNtException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());
@@ -54,9 +54,9 @@ class AvroFilesExporterTest extends AbstractTest {
 
         // Read the files back in to ensure we get 15 rows
         Flux.importAvroFiles()
-            .readFiles(tempDir.toFile().getAbsolutePath())
+            .from(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS).collections("avro-test"))
+            .to(options -> options.permissionsString(DEFAULT_PERMISSIONS).collections("avro-test"))
             .execute();
 
         assertCollectionSize("avro-test", 15);

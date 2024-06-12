@@ -10,7 +10,7 @@ class CustomImporterTest extends AbstractTest {
     @Test
     void test() {
         Flux.customImport()
-            .readData(options -> options
+            .from(options -> options
                 .source("csv")
                 .additionalOptions(Map.of(
                     "path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
@@ -18,7 +18,7 @@ class CustomImporterTest extends AbstractTest {
                     "header", "true"
                 )))
             .connectionString(makeConnectionString())
-            .writeData(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("csv-test")
                 .uriTemplate("/csv/{number}.json"))

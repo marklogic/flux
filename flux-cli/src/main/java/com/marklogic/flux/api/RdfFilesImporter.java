@@ -15,9 +15,9 @@ public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
         WriteTriplesDocumentsOptions graphOverride(String graphOverride);
     }
 
-    RdfFilesImporter readFiles(Consumer<ReadRdfFilesOptions> consumer);
+    RdfFilesImporter from(Consumer<ReadRdfFilesOptions> consumer);
 
-    RdfFilesImporter readFiles(String... paths);
+    RdfFilesImporter from(String... paths);
 
-    RdfFilesImporter writeDocuments(Consumer<WriteTriplesDocumentsOptions> consumer);
+    RdfFilesImporter to(Consumer<WriteTriplesDocumentsOptions> consumer);
 }

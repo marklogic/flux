@@ -13,7 +13,7 @@ public interface JdbcImporter extends Executor<JdbcImporter> {
         ReadJdbcOptions aggregationExpressions(String... expressions);
     }
 
-    JdbcImporter readJdbc(Consumer<ReadJdbcOptions> consumer);
+    JdbcImporter from(Consumer<ReadJdbcOptions> consumer);
 
-    JdbcImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
+    JdbcImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

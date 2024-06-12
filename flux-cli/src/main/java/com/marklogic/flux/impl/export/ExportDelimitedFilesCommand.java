@@ -52,25 +52,25 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
     }
 
     @Override
-    public DelimitedFilesExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public DelimitedFilesExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public DelimitedFilesExporter readRows(String opticQuery) {
+    public DelimitedFilesExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public DelimitedFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
+    public DelimitedFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public DelimitedFilesExporter writeFiles(String path) {
+    public DelimitedFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

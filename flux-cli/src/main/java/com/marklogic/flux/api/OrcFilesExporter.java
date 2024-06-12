@@ -4,11 +4,11 @@ import java.util.function.Consumer;
 
 public interface OrcFilesExporter extends Executor<OrcFilesExporter> {
 
-    OrcFilesExporter readRows(Consumer<ReadRowsOptions> consumer);
+    OrcFilesExporter from(Consumer<ReadRowsOptions> consumer);
 
-    OrcFilesExporter readRows(String opticQuery);
+    OrcFilesExporter from(String opticQuery);
 
-    OrcFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+    OrcFilesExporter to(Consumer<WriteSparkFilesOptions> consumer);
 
-    OrcFilesExporter writeFiles(String path);
+    OrcFilesExporter to(String path);
 }

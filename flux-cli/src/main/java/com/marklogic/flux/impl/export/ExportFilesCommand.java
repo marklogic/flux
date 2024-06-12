@@ -122,19 +122,19 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
     }
 
     @Override
-    public GenericFilesExporter readDocuments(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
+    public GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public GenericFilesExporter writeFiles(Consumer<WriteGenericFilesOptions> consumer) {
+    public GenericFilesExporter to(Consumer<WriteGenericFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public GenericFilesExporter writeFiles(String path) {
+    public GenericFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

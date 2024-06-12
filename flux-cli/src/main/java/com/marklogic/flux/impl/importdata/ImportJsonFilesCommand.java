@@ -78,19 +78,19 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
     }
 
     @Override
-    public JsonFilesImporter readFiles(Consumer<ReadJsonFilesOptions> consumer) {
+    public JsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public JsonFilesImporter readFiles(String... paths) {
+    public JsonFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public JsonFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public JsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

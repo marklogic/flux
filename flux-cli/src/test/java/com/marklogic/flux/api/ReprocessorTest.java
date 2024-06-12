@@ -14,10 +14,10 @@ class ReprocessorTest extends AbstractTest {
     void test() {
         Flux.reprocess()
             .connectionString(makeConnectionString())
-            .readItems(options -> options
+            .from(options -> options
                 .javascript("var collection; cts.uris(null, null, cts.collectionQuery(collection))")
                 .vars(Map.of("collection", "author")))
-            .writeItems(options -> options
+            .to(options -> options
                 .invoke("/writeDocument.sjs")
                 .vars(Map.of("theValue", "my value")))
             .execute();
@@ -34,7 +34,7 @@ class ReprocessorTest extends AbstractTest {
     void noReader() {
         Reprocessor r = Flux.reprocess()
             .connectionString(makeConnectionString())
-            .writeItems(options -> options.invoke("/writeDocument.sjs"));
+            .to(options -> options.invoke("/writeDocument.sjs"));
 
         FluxException ex = assertThrowsNtException(() -> r.execute());
         assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for reading from MarkLogic", ex.getMessage());
@@ -44,10 +44,10 @@ class ReprocessorTest extends AbstractTest {
     void twoPartitionReaders() {
         Reprocessor r = Flux.reprocess()
             .connectionString(makeConnectionString())
-            .readItems(options -> options.invoke("anything.sjs")
+            .from(options -> options.invoke("anything.sjs")
                 .partitionsJavascript("something")
                 .partitionsXquery("something else"))
-            .writeItems(options -> options.invoke("/writeDocument.sjs"));
+            .to(options -> options.invoke("/writeDocument.sjs"));
 
         FluxException ex = assertThrowsNtException(() -> r.execute());
         assertEquals("Can only specify one approach for defining partitions that are sent to the code for reading from MarkLogic", ex.getMessage());
@@ -57,7 +57,7 @@ class ReprocessorTest extends AbstractTest {
     void noWriter() {
         Reprocessor r = Flux.reprocess()
             .connectionString(makeConnectionString())
-            .readItems(options -> options.invoke("anything"));
+            .from(options -> options.invoke("anything"));
 
         FluxException ex = assertThrowsNtException(() -> r.execute());
         assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for writing to MarkLogic", ex.getMessage());

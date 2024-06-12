@@ -296,13 +296,13 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     }
 
     @Override
-    public DocumentCopier readDocuments(Consumer<CopyReadDocumentsOptions> consumer) {
+    public DocumentCopier from(Consumer<CopyReadDocumentsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public DocumentCopier writeDocuments(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    public DocumentCopier to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
         consumer.accept(writeParams);
         return this;
     }

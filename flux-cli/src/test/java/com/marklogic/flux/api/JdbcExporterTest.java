@@ -14,8 +14,8 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
     void test() {
         Flux.exportJdbc()
             .connectionString(makeConnectionString())
-            .readRows(options -> options.opticQuery(READ_AUTHORS_OPTIC_QUERY))
-            .writeRows(options -> options
+            .from(options -> options.opticQuery(READ_AUTHORS_OPTIC_QUERY))
+            .to(options -> options
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .additionalOptions(Map.of("driver", PostgresUtil.DRIVER))
                 .table(EXPORTED_TABLE_NAME)
@@ -30,8 +30,8 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
     void queryOnly() {
         Flux.exportJdbc()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeRows(options -> options
+            .from(READ_AUTHORS_OPTIC_QUERY)
+            .to(options -> options
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .additionalOptions(Map.of("driver", PostgresUtil.DRIVER))
                 .table(EXPORTED_TABLE_NAME)
@@ -46,8 +46,8 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
     void missingJdbcUrl() {
         JdbcExporter exporter = Flux.exportJdbc()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeRows(options -> options
+            .from(READ_AUTHORS_OPTIC_QUERY)
+            .to(options -> options
                 .table(EXPORTED_TABLE_NAME)
                 .saveMode(SaveMode.ERRORIFEXISTS)
             );
@@ -60,8 +60,8 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
     void missingTable() {
         JdbcExporter exporter = Flux.exportJdbc()
             .connectionString(makeConnectionString())
-            .readRows(READ_AUTHORS_OPTIC_QUERY)
-            .writeRows(options -> options
+            .from(READ_AUTHORS_OPTIC_QUERY)
+            .to(options -> options
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .saveMode(SaveMode.ERRORIFEXISTS)
             );

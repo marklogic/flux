@@ -4,9 +4,9 @@ import java.util.function.Consumer;
 
 public interface ParquetFilesImporter extends Executor<ParquetFilesImporter> {
 
-    ParquetFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer);
+    ParquetFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
 
-    ParquetFilesImporter readFiles(String... paths);
+    ParquetFilesImporter from(String... paths);
 
-    ParquetFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
+    ParquetFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

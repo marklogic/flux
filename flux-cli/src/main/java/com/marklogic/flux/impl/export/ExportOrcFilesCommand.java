@@ -49,25 +49,25 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
     }
 
     @Override
-    public OrcFilesExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public OrcFilesExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public OrcFilesExporter readRows(String opticQuery) {
+    public OrcFilesExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public OrcFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer) {
+    public OrcFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }
 
     @Override
-    public OrcFilesExporter writeFiles(String path) {
+    public OrcFilesExporter to(String path) {
         writeParams.path(path);
         return this;
     }

@@ -13,8 +13,8 @@ class AvroFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importAvroFiles()
             .connectionString(makeConnectionString())
-            .readFiles("src/test/resources/avro/*")
-            .writeDocuments(options -> options
+            .from("src/test/resources/avro/*")
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("avro-test")
                 .uriTemplate("/avro/{color}.json"))
@@ -27,10 +27,10 @@ class AvroFilesImporterTest extends AbstractTest {
     void badAvroOption() {
         AvroFilesImporter importer = Flux.importAvroFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/avro/*")
                 .additionalOptions(Map.of("avroSchema", "not-a-valid-schema")))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("avro-test")
                 .uriTemplate("/avro/{color}.json"));

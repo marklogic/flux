@@ -99,19 +99,19 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
     }
 
     @Override
-    public RdfFilesImporter readFiles(Consumer<ReadRdfFilesOptions> consumer) {
+    public RdfFilesImporter from(Consumer<ReadRdfFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public RdfFilesImporter readFiles(String... paths) {
+    public RdfFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public RdfFilesImporter writeDocuments(Consumer<WriteTriplesDocumentsOptions> consumer) {
+    public RdfFilesImporter to(Consumer<WriteTriplesDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

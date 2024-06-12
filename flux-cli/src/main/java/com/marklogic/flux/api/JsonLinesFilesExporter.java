@@ -4,11 +4,11 @@ import java.util.function.Consumer;
 
 public interface JsonLinesFilesExporter extends Executor<JsonLinesFilesExporter> {
 
-    JsonLinesFilesExporter readRows(Consumer<ReadRowsOptions> consumer);
+    JsonLinesFilesExporter from(Consumer<ReadRowsOptions> consumer);
 
-    JsonLinesFilesExporter readRows(String opticQuery);
+    JsonLinesFilesExporter from(String opticQuery);
 
-    JsonLinesFilesExporter writeFiles(Consumer<WriteSparkFilesOptions> consumer);
+    JsonLinesFilesExporter to(Consumer<WriteSparkFilesOptions> consumer);
 
-    JsonLinesFilesExporter writeFiles(String path);
+    JsonLinesFilesExporter to(String path);
 }

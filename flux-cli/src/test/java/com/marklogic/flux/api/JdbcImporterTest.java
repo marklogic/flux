@@ -18,14 +18,14 @@ class JdbcImporterTest extends AbstractTest {
     @Test
     void test() {
         Flux.importJdbc()
-            .readJdbc(options -> options
+            .from(options -> options
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .driver(PostgresUtil.DRIVER)
                 .query(QUERY)
                 .groupBy("customer_id")
                 .aggregationExpressions("payments=payment_id;amount;payment_date"))
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/customer/{customer_id}.json"))
             .execute();
@@ -38,13 +38,13 @@ class JdbcImporterTest extends AbstractTest {
     @Test
     void withoutDriver() {
         Flux.importJdbc()
-            .readJdbc(options -> options
+            .from(options -> options
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .driver(PostgresUtil.DRIVER)
                 .query("select * from customer"))
             .connectionString(makeConnectionString())
             .limit(10)
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("jdbc-customer"))
             .execute();
@@ -56,7 +56,7 @@ class JdbcImporterTest extends AbstractTest {
     @Test
     void missingJdbcUrl() {
         JdbcImporter importer = Flux.importJdbc()
-            .readJdbc(options -> options.query(QUERY))
+            .from(options -> options.query(QUERY))
             .connectionString(makeConnectionString());
 
         FluxException ex = assertThrowsNtException(() -> importer.execute());
@@ -66,7 +66,7 @@ class JdbcImporterTest extends AbstractTest {
     @Test
     void missingQuery() {
         JdbcImporter importer = Flux.importJdbc()
-            .readJdbc(options -> options.url(PostgresUtil.URL))
+            .from(options -> options.url(PostgresUtil.URL))
             .connectionString(makeConnectionString());
 
         FluxException ex = assertThrowsNtException(() -> importer.execute());

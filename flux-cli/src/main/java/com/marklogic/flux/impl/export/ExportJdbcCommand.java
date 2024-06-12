@@ -79,19 +79,19 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     }
 
     @Override
-    public JdbcExporter readRows(Consumer<ReadRowsOptions> consumer) {
+    public JdbcExporter from(Consumer<ReadRowsOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public JdbcExporter readRows(String opticQuery) {
+    public JdbcExporter from(String opticQuery) {
         readParams.opticQuery(opticQuery);
         return this;
     }
 
     @Override
-    public JdbcExporter writeRows(Consumer<WriteRowsOptions> consumer) {
+    public JdbcExporter to(Consumer<WriteRowsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

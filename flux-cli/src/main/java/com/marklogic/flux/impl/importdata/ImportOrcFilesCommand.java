@@ -62,19 +62,19 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
     }
 
     @Override
-    public OrcFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer) {
+    public OrcFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public OrcFilesImporter readFiles(String... paths) {
+    public OrcFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public OrcFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public OrcFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

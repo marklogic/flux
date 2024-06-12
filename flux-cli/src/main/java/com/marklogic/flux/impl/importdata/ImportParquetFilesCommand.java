@@ -62,19 +62,19 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
     }
 
     @Override
-    public ParquetFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer) {
+    public ParquetFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public ParquetFilesImporter readFiles(String... paths) {
+    public ParquetFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public ParquetFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public ParquetFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

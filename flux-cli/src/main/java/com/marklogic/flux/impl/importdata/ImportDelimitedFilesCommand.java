@@ -63,19 +63,19 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     }
 
     @Override
-    public DelimitedFilesImporter readFiles(Consumer<ReadSparkFilesOptions> consumer) {
+    public DelimitedFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public DelimitedFilesImporter readFiles(String... paths) {
+    public DelimitedFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public DelimitedFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public DelimitedFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

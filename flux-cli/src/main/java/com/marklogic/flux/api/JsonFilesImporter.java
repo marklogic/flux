@@ -11,9 +11,9 @@ public interface JsonFilesImporter extends Executor<JsonFilesImporter> {
         ReadJsonFilesOptions additionalOptions(Map<String, String> additionalOptions);
     }
 
-    JsonFilesImporter readFiles(Consumer<ReadJsonFilesOptions> consumer);
+    JsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer);
 
-    JsonFilesImporter readFiles(String... paths);
+    JsonFilesImporter from(String... paths);
 
-    JsonFilesImporter writeDocuments(Consumer<WriteStructuredDocumentsOptions> consumer);
+    JsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

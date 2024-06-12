@@ -32,7 +32,7 @@ class SslTest extends AbstractTest {
     @Test
     void twoWaySslTest() {
         Flux.importGenericFiles()
-            .readFiles("src/test/resources/mixed-files")
+            .from("src/test/resources/mixed-files")
             .connection(options -> options
                 .host(getDatabaseClient().getHost())
                 .port(8005)
@@ -43,7 +43,7 @@ class SslTest extends AbstractTest {
                 .trustStorePath(twoWaySslConfig.getTrustStoreFile().getAbsolutePath())
                 .trustStorePassword(twoWaySslConfig.getTrustStorePassword())
                 .sslHostnameVerifier(SslHostnameVerifier.ANY))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("ssl-files"))
             .execute();

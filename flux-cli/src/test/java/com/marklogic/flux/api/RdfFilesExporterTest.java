@@ -15,15 +15,15 @@ class RdfFilesExporterTest extends AbstractTest {
     @Test
     void test(@TempDir Path tempDir) {
         Flux.importRdfFiles()
-            .readFiles("src/test/resources/rdf/englishlocale.ttl")
+            .from("src/test/resources/rdf/englishlocale.ttl")
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS).graph("my-graph"))
+            .to(options -> options.permissionsString(DEFAULT_PERMISSIONS).graph("my-graph"))
             .execute();
 
         Flux.exportRdfFiles()
             .connectionString(makeConnectionString())
-            .readTriples(options -> options.graphs("my-graph"))
-            .writeFiles(options -> options
+            .from(options -> options.graphs("my-graph"))
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
                 .format("nq")
@@ -34,9 +34,9 @@ class RdfFilesExporterTest extends AbstractTest {
         assertEquals(1, files.length);
 
         Flux.importRdfFiles()
-            .readFiles(tempDir.toFile().getAbsolutePath())
+            .from(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS))
+            .to(options -> options.permissionsString(DEFAULT_PERMISSIONS))
             .execute();
 
         assertCollectionSize("The collection should have 2 documents - one containing the " +
@@ -46,15 +46,15 @@ class RdfFilesExporterTest extends AbstractTest {
     @Test
     void gzip(@TempDir Path tempDir) {
         Flux.importRdfFiles()
-            .readFiles("src/test/resources/rdf/englishlocale.ttl")
+            .from("src/test/resources/rdf/englishlocale.ttl")
             .connectionString(makeConnectionString())
-            .writeDocuments(options -> options.permissionsString(DEFAULT_PERMISSIONS))
+            .to(options -> options.permissionsString(DEFAULT_PERMISSIONS))
             .execute();
 
         Flux.exportRdfFiles()
             .connectionString(makeConnectionString())
-            .readTriples(options -> options.graphs("http://marklogic.com/semantics#default-graph"))
-            .writeFiles(options -> options
+            .from(options -> options.graphs("http://marklogic.com/semantics#default-graph"))
+            .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
                 .fileCount(1)
                 .format("nq")

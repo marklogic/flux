@@ -28,13 +28,13 @@ public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<Cu
     }
 
     @Override
-    public CustomDocumentsExporter readDocuments(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
+    public CustomDocumentsExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public CustomDocumentsExporter writeDocuments(Consumer<CustomExportWriteOptions> consumer) {
+    public CustomDocumentsExporter to(Consumer<CustomExportWriteOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

@@ -16,8 +16,8 @@ class GenericFilesImporterTest extends AbstractTest {
     void test() {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(PATH)
-            .writeDocuments(options -> options
+            .from(PATH)
+            .to(options -> options
                 .collectionsString("api-files,second-collection")
                 .permissionsString(DEFAULT_PERMISSIONS))
             .execute();
@@ -30,10 +30,10 @@ class GenericFilesImporterTest extends AbstractTest {
     void zipFile() {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("src/test/resources/mixed-files/goodbye.zip")
                 .compressionType(CompressionType.ZIP))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .collections("files")
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriReplace(".*/mixed-files,''"))
@@ -48,8 +48,8 @@ class GenericFilesImporterTest extends AbstractTest {
     void documentType() {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles("src/test/resources/mixed-files/hello.json")
-            .writeDocuments(options -> options
+            .from("src/test/resources/mixed-files/hello.json")
+            .to(options -> options
                 .collectionsString("api-files,second-collection")
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriReplace(".*/mixed-files,''")
@@ -68,7 +68,7 @@ class GenericFilesImporterTest extends AbstractTest {
     void badPath() {
         GenericFilesImporter command = Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles("path/doesnt/exist");
+            .from("path/doesnt/exist");
 
         FluxException ex = assertThrowsNtException(() -> command.execute());
         assertTrue(ex.getMessage().contains("Path does not exist"),
@@ -82,8 +82,8 @@ class GenericFilesImporterTest extends AbstractTest {
     void abortOnWriteFailure() {
         GenericFilesImporter command = Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .readFiles(options -> options.paths(PATH))
-            .writeDocuments(options -> options
+            .from(options -> options.paths(PATH))
+            .to(options -> options
                 .abortOnWriteFailure(true)
                 .permissionsString("not-a-real-role,update"));
 
