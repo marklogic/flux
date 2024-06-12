@@ -18,8 +18,8 @@ downloading the `dvdrental.zip` and extracting it to produce a file named `dvdre
 Once you have the `dvdrental.tar` file in place, run these commands to load it into Postgres:
 
 ```
-docker exec -it new_tool-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental"
-docker exec -it new_tool-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
+docker exec -it flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental"
+docker exec -it flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
 ```
 
 The Docker file includes a pgadmin instance which can be accessed at <http://localhost:15432/>. 
@@ -43,11 +43,11 @@ You will now be able to import this repository's project into Intellij and run t
 If you would like to test our the Flux distribution - as either a tar or zip - perform the following steps:
 
 1. Run either `./gradlew distTar` or `./gradlew distZip`.
-2. Move the file created at `./new-tool-cli/build/distributions` to a desired location.
+2. Move the file created at `./flux-cli/build/distributions` to a desired location.
 3. Extract the file. 
 4. `cd` into the extracted directory.
 
-You can now run `./bin/nt` to test out various commands. 
+You can now run `./bin/flux` to test out various commands. 
 
 ## Running the tests
 
@@ -126,34 +126,34 @@ reporting, they are not necessarily helpful. Support for trying each document in
 
 You can test an invalid command name:
 
-    ./nt/bin/nt not_a_real_command
+    ./flux/bin/flux not_a_real_command
 
 You can forget a required argument:
 
-    ./nt/bin/nt import-files
+    ./flux/bin/flux import-files
 
 You can cause an error from Spark:
 
-    ./nt/bin/nt import-files --path invalid-path
+    ./flux/bin/flux import-files --path invalid-path
 
 You can cause a failure with MarkLogic that caused the command to stop:
 
 ```
-./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connection-string "new-tool-user:password@localhost:8000" \
+./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
+  --connection-string "flux-user:password@localhost:8000" \
   --repartition 1 \
   --abort-on-write-failure \
-  --permissions "invalid-role,read,new-tool-role,update" \
+  --permissions "invalid-role,read,flux-role,update" \
   --uri-replace ".*/mixed-files,'/test'"
 ```
 
 You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
 
 ```
-./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connection-string "new-tool-user:password@localhost:8000" \
+./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
+  --connection-string "flux-user:password@localhost:8000" \
   --repartition 1 \
-  --permissions "invalid-role,read,new-tool-role,update" \
+  --permissions "invalid-role,read,flux-role,update" \
   --uri-replace ".*/mixed-files,'/test'" \
   --abort-on-write-failure \
   --stacktrace
@@ -162,9 +162,9 @@ You can cause a failure and ask to see the full stacktrace (often noisy and not 
 You can cause a failure and tell the command to keep executing by not including `--abort-on-write-failure`:
 
 ```
-./nt/bin/nt import-files --path "new-tool-cli/src/test/resources/mixed-files/*" \
-  --connection-string "new-tool-user:password@localhost:8000" \
-  --permissions "invalid-role,read,new-tool-role,update" \
+./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
+  --connection-string "flux-user:password@localhost:8000" \
+  --permissions "invalid-role,read,flux-role,update" \
   --uri-replace ".*/mixed-files,'/test'"
 ```
 
@@ -181,7 +181,7 @@ owned by the performance team. Feel free to adjust this config locally as needed
 Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
 
 ```
-./nt/bin/nt copy --connection-string "admin:admin@localhost:8006" \
+./flux/bin/flux copy --connection-string "admin:admin@localhost:8006" \
   --collections "address_small" \
   --batch-size 500 \
   --limit 10000 \
@@ -230,7 +230,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/flux-cli-0.2.0-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -238,8 +238,8 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
---master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.2.0-all.jar \
-import-files --path /Users/rudin/workspace/new-tool/new-tool-cli/src/test/resources/mixed-files --preview 5 --preview-drop content
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-cli-0.2.0-all.jar \
+import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files --preview 5 --preview-drop content
 ```
 
 After spark-submit completes, you can refresh <http://localhost:8080> to see evidence of the completed application.
@@ -252,7 +252,7 @@ to something you can access :
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
---master spark://NYWHYC3G0W:7077 new-tool-cli/build/libs/new-tool-cli-0.1-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-cli-0.1-SNAPSHOT-all.jar \
 import-files --path "s3a://changeme/*.*" --preview 10 --preview-drop content
 ```
 

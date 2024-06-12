@@ -24,7 +24,7 @@ will be used as the root of an XML document written to MarkLogic. The `--namespa
 has an associated namespace:
 
 ```
-./bin/nt import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
+./bin/flux import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
     --element employee --namespace org:example
 ```
 
@@ -35,7 +35,7 @@ you can use the `--uri-element` and `--uri-namespace` options to identify an ele
 be included in the URI:
 
 ```
-./bin/nt import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
+./bin/flux import-aggregate-xml-files --path /path/to/files --connection-string user:password@localhost:8000 \
     --element employee --namespace org:example \
     --uri-element employee ID --namespace org:example
 ```

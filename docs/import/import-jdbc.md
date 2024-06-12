@@ -36,7 +36,7 @@ Connection details are specified via the following options:
 To import all rows in a table, use the `--query` option with a SQL query selecting all rows (connection details for 
 MarkLogic are omitted for brevity):
 
-    ./bin/nt import-jdbc --query "SELECT * FROM customer" 
+    ./bin/flux import-jdbc --query "SELECT * FROM customer" 
 
 The SQL query can contain any syntax supported by your database. 
 
@@ -72,7 +72,7 @@ on the needs of an application, it may be beneficial for payments to be stored i
 following options would be used to achieve that (connection details are omitted for brevity):
 
 ```
-./bin/nt import-jdbc \
+./bin/flux import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --group-by customer_id \
     --aggregate "payments=payment_id;amount;payment_date"

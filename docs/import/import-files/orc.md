@@ -20,7 +20,7 @@ The `import-orc-files` command is used to read ORC files and write the contents 
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import-orc-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-orc-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 

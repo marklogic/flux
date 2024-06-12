@@ -19,5 +19,5 @@ In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux u
 To enable this, include the `--s3-add-credentials` option:
 
 ```
-./bin/nt export-files --path "s3a://my-bucket/some/path" --s3-add-credentials
+./bin/flux export-files --path "s3a://my-bucket/some/path" --s3-add-credentials
 ```

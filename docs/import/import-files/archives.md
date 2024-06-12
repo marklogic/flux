@@ -23,7 +23,7 @@ The `import-archive-files` command will import the documents and metadata files 
 `export-archive-files` command. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/nt import-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Importing MLCP archives
 
@@ -32,7 +32,7 @@ You can also import
 that were produced via the `EXPORT` command in MLCP. The `import-mlcp-archive-files` command is used instead, and it also
 requires at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
-    ./bin/nt import-mlcp-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-mlcp-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Restricting metadata
 

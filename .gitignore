@@ -5,5 +5,3 @@ bin
 out
 .DS_Store
 gradle-local.properties
-nt
-flux

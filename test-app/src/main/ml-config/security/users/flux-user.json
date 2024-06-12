@@ -1,7 +1,7 @@
 {
-  "user-name": "new-tool-admin",
+  "user-name": "flux-user",
   "password": "password",
   "role": [
-    "admin"
+    "flux-role"
   ]
 }

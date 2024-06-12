@@ -26,11 +26,11 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     private static DatabaseClient databaseClient;
 
-    protected static final String DEFAULT_PERMISSIONS = "new-tool-role,read,new-tool-role,update";
+    protected static final String DEFAULT_PERMISSIONS = "flux-role,read,flux-role,update";
 
     protected static final String READ_AUTHORS_OPTIC_QUERY = "op.fromView('Medical', 'Authors', '')";
 
-    protected static final String DEFAULT_USER = "new-tool-user";
+    protected static final String DEFAULT_USER = "flux-user";
     protected static final String DEFAULT_PASSWORD = "password";
 
     private SparkSession sparkSession;
@@ -79,7 +79,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     }
 
     protected final String makeConnectionString() {
-        // new-tool-user is expected to have the minimum set of privileges for running all the tests.
+        // flux-user is expected to have the minimum set of privileges for running all the tests.
         return String.format("%s:%s@%s:%d", DEFAULT_USER, DEFAULT_PASSWORD, databaseClient.getHost(), databaseClient.getPort());
     }
 

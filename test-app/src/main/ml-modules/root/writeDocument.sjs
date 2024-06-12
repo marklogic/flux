@@ -6,6 +6,6 @@ xdmp.documentInsert(`/reprocess-test${URI}`,
   {"theValue": theValue},
   {
     "collections": ["reprocess-test"],
-    "permissions": [xdmp.permission("new-tool-role", "read"), xdmp.permission("new-tool-role", "update")]
+    "permissions": [xdmp.permission("flux-role", "read"), xdmp.permission("flux-role", "update")]
   }
 )

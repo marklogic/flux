@@ -20,7 +20,7 @@ The `import-parquet-files` command is used to read Parquet files and write the c
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the 
 MarkLogic database you wish to write to:
 
-    ./bin/nt import-parquet-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-parquet-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 

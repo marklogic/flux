@@ -65,7 +65,7 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 a notional example of doing so:
 
 ```
-./bin/nt export-jdbc --connection-string user:password@localhost:8000 \
+./bin/flux export-jdbc --connection-string user:password@localhost:8000 \
   --query "op.fromView('example', 'employee', '')" \
   --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
   --jdbc-driver "org.postgresql.Driver" \

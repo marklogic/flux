@@ -20,7 +20,7 @@ The `import-delimited-files` command is used to read delimited text files. The c
 the delimiter for each row value. You must specify at least one `--path` option along with connection information 
 for the MarkLogic database you wish to write to:
 
-    ./bin/nt import-delimited-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-delimited-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Specifying a JSON root name
 
@@ -45,4 +45,4 @@ The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for
 example:
 
-    ./bin/nt import-delimited-files -Pheader=false -PescapeQuotes=false ....
+    ./bin/flux import-delimited-files -Pheader=false -PescapeQuotes=false ....

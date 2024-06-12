@@ -8,5 +8,5 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:new-tool-cli:0.3-SNAPSHOT"
+  implementation "com.marklogic:flux-cli:0.3-SNAPSHOT"
 }

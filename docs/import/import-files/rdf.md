@@ -24,7 +24,7 @@ document is an XML document containing up to 100 semantic triples.
 To import RDF files, you must specify at least one `--path` option along with connection information for the MarkLogic 
 database you wish to write to:
 
-    ./bin/nt import-rdf-files --path /path/to/files --connection-string "user:password@localhost:8000"
+    ./bin/flux import-rdf-files --path /path/to/files --connection-string "user:password@localhost:8000"
 
 ## Supported files types
 

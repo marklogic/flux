@@ -25,7 +25,7 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
     // TBD on the real name here. And will need to account for Windows.
-    private static final String PROGRAM_NAME = "./bin/nt";
+    private static final String PROGRAM_NAME = "./bin/flux";
 
     private static final int COLUMN_SIZE = 120;
 
