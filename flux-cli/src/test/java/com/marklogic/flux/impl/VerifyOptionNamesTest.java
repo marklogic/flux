@@ -40,11 +40,19 @@ class VerifyOptionNamesTest {
         Files.walkFileTree(dir.toPath(), new FileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                if ("../docs".equals(path) && dir.endsWith("assets")) {
+                    // Don't need to check any of the docs/assets files.
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                if (path.toFile().getAbsolutePath().endsWith(".jar")) {
+                    // All kinds of funky chars in a jar file, we don't need to check it.
+                    return FileVisitResult.CONTINUE;
+                }
                 try (FileReader reader = new FileReader(path.toFile())) {
                     String text = FileCopyUtils.copyToString(reader);
                     Pattern pattern = Pattern.compile("\\-\\-[a-zA-Z]+");
@@ -53,6 +61,7 @@ class VerifyOptionNamesTest {
                         String group = matcher.group();
                         for (int i = 0; i < group.length(); i++) {
                             if (Character.isUpperCase(group.charAt(i))) {
+                                System.out.println("HEY OHH!");
                                 throw new RuntimeException(String.format("Found option starting with '--' that " +
                                     "contains an uppercase character: %s; file: %s", group, path.toFile()));
                             }
