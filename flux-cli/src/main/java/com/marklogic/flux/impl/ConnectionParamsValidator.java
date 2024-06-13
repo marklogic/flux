@@ -2,6 +2,7 @@ package com.marklogic.flux.impl;
 
 import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.ParameterException;
+import com.marklogic.flux.api.AuthenticationType;
 
 import java.util.Map;
 
@@ -29,8 +30,8 @@ public class ConnectionParamsValidator implements IParametersValidator {
                     paramNames.port, paramNames.connectionString));
             }
 
-            String authType = (String) parameters.get(paramNames.authType);
-            boolean isDigestOrBasicAuth = authType == null || ("digest".equalsIgnoreCase(authType) || "basic".equalsIgnoreCase(authType));
+            AuthenticationType authType = (AuthenticationType) parameters.get(paramNames.authType);
+            boolean isDigestOrBasicAuth = authType == null || (AuthenticationType.DIGEST.equals(authType) || AuthenticationType.BASIC.equals(authType));
             if (isDigestOrBasicAuth) {
                 if (parameters.get(paramNames.username) == null) {
                     throw new ParameterException(String.format("Must specify a MarkLogic user via %s when using 'BASIC' or 'DIGEST' authentication.",

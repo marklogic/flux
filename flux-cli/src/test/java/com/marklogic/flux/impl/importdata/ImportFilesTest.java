@@ -33,6 +33,35 @@ class ImportFilesTest extends AbstractTest {
     }
 
     @Test
+    void withUsernameAndPasswordAndAuthType() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--host", getDatabaseClient().getHost(),
+            "--port", getDatabaseClient().getPort() + "",
+            "--username", DEFAULT_USER,
+            "--password", DEFAULT_PASSWORD,
+            "--auth-type", "digest",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--uri-replace", ".*/mixed-files,''"
+        );
+
+        verifyDocsWereWritten(uris.length, uris);
+    }
+
+    @Test
+    void invalidAuthType() {
+        assertStderrContains(() -> run(
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--auth-type", "notvalid"
+        ), "Invalid value for --auth-type parameter. Allowed values:[BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, SAML]");
+    }
+
+    @Test
     void documentType() {
         run(
             "import-files",
