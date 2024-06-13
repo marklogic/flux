@@ -8,9 +8,9 @@ public class App {
         // Currently depends on flux test-app.
         Flux.importGenericFiles()
             .connectionString("flux-test-user:password@localhost:8003")
-            .readFiles(options -> options
+            .from(options -> options
                 .paths("../flux-cli/src/test/resources/mixed-files"))
-            .writeDocuments(options -> options
+            .to(options -> options
                 .collections("client-files")
                 .permissionsString("flux-test-role,read,flux-test-role,update"))
             .execute();

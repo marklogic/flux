@@ -131,9 +131,13 @@ java {
 publishing {
   publications {
     mainJava(MavenPublication) {
+      groupId = group
+      // Using a more fitting name of "flux-api". May eventually break out the current "flux-cli" module into
+      // multiple Gradle subprojects, such as "flux-api" and "flux-cli".
+      artifactId = "flux-api"
+      version = version
       from components.java
       pom {
-        name = "${group}:${project.name}"
         description = "Flux ETL for MarkLogic"
         packaging = "jar"
         url = "https://github.com/marklogic/${project.name}"

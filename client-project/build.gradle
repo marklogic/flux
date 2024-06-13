@@ -8,5 +8,11 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-cli:0.3-SNAPSHOT"
+  implementation "com.marklogic:flux-api:0.3-SNAPSHOT"
+}
+
+task runApp(type: JavaExec) {
+  description = "Verify that the example program can be compiled and run with flux-api as a dependency."
+  mainClass = "org.example.App"
+  classpath = sourceSets.main.runtimeClasspath
 }
