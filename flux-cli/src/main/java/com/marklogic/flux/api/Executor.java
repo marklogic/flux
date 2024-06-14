@@ -18,24 +18,30 @@ public interface Executor<T extends Executor> {
      * @param sparkSession must be an instance of {@code org.apache.spark.sql.SparkSession}. The Spark type is not used
      *                     here to avoid adding the Spark API and all of its dependencies to the compile-time
      *                     classpath of clients.
+     * @return instance of this executor
      */
     T withSparkSession(Object sparkSession);
 
     /**
+     * Configure a connection to MarkLogic.
+     *
      * @param consumer Provided by the caller to configure the given options object.
      * @return instance of this executor
      */
     T connection(Consumer<ConnectionOptions> consumer);
 
     /**
-     * Convenience for the common use case of configuring a MarkLogic connection via a connection string.
+     * Convenience for the common use case of configuring a MarkLogic connection via a connection string. Requires
+     * that the associated MarkLogic REST API app server use basic or digest authentication.
      *
-     * @param connectionString Defines a connection to MarkLogic via "user:password@host:port".
+     * @param connectionString Defines a connection to MarkLogic via "user:password@host:port/optionalDatabaseName".
      * @return instance of this executor
      */
     T connectionString(String connectionString);
 
     /**
+     * Limit the number of records read from the executor's data source.
+     *
      * @param limit Maximum number of records to read from the executor's data source.
      * @return instance of this executor
      */

@@ -70,9 +70,9 @@ tasks.register("copyJavadoc", Copy) {
   into "../docs/assets/javadoc"
   rename { filename -> filename.endsWith(".md") ? filename.replace(".md", ".txt") : filename}
 }
-copyJavadoc.mustRunAfter deleteJavadoc
+copyJavadoc.mustRunAfter deleteJavadoc, javadoc
 tasks.register("updateJavadoc")
-updateJavadoc.dependsOn deleteJavadoc, copyJavadoc
+updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 
 distributions {
   main {

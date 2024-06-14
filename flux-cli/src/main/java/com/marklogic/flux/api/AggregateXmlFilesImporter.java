@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic.
+ */
 public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImporter> {
 
     interface ReadXmlFilesOptions extends ReadFilesOptions<ReadXmlFilesOptions> {

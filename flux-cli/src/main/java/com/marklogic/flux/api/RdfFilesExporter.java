@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3.
+ */
 public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
 
     interface ReadTriplesDocumentsOptions {

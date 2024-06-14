@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.export;
 
 import com.beust.jcommander.DynamicParameter;
+import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.JsonLinesFilesExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to JSON Lines files on a local filesystem, HDFS, or S3.")
 public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesCommand<JsonLinesFilesExporter> implements JsonLinesFilesExporter {
 
     @ParametersDelegate

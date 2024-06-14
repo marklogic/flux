@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read rows via JDBC and write JSON or XML documents to MarkLogic.
+ */
 public interface JdbcImporter extends Executor<JdbcImporter> {
 
     interface ReadJdbcOptions extends JdbcOptions<ReadJdbcOptions> {

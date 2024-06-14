@@ -151,7 +151,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="Executor.html" title="type parameter in Executor">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#connection(java.util.function.Consumer)">connection</a></span>&#8203;(java.util.function.Consumer&lt;<a href="ConnectionOptions.html" title="interface in com.marklogic.flux.api">ConnectionOptions</a>&gt;&nbsp;consumer)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Configure a connection to MarkLogic.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="Executor.html" title="type parameter in Executor">T</a></code></td>
@@ -175,7 +177,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="Executor.html" title="type parameter in Executor">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>&#8203;(int&nbsp;limit)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Limit the number of records read from the executor's data source.</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="Executor.html" title="type parameter in Executor">T</a></code></td>
@@ -224,6 +228,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>sparkSession</code> - must be an instance of <code>org.apache.spark.sql.SparkSession</code>. The Spark type is not used
                      here to avoid adding the Spark API and all of its dependencies to the compile-time
                      classpath of clients.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>instance of this executor</dd>
 </dl>
 </li>
 </ul>
@@ -234,6 +240,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>connection</h4>
 <pre class="methodSignature"><a href="Executor.html" title="type parameter in Executor">T</a>&nbsp;connection&#8203;(java.util.function.Consumer&lt;<a href="ConnectionOptions.html" title="interface in com.marklogic.flux.api">ConnectionOptions</a>&gt;&nbsp;consumer)</pre>
+<div class="block">Configure a connection to MarkLogic.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>consumer</code> - Provided by the caller to configure the given options object.</dd>
@@ -249,10 +256,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>connectionString</h4>
 <pre class="methodSignature"><a href="Executor.html" title="type parameter in Executor">T</a>&nbsp;connectionString&#8203;(java.lang.String&nbsp;connectionString)</pre>
-<div class="block">Convenience for the common use case of configuring a MarkLogic connection via a connection string.</div>
+<div class="block">Convenience for the common use case of configuring a MarkLogic connection via a connection string. Requires
+ that the associated MarkLogic REST API app server use basic or digest authentication.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>connectionString</code> - Defines a connection to MarkLogic via "user:password@host:port".</dd>
+<dd><code>connectionString</code> - Defines a connection to MarkLogic via "user:password@host:port/optionalDatabaseName".</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>instance of this executor</dd>
 </dl>
@@ -265,6 +273,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>limit</h4>
 <pre class="methodSignature"><a href="Executor.html" title="type parameter in Executor">T</a>&nbsp;limit&#8203;(int&nbsp;limit)</pre>
+<div class="block">Limit the number of records read from the executor's data source.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>limit</code> - Maximum number of records to read from the executor's data source.</dd>
