@@ -4,8 +4,10 @@ import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.OrcFilesImporter;
-import com.marklogic.flux.api.ReadSparkFilesOptions;
+import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         return writeParams;
     }
 
-    public static class ReadOrcFilesParams extends ReadFilesParams<ReadSparkFilesOptions> implements ReadSparkFilesOptions {
+    public static class ReadOrcFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
         @DynamicParameter(
             names = "-P",
@@ -47,6 +49,9 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
+        @ParametersDelegate
+        private AggregationParams aggregationParams = new AggregationParams();
+
         @Override
         public Map<String, String> makeOptions() {
             Map<String, String> options = super.makeOptions();
@@ -55,14 +60,31 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         }
 
         @Override
-        public ReadSparkFilesOptions additionalOptions(Map<String, String> options) {
+        public ReadTabularFilesOptions additionalOptions(Map<String, String> options) {
             this.additionalOptions = options;
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions groupBy(String columnName) {
+            aggregationParams.setGroupBy(columnName);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
+            aggregationParams.addAggregationExpression(newColumnName, columns);
             return this;
         }
     }
 
     @Override
-    public OrcFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        return readParams.aggregationParams.applyGroupBy(dataset);
+    }
+
+    @Override
+    public OrcFilesImporter from(Consumer<ReadTabularFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }

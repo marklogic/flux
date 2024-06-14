@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  */
 public interface ParquetFilesImporter extends Executor<ParquetFilesImporter> {
 
-    ParquetFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
+    ParquetFilesImporter from(Consumer<ReadTabularFilesOptions> consumer);
 
     ParquetFilesImporter from(String... paths);
 

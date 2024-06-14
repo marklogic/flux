@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  */
 public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter> {
 
-    DelimitedFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
+    DelimitedFilesImporter from(Consumer<ReadTabularFilesOptions> consumer);
 
     DelimitedFilesImporter from(String... paths);
 

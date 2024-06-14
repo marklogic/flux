@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +23,33 @@ class ImportOrcFilesTest extends AbstractTest {
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);
     }
+
+    @Test
+    void aggregate() {
+        run(
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--group-by", "CitationID",
+            "--aggregate", "names=ForeName;LastName",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "orc-test",
+            "--uri-template", "/orc-test/{CitationID}.json"
+        );
+
+        assertCollectionSize("Expecting 1 doc for each CitationID", "orc-test", 5);
+        for (int i = 1; i <= 5; i++) {
+            JsonNode doc = readJsonDocument("/orc-test/" + i + ".json");
+            assertEquals(i, doc.get("CitationID").asInt());
+            ArrayNode names = (ArrayNode) doc.get("names");
+            for (int j = 0; i < names.size(); i++) {
+                JsonNode name = names.get(i);
+                assertTrue(name.has("ForeName"));
+                assertTrue(name.has("LastName"));
+            }
+        }
+    }
+
 
     @Test
     void jsonRootName() {

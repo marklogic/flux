@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,30 @@ class ImportAvroFilesTest extends AbstractTest {
 
         JsonNode doc = readJsonDocument("/avro/blue.json");
         assertEquals(1, doc.get("myAvroData").get("number").asInt());
+    }
+
+    @Test
+    void aggregate() {
+        run(
+            "import-avro-files",
+            "--path", "src/test/resources/avro",
+            "--group-by", "flag", // Weird, but effective for our test data.
+            "--aggregate", "values=number;color",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "my-avro",
+            "--uri-template", "/avro/{flag}.json"
+        );
+
+        assertCollectionSize("my-avro", 2);
+        JsonNode doc = readJsonDocument("/avro/true.json");
+        ArrayNode values = (ArrayNode) doc.get("values");
+        assertEquals(4, values.size());
+        for (int i = 0; i < 4; i++) {
+            JsonNode object = values.get(i);
+            assertTrue(object.has("number"));
+            assertTrue(object.has("color"));
+        }
     }
 
     @Test

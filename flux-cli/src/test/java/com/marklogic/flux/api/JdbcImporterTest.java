@@ -23,7 +23,7 @@ class JdbcImporterTest extends AbstractTest {
                 .driver(PostgresUtil.DRIVER)
                 .query(QUERY)
                 .groupBy("customer_id")
-                .aggregationExpressions("payments=payment_id;amount;payment_date"))
+                .aggregateColumns("payments", "payment_id", "amount", "payment_date"))
             .connectionString(makeConnectionString())
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

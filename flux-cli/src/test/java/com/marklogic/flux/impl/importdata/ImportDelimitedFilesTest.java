@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.query.QueryManager;
@@ -166,12 +167,12 @@ class ImportDelimitedFilesTest extends AbstractTest {
         assertTrue(
             uriCount > 0,
             "Spark CSV is very liberal in terms of what it allows. It will extract lines from " +
-            "binary files like single-xml.zip. What's not clear is how Spark chooses a schema when it gets a " +
-            "non-delimited file like single-xml.zip. In this test, it consistently chooses single-xml.zip to use " +
-            "as the source of a schema, which results in a gibberish column name and only one row being created. " +
-            "It's not clear if this process is indeterminate and thus Spark CSV may choose three-rows.csv sometimes " +
-            "too. So we expect at least one URI to be written, as the command should default to not failing. " +
-            "Actual URI count: " + uriCount
+                "binary files like single-xml.zip. What's not clear is how Spark chooses a schema when it gets a " +
+                "non-delimited file like single-xml.zip. In this test, it consistently chooses single-xml.zip to use " +
+                "as the source of a schema, which results in a gibberish column name and only one row being created. " +
+                "It's not clear if this process is indeterminate and thus Spark CSV may choose three-rows.csv sometimes " +
+                "too. So we expect at least one URI to be written, as the command should default to not failing. " +
+                "Actual URI count: " + uriCount
         );
 
         assertFalse(stderr.contains("Command failed"), "The command should not have failed because it defaults to " +
@@ -194,6 +195,29 @@ class ImportDelimitedFilesTest extends AbstractTest {
         assertTrue(stderr.contains("Command failed, cause: [MALFORMED_RECORD_IN_PARSING]"), "The command should " +
             "have failed due to --abort-on-read-failure being included. This should result in the 'mode' option being " +
             "set to FAILFAST.");
+    }
+
+    @Test
+    void aggregate() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/join-rows.csv",
+            "--group-by", "number",
+            "--aggregate", "objects=color;flag",
+            "--permissions", "rest-reader,read,rest-writer,update",
+            "--connection-string", makeConnectionString(),
+            "--collections", "my-csv",
+            "--uri-template", "/my-csv/{number}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/my-csv/1.json");
+        assertEquals(1, doc.get("number").asInt());
+        ArrayNode objects = (ArrayNode) doc.get("objects");
+        assertEquals(2, objects.size());
+        assertEquals("blue", objects.get(0).get("color").asText());
+        assertEquals(true, objects.get(0).get("flag").asBoolean());
+        assertEquals("yellow", objects.get(1).get("color").asText());
+        assertEquals(true, objects.get(1).get("flag").asBoolean());
     }
 
     private void verifyDoc(String uri, int expectedNumber, String expectedColor, boolean expectedFlag) {

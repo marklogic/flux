@@ -1,6 +1,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,31 @@ class ImportParquetFilesTest extends AbstractTest {
         verifyCarDoc("/parquet/Datsun 710.json", 22.8, 4, 1);
         verifyCarDoc("/parquet/Ferrari Dino.json", 19.7, 5, 6);
         verifyCarDoc("/parquet/Toyota Corolla.json", 33.9, 4, 1);
+    }
+
+    @Test
+    void aggregate() {
+        run(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--group-by", "cyl",
+            "--aggregate", "models=model;mpg",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "cyl-test",
+            "--uri-template", "/parquet/{cyl}.json"
+        );
+
+        assertCollectionSize("Expecting 3 documents, since there are 3 values for cyl - 4, 6, and 8", "cyl-test", 3);
+        JsonNode doc = readJsonDocument("/parquet/4.json");
+        assertEquals(4, doc.get("cyl").asInt());
+        ArrayNode models = (ArrayNode) doc.get("models");
+        assertEquals(11, models.size(), "Expecting 11 models to have cyl=4");
+        for (int i = 0; i < 11; i++) {
+            JsonNode model = models.get(i);
+            assertTrue(model.has("model"));
+            assertTrue(model.has("mpg"));
+        }
     }
 
     @Test
