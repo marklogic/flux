@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Parameters(commandDescription = "Read aggregate XML files from local, HDFS, and S3 locations using Spark's support " +
-    "with each row being written to MarkLogic.")
+@Parameters(commandDescription = "Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic.")
 public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
 
     @ParametersDelegate

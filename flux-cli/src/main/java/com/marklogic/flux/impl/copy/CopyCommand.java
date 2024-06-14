@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * all the connection params for writing as well. It relies on unit tests to ensure that the counts of these params
  * are the same to avoid a situation where e.g. a new param is added to {@code WriteDocumentParams} but not added here.
  */
-@Parameters(commandDescription = "Copy documents from one to another database, which includes the originating database.")
+@Parameters(commandDescription = "Copy documents from one database to another database, which can also be the originating database.")
 public class CopyCommand extends AbstractCommand<DocumentCopier> implements DocumentCopier {
 
     public static class CopyReadDocumentsParams extends ReadDocumentParams<CopyReadDocumentsOptions> implements DocumentCopier.CopyReadDocumentsOptions {

@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read rows via Optic from MarkLogic and write them to delimited text files on a local filesystem, HDFS, or S3.
+ */
 public interface DelimitedFilesExporter extends Executor<DelimitedFilesExporter> {
 
     DelimitedFilesExporter from(Consumer<ReadRowsOptions> consumer);

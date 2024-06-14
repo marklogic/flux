@@ -145,8 +145,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">FluxException</span>
 extends java.lang.RuntimeException</pre>
-<div class="block">Intended to wrap any non-MarkLogic-connector exception so that users - particularly API users - are not exposed
- directly to e.g. Spark exceptions. Will be renamed once we have an official name.</div>
+<div class="block">Wraps any exception not thrown by the MarkLogic Spark connector so that API users are not exposed directly to
+ Spark exceptions.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../serialized-form.html#com.marklogic.flux.api.FluxException">Serialized Form</a></dd>

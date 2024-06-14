@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read rows via Optic from MarkLogic and write them to a table via JDBC.
+ */
 public interface JdbcExporter extends Executor<JdbcExporter> {
 
     interface WriteRowsOptions extends JdbcOptions<WriteRowsOptions> {

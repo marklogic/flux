@@ -2,6 +2,9 @@ package com.marklogic.flux.api;
 
 import java.util.function.Consumer;
 
+/**
+ * Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic.
+ */
 public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     enum DocumentType {
@@ -10,6 +13,7 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
         ReadGenericFilesOptions compressionType(CompressionType compressionType);
+
         ReadGenericFilesOptions partitions(Integer partitions);
     }
 
