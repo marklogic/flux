@@ -81,6 +81,9 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Parameter(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
         private String options;
 
+        @Parameter(names = "--base-iri", description = "Base IRI to prepend to the graph of a triple when the graph is relative and not absolute.")
+        private String baseIri;
+
         @Parameter(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
         private Integer batchSize = 100;
 
@@ -97,6 +100,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
                 Options.READ_TRIPLES_QUERY, query,
                 Options.READ_TRIPLES_STRING_QUERY, stringQuery,
                 Options.READ_TRIPLES_URIS, uris,
+                Options.READ_TRIPLES_BASE_IRI, baseIri,
                 Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest.toString(),
                 Options.READ_BATCH_SIZE, batchSize.toString()
             );
@@ -141,6 +145,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Override
         public RdfFilesExporter.ReadTriplesDocumentsOptions directory(String directory) {
             this.directory = directory;
+            return this;
+        }
+
+        @Override
+        public ReadTriplesDocumentsOptions baseIri(String baseIri) {
+            this.baseIri = baseIri;
             return this;
         }
 
