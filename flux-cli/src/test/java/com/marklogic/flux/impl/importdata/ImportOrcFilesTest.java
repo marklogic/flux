@@ -30,7 +30,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--group-by", "CitationID",
-            "--aggregate", "names=ForeName;LastName",
+            "--aggregate", "names=ForeName,LastName",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-test",

@@ -13,4 +13,8 @@ public class FluxException extends RuntimeException {
     public FluxException(Throwable cause) {
         super(cause.getMessage(), cause);
     }
+
+    public FluxException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
