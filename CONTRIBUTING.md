@@ -118,6 +118,15 @@ though you don't need to perform all of those steps since some of the files gene
 
 You can then go to http://localhost:4000 to view the docs. 
 
+## Updating the published Javadoc
+
+This project's Javadocs are being published via inclusion in the `docs/assets/javadoc` directory. To update these
+files after changing any of the classes in the `com.marklogic.flux.api` package, run the following:
+
+    ./gradlew updateJavadoc
+
+We will hopefully have this automated in the future so that this does not need to be done manually.
+
 ## Examining error reports
 
 The following commands show examples of how the tool reports errors. One gap is that when a batch fails, the contents

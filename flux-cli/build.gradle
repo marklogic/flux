@@ -62,6 +62,18 @@ javadoc {
   include "com/marklogic/flux/api/**"
 }
 
+tasks.register("deleteJavadoc", Delete) {
+  delete "../docs/assets/javadoc"
+}
+tasks.register("copyJavadoc", Copy) {
+  from layout.buildDirectory.dir("docs/javadoc")
+  into "../docs/assets/javadoc"
+  rename { filename -> filename.endsWith(".md") ? filename.replace(".md", ".txt") : filename}
+}
+copyJavadoc.mustRunAfter deleteJavadoc
+tasks.register("updateJavadoc")
+updateJavadoc.dependsOn deleteJavadoc, copyJavadoc
+
 distributions {
   main {
     distributionBaseName = "flux"
