@@ -22,6 +22,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
             "--collections", "c1,c2",
             "--directory", "/dir/",
             "--options", "my-options",
+            "--base-iri", "my-base-iri",
             "--batch-size", "50",
             "--partitions-per-forest", "2",
             "--path", "anywhere",
@@ -37,6 +38,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("c1,c2", options.get(Options.READ_TRIPLES_COLLECTIONS));
         assertEquals("/dir/", options.get(Options.READ_TRIPLES_DIRECTORY));
         assertEquals("my-options", options.get(Options.READ_TRIPLES_OPTIONS));
+        assertEquals("my-base-iri", options.get(Options.READ_TRIPLES_BASE_IRI));
         assertEquals("50", options.get(Options.READ_BATCH_SIZE));
         assertEquals("2", options.get(Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST));
 

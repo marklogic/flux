@@ -20,6 +20,8 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
 
         ReadTriplesDocumentsOptions directory(String directory);
 
+        ReadTriplesDocumentsOptions baseIri(String baseIri);
+
         ReadTriplesDocumentsOptions batchSize(Integer batchSize);
 
         ReadTriplesDocumentsOptions partitionsPerForest(Integer partitionsPerForest);
