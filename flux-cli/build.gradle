@@ -82,10 +82,19 @@ distributions {
 
 application {
   mainClass = "com.marklogic.flux.cli.Main"
+
   // Removes warnings due to Spark performing "illegal reflective access".
   applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
                                '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',
                                '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED']
+
+  // For now, the log4j2 config we use for tests is suitable for production usage as well. So the log4j2 file is
+  // included in the "conf" directory, which is included on the Flux classpath via the start-script.txt file.
+  // Reference for this - https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaApplication.html .
+  applicationDistribution.from("src/test/resources") {
+    include "log4j2.properties"
+    into "conf"
+  }
 }
 
 // Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.

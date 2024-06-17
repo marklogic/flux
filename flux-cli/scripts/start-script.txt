@@ -152,6 +152,9 @@ CLASSPATH=$classpath
 MODULE_PATH=$modulePath
 <% } %>
 
+# Add conf directory so user can edit the files in it.
+CLASSPATH=\${CLASSPATH}":\$APP_HOME/conf"
+
 # Add user stuff; we'll say "/ext" for now.
 for file in "\${APP_HOME}"/ext/*.jar
 do
