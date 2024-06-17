@@ -86,6 +86,18 @@ class ImportJdbcTest extends AbstractTest {
         assertCollectionSize("customer", 599);
     }
 
+    @Test
+    void badJdbcDriverValue() {
+        assertStderrContains(() -> run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", "not.valid.driver.value",
+            "--query", "select * from customer",
+            "--preview", "10"
+        ), "Command failed, cause: Unable to load class: not.valid.driver.value; " +
+            "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
+    }
+
     private void verifyTenCustomersWereImported() {
         assertCollectionSize("customer", 10);
         JsonNode doc = readJsonDocument("/customer/1.json");

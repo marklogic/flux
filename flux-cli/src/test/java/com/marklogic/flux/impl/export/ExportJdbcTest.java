@@ -81,6 +81,19 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
             "set via command arguments, so the value of -Pdriver should be used, causing the query to work.");
     }
 
+    @Test
+    void badJdbcDriver() {
+        assertStderrContains(() -> run(
+            "export-jdbc",
+            "--connection-string", makeConnectionString(),
+            "--query", READ_AUTHORS_OPTIC_QUERY,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", "not.valid.driver.name",
+            "--table", EXPORTED_TABLE_NAME
+        ), "Command failed, cause: Unable to load class: not.valid.driver.name; " +
+            "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
+    }
+
     private void exportFifteenAuthors() {
         exportFifteenAuthorsWithMode("errorifexists");
     }

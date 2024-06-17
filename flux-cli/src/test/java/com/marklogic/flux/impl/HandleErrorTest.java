@@ -66,7 +66,7 @@ class HandleErrorTest extends AbstractTest {
                 "--path", "/not/valid",
                 "--connection-string", makeConnectionString()
             ),
-            "Command failed, cause: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
+            "Command failed, cause: AnalysisException: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
         );
     }
 

@@ -10,6 +10,7 @@ import com.marklogic.flux.api.JdbcImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.JdbcParams;
+import com.marklogic.flux.impl.JdbcUtil;
 import com.marklogic.flux.impl.OptionsUtil;
 import org.apache.spark.sql.*;
 
@@ -34,10 +35,13 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     }
 
     @Override
-    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        return session.read().format("jdbc")
-            .options(readParams.makeOptions())
-            .load();
+    protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) throws Exception {
+        DataFrameReader readerToLoad = session.read().format("jdbc").options(readParams.makeOptions());
+        try {
+            return readerToLoad.load();
+        } catch (Exception ex) {
+            throw JdbcUtil.massageException(ex);
+        }
     }
 
     @Override
