@@ -206,7 +206,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/join-rows.csv",
             "--group-by", "number",
-            "--aggregate", "objects=color;flag",
+            "--aggregate", "objects=color,flag",
             "--permissions", "rest-reader,read,rest-writer,update",
             "--connection-string", makeConnectionString(),
             "--collections", "my-csv",

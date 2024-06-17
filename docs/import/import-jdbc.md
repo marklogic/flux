@@ -63,7 +63,7 @@ To facilitate producing hierarchical documents with multiple sets of related dat
 to combine multiple rows from a SQL query (which typically will include one or more joins) into hierarchical documents:
 
 - `--group-by` specifies a column name to group rows by; this is typically the column used in a join.
-- `--aggregate` specifies a string of the form `new_column_name=column1;column2;column3`. The `new_column_name` column
+- `--aggregate` specifies a string of the form `new_column_name=column1,column2,column3`. The `new_column_name` column
   will contain an array of objects, with each object having columns of `column`, `column2`, and `column3`.
 
 For example, consider the [Postgres tutorial database](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
@@ -75,7 +75,7 @@ following options would be used to achieve that (connection details are omitted 
 ./bin/flux import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --group-by customer_id \
-    --aggregate "payments=payment_id;amount;payment_date"
+    --aggregate "payments=payment_id,amount,payment_date"
 ```
 
 The options above result in the following aggregation being performed:

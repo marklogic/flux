@@ -31,7 +31,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", query,
             "--group-by", "customer_id",
-            "--aggregate", "payments=payment_id;amount;payment_date",
+            "--aggregate", "payments=payment_id,amount,payment_date",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/customer/{customer_id}.json"
@@ -80,8 +80,8 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", query,
             "--group-by", "customer_id",
-            "--aggregate", "payments=payment_id;amount",
-            "--aggregate", "rentals=rental_id;inventory_id",
+            "--aggregate", "payments=payment_id,amount",
+            "--aggregate", "rentals=rental_id,inventory_id",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/customer/{customer_id}.json"
@@ -135,5 +135,41 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         assertEquals(3, film.size(), "Expecting 3 fields - film_id, title, and actor_ids");
         assertEquals(1, film.get("film_id").asInt());
         assertEquals(10, film.get("actor_ids").size(), "Expecting 10 actor references to film 1; doc: " + film);
+    }
+
+    @Test
+    void missingEqualsInAggregationExpression() {
+        assertStderrContains(() -> run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer",
+            "--group-by", "customer_id",
+            "--aggregate", "payments,payment_id,amount",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS
+        ), "Invalid aggregation: payments,payment_id,amount; must be of the form " +
+            "newColumnName=columnToGroup1,columnToGroup2,etc.");
+    }
+
+    @Test
+    void badColumnName() {
+        String query = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
+            "        from customer c\n" +
+            "        inner join public.payment p on c.customer_id = p.customer_id\n" +
+            "        where c.customer_id < 10";
+
+        assertStderrContains(() -> run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", query,
+            "--group-by", "customer_id",
+            "--aggregate", "payments=payment_id,notfound",
+            "--aggregate", "dates=payment_date",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS
+        ), "Unable to aggregate columns: [payment_id, notfound], [payment_date]; please ensure that each column name " +
+            "will be present in the data read from the data source.");
     }
 }

@@ -54,7 +54,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "import-avro-files",
             "--path", "src/test/resources/avro",
             "--group-by", "flag", // Weird, but effective for our test data.
-            "--aggregate", "values=number;color",
+            "--aggregate", "values=number,color",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-avro",

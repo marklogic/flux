@@ -36,7 +36,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--group-by", "cyl",
-            "--aggregate", "models=model;mpg",
+            "--aggregate", "models=model,mpg",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "cyl-test",
