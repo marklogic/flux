@@ -82,6 +82,9 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // Our connector exceptions are expected to be helpful and friendly to the user.
             throw (ConnectorException) ex.getCause();
         }
+        if (ex instanceof FluxException) {
+            throw (FluxException) ex;
+        }
         if (ex instanceof SparkException && ex.getCause() != null) {
             if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
                 // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
@@ -91,12 +94,16 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
             throw new FluxException(ex.getCause());
         }
-        throw new FluxException(ex);
+        // The exception class name is included in the hopes that it will provide some helpful context without having
+        // to ask for the stacktrace to be shown.
+        throw new FluxException(ex.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
     }
 
-    protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader);
+    @SuppressWarnings("java:S112")
+    protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) throws Exception;
 
-    protected abstract void applyWriter(SparkSession session, DataFrameWriter<Row> writer);
+    @SuppressWarnings("java:S112")
+    protected abstract void applyWriter(SparkSession session, DataFrameWriter<Row> writer) throws Exception;
 
     public final ConnectionParams getConnectionParams() {
         return connectionParams;

@@ -40,7 +40,7 @@ class OrcFilesImporterTest extends AbstractTest {
                 .collections("orc-test"));
 
         FluxException ex = assertThrowsNtException(() -> importer.execute());
-        assertEquals("For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
+        assertEquals("IllegalArgumentException: For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
             "invalid value for the ORC 'mergeSchema' option.");
     }
 

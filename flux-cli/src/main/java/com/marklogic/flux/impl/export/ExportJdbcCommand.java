@@ -9,10 +9,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.JdbcExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.flux.api.SaveMode;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.JdbcParams;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.*;
 
 import java.util.Map;
@@ -44,11 +41,16 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     }
 
     @Override
-    protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writer.format("jdbc")
+    protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) throws Exception {
+        writer = writer.format("jdbc")
             .options(writeParams.makeOptions())
-            .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))
-            .save();
+            .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode));
+
+        try {
+            writer.save();
+        } catch (Exception e) {
+            throw JdbcUtil.massageException(e);
+        }
     }
 
     public static class WriteJdbcParams extends JdbcParams<WriteRowsOptions> implements WriteRowsOptions {
