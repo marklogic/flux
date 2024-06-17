@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  */
 public interface OrcFilesImporter extends Executor<OrcFilesImporter> {
 
-    OrcFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
+    OrcFilesImporter from(Consumer<ReadTabularFilesOptions> consumer);
 
     OrcFilesImporter from(String... paths);
 

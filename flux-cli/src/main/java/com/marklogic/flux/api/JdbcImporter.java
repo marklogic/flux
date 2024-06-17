@@ -12,8 +12,7 @@ public interface JdbcImporter extends Executor<JdbcImporter> {
 
         ReadJdbcOptions groupBy(String groupBy);
 
-        // Could also support something nicer like withAggregationExpression(String newColumnName, String... columns)
-        ReadJdbcOptions aggregationExpressions(String... expressions);
+        ReadJdbcOptions aggregateColumns(String newColumnName, String... columns);
     }
 
     JdbcImporter from(Consumer<ReadJdbcOptions> consumer);

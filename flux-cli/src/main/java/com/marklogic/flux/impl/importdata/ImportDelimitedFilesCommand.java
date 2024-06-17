@@ -4,8 +4,10 @@ import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.DelimitedFilesImporter;
-import com.marklogic.flux.api.ReadSparkFilesOptions;
+import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         return writeParams;
     }
 
-    public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadSparkFilesOptions> implements ReadSparkFilesOptions {
+    public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
         @DynamicParameter(
             names = "-P",
@@ -45,6 +47,9 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
                 "https://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
+
+        @ParametersDelegate
+        private AggregationParams aggregationParams = new AggregationParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -56,14 +61,31 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         }
 
         @Override
-        public ReadSparkFilesOptions additionalOptions(Map<String, String> options) {
+        public ReadTabularFilesOptions additionalOptions(Map<String, String> options) {
             this.additionalOptions = options;
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions groupBy(String columnName) {
+            aggregationParams.setGroupBy(columnName);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
+            aggregationParams.addAggregationExpression(newColumnName, columns);
             return this;
         }
     }
 
     @Override
-    public DelimitedFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        return readParams.aggregationParams.applyGroupBy(dataset);
+    }
+
+    @Override
+    public DelimitedFilesImporter from(Consumer<ReadTabularFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }

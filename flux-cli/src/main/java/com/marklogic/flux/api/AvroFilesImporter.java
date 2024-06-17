@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  */
 public interface AvroFilesImporter extends Executor<AvroFilesImporter> {
 
-    AvroFilesImporter from(Consumer<ReadSparkFilesOptions> consumer);
+    AvroFilesImporter from(Consumer<ReadTabularFilesOptions> consumer);
 
     AvroFilesImporter from(String... paths);
 

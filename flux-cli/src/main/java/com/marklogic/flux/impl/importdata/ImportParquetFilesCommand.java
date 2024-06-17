@@ -4,8 +4,10 @@ import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.ParquetFilesImporter;
-import com.marklogic.flux.api.ReadSparkFilesOptions;
+import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         return writeParams;
     }
 
-    public static class ReadParquetFilesParams extends ReadFilesParams<ReadSparkFilesOptions> implements ReadSparkFilesOptions {
+    public static class ReadParquetFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
         @DynamicParameter(
             names = "-P",
@@ -47,6 +49,9 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
+        @ParametersDelegate
+        private AggregationParams aggregationParams = new AggregationParams();
+
         @Override
         public Map<String, String> makeOptions() {
             Map<String, String> options = super.makeOptions();
@@ -55,14 +60,31 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         }
 
         @Override
-        public ReadSparkFilesOptions additionalOptions(Map<String, String> options) {
+        public ReadTabularFilesOptions additionalOptions(Map<String, String> options) {
             additionalOptions = options;
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions groupBy(String columnName) {
+            aggregationParams.setGroupBy(columnName);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
+            aggregationParams.addAggregationExpression(newColumnName, columns);
             return this;
         }
     }
 
     @Override
-    public ParquetFilesImporter from(Consumer<ReadSparkFilesOptions> consumer) {
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        return readParams.aggregationParams.applyGroupBy(dataset);
+    }
+
+    @Override
+    public ParquetFilesImporter from(Consumer<ReadTabularFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }

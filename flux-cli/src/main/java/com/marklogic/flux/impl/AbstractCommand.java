@@ -44,6 +44,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             }
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = loadDataset(session, session.read());
+            dataset = afterDatasetLoaded(dataset);
             dataset = commonParams.applyParams(dataset);
             if (commonParams.isCount()) {
                 logger.info("Count of rows read: {}", dataset.count());
@@ -61,6 +62,16 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             handleException(ex);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Allows a subclass to modify the dataset after "load()" has been called but before "write()" is called.
+     *
+     * @param dataset
+     * @return
+     */
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        return dataset;
     }
 
     private void handleException(Exception ex) {
