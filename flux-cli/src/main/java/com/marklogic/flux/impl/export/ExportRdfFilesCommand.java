@@ -23,10 +23,10 @@ import java.util.stream.Stream;
 )
 public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> implements RdfFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected ReadTriplesParams readParams = new ReadTriplesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected WriteRdfFilesParams writeParams = new WriteRdfFilesParams();
 
     @Override

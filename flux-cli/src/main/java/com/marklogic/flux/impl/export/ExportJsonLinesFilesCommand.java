@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 )
 public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesCommand<JsonLinesFilesExporter> implements JsonLinesFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteJsonFilesParams writeParams = new WriteJsonFilesParams();
 
     public static class WriteJsonFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {

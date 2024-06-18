@@ -16,7 +16,7 @@ import picocli.CommandLine;
  */
 abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected final ReadRowsParams readParams = new ReadRowsParams();
 
     // Sonar complaining about the use of ?; not sure yet how to "fix" it, so ignoring.

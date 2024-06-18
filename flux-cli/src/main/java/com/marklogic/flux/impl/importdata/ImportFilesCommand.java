@@ -19,10 +19,10 @@ import java.util.function.Consumer;
 )
 public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesImporter> implements GenericFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
+    @CommandLine.Mixin
     private ReadGenericFilesParams readParams = new ReadGenericFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteGenericDocumentsParams writeParams = new WriteGenericDocumentsParams();
 
     @Override

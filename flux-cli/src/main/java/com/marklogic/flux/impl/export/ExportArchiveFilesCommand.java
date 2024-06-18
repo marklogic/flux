@@ -23,10 +23,10 @@ import java.util.stream.Stream;
 )
 public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
     @Override

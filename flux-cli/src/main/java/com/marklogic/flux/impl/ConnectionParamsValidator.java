@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.ParameterException;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.FluxException;
 
@@ -15,7 +14,7 @@ public class ConnectionParamsValidator {
         this.paramNames = new ParamNames(isOutput);
     }
 
-    public void validate(ConnectionInputs connectionInputs, CommonParams commonParams) throws ParameterException {
+    public void validate(ConnectionInputs connectionInputs, CommonParams commonParams) {
         if (connectionInputs.connectionString != null || (commonParams != null && commonParams.isPreviewRequested())) {
             return;
         }

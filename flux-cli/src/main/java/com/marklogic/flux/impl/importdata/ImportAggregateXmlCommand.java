@@ -17,15 +17,14 @@ import java.util.function.Supplier;
 
 @CommandLine.Command(
     name = "import-aggregate-xml-files",
-    abbreviateSynopsis = true,
-    description = "Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic."
+    description = "%nRead aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic.%n"
 )
 public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
+    @CommandLine.Mixin
     private ReadXmlFilesParams readParams = new ReadXmlFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override

@@ -20,10 +20,10 @@ import java.util.function.Consumer;
 )
 public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
+    @CommandLine.Mixin
     private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

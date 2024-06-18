@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 )
 public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<AvroFilesExporter> implements AvroFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteAvroFilesParams writeParams = new WriteAvroFilesParams();
 
     @Override

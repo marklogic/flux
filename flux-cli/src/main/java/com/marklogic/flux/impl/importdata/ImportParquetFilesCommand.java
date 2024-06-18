@@ -23,10 +23,10 @@ import java.util.function.Consumer;
 )
 public class ImportParquetFilesCommand extends AbstractImportFilesCommand<ParquetFilesImporter> implements ParquetFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
+    @CommandLine.Mixin
     private ReadParquetFilesParams readParams = new ReadParquetFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

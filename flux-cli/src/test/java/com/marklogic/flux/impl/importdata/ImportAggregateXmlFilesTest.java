@@ -5,8 +5,8 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.StringHandle;
-import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -20,13 +20,19 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
 
     @Test
     void elementIsRequired() {
-        String stderr = runAndReturnStderr(() -> run(
+        assertStderrContains(() -> run(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--connection-string", makeConnectionString()
-        ));
-        assertTrue(stderr.contains("Error: Missing required argument(s): --element=<element>"),
-            "Unexpected stderr: " + stderr);
+        ), "Missing required option: '--element <element>'");
+    }
+
+    @Test
+    void elementAndPathAreRequired() {
+        assertStderrContains(() -> run(
+            "import-aggregate-xml-files",
+            "--connection-string", makeConnectionString()
+        ), "Missing required options: '--path <path>', '--element <element>'");
     }
 
     @Test
