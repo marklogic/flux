@@ -39,6 +39,14 @@ class ConfigureSparkMasterUrlTest extends AbstractTest {
     @Test
     @Order(2)
     void invalidMasterUrl() {
+        run(
+            "import-parquet-files",
+            "--master-url", "just-not-valid-at-all",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS
+        );
+
         assertStderrContains(() -> run(
             "import-parquet-files",
             "--master-url", "just-not-valid-at-all",

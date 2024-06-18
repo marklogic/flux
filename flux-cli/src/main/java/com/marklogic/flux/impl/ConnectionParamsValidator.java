@@ -3,47 +3,42 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.IParametersValidator;
 import com.beust.jcommander.ParameterException;
 import com.marklogic.flux.api.AuthenticationType;
+import com.marklogic.flux.api.FluxException;
 
-import java.util.Map;
-
-public class ConnectionParamsValidator implements IParametersValidator {
+public class ConnectionParamsValidator {
 
     private final ParamNames paramNames;
-
-    public ConnectionParamsValidator() {
-        this(false);
-    }
 
     public ConnectionParamsValidator(boolean isOutput) {
         this.paramNames = new ParamNames(isOutput);
     }
 
-    @Override
-    public void validate(Map<String, Object> parameters) throws ParameterException {
-        if (parameters.get(paramNames.connectionString) == null && parameters.get("--preview") == null) {
-            if (parameters.get(paramNames.host) == null) {
-                throw new ParameterException(String.format("Must specify a MarkLogic host via %s or %s.",
-                    paramNames.host, paramNames.connectionString));
-            }
-            if (parameters.get(paramNames.port) == null) {
-                throw new ParameterException(String.format("Must specify a MarkLogic app server port via %s or %s.",
-                    paramNames.port, paramNames.connectionString));
-            }
+    public void validate(ConnectionInputs connectionInputs, CommonParams commonParams) throws ParameterException {
+        if (connectionInputs.connectionString != null || (commonParams != null && commonParams.isPreviewRequested())) {
+            return;
+        }
 
-            AuthenticationType authType = (AuthenticationType) parameters.get(paramNames.authType);
-            boolean isDigestOrBasicAuth = authType == null || (AuthenticationType.DIGEST.equals(authType) || AuthenticationType.BASIC.equals(authType));
-            if (isDigestOrBasicAuth) {
-                if (parameters.get(paramNames.username) == null) {
-                    throw new ParameterException(String.format("Must specify a MarkLogic user via %s when using 'BASIC' or 'DIGEST' authentication.",
-                        paramNames.username));
-                }
-                if (parameters.get(paramNames.password) == null) {
-                    throw new ParameterException(String.format("Must specify a password via %s when using 'BASIC' or 'DIGEST' authentication.",
-                        paramNames.password));
-                }
+        if (connectionInputs.host == null) {
+            throw new FluxException(String.format("Must specify a MarkLogic host via %s or %s.",
+                paramNames.host, paramNames.connectionString));
+        }
+        if (connectionInputs.port == null) {
+            throw new FluxException(String.format("Must specify a MarkLogic app server port via %s or %s.",
+                paramNames.port, paramNames.connectionString));
+        }
+
+        AuthenticationType authType = connectionInputs.authType;
+        boolean isDigestOrBasicAuth = authType == null || (AuthenticationType.DIGEST.equals(authType) || AuthenticationType.BASIC.equals(authType));
+        if (isDigestOrBasicAuth) {
+            if (connectionInputs.username == null) {
+                throw new FluxException(String.format("Must specify a MarkLogic user via %s when using 'BASIC' or 'DIGEST' authentication.",
+                    paramNames.username));
+            }
+            if (connectionInputs.password == null) {
+                throw new FluxException(String.format("Must specify a password via %s when using 'BASIC' or 'DIGEST' authentication.",
+                    paramNames.password));
             }
         }
     }

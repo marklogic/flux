@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.AbstractCommand;
@@ -17,7 +16,6 @@ import picocli.CommandLine;
  */
 abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
-    @ParametersDelegate
     @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n")
     protected final ReadRowsParams readParams = new ReadRowsParams();
 

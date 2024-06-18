@@ -6,7 +6,6 @@ package com.marklogic.flux;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.flux.api.FluxException;
-import com.marklogic.flux.cli.Main;
 import com.marklogic.flux.cli.PicoMain;
 import com.marklogic.junit5.AbstractMarkLogicTest;
 import com.marklogic.mgmt.ManageClient;
@@ -90,12 +89,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     }
 
     protected final void run(String... args) {
-        List<String> commands = Arrays.asList("export-delimited-files");
-        if (args.length > 0 && commands.contains(args[0])) {
-            PicoMain.main(args);
-        } else {
-            Main.main(args);
-        }
+        PicoMain.main(args);
     }
 
     /**

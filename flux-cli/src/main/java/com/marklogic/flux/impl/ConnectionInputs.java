@@ -3,8 +3,6 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.IParameterValidator;
-import com.beust.jcommander.ParameterException;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.FluxException;
@@ -12,6 +10,7 @@ import com.marklogic.flux.api.SslHostnameVerifier;
 import com.marklogic.spark.ConnectionString;
 import com.marklogic.spark.ConnectorException;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 
@@ -21,10 +20,17 @@ import java.util.Map;
  */
 public abstract class ConnectionInputs {
 
-    public static class ConnectionStringValidator implements IParameterValidator {
+    public static class ConnectionStringValidator implements CommandLine.ITypeConverter<String> {
+
         @Override
-        public void validate(String name, String value) throws ParameterException {
-            new ConnectionString(value, name);
+        public String convert(String value) {
+            try {
+                new ConnectionString(value, "connection string");
+            } catch (ConnectorException e) {
+                // See https://picocli.info/#_handling_invalid_input .
+                throw new CommandLine.TypeConversionException(e.getMessage());
+            }
+            return value;
         }
     }
 

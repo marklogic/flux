@@ -3,8 +3,6 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
@@ -14,43 +12,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T>, Callable<Void> {
+public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
 
     protected final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Common Options\n")
     private CommonParams commonParams = new CommonParams();
 
-    @ParametersDelegate
     @CommandLine.ArgGroup(exclusive = false, heading = "Connection Options\n")
     private ConnectionParams connectionParams = new ConnectionParams();
-
-    @DynamicParameter(
-        names = "-C",
-        description = "Specify any key and value to be added to the Spark runtime configuration; e.g. -Cspark.logConf=true."
-    )
-    private Map<String, String> configParams = new HashMap<>();
 
     private SparkSession sparkSession;
 
     @Override
-    public Void call() {
-        execute();
-        return null;
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        new ConnectionParamsValidator(false).validate(connectionParams, commonParams);
     }
 
     @Override
     public final Optional<Preview> execute(SparkSession session) {
         try {
-            configParams.entrySet().stream().forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
+            commonParams.getConfigParams().entrySet().stream()
+                .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
             if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
                 logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());
             }

@@ -3,11 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.ReadFilesOptions;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.*;
 
@@ -16,19 +15,19 @@ import java.util.*;
  */
 public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T> {
 
-    @Parameter(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
+    @CommandLine.Option(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
     private List<String> paths = new ArrayList<>();
 
-    @Parameter(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
+    @CommandLine.Option(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
     private Boolean abortOnReadFailure = false;
 
-    @Parameter(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
+    @CommandLine.Option(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
     private String filter;
 
-    @Parameter(names = "--recursive-file-lookup", arity = 1, description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
+    @CommandLine.Option(names = "--recursive-file-lookup", arity = "1", description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
     private Boolean recursiveFileLookup = true;
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private S3Params s3Params = new S3Params();
 
     public boolean hasAtLeastOnePath() {

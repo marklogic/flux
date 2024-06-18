@@ -3,26 +3,28 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.CompressionType;
 import com.marklogic.flux.api.RdfFilesImporter;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Parameters(commandDescription = "Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic.")
+@CommandLine.Command(
+    name = "import-rdf-files",
+    abbreviateSynopsis = true,
+    description = "Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic."
+)
 public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesImporter> implements RdfFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadRdfFilesParams readParams = new ReadRdfFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteTriplesDocumentsParams writeParams = new WriteTriplesDocumentsParams();
 
     @Override
@@ -42,10 +44,10 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
 
     public static class ReadRdfFilesParams extends ReadFilesParams<ReadRdfFilesOptions> implements ReadRdfFilesOptions {
 
-        @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
         private CompressionType compressionType;
 
-        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
         @Override
@@ -72,11 +74,11 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
 
     public static class WriteTriplesDocumentsParams extends WriteDocumentParams<WriteTriplesDocumentsOptions> implements WriteTriplesDocumentsOptions {
 
-        @Parameter(names = "--graph", description = "Specify the graph URI for each triple not already associated with a graph. If not set, " +
+        @CommandLine.Option(names = "--graph", description = "Specify the graph URI for each triple not already associated with a graph. If not set, " +
             "triples will be added to the default MarkLogic graph - http://marklogic.com/semantics#default-graph . ")
         private String graph;
 
-        @Parameter(names = "--graph-override", description = "Specify the graph URI for each triple to be included in, " +
+        @CommandLine.Option(names = "--graph-override", description = "Specify the graph URI for each triple to be included in, " +
             "even if is already associated with a graph.")
         private String graphOverride;
 

@@ -3,9 +3,6 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.JdbcImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
@@ -13,17 +10,22 @@ import com.marklogic.flux.impl.JdbcParams;
 import com.marklogic.flux.impl.JdbcUtil;
 import com.marklogic.flux.impl.OptionsUtil;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read rows via JDBC and write JSON or XML documents to MarkLogic.")
+@CommandLine.Command(
+    name = "import-jdbc",
+    abbreviateSynopsis = true,
+    description = "Read rows via JDBC and write JSON or XML documents to MarkLogic."
+)
 public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements JdbcImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private ReadJdbcParams readParams = new ReadJdbcParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
@@ -72,11 +74,11 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
-        @Parameter(names = "--query", required = true,
+        @CommandLine.Option(names = "--query", required = true,
             description = "A SQL query used to read data from the JDBC data source.")
         private String query;
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override

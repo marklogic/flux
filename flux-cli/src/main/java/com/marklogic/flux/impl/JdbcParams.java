@@ -3,28 +3,32 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
 import com.marklogic.flux.api.JdbcOptions;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
 
-    @Parameter(names = "--jdbc-url", required = true, description = "The JDBC URL to connect to.")
+    @CommandLine.Option(names = "--jdbc-url", required = true, description = "The JDBC URL to connect to.")
     private String url;
 
-    @Parameter(names = "--jdbc-driver", description = "The class name of the JDBC driver to use.")
+    @CommandLine.Option(names = "--jdbc-driver", description = "The class name of the JDBC driver to use.")
     private String driver;
 
-    @Parameter(names = "--jdbc-user", description = "The user to authenticate as, if not specified in the JDBC URL.")
+    @CommandLine.Option(names = "--jdbc-user", description = "The user to authenticate as, if not specified in the JDBC URL.")
     private String user;
 
-    @Parameter(names = "--jdbc-password", description = "The password to user for authentication, if not specified in the JDBC URL.")
+    @CommandLine.Option(
+        names = "--jdbc-password",
+        description = "The password to user for authentication, if not specified in the JDBC URL.",
+        interactive = true,
+        arity = "0..1"
+    )
     private String password;
 
-    @DynamicParameter(
+    @CommandLine.Option(
         names = "-P",
         description = "Specify any Spark JDBC option defined at " +
             "https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. -Pfetchsize=100."

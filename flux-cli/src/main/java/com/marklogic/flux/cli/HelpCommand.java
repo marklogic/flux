@@ -4,14 +4,10 @@
 package com.marklogic.flux.cli;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
+import picocli.CommandLine;
 
-@Parameters(commandDescription = "View details for the named command.")
+@CommandLine.Command(description = "View details for the named command.")
 class HelpCommand {
-
-    @Parameter
-    private String commandName;
 
     private final String programName;
     private final int columnSize;

@@ -3,12 +3,10 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.marklogic.flux.api.ReadDocumentsOptions;
-import com.marklogic.flux.impl.AtLeastOneValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,49 +15,47 @@ import java.util.stream.Stream;
 /**
  * For commands that export documents and must therefore read "document rows" first.
  */
-@Parameters(parametersValidators = ReadDocumentParams.Validator.class)
 public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadDocumentsOptions<T> {
 
-    public static class Validator extends AtLeastOneValidator {
-        public Validator() {
-            super("--query", "--uris", "--string-query", "--collections", "--directory");
-        }
-    }
+    @SuppressWarnings("java:S2386") // Sonar mistakenly thinks this can be protected.
+    public static final String[] REQUIRED_QUERY_OPTIONS = new String[]{
+        "--query", "--uris", "--string-query", "--collections", "--directory"
+    };
 
-    @Parameter(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
+    @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
         "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
     private String stringQuery;
 
-    @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
+    @CommandLine.Option(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
         "with --collections, --directory, and --string-query. If specified, --query will be ignored.")
     private String uris;
 
-    @Parameter(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
+    @CommandLine.Option(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
         "See https://docs.marklogic.com/guide/rest-dev/search#id_49329 for more information.")
     private String query;
 
-    @Parameter(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
+    @CommandLine.Option(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
     private String options;
 
-    @Parameter(names = "--collections", description = "Comma-delimited sequence of collection names by which to constrain the query.")
+    @CommandLine.Option(names = "--collections", description = "Comma-delimited sequence of collection names by which to constrain the query.")
     private String collections;
 
-    @Parameter(names = "--directory", description = "Database directory by which to constrain the query.")
+    @CommandLine.Option(names = "--directory", description = "Database directory by which to constrain the query.")
     private String directory;
 
-    @Parameter(names = "--transform", description = "Name of a MarkLogic REST API transform to apply to each matching document.")
+    @CommandLine.Option(names = "--transform", description = "Name of a MarkLogic REST API transform to apply to each matching document.")
     private String transform;
 
-    @Parameter(names = "--transform-params", description = "Comma-delimited sequence of transform parameter names and values - e.g. param1,value1,param2,value2.")
+    @CommandLine.Option(names = "--transform-params", description = "Comma-delimited sequence of transform parameter names and values - e.g. param1,value1,param2,value2.")
     private String transformParams;
 
-    @Parameter(names = "--transform-params-delimiter", description = "Delimiter for transform parameters; defaults to a comma.")
+    @CommandLine.Option(names = "--transform-params-delimiter", description = "Delimiter for transform parameters; defaults to a comma.")
     private String transformParamsDelimiter;
 
-    @Parameter(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
+    @CommandLine.Option(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
     private Integer batchSize = 500;
 
-    @Parameter(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
+    @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
     private Integer partitionsPerForest = 4;
 
     public Map<String, String> makeOptions() {

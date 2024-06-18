@@ -3,17 +3,16 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.export.ReadDocumentParams;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.DocumentCopier;
 import com.marklogic.flux.api.WriteDocumentsOptions;
+import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.ConnectionParamsValidator;
+import com.marklogic.flux.impl.OptionsUtil;
+import com.marklogic.flux.impl.export.ReadDocumentParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,12 +25,16 @@ import java.util.stream.Stream;
  * all the connection params for writing as well. It relies on unit tests to ensure that the counts of these params
  * are the same to avoid a situation where e.g. a new param is added to {@code WriteDocumentParams} but not added here.
  */
-@Parameters(commandDescription = "Copy documents from one database to another database, which can also be the originating database.")
+@CommandLine.Command(
+    name = "copy",
+    abbreviateSynopsis = true,
+    description = "Copy documents from one database to another database, which can also be the originating database."
+)
 public class CopyCommand extends AbstractCommand<DocumentCopier> implements DocumentCopier {
 
     public static class CopyReadDocumentsParams extends ReadDocumentParams<CopyReadDocumentsOptions> implements DocumentCopier.CopyReadDocumentsOptions {
 
-        @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
+        @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
             "Valid choices are: content, metadata (for all types of metadata), collections, permissions, quality, properties, and metadatavalues.")
         private String categories = "content,metadata";
 
@@ -51,92 +54,92 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
     public static class CopyWriteDocumentsParams implements WriteDocumentsOptions<CopyWriteDocumentsParams> {
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-abort-on-write-failure",
             description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
         )
         private Boolean abortOnWriteFailure;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-batch-size",
             description = "The number of documents written in a call to MarkLogic."
         )
         private Integer batchSize = 100;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-collections",
             description = "Comma-delimited string of collection names to add to each document."
         )
         private String collections;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-failed-documents-path",
             description = "File path for writing an archive file containing failed documents and their metadata."
         )
         private String failedDocumentsPath;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-permissions",
             description = "Comma-delimited string of role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
         )
         private String permissions;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-temporal-collection",
             description = "Name of a temporal collection to assign to each document."
         )
         private String temporalCollection;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-thread-count",
             description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic."
         )
         private Integer threadCount = 4;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-total-thread-count",
             description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
         )
         private Integer totalThreadCount;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-transform",
             description = "Name of a MarkLogic REST API transform to apply to each document."
         )
         private String transform;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-transform-params",
             description = "Comma-delimited string of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
         )
         private String transformParams;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-transform-params-delimiter",
             description = "Delimiter to use instead of a comma for the '--transform-params' parameter."
         )
         private String transformParamsDelimiter;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-uri-prefix",
             description = "String to prepend to each document URI."
         )
         private String uriPrefix;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-uri-replace",
             description = "Modify the URI for a document via a comma-delimited list of regular expression " +
                 "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
         )
         private String uriReplace;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-uri-suffix",
             description = "String to append to each document URI."
         )
         private String uriSuffix;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--output-uri-template",
             description = "String defining a template for constructing each document URI. " +
                 "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
@@ -260,19 +263,29 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
     }
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private CopyReadDocumentsParams readParams = new CopyReadDocumentsParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     protected final CopyWriteDocumentsParams writeParams = new CopyWriteDocumentsParams();
 
     @Override
     public void execute() {
         outputConnectionParams.validateConnectionString("output connection string");
         super.execute();
+    }
+
+    @Override
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        super.validateCommandLineOptions(parseResult);
+        if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
+            CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
+            new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams, copyCommand.getCommonParams());
+        }
+        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
     }
 
     @Override

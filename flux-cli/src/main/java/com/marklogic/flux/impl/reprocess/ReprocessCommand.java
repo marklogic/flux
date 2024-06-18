@@ -3,13 +3,13 @@
  */
 package com.marklogic.flux.impl.reprocess;
 
-import com.beust.jcommander.*;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.Reprocessor;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,16 +20,17 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Parameters(
-    commandDescription = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.",
-    parametersValidators = ReprocessCommand.ReprocessValidator.class
+@CommandLine.Command(
+    name = "reprocess",
+    abbreviateSynopsis = true,
+    description = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code."
 )
 public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Reprocessor {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     protected ReadParams readParams = new ReadParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     protected WriteParams writeParams = new WriteParams();
 
     @Override
@@ -56,127 +57,125 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             .save();
     }
 
-    public static class ReprocessValidator implements IParametersValidator {
+    @Override
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        super.validateCommandLineOptions(parseResult);
+        validateReadParams(parseResult);
+        validatePartitionParams(parseResult);
+        validateWriteParams(parseResult);
+    }
 
-        @Override
-        public void validate(Map<String, Object> params) throws ParameterException {
-            validateReadParams(params);
-            validatePartitionParams(params);
-            validateWriteParams(params);
+    private void validateReadParams(CommandLine.ParseResult parseResult) {
+        String[] options = new String[]{
+            "--read-invoke", "--read-javascript", "--read-xquery", "--read-javascript-file", "--read-xquery-file"
+        };
+        if (getCountOfNonNullParams(parseResult, options) != 1) {
+            throw new FluxException(makeErrorMessage("Must specify one of ", options));
         }
+    }
 
-        private void validateReadParams(Map<String, Object> params) {
-            String[] readParams = new String[]{
-                "--read-invoke", "--read-javascript", "--read-xquery", "--read-javascript-file", "--read-xquery-file"
-            };
-            if (getCountOfNonNullParams(params, readParams) != 1) {
-                throw new ParameterException(makeErrorMessage("Must specify one of ", readParams));
+    private void validatePartitionParams(CommandLine.ParseResult parseResult) {
+        String[] options = new String[]{
+            "--read-partitions-invoke", "--read-partitions-javascript", "--read-partitions-xquery",
+            "--read-partitions-javascript-file", "--read-partitions-xquery-file"
+        };
+        if (getCountOfNonNullParams(parseResult, options) > 1) {
+            throw new FluxException(makeErrorMessage("Can only specify one of ", options));
+        }
+    }
+
+    private void validateWriteParams(CommandLine.ParseResult parseResult) {
+        if (parseResult.subcommand().hasMatchedOption("--preview")) {
+            return;
+        }
+        String[] options = new String[]{
+            "--write-invoke", "--write-javascript", "--write-xquery", "--write-javascript-file", "--write-xquery-file"
+        };
+        if (getCountOfNonNullParams(parseResult, options) != 1) {
+            throw new FluxException(makeErrorMessage("Must specify one of ", options));
+        }
+    }
+
+    private String makeErrorMessage(String preamble, String... args) {
+        List<String> list = Arrays.asList(args);
+        String str = list.subList(0, list.size() - 1).stream().collect(Collectors.joining(", "));
+        return preamble + str + ", or " + list.get(list.size() - 1) + ".";
+    }
+
+    private int getCountOfNonNullParams(CommandLine.ParseResult parseResult, String... options) {
+        int count = 0;
+        for (String option : options) {
+            if (parseResult.subcommand().hasMatchedOption(option)) {
+                count++;
             }
         }
-
-        private void validatePartitionParams(Map<String, Object> params) {
-            String[] partitionParams = new String[]{
-                "--read-partitions-invoke", "--read-partitions-javascript", "--read-partitions-xquery",
-                "--read-partitions-javascript-file", "--read-partitions-xquery-file"
-            };
-            if (getCountOfNonNullParams(params, partitionParams) > 1) {
-                throw new ParameterException(makeErrorMessage("Can only specify one of ", partitionParams));
-            }
-        }
-
-        private void validateWriteParams(Map<String, Object> params) {
-            if (params.get("--preview") != null) {
-                return;
-            }
-            String[] writeParams = new String[]{
-                "--write-invoke", "--write-javascript", "--write-xquery", "--write-javascript-file", "--write-xquery-file"
-            };
-            if (getCountOfNonNullParams(params, writeParams) != 1) {
-                throw new ParameterException(makeErrorMessage("Must specify one of ", writeParams));
-            }
-        }
-
-        private String makeErrorMessage(String preamble, String... args) {
-            List<String> list = Arrays.asList(args);
-            String str = list.subList(0, list.size() - 1).stream().collect(Collectors.joining(", "));
-            return preamble + str + ", or " + list.get(list.size() - 1) + ".";
-        }
-
-        private int getCountOfNonNullParams(Map<String, Object> params, String... paramNames) {
-            int count = 0;
-            for (String paramName : paramNames) {
-                if (params.get(paramName) != null) {
-                    count++;
-                }
-            }
-            return count;
-        }
+        return count;
     }
 
     public static class ReadParams implements Supplier<Map<String, String>>, ReadOptions {
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-invoke"},
             description = "The path to a module to invoke for reading data; the module must be in your application’s modules database."
         )
         private String readInvoke;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-javascript"},
             description = "JavaScript code to execute for reading data."
         )
         private String readJavascript;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-javascript-file"},
             description = "Local file containing JavaScript code to execute for reading data."
         )
         private String readJavascriptFile;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-xquery"},
             description = "XQuery code to execute for reading data."
         )
         private String readXquery;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-xquery-file"},
             description = "Local file containing XQuery code to execute for reading data."
         )
         private String readXqueryFile;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-partitions-invoke"},
             description = "The path to a module to invoke to define partitions that are sent to your custom code for reading; the module must be in your application’s modules database."
         )
         private String readPartitionsInvoke;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-partitions-javascript"},
             description = "JavaScript code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsJavascript;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-partitions-javascript-file"},
             description = "Local file containing JavaScript code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsJavascriptFile;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-partitions-xquery"},
             description = "XQuery code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsXquery;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--read-partitions-xquery-file"},
             description = "Local file containing XQuery code to execute to define partitions that are sent to your custom code for reading."
         )
         private String readPartitionsXqueryFile;
 
-        @Parameter(
-            names = "--read-var", variableArity = true,
+        @CommandLine.Option(
+            names = "--read-var", arity = "*",
             description = "Define variables to be sent to the code for reading data; e.g. '--read-var var1=value1'."
         )
         private List<String> readVars = new ArrayList<>();
@@ -298,61 +297,61 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
     public static class WriteParams implements Supplier<Map<String, String>>, WriteOptions {
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--write-invoke"},
             description = "The path to a module to invoke for writing data; the module must be in your application’s modules database."
         )
         private String writeInvoke;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--write-javascript"},
             description = "JavaScript code to execute for writing data."
         )
         private String writeJavascript;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--write-javascript-file"},
             description = "Local file containing JavaScript code to execute for writing data."
         )
         private String writeJavascriptFile;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--write-xquery"},
             description = "XQuery code to execute for writing data."
         )
         private String writeXquery;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--write-xquery-file"},
             description = "Local file containing XQuery code to execute for writing data."
         )
         private String writeXqueryFile;
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--external-variable-name"},
             description = "Name of the external variable in the custom code for writing that will be populated with each value read from MarkLogic."
         )
         private String externalVariableName = "URI";
 
-        @Parameter(
+        @CommandLine.Option(
             names = {"--external-variable-delimiter"},
             description = "Delimiter used when multiple values are included in the external variable in the code for writing."
         )
         private String externalVariableDelimiter = ",";
 
-        @Parameter(
-            names = "--write-var", variableArity = true,
+        @CommandLine.Option(
+            names = "--write-var", arity = "*",
             description = "Define variables to be sent to the code for writing data; e.g. '--write-var var1=value1'."
         )
         private List<String> writeVars = new ArrayList<>();
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--abort-on-write-failure",
             description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
         )
         private Boolean abortOnWriteFailure;
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--batch-size",
             description = "The number of values sent to the code for writing data in a single call."
         )

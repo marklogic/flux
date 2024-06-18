@@ -61,7 +61,7 @@ class ImportFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--auth-type", "notvalid"
-        ), "Invalid value for --auth-type parameter. Allowed values:[BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, SAML]");
+        ), "Invalid value for option '--auth-type': expected one of [BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, SAML] (case-insensitive) but was 'notvalid'");
     }
 
     @Test

@@ -25,7 +25,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--path", "src/test/resources/xml-file/people.xml",
             "--connection-string", makeConnectionString()
         ));
-        assertTrue(stderr.contains("The following option is required: [--element]"),
+        assertTrue(stderr.contains("Error: Missing required argument(s): --element=<element>"),
             "Unexpected stderr: " + stderr);
     }
 

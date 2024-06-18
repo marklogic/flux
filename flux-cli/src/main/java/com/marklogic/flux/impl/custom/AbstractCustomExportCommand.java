@@ -3,42 +3,40 @@
  */
 package com.marklogic.flux.impl.custom;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.S3Params;
-import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.SaveMode;
+import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.S3Params;
+import com.marklogic.flux.impl.SparkUtil;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 
 abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     protected final CustomWriteParams writeParams = new CustomWriteParams();
 
     public static class CustomWriteParams implements CustomExportWriteOptions {
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private S3Params s3Params = new S3Params();
 
-        @Parameter(names = "--target", description = "Identifier for the Spark connector that is the target of data to export.")
+        @CommandLine.Option(names = "--target", description = "Identifier for the Spark connector that is the target of data to export.")
         private String target;
 
-        @DynamicParameter(
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any number of options to be passed to the connector identified by '--target'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @Parameter(names = "--mode",
+        @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
                 "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
         private SaveMode saveMode = SaveMode.APPEND;

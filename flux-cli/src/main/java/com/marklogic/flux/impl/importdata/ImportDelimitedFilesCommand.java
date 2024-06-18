@@ -3,28 +3,30 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.DelimitedFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
+@CommandLine.Command(
+    name = "import-delimited-files",
+    abbreviateSynopsis = true,
+    description = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html, with each row being written " +
-    "as a JSON  or XML document to MarkLogic.")
+    "as a JSON  or XML document to MarkLogic."
+)
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
@@ -44,14 +46,14 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
     public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
-        @DynamicParameter(
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark CSV option defined at " +
                 "https://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override

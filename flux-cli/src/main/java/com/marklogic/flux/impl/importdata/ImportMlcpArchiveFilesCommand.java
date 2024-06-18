@@ -3,26 +3,28 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.MlcpArchiveFilesImporter;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Parameters(commandDescription = "Read local, HDFS, and S3 archive files written by MLCP and write the documents in each archive to MarkLogic.")
+@CommandLine.Command(
+    name = "import-mlcp-archive-files",
+    abbreviateSynopsis = true,
+    description = "Read local, HDFS, and S3 archive files written by MLCP and write the documents in each archive to MarkLogic."
+)
 public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<MlcpArchiveFilesImporter> implements MlcpArchiveFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadMlcpArchiveFilesParams readParams = new ReadMlcpArchiveFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override
@@ -42,12 +44,12 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
 
     public static class ReadMlcpArchiveFilesParams extends ReadFilesParams<ReadMlcpArchiveFilesOptions> implements ReadMlcpArchiveFilesOptions {
 
-        @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
+        @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
             "If not specified, all types of metadata are included. " +
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
         private String categories;
 
-        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
         @Override

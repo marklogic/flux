@@ -3,27 +3,29 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.AggregateXmlFilesImporter;
 import com.marklogic.flux.api.CompressionType;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Parameters(commandDescription = "Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic.")
+@CommandLine.Command(
+    name = "import-aggregate-xml-files",
+    abbreviateSynopsis = true,
+    description = "Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic."
+)
 public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadXmlFilesParams readParams = new ReadXmlFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override
@@ -43,32 +45,32 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
 
     public static class ReadXmlFilesParams extends ReadFilesParams<ReadXmlFilesOptions> implements ReadXmlFilesOptions {
 
-        @Parameter(required = true, names = "--element",
+        @CommandLine.Option(required = true, names = "--element",
             description = "Specifies the local name of the element to use as the root of each document."
         )
         private String element;
 
-        @Parameter(names = "--namespace",
+        @CommandLine.Option(names = "--namespace",
             description = "Specifies the namespace of the element to use as the root of each document."
         )
         private String namespace;
 
-        @Parameter(names = "--uri-element",
+        @CommandLine.Option(names = "--uri-element",
             description = "Specifies the local name of the element used for creating URIs."
         )
         private String uriElement;
 
-        @Parameter(names = "--uri-namespace",
+        @CommandLine.Option(names = "--uri-namespace",
             description = "Specifies the namespace of the element used for creating URIs."
         )
         private String uriNamespace;
 
-        @Parameter(names = "--compression",
+        @CommandLine.Option(names = "--compression",
             description = "When importing compressed files, specify the type of compression used."
         )
         private CompressionType compressionType;
 
-        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
         @Override

@@ -4,7 +4,9 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.FluxException;
+import picocli.CommandLine;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,22 @@ public abstract class OptionsUtil {
                 throw new FluxException(optionNamesAndMessages[i + 1]);
             }
         }
+    }
+
+    /**
+     * For use by the CLI.
+     *
+     * @param parseResult
+     * @param options
+     */
+    public static void verifyHasAtLeastOneOption(CommandLine.ParseResult parseResult, String... options) {
+        for (String option : options) {
+            if (parseResult.subcommand().hasMatchedOption(option)) {
+                return;
+            }
+        }
+        throw new FluxException(String.format(
+            "Must specify at least one of the following options: %s.", Arrays.asList(options)));
     }
 
     private OptionsUtil() {

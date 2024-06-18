@@ -73,7 +73,8 @@ class CopyTest extends AbstractTest {
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-connection-string", "not@valid"
-        ), "Invalid value for --output-connection-string; must be username:password@host:port/optionalDatabaseName");
+        ), "Invalid value for option '--output-connection-string': Invalid value for connection string; " +
+            "must be username:password@host:port/optionalDatabaseName");
     }
 
     @Test

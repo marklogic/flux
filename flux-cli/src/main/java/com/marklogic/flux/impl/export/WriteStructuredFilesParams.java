@@ -3,16 +3,16 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
 import com.marklogic.flux.api.SaveMode;
 import com.marklogic.flux.api.WriteFilesOptions;
+import picocli.CommandLine;
 
 /**
  * Structured = reuses a Spark data source, where saveMode can vary.
  */
 public abstract class WriteStructuredFilesParams<T extends WriteFilesOptions> extends WriteFilesParams<T> {
 
-    @Parameter(names = "--mode",
+    @CommandLine.Option(names = "--mode",
         description = "Specifies how data is written if the path already exists. " +
             "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
     private SaveMode saveMode = SaveMode.OVERWRITE;

@@ -3,8 +3,8 @@
  */
 package com.marklogic.flux.impl;
 
-import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

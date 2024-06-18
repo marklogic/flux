@@ -3,44 +3,31 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.beust.jcommander.IParametersValidator;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
-import com.beust.jcommander.Parameters;
 import com.marklogic.client.DatabaseClient;
-import com.marklogic.flux.impl.ConnectionInputs;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
-import com.marklogic.flux.impl.ConnectionParamsValidator;
+import com.marklogic.flux.impl.ConnectionInputs;
+import picocli.CommandLine;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * Defines all inputs with a "--output" prefix so that it can be used in {@code CopyCommand} without conflicting with
  * the args in {@code ConnectionParams}.
  */
-@Parameters(parametersValidators = OutputConnectionParams.class)
-public class OutputConnectionParams extends ConnectionInputs implements ConnectionOptions, IParametersValidator {
-
-    @Override
-    public void validate(Map<String, Object> parameters) throws ParameterException {
-        if (atLeastOutputConnectionParameterExists(parameters)) {
-            new ConnectionParamsValidator(true).validate(parameters);
-        }
-    }
+public class OutputConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     /**
      * The user has the option not to provide any output connection params, in which case the "Copy" command will use
      * the normal connection params for the target database.
      */
-    private boolean atLeastOutputConnectionParameterExists(Map<String, Object> params) {
+    public boolean atLeastOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
         for (Method method : getClass().getMethods()) {
-            Parameter param = method.getAnnotation(Parameter.class);
-            if (param != null) {
-                for (String name : param.names()) {
-                    if (params.get(name) != null) {
+            CommandLine.Option option = method.getAnnotation(CommandLine.Option.class);
+            if (option != null) {
+                for (String name : option.names()) {
+                    if (parseResult.subcommand().hasMatchedOption(name)) {
                         return true;
                     }
                 }
@@ -50,10 +37,10 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = {"--output-connection-string"},
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
-        validateWith = ConnectionStringValidator.class
+        converter = ConnectionStringValidator.class
     )
     public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;
@@ -61,7 +48,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = {"--output-host"},
         description = "The MarkLogic host to connect to."
     )
@@ -71,7 +58,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-port",
         description = "Port of a MarkLogic REST API app server to connect to."
     )
@@ -81,7 +68,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-base-path",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
@@ -91,7 +78,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-database",
         description = "Name of a database to connect if it differs from the one associated with the app server identified by 'port'."
     )
@@ -100,7 +87,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
         return this;
     }
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-connection-type",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
     )
@@ -122,7 +109,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-auth-type",
         description = "Type of authentication to use."
     )
@@ -132,7 +119,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-username",
         description = "Username when using 'DIGEST' or 'BASIC' authentication."
     )
@@ -142,10 +129,11 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-password",
         description = "Password when using 'DIGEST' or 'BASIC' authentication.",
-        password = true
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions password(String password) {
         this.password = password;
@@ -153,7 +141,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-certificate-file",
         description = "File path for a keystore to be used for 'CERTIFICATE' authentication."
     )
@@ -163,9 +151,11 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-certificate-password",
-        description = "Password for the keystore referenced by '--certificate-file'."
+        description = "Password for the keystore referenced by '--certificate-file'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions certificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
@@ -173,7 +163,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-cloud-api-key",
         description = "API key for authenticating with a MarkLogic Cloud cluster."
     )
@@ -183,7 +173,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-kerberos-principal",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
@@ -193,7 +183,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-saml-token",
         description = "Token to be used with 'SAML' authentication."
     )
@@ -203,7 +193,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-ssl-protocol",
         description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
             "or truststore is configured, defaults to 'TLSv1.2'."
@@ -214,7 +204,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-ssl-hostname-verifier",
         description = "Hostname verification strategy when connecting via SSL."
     )
@@ -224,7 +214,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-keystore-path",
         description = "File path for a keystore for two-way SSL connections."
     )
@@ -234,9 +224,11 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-keystore-password",
-        description = "Password for the keystore identified by '--keystore-path'."
+        description = "Password for the keystore identified by '--keystore-path'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions keyStorePassword(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
@@ -244,7 +236,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-keystore-type",
         description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
     )
@@ -254,7 +246,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-keystore-algorithm",
         description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
     )
@@ -264,7 +256,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-truststore-path",
         description = "File path for a truststore for establishing trust with the certificate used by the MarkLogic app server."
     )
@@ -274,9 +266,11 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-truststore-password",
-        description = "Password for the truststore identified by '--truststore-path'."
+        description = "Password for the truststore identified by '--truststore-path'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
@@ -284,7 +278,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-truststore-type",
         description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
     )
@@ -294,7 +288,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--output-truststore-algorithm",
         description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
     )
