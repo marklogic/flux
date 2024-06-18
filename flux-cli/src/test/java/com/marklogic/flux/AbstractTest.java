@@ -108,7 +108,9 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
             System.out.flush();
             System.setOut(original);
         }
-        return new String(outputStream.toByteArray());
+        String stdout = new String(outputStream.toByteArray());
+        logger.info("Captured stdout:\n{}", stdout);
+        return stdout;
     }
 
     protected final String runAndReturnStderr(Runnable r) {

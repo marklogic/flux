@@ -23,10 +23,10 @@ import java.util.function.Consumer;
 )
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
+    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
     private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

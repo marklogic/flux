@@ -23,10 +23,10 @@ import java.util.function.Consumer;
 )
 public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesImporter> implements OrcFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
+    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
     private ReadOrcFilesParams readParams = new ReadOrcFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

@@ -57,7 +57,20 @@ public class PicoMain {
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
     public static void main(String[] args) {
-        new PicoMain().newCommandLine().execute(args);
+        if (args.length == 0 || args[0].trim().equals("")) {
+            args = new String[]{"help"};
+        } else if (args[0].equals("help") && args.length == 1) {
+            args = new String[]{"help", "-h"};
+        }
+
+        if (args[0].equals("help")) {
+            new CommandLine(new PicoMain())
+                .setUsageHelpWidth(120)
+                .setAbbreviatedSubcommandsAllowed(true)
+                .execute(args);
+        } else {
+            new PicoMain().newCommandLine().execute(args);
+        }
     }
 
     // Sonar's not happy about stderr/stdout usage; will revisit this, ignoring warnings for now.
@@ -68,13 +81,7 @@ public class PicoMain {
             .setAbbreviatedSubcommandsAllowed(true)
             .setCaseInsensitiveEnumValuesAllowed(true)
             .setExecutionStrategy(parseResult -> {
-                Object userObject = parseResult.subcommand().commandSpec().userObject();
-                if (userObject instanceof CommandLine.HelpCommand) {
-                    ((CommandLine.HelpCommand) userObject).run();
-                    return CommandLine.ExitCode.OK;
-                }
-
-                final Command command = (Command) userObject;
+                final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
                 try {
                     command.validateCommandLineOptions(parseResult);
                     SparkSession session = buildSparkSession(command);

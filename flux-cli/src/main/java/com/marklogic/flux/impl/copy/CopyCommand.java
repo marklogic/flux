@@ -263,13 +263,13 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
     }
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
     private CopyReadDocumentsParams readParams = new CopyReadDocumentsParams();
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.ArgGroup(exclusive = false, heading = "\nOutput Connection Options\n")
     private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     protected final CopyWriteDocumentsParams writeParams = new CopyWriteDocumentsParams();
 
     @Override

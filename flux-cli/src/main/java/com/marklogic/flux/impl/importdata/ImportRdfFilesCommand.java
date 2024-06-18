@@ -21,10 +21,10 @@ import java.util.function.Supplier;
 )
 public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesImporter> implements RdfFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
+    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
     private ReadRdfFilesParams readParams = new ReadRdfFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteTriplesDocumentsParams writeParams = new WriteTriplesDocumentsParams();
 
     @Override

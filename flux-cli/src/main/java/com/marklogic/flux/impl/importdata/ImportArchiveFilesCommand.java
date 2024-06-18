@@ -22,10 +22,10 @@ import java.util.stream.Stream;
 )
 public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<ArchiveFilesImporter> implements ArchiveFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
+    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
     private ReadArchiveFilesParams readParams = new ReadArchiveFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override
