@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 )
 public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<ParquetFilesExporter> implements ParquetFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteParquetFilesParams writeParams = new WriteParquetFilesParams();
 
     @Override

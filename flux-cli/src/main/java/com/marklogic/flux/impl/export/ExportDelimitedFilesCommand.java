@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 )
 public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesCommand<DelimitedFilesExporter> implements DelimitedFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
     private WriteDelimitedFilesParams writeParams = new WriteDelimitedFilesParams();
 
     @Override

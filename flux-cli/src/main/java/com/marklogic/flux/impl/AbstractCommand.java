@@ -18,13 +18,15 @@ import java.util.function.Consumer;
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
+    protected static final String READER_OPTIONS_HEADING = "\nReader Options\n";
+    protected static final String WRITER_OPTIONS_HEADING = "\nWriter Options\n";
 
     protected final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Common Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = "\nCommon Options\n")
     private CommonParams commonParams = new CommonParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "Connection Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = "\nConnection Options\n")
     private ConnectionParams connectionParams = new ConnectionParams();
 
     private SparkSession sparkSession;
