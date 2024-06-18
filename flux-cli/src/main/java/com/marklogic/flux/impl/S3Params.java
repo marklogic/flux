@@ -5,8 +5,8 @@ package com.marklogic.flux.impl;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.beust.jcommander.Parameter;
 import org.apache.hadoop.conf.Configuration;
+import picocli.CommandLine;
 
 /**
  * Intended to be a delegate in any command that can access S3.
@@ -18,25 +18,25 @@ public class S3Params {
     private static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
     private static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--s3-add-credentials",
         description = "Add credentials retrieved via the AWS SDK to the Spark context for use when accessing S3."
     )
     private boolean addCredentials;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--s3-access-key-id",
         description = "Specifies the AWS access key ID to use for accessing S3 paths."
     )
     private String accessKeyId;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--s3-secret-access-key",
         description = "Specifies the AWS secret key to use for accessing S3 paths."
     )
     private String secretAccessKey;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--s3-endpoint",
         description = "Define the S3 endpoint for any operations involving S3; typically used when a " +
             "process like AWS EMR must access an S3 bucket in a separate region."

@@ -3,10 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 
@@ -15,19 +15,19 @@ import java.util.Map;
  */
 public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStructuredDocumentsOptions> implements WriteStructuredDocumentsOptions {
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--json-root-name",
         description = "Name of a root field to add to each JSON document."
     )
     private String jsonRootName;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--xml-root-name",
         description = "Causes XML documents to be written instead of JSON, with the documents having a root element with this name."
     )
     private String xmlRootName;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--xml-namespace",
         description = "Namespace for the root element of XML documents as specified by '--xml-root-name'."
     )

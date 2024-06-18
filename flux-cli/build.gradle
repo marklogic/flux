@@ -82,8 +82,7 @@ distributions {
 }
 
 application {
-  mainClass = "com.marklogic.flux.cli.Main"
-
+  mainClass = "com.marklogic.flux.cli.PicoMain"
   // Removes warnings due to Spark performing "illegal reflective access".
   applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
                                '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',

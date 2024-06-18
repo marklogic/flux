@@ -3,26 +3,27 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.JsonFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
+@CommandLine.Command(
+    name = "import-json-files",
+    abbreviateSynopsis = true,
+    description = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
-    "as a JSON document in MarkLogic.")
+    "as a JSON document in MarkLogic."
+)
 public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
@@ -42,13 +43,13 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
 
     public static class ReadJsonFilesParams extends ReadFilesParams<ReadJsonFilesOptions> implements ReadJsonFilesOptions {
 
-        @Parameter(
+        @CommandLine.Option(
             names = "--json-lines",
             description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
         )
         private Boolean jsonLines;
 
-        @DynamicParameter(
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark JSON option defined at " +
                 "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."

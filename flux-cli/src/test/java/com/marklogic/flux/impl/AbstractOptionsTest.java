@@ -3,9 +3,10 @@
  */
 package com.marklogic.flux.impl;
 
-import com.marklogic.flux.cli.Main;
+import com.marklogic.flux.cli.PicoMain;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +27,14 @@ public abstract class AbstractOptionsTest {
 
 
     protected final Object getCommand(String... args) {
-        return new Main(args).getSelectedCommand();
+        AtomicReference<Command> selectedCommand = new AtomicReference<>();
+        new PicoMain().newCommandLine()
+            .setExecutionStrategy(parseResult -> {
+                selectedCommand.set((Command) parseResult.subcommand().commandSpec().userObject());
+                return 0;
+            })
+            .execute(args);
+        return selectedCommand.get();
     }
 
 }

@@ -3,24 +3,26 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.CompressionType;
 import com.marklogic.flux.api.GenericFilesImporter;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic.")
+@CommandLine.Command(
+    name = "import-files",
+    abbreviateSynopsis = true,
+    description = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic."
+)
 public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesImporter> implements GenericFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadGenericFilesParams readParams = new ReadGenericFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteGenericDocumentsParams writeParams = new WriteGenericDocumentsParams();
 
     @Override
@@ -61,13 +63,13 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private CompressionType compressionType;
 
         @Override
-        @Parameter(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
             return this;
         }
 
-        @Parameter(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
+        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
         @Override
@@ -90,7 +92,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private DocumentType documentType;
 
         @Override
-        @Parameter(names = "--document-type", description = "Forces a type for any document with an unrecognized URI extension.")
+        @CommandLine.Option(names = "--document-type", description = "Forces a type for any document with an unrecognized URI extension.")
         public WriteGenericDocumentsOptions documentType(DocumentType documentType) {
             this.documentType = documentType;
             return this;

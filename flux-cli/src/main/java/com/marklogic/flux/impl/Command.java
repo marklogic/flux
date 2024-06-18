@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl;
 
 import org.apache.spark.sql.SparkSession;
+import picocli.CommandLine;
 
 import java.util.Optional;
 
@@ -15,4 +16,12 @@ public interface Command {
      * the writer. Those commands can return a preview of the dataset that has been read by the command.
      */
     Optional<Preview> execute(SparkSession session);
+
+    /**
+     * With picocli, we don't have a JCommander-like facility for validating all the params before the command is
+     * executed. This allows us to do that.
+     *
+     * @param parseResult
+     */
+    void validateCommandLineOptions(CommandLine.ParseResult parseResult);
 }

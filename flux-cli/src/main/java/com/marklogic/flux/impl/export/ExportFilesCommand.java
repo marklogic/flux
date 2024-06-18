@@ -3,35 +3,43 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.CompressionType;
-import com.marklogic.flux.api.GenericFilesExporter;
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.api.GenericFilesExporter;
 import com.marklogic.flux.api.ReadDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Parameters(commandDescription = "Read documents from MarkLogic and write them to a local filesystem, HDFS, or S3.")
+@CommandLine.Command(
+    name = "export-files",
+    abbreviateSynopsis = true,
+    description = "Read documents from MarkLogic and write them to a local filesystem, HDFS, or S3."
+)
 public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
 
     @Override
     protected void validateDuringApiUsage() {
         writeParams.validatePath();
+    }
+
+    @Override
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        super.validateCommandLineOptions(parseResult);
+        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
     }
 
     @Override
@@ -58,19 +66,19 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
     public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions {
 
-        @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
+        @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
         private String path;
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private S3Params s3Params = new S3Params();
 
-        @Parameter(names = "--compression", description = "Set to 'ZIP' to write one zip file per partition, or to 'GZIP' to GZIP each document file.")
+        @CommandLine.Option(names = "--compression", description = "Set to 'ZIP' to write one zip file per partition, or to 'GZIP' to GZIP each document file.")
         private CompressionType compressionType;
 
-        @Parameter(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")
+        @CommandLine.Option(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")
         private Boolean prettyPrint;
 
-        @Parameter(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
+        @CommandLine.Option(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
         private Integer zipFileCount;
 
         @Override

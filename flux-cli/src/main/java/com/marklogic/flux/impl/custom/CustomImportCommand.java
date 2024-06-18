@@ -3,28 +3,29 @@
  */
 package com.marklogic.flux.impl.custom;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
+import com.marklogic.flux.api.CustomImporter;
+import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.flux.impl.importdata.WriteStructuredDocumentParams;
-import com.marklogic.flux.api.CustomImporter;
-import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read data via a custom Spark connector or data source and write JSON or XML documents to MarkLogic.")
+@CommandLine.Command(
+    name = "custom-import",
+    abbreviateSynopsis = true,
+    description = "Read data via a custom Spark connector or data source and write JSON or XML documents to MarkLogic."
+)
 public class CustomImportCommand extends AbstractCommand<CustomImporter> implements CustomImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private CustomReadParams readParams = new CustomReadParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
@@ -46,16 +47,16 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
     public static class CustomReadParams implements CustomReadOptions {
 
-        @Parameter(names = "--source", description = "Identifier for the Spark connector that is the source of data to import.")
+        @CommandLine.Option(names = "--source", description = "Identifier for the Spark connector that is the source of data to import.")
         private String source;
 
-        @DynamicParameter(
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any number of options to be passed to the connector identified by '--source'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private S3Params s3Params = new S3Params();
 
         @Override

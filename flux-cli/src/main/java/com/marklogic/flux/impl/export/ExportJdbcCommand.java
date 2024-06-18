@@ -3,25 +3,27 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.JdbcExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.flux.api.SaveMode;
 import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to a table via JDBC.")
+@CommandLine.Command(
+    name = "export-jdbc",
+    abbreviateSynopsis = true,
+    description = "Read rows via Optic from MarkLogic and write them to a table via JDBC."
+)
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private ReadRowsParams readParams = new ReadRowsParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private WriteJdbcParams writeParams = new WriteJdbcParams();
 
     @Override
@@ -55,10 +57,10 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
 
     public static class WriteJdbcParams extends JdbcParams<WriteRowsOptions> implements WriteRowsOptions {
 
-        @Parameter(names = "--table", required = true, description = "The JDBC table that should be written to.")
+        @CommandLine.Option(names = "--table", required = true, description = "The JDBC table that should be written to.")
         private String table;
 
-        @Parameter(names = "--mode",
+        @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written to a table if the table already exists. " +
                 "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
         private SaveMode saveMode = SaveMode.ERRORIFEXISTS;

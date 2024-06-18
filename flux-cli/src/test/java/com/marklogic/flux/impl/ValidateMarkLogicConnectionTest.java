@@ -49,7 +49,7 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--connection-string", "admin-missing-password@localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --connection-string; must be username:password@host:port"),
+        assertTrue(output.contains("Invalid value for connection string; must be username:password@host:port"),
             "Unexpected output: " + output + "; this test also confirms that the ETL tool is overriding " +
                 "error messages from the connector so that CLI option names appear instead of connector " +
                 "option names. This is also confirmed by ErrorMessagesTest.");
@@ -63,7 +63,8 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--connection-string", "localhost:8003"
         ));
 
-        assertTrue(output.contains("Invalid value for --connection-string; must be username:password@host:port"),
+        assertTrue(output.contains(
+            "Invalid value for option '--connection-string': Invalid value for connection string; must be username:password@host:port/optionalDatabaseName"),
             "Unexpected output: " + output);
     }
 }

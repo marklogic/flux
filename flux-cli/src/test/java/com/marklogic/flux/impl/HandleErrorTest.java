@@ -19,7 +19,7 @@ class HandleErrorTest extends AbstractTest {
     void invalidCommand() {
         assertStderrContains(
             () -> run("not_a_real_command", "--connection-string", makeConnectionString()),
-            "Invalid command name: not_a_real_command"
+            "Unmatched arguments from index 0: 'not_a_real_command'"
         );
     }
 
@@ -27,7 +27,7 @@ class HandleErrorTest extends AbstractTest {
     void invalidParam() {
         assertStderrContains(
             () -> run("import-files", "--not-a-real-param"),
-            "Invalid option: '--not-a-real-param'"
+            "Unknown option: '--not-a-real-param'"
         );
     }
 
@@ -35,7 +35,7 @@ class HandleErrorTest extends AbstractTest {
     void invalidParamWithSingleQuotesInIt() {
         assertStderrContains(
             () -> run("import-files", "-not-a-'real'-param"),
-            "Invalid option: '-not-a-'real'-param'"
+            "Unknown option: '-not-a-'real'-param'"
         );
     }
 
@@ -43,7 +43,7 @@ class HandleErrorTest extends AbstractTest {
     void badDynamicOption() {
         assertStderrContains(
             () -> run("import-files", "-CnoValue"),
-            "Options specified via '-C' or '-P' must have a form of -Ckey=value or -Pkey=value."
+            "Value for option option '-C' (<String=String>) should be in KEY=VALUE format but was noValue"
         );
     }
 
@@ -51,7 +51,7 @@ class HandleErrorTest extends AbstractTest {
     void missingRequiredParam() {
         assertStderrContains(
             () -> run("import-files", "--connection-string", makeConnectionString()),
-            "The following option is required: [--path]"
+            "Error: Missing required argument(s): (--path=<paths>"
         );
     }
 

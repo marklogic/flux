@@ -3,31 +3,28 @@
  */
 package com.marklogic.flux.impl;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
 import picocli.CommandLine;
 
-@Parameters(parametersValidators = ConnectionParamsValidator.class)
+//@CommandLine.Command(parametersValidators = ConnectionParamsValidator.class)
 public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     @Override
-    @Parameter(
-        names = {"--connection-string"},
-        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
-        validateWith = ConnectionStringValidator.class
+    @CommandLine.Option(
+        names = "--connection-string",
+        converter = ConnectionStringValidator.class,
+        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication."
     )
-    @CommandLine.Option(names = "--connection-string")
     public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = {"--host"},
         description = "The MarkLogic host to connect to."
     )
@@ -37,7 +34,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--port",
         description = "Port of a MarkLogic REST API app server to connect to."
     )
@@ -47,7 +44,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--base-path",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
@@ -57,7 +54,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--database",
         description = "Name of a database to connect if it differs from the one associated with the app server identified by '--port'."
     )
@@ -66,7 +63,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
         return this;
     }
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--connection-type",
         description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
     )
@@ -81,7 +78,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--disable-gzipped-responses",
         description = "If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
     )
@@ -91,7 +88,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--auth-type",
         description = "Type of authentication to use."
     )
@@ -101,7 +98,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--username",
         description = "Username when using 'DIGEST' or 'BASIC' authentication."
     )
@@ -111,10 +108,11 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--password",
         description = "Password when using 'DIGEST' or 'BASIC' authentication.",
-        password = true
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions password(String password) {
         this.password = password;
@@ -122,7 +120,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--certificate-file",
         description = "File path for a keystore to be used for 'CERTIFICATE' authentication."
     )
@@ -132,9 +130,11 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--certificate-password",
-        description = "Password for the keystore referenced by '--certificate-file'."
+        description = "Password for the keystore referenced by '--certificate-file'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions certificatePassword(String certificatePassword) {
         this.certificatePassword = certificatePassword;
@@ -142,7 +142,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--cloud-api-key",
         description = "API key for authenticating with a MarkLogic Cloud cluster."
     )
@@ -152,7 +152,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--kerberos-principal",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
@@ -162,7 +162,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--saml-token",
         description = "Token to be used with 'SAML' authentication."
     )
@@ -172,7 +172,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--ssl-protocol",
         description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
             "or truststore is configured, defaults to 'TLSv1.2'."
@@ -183,7 +183,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--ssl-hostname-verifier",
         description = "Hostname verification strategy when connecting via SSL."
     )
@@ -193,7 +193,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--keystore-path",
         description = "File path for a keystore for two-way SSL connections."
     )
@@ -203,9 +203,11 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--keystore-password",
-        description = "Password for the keystore identified by '--keystore-path'."
+        description = "Password for the keystore identified by '--keystore-path'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions keyStorePassword(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
@@ -213,7 +215,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--keystore-type",
         description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
     )
@@ -223,7 +225,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--keystore-algorithm",
         description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
     )
@@ -233,7 +235,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--truststore-path",
         description = "File path for a truststore for establishing trust with the certificate used by the MarkLogic app server."
     )
@@ -243,9 +245,11 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--truststore-password",
-        description = "Password for the truststore identified by '--truststore-path'."
+        description = "Password for the truststore identified by '--truststore-path'.",
+        interactive = true,
+        arity = "0..1"
     )
     public ConnectionOptions trustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
@@ -253,7 +257,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--truststore-type",
         description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
     )
@@ -263,7 +267,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     }
 
     @Override
-    @Parameter(
+    @CommandLine.Option(
         names = "--truststore-algorithm",
         description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
     )

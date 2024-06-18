@@ -3,14 +3,14 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.*;
 import com.marklogic.flux.api.FluxException;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-class AggregationParams implements IStringConverter<AggregationParams.Aggregation> {
+class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.Aggregation> {
 
     // Have not found a way to make this configurable in the CLI yet. The StringConverter interface is invoked first
     // by JCommander, which means the logic for converting the aggregation expression doesn't know what value a user
@@ -19,14 +19,14 @@ class AggregationParams implements IStringConverter<AggregationParams.Aggregatio
     // in it.
     private static final String AGGREGATE_DELIMITER = ",";
 
-    @Parameter(names = "--group-by", description = "Name of a column to group the rows by before constructing documents.")
+    @CommandLine.Option(names = "--group-by", description = "Name of a column to group the rows by before constructing documents.")
     private String groupBy;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--aggregate",
         description = "Define an aggregation of multiple columns into a new column. Each aggregation must be of the " +
             "the form newColumnName=column1,column2,etc. Requires the use of --group-by.",
-        listConverter = AggregationParams.class
+        converter = AggregationParams.class
     )
     private List<Aggregation> aggregations = new ArrayList<>();
 

@@ -3,33 +3,41 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.api.ArchiveFilesExporter;
 import com.marklogic.flux.api.WriteFilesOptions;
+import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Parameters(commandDescription = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.")
+@CommandLine.Command(
+    name = "export-archive-files",
+    abbreviateSynopsis = true,
+    description = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3."
+)
 public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
     @Override
     protected void validateDuringApiUsage() {
         writeParams.validatePath();
+    }
+
+    @Override
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        super.validateCommandLineOptions(parseResult);
+        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
     }
 
     @Override
@@ -64,7 +72,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
 
     public static class ReadArchiveDocumentsParams extends ReadDocumentParams<ReadArchiveDocumentOptions> implements ReadArchiveDocumentOptions {
 
-        @Parameter(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
+        @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of data to include. " +
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
         private String categories;
 

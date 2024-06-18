@@ -3,15 +3,12 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.RdfFilesExporter;
 import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.AtLeastOneValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -19,23 +16,25 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Parameters(
-    commandDescription = "Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3.",
-    parametersValidators = ExportRdfFilesCommand.Validator.class
+@CommandLine.Command(
+    name = "export-rdf-files",
+    abbreviateSynopsis = true,
+    description = "Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3."
 )
 public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> implements RdfFilesExporter {
 
-    public static class Validator extends AtLeastOneValidator {
-        public Validator() {
-            super("--graphs", "--query", "--uris", "--string-query", "--collections", "--directory");
-        }
-    }
-
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n")
     protected ReadTriplesParams readParams = new ReadTriplesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     protected WriteRdfFilesParams writeParams = new WriteRdfFilesParams();
+
+    @Override
+    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
+        super.validateCommandLineOptions(parseResult);
+        OptionsUtil.verifyHasAtLeastOneOption(parseResult,
+            "--graphs", "--query", "--uris", "--string-query", "--collections", "--directory");
+    }
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
@@ -60,37 +59,37 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     public static class ReadTriplesParams implements Supplier<Map<String, String>>, RdfFilesExporter.ReadTriplesDocumentsOptions {
 
-        @Parameter(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
+        @CommandLine.Option(names = "--uris", description = "Newline-delimited sequence of document URIs to retrieve. Can be combined " +
             "with --collections, --directory, and --string-query. If specified, --query will be ignored.")
         private String uris;
 
-        @Parameter(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
+        @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
             "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
         private String stringQuery;
 
-        @Parameter(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
+        @CommandLine.Option(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +
             "See https://docs.marklogic.com/guide/rest-dev/search#id_49329 for more information.")
         private String query;
 
-        @Parameter(names = "--graphs", description = "Comma-delimited sequence of MarkLogic graph names by which to constrain the query.")
+        @CommandLine.Option(names = "--graphs", description = "Comma-delimited sequence of MarkLogic graph names by which to constrain the query.")
         private String graphs;
 
-        @Parameter(names = "--collections", description = "Comma-delimited sequence of collection names by which to constrain the query.")
+        @CommandLine.Option(names = "--collections", description = "Comma-delimited sequence of collection names by which to constrain the query.")
         private String collections;
 
-        @Parameter(names = "--directory", description = "Database directory by which to constrain the query.")
+        @CommandLine.Option(names = "--directory", description = "Database directory by which to constrain the query.")
         private String directory;
 
-        @Parameter(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
+        @CommandLine.Option(names = "--options", description = "Name of a set of MarkLogic REST API search options.")
         private String options;
 
-        @Parameter(names = "--base-iri", description = "Base IRI to prepend to the graph of a triple when the graph is relative and not absolute.")
+        @CommandLine.Option(names = "--base-iri", description = "Base IRI to prepend to the graph of a triple when the graph is relative and not absolute.")
         private String baseIri;
 
-        @Parameter(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
+        @CommandLine.Option(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
         private Integer batchSize = 100;
 
-        @Parameter(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
+        @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
         private Integer partitionsPerForest = 4;
 
         @Override
@@ -98,11 +97,11 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
             return OptionsUtil.makeOptions(
                 Options.READ_TRIPLES_GRAPHS, graphs,
                 Options.READ_TRIPLES_COLLECTIONS, collections,
-                Options.READ_TRIPLES_OPTIONS, options,
-                Options.READ_TRIPLES_DIRECTORY, directory,
                 Options.READ_TRIPLES_QUERY, query,
                 Options.READ_TRIPLES_STRING_QUERY, stringQuery,
                 Options.READ_TRIPLES_URIS, uris,
+                Options.READ_TRIPLES_DIRECTORY, directory,
+                Options.READ_TRIPLES_OPTIONS, options,
                 Options.READ_TRIPLES_BASE_IRI, baseIri,
                 Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest.toString(),
                 Options.READ_BATCH_SIZE, batchSize.toString()
@@ -172,13 +171,13 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     public static class WriteRdfFilesParams extends WriteFilesParams<WriteRdfFilesOptions> implements WriteRdfFilesOptions {
 
-        @Parameter(names = "--format", description = "RDF file format; supported values are 'nq', 'nt', 'rdfthrift', 'trig', 'trix', and 'ttl'.")
+        @CommandLine.Option(names = "--format", description = "RDF file format; supported values are 'nq', 'nt', 'rdfthrift', 'trig', 'trix', and 'ttl'.")
         private String format = "ttl";
 
-        @Parameter(names = "--graph-override", description = "Semantic graph to include in each file. Only allowed when '--format' is 'nq' or 'trig'.")
+        @CommandLine.Option(names = "--graph-override", description = "Semantic graph to include in each file. Only allowed when '--format' is 'nq' or 'trig'.")
         private String graphOverride;
 
-        @Parameter(names = "--gzip", description = "GZIP each file.")
+        @CommandLine.Option(names = "--gzip", description = "GZIP each file.")
         private boolean gzip;
 
         @Override

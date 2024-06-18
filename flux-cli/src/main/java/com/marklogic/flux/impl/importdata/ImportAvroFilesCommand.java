@@ -3,28 +3,30 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.AvroFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read Avro files from local, HDFS, and S3 locations using Spark's support " +
+@CommandLine.Command(
+    name = "import-avro-files",
+    abbreviateSynopsis = true,
+    description = "Read Avro files from local, HDFS, and S3 locations using Spark's support " +
     "defined at https://spark.apache.org/docs/latest/sql-data-sources-avro.html, with each row being written " +
-    "as a JSON or XML document in MarkLogic.")
+    "as a JSON or XML document in MarkLogic."
+)
 public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFilesImporter> implements AvroFilesImporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n", multiplicity = "1")
     private ReadAvroFilesParams readParams = new ReadAvroFilesParams();
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Write Options\n")
     private WriteStructuredDocumentParams writeDocumentParams = new WriteStructuredDocumentParams();
 
     @Override
@@ -44,7 +46,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
     public static class ReadAvroFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
-        @DynamicParameter(
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark Avro data source option defined at " +
                 "https://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
@@ -52,7 +54,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @ParametersDelegate
+        @CommandLine.ArgGroup(exclusive = false)
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override
@@ -85,7 +87,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
         return readParams.aggregationParams.applyGroupBy(dataset);
     }
-    
+
     @Override
     public AvroFilesImporter from(Consumer<ReadTabularFilesOptions> consumer) {
         consumer.accept(readParams);

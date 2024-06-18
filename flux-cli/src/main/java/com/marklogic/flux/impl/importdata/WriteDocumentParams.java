@@ -3,10 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.beust.jcommander.Parameter;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -19,92 +19,92 @@ import java.util.stream.Stream;
  */
 public class WriteDocumentParams<T extends WriteDocumentsOptions> implements WriteDocumentsOptions<T>, Supplier<Map<String, String>> {
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--abort-on-write-failure",
         description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
     )
     private Boolean abortOnWriteFailure;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--batch-size",
         description = "The number of documents written in a call to MarkLogic."
     )
     private Integer batchSize = 200;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--collections",
         description = "Comma-delimited string of collection names to add to each document."
     )
     private String collections;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--failed-documents-path",
         description = "File path for writing an archive file containing failed documents and their metadata."
     )
     private String failedDocumentsPath;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--permissions",
         description = "Comma-delimited string of role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
     )
     private String permissions;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--temporal-collection",
         description = "Name of a temporal collection to assign to each document."
     )
     private String temporalCollection;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--thread-count",
         description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic."
     )
     private Integer threadCount = 4;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--total-thread-count",
         description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
     )
     private Integer totalThreadCount;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--transform",
         description = "Name of a MarkLogic REST API transform to apply to each document."
     )
     private String transform;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--transform-params",
         description = "Comma-delimited string of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
     )
     private String transformParams;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--transform-params-delimiter",
         description = "Delimiter to use instead of a comma for the '--transform-params' parameter."
     )
     private String transformParamsDelimiter;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--uri-prefix",
         description = "String to prepend to each document URI."
     )
     private String uriPrefix;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--uri-replace",
         description = "Modify the URI for a document via a comma-delimited list of regular expression " +
             "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
     )
     private String uriReplace;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--uri-suffix",
         description = "String to append to each document URI."
     )
     private String uriSuffix;
 
-    @Parameter(
+    @CommandLine.Option(
         names = "--uri-template",
         description = "String defining a template for constructing each document URI. " +
             "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
