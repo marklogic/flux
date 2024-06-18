@@ -28,6 +28,31 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
             "--file-count", "1"
         );
 
+        verifyDelimitedFile(tempDir);
+    }
+
+    /**
+     * Verifies that an options file can have values with whitespace in them, which picocli supports and
+     * JCommander oddly does not. Users will frequently have spaces in any Optic or search queries that they put into
+     * options files. And it's common to put queries into options files as they are awkward to type directly on the
+     * command line.
+     *
+     * @param tempDir
+     * @throws IOException
+     */
+    @Test
+    void optionsFileWithSpacesInIt(@TempDir Path tempDir) throws IOException {
+        run(
+            "export-delimited-files",
+            "--connection-string", makeConnectionString(),
+            "@src/test/resources/options-files/export-rows.txt",
+            "--path", tempDir.toFile().getAbsolutePath()
+        );
+
+        verifyDelimitedFile(tempDir);
+    }
+
+    private void verifyDelimitedFile(Path tempDir) throws IOException {
         File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
         assertEquals(1, files.length);
 

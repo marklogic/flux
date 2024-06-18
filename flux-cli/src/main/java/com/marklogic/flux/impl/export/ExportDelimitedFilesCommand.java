@@ -3,23 +3,24 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.beust.jcommander.DynamicParameter;
-import com.beust.jcommander.Parameters;
-import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.DelimitedFilesExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.flux.api.WriteSparkFilesOptions;
 import com.marklogic.flux.impl.OptionsUtil;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Parameters(commandDescription = "Read rows via Optic from MarkLogic and write them to delimited text files on a " +
-    "local filesystem, HDFS, or S3.")
+@CommandLine.Command(
+    name = "export-delimited-files",
+    abbreviateSynopsis = true,
+    description = "Read rows via Optic from MarkLogic and write them to delimited text files on a local filesystem, HDFS, or S3."
+)
 public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesCommand<DelimitedFilesExporter> implements DelimitedFilesExporter {
 
-    @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false)
     private WriteDelimitedFilesParams writeParams = new WriteDelimitedFilesParams();
 
     @Override
@@ -34,10 +35,10 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
 
     public static class WriteDelimitedFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
 
-        @DynamicParameter(
-            names = "-P",
-            description = "Specify any Spark CSV option defined at " +
-                "https://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true.")
+        @CommandLine.Option(
+            names = {"-P"},
+            description = "Specify any Spark CSV option defined at https://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
+        )
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @Override

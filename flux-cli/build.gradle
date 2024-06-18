@@ -23,6 +23,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
+  implementation 'info.picocli:picocli:4.7.6'
   implementation "org.jcommander:jcommander:1.83"
 
   implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"

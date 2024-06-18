@@ -1,0 +1,6 @@
+--query
+op.fromView("Medical", "Authors", "").orderBy(op.asc(op.col("LastName")))
+--file-count
+1
+--partitions
+1

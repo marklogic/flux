@@ -7,6 +7,7 @@ import com.beust.jcommander.Parameter;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.spark.Options;
+import picocli.CommandLine;
 
 import java.util.Map;
 
@@ -16,19 +17,23 @@ import java.util.Map;
 public class ReadRowsParams implements ReadRowsOptions {
 
     @Parameter(names = "--query", description = "The Optic DSL query for retrieving rows; must use op.fromView as an accessor.")
+    @CommandLine.Option(names = "--query")
     private String query;
 
     @Parameter(names = "--batch-size", description = "Approximate number of rows to retrieve in each call to MarkLogic; defaults to 100000.")
+    @CommandLine.Option(names = "--batch-size")
     private Integer batchSize;
 
     // Not yet showing this in usage as it is confusing for a typical user to understand and would only need to be
     // set if push down aggregation is producing incorrect results. See the MarkLogic Spark connector documentation
     // for more information.
     @Parameter(names = "--disable-aggregation-push-down", hidden = true)
+    @CommandLine.Option(names = "--disable-aggregation-push-down", hidden = true)
     private Boolean disableAggregationPushDown;
 
     @Parameter(names = "--partitions", description = "Number of partitions to create when reading rows from MarkLogic. " +
         "Increasing this may improve performance as the number of rows to read increases.")
+    @CommandLine.Option(names = "--partitions")
     private Integer partitions;
 
     public Map<String, String> makeOptions() {
