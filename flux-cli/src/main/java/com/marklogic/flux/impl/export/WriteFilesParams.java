@@ -8,6 +8,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.S3Params;
+import picocli.CommandLine;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -15,12 +16,14 @@ import java.util.function.Supplier;
 public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T> {
 
     @Parameter(required = true, names = "--path", description = "Path expression for where files should be written.")
+    @CommandLine.Option(names = "--path")
     private String path;
 
     @ParametersDelegate
     private S3Params s3Params = new S3Params();
 
     @Parameter(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
+    @CommandLine.Option(names = "--file-count")
     protected Integer fileCount;
 
     public String getPath() {

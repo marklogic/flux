@@ -12,13 +12,15 @@ import org.apache.spark.SparkException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
+public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T>, Callable<Void> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
 
@@ -28,6 +30,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     private CommonParams commonParams = new CommonParams();
 
     @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Connection Options\n")
     private ConnectionParams connectionParams = new ConnectionParams();
 
     @DynamicParameter(
@@ -37,6 +40,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     private Map<String, String> configParams = new HashMap<>();
 
     private SparkSession sparkSession;
+
+    @Override
+    public Void call() {
+        execute();
+        return null;
+    }
 
     @Override
     public final Optional<Preview> execute(SparkSession session) {

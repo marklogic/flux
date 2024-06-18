@@ -9,6 +9,7 @@ import com.marklogic.client.DatabaseClient;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
+import picocli.CommandLine;
 
 @Parameters(parametersValidators = ConnectionParamsValidator.class)
 public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
@@ -19,6 +20,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
         description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
         validateWith = ConnectionStringValidator.class
     )
+    @CommandLine.Option(names = "--connection-string")
     public ConnectionOptions connectionString(String connectionString) {
         this.connectionString = connectionString;
         return this;

@@ -9,6 +9,7 @@ import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.SparkUtil;
 import org.apache.spark.sql.*;
+import picocli.CommandLine;
 
 /**
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
@@ -17,6 +18,7 @@ import org.apache.spark.sql.*;
 abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
     @ParametersDelegate
+    @CommandLine.ArgGroup(exclusive = false, heading = "Read Options\n")
     protected final ReadRowsParams readParams = new ReadRowsParams();
 
     // Sonar complaining about the use of ?; not sure yet how to "fix" it, so ignoring.
