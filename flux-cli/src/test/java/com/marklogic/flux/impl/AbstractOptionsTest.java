@@ -3,7 +3,7 @@
  */
 package com.marklogic.flux.impl;
 
-import com.marklogic.flux.cli.PicoMain;
+import com.marklogic.flux.cli.Main;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,10 +25,9 @@ public abstract class AbstractOptionsTest {
         }
     }
 
-
     protected final Object getCommand(String... args) {
         AtomicReference<Command> selectedCommand = new AtomicReference<>();
-        new PicoMain().newCommandLine()
+        new Main().newCommandLine()
             .setExecutionStrategy(parseResult -> {
                 selectedCommand.set((Command) parseResult.subcommand().commandSpec().userObject());
                 return 0;

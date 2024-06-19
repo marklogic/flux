@@ -6,7 +6,7 @@ package com.marklogic.flux;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.flux.api.FluxException;
-import com.marklogic.flux.cli.PicoMain;
+import com.marklogic.flux.cli.Main;
 import com.marklogic.junit5.AbstractMarkLogicTest;
 import com.marklogic.mgmt.ManageClient;
 import com.marklogic.mgmt.ManageConfig;
@@ -19,8 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -89,7 +87,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     }
 
     protected final void run(String... args) {
-        PicoMain.main(args);
+        Main.main(args);
     }
 
     /**
