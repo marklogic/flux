@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 
 /**
  * Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using
- * <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support </a>,
- * with each object being written as a JSON document in MarkLogic.
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support</a>,
+ * and write each object as a JSON document to MarkLogic.
  */
 public interface JsonFilesImporter extends Executor<JsonFilesImporter> {
 

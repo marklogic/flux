@@ -6,7 +6,9 @@ package com.marklogic.flux.api;
 import java.util.function.Consumer;
 
 /**
- * Read rows via JDBC and write JSON or XML documents to MarkLogic.
+ * Read rows using
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark's JDBC support</a>
+ * and write JSON or XML documents to MarkLogic.
  */
 public interface JdbcImporter extends Executor<JdbcImporter> {
 

@@ -130,7 +130,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 extends <a href="Executor.html" title="interface in com.marklogic.flux.api">Executor</a>&lt;<a href="DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a>&gt;</pre>
 <div class="block">Read delimited text files from local, HDFS, and S3 locations using
  <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>,
- with each row being written as a JSON or XML document to MarkLogic.</div>
+ and write JSON or XML documents to MarkLogic.</div>
 </li>
 </ul>
 </div>
@@ -158,7 +158,7 @@ extends <a href="Executor.html" title="interface in com.marklogic.flux.api">Exec
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#from(java.util.function.Consumer)">from</a></span>&#8203;(java.util.function.Consumer&lt;<a href="ReadSparkFilesOptions.html" title="interface in com.marklogic.flux.api">ReadSparkFilesOptions</a>&gt;&nbsp;consumer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#from(java.util.function.Consumer)">from</a></span>&#8203;(java.util.function.Consumer&lt;<a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a>&gt;&nbsp;consumer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
@@ -196,7 +196,7 @@ extends <a href="Executor.html" title="interface in com.marklogic.flux.api">Exec
 <ul class="blockList">
 <li class="blockList">
 <h4>from</h4>
-<pre class="methodSignature"><a href="DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a>&nbsp;from&#8203;(java.util.function.Consumer&lt;<a href="ReadSparkFilesOptions.html" title="interface in com.marklogic.flux.api">ReadSparkFilesOptions</a>&gt;&nbsp;consumer)</pre>
+<pre class="methodSignature"><a href="DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a>&nbsp;from&#8203;(java.util.function.Consumer&lt;<a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a>&gt;&nbsp;consumer)</pre>
 </li>
 </ul>
 <a id="from(java.lang.String...)">

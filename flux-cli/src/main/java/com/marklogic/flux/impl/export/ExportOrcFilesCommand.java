@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "export-orc-files",
-    abbreviateSynopsis = true,
-    description = "Read rows via Optic from MarkLogic and write them to ORC files on a local filesystem, HDFS, or S3."
+    description = "Read rows via Optic from MarkLogic and write them to ORC files on a local filesystem, HDFS, or S3 " +
+        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html."
 )
 public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcFilesExporter> implements OrcFilesExporter {
 
@@ -37,7 +37,7 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark ORC option defined at " +
-                "https://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -Pcompression=lz4."
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -Pcompression=lz4."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

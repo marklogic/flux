@@ -6,7 +6,8 @@ package com.marklogic.flux.api;
 import java.util.function.Consumer;
 
 /**
- * Read rows via Optic from MarkLogic and write them to a table via JDBC.
+ * Read rows via Optic from MarkLogic and write them to a table using
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark's JDBC support</a>.
  */
 public interface JdbcExporter extends Executor<JdbcExporter> {
 

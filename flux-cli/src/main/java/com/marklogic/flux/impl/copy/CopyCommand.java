@@ -27,7 +27,6 @@ import java.util.stream.Stream;
  */
 @CommandLine.Command(
     name = "copy",
-    abbreviateSynopsis = true,
     description = "Copy documents from one database to another database, which can also be the originating database."
 )
 public class CopyCommand extends AbstractCommand<DocumentCopier> implements DocumentCopier {

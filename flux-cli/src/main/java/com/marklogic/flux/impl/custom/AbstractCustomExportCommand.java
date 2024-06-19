@@ -38,7 +38,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
-                "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
+                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
         private SaveMode saveMode = SaveMode.APPEND;
 
         @Override

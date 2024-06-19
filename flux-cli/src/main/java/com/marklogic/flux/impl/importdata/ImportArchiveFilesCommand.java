@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
     name = "import-archive-files",
-    abbreviateSynopsis = true,
     description = "Read local, HDFS, and S3 Flux archive files and write the documents in each archive to MarkLogic."
 )
 public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<ArchiveFilesImporter> implements ArchiveFilesImporter {

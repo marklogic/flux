@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "export-jdbc",
-    abbreviateSynopsis = true,
-    description = "Read rows via Optic from MarkLogic and write them to a table via JDBC."
+    description = "Read rows via Optic from MarkLogic and write them to a table using Spark's support defined at" +
+        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html."
 )
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
@@ -62,7 +62,7 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written to a table if the table already exists. " +
-                "See https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
+                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
         private SaveMode saveMode = SaveMode.ERRORIFEXISTS;
 
         @Override

@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "custom-import",
-    abbreviateSynopsis = true,
     description = "Read data via a custom Spark connector or data source and write JSON or XML documents to MarkLogic."
 )
 public class CustomImportCommand extends AbstractCommand<CustomImporter> implements CustomImporter {

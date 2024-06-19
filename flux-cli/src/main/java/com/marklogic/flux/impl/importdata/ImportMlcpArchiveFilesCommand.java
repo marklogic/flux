@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
     name = "import-mlcp-archive-files",
-    abbreviateSynopsis = true,
     description = "Read local, HDFS, and S3 archive files written by MLCP and write the documents in each archive to MarkLogic."
 )
 public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<MlcpArchiveFilesImporter> implements MlcpArchiveFilesImporter {
