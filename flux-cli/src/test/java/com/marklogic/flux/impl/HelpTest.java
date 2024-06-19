@@ -43,7 +43,7 @@ class HelpTest extends AbstractTest {
     void noCommandAfterHelp() {
         String stdout = runAndReturnStdout(() -> run("help"));
         System.out.println(stdout);
-        assertTrue(stdout.contains("Usage: ./bin/flux help [-h] [COMMAND]"),
+        assertTrue(stdout.contains("Usage: ./bin/flux help [OPTIONS] [COMMAND]"),
             "If 'help' is run with no command, then the help for 'help' should be shown.");
     }
 }

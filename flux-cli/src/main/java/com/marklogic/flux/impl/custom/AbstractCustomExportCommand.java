@@ -19,7 +19,7 @@ import java.util.Map;
 
 abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected final CustomWriteParams writeParams = new CustomWriteParams();
 
     public static class CustomWriteParams implements CustomExportWriteOptions {

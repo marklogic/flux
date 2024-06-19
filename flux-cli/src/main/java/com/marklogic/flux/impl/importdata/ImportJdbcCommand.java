@@ -22,10 +22,10 @@ import java.util.function.Consumer;
 )
 public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements JdbcImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadJdbcParams readParams = new ReadJdbcParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

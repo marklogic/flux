@@ -22,10 +22,10 @@ import java.util.function.Consumer;
 )
 public class CustomImportCommand extends AbstractCommand<CustomImporter> implements CustomImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private CustomReadParams readParams = new CustomReadParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override

@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 )
 public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcFilesExporter> implements OrcFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteOrcFilesParams writeParams = new WriteOrcFilesParams();
 
     @Override

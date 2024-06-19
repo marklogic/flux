@@ -21,10 +21,10 @@ import java.util.stream.Stream;
 )
 public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<MlcpArchiveFilesImporter> implements MlcpArchiveFilesImporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING, multiplicity = "1")
+    @CommandLine.Mixin
     private ReadMlcpArchiveFilesParams readParams = new ReadMlcpArchiveFilesParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override

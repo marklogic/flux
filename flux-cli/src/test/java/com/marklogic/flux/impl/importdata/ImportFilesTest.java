@@ -22,10 +22,12 @@ class ImportFilesTest extends AbstractTest {
     String[] uris = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
 
     @Test
-    void test() {
+    void multiplePaths() {
         run(
             "import-files",
-            "--path", "src/test/resources/mixed-files/hello*",
+            "--path", "src/test/resources/mixed-files/hello*txt*",
+            "--path", "src/test/resources/mixed-files/hello.json",
+            "--path", "src/test/resources/mixed-files/hello.xml",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",

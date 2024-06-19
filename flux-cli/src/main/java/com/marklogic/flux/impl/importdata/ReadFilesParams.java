@@ -15,8 +15,9 @@ import java.util.*;
  */
 public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T> {
 
+    // "path" is the name so that picocli shows "--path <path>" instead of "--path <paths>".
     @CommandLine.Option(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
-    private List<String> paths = new ArrayList<>();
+    private List<String> path = new ArrayList<>();
 
     @CommandLine.Option(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
     private Boolean abortOnReadFailure = false;
@@ -31,7 +32,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     private S3Params s3Params = new S3Params();
 
     public boolean hasAtLeastOnePath() {
-        return paths != null && !paths.isEmpty();
+        return path != null && !path.isEmpty();
     }
 
     public Map<String, String> makeOptions() {
@@ -80,7 +81,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     public List<String> getPaths() {
-        return paths;
+        return path;
     }
 
     public S3Params getS3Params() {
@@ -89,7 +90,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
 
     @Override
     public T paths(String... paths) {
-        this.paths = Arrays.asList(paths);
+        this.path = Arrays.asList(paths);
         return (T) this;
     }
 

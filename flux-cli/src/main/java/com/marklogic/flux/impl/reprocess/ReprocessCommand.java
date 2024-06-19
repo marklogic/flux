@@ -27,10 +27,10 @@ import java.util.stream.Stream;
 )
 public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Reprocessor {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected ReadParams readParams = new ReadParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected WriteParams writeParams = new WriteParams();
 
     @Override

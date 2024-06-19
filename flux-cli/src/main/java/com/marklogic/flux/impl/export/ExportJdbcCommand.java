@@ -20,10 +20,10 @@ import java.util.function.Consumer;
 )
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadRowsParams readParams = new ReadRowsParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private WriteJdbcParams writeParams = new WriteJdbcParams();
 
     @Override

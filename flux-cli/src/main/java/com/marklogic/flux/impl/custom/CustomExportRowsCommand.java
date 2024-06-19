@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 )
 public class CustomExportRowsCommand extends AbstractCustomExportCommand<CustomRowsExporter> implements CustomRowsExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadRowsParams readParams = new ReadRowsParams();
 
     @Override

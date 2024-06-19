@@ -23,6 +23,14 @@ import java.util.Optional;
 
 @CommandLine.Command(
     name = "./bin/flux",
+
+    // The scope allows for the following attributes to be inherited by the subcommands.
+    scope = CommandLine.ScopeType.INHERIT,
+    abbreviateSynopsis = true,
+    showAtFileInUsageHelp = true,
+    separator = " ",
+    requiredOptionMarker = '*',
+
     subcommands = {
         CommandLine.HelpCommand.class,
         CopyCommand.class,
@@ -80,6 +88,7 @@ public class PicoMain {
             .setAbbreviatedOptionsAllowed(true)
             .setAbbreviatedSubcommandsAllowed(true)
             .setCaseInsensitiveEnumValuesAllowed(true)
+            .setParameterExceptionHandler(new ShortErrorMessageHandler())
             .setExecutionStrategy(parseResult -> {
                 final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
                 try {

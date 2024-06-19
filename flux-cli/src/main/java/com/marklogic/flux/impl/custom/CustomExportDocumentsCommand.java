@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 )
 public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<CustomDocumentsExporter> implements CustomDocumentsExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
     @Override

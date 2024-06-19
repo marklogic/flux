@@ -26,7 +26,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParam() {
         assertStderrContains(
-            () -> run("import-files", "--not-a-real-param"),
+            () -> run("import-files", "--not-a-real-param", "--path", "anywhere"),
             "Unknown option: '--not-a-real-param'"
         );
     }
@@ -34,7 +34,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParamWithSingleQuotesInIt() {
         assertStderrContains(
-            () -> run("import-files", "-not-a-'real'-param"),
+            () -> run("import-files", "-not-a-'real'-param", "--path", "anywhere"),
             "Unknown option: '-not-a-'real'-param'"
         );
     }
@@ -51,7 +51,7 @@ class HandleErrorTest extends AbstractTest {
     void missingRequiredParam() {
         assertStderrContains(
             () -> run("import-files", "--connection-string", makeConnectionString()),
-            "Error: Missing required argument(s): (--path=<paths>"
+            "Missing required option: '--path <path>'"
         );
     }
 

@@ -25,10 +25,10 @@ import java.util.function.Supplier;
 )
 public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {
 
-    @CommandLine.ArgGroup(exclusive = false, heading = READER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = WRITER_OPTIONS_HEADING)
+    @CommandLine.Mixin
     protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
 
     @Override
