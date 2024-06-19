@@ -109,9 +109,6 @@ class ImportFilesTest extends AbstractTest {
         assertFalse(stdout.contains("modificationTime"), message);
     }
 
-    /**
-     * Verifies that https://jcommander.org/#_syntax "just works"!
-     */
     @Test
     void fileOptions(@TempDir Path tempDir) throws IOException {
         File optionsFile = new File(tempDir.toFile(), "options.txt");

@@ -3,11 +3,11 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.beust.jcommander.Parameter;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.flux.impl.importdata.WriteDocumentParams;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.lang.reflect.Field;
 
@@ -155,7 +155,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     private int getParameterCount(Class<?> clazz) {
         int count = 0;
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.getAnnotation(Parameter.class) != null) {
+            if (field.getAnnotation(CommandLine.Option.class) != null) {
                 count++;
             }
         }
@@ -165,8 +165,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
     private int getOutputParameterCountInCopyCommand() {
         int count = 0;
         for (Field field : CopyCommand.CopyWriteDocumentsParams.class.getDeclaredFields()) {
-            Parameter param = field.getAnnotation(Parameter.class);
-            if (param != null && param.names()[0].startsWith("--output")) {
+            CommandLine.Option option = field.getAnnotation(CommandLine.Option.class);
+            if (option != null && option.names()[0].startsWith("--output")) {
                 count++;
             }
         }

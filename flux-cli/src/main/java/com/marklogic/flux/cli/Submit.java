@@ -12,12 +12,8 @@ import org.apache.spark.sql.SparkSession;
  */
 public class Submit extends Main {
 
-    public Submit(String... args) {
-        super(args);
-    }
-
     public static void main(String[] args) {
-        new Submit(args).run();
+        new Submit().newCommandLine().execute(args);
     }
 
     @Override
