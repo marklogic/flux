@@ -9,3 +9,5 @@ flux/lib
 flux/ext
 flux/bin
 flux/conf
+flux/export
+export

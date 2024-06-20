@@ -27,7 +27,11 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
         @CommandLine.ArgGroup(exclusive = false)
         private S3Params s3Params = new S3Params();
 
-        @CommandLine.Option(names = "--target", description = "Identifier for the Spark connector that is the target of data to export.")
+        @CommandLine.Option(
+            names = "--target",
+            description = "Identifier for the Spark connector that is the target of data to export.",
+            required = true
+        )
         private String target;
 
         @CommandLine.Option(
