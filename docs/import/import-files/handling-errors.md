@@ -6,6 +6,14 @@ grand_parent: Importing Data
 nav_order: 10
 ---
 
+## Table of contents
+{: .no_toc .text-delta }
+
+- TOC
+{:toc}
+
+## Retrying failed documents
+
 If Flux fails to write a batch of documents to MarkLogic, it will attempt to write each document in the batch in smaller
 batches until it concludes it cannot write a particular document. An error will be logged for that document and 
 processing will continue. 
@@ -17,3 +25,15 @@ ZIP archive file. To enable this, include the `--failed-documents-path` option w
 archive files written containing failed documents. You can later use the `import-archive-files` command to retry these 
 failed documents, presumably after making a fix to either the data or your application that will allow the documents 
 to be successfully imported.
+
+## Errors with Snappy compression
+
+When importing files compressed [using Snappy](https://google.github.io/snappy/), you may run into the following error:
+
+    failed to map segment from shared object when /tmp is mounted with noexec
+
+Per the [Snappy documentation](https://www.javadoc.io/doc/org.xerial.snappy/snappy-java/1.1.7.1/org/xerial/snappy/SnappyLoader.html), this
+can be fixed by configuring Snappy to use a different temp directory when it compresses or decompresses a file - e.g. 
+
+    export JAVA_OPTS='-Dorg.xerial.snappy.tempdir=/opt/tmp'
+    ./bin/flux import-parquet-files etc...

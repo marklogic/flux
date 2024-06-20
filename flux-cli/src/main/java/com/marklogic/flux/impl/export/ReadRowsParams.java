@@ -15,7 +15,11 @@ import java.util.Map;
  */
 public class ReadRowsParams implements ReadRowsOptions {
 
-    @CommandLine.Option(names = "--query", description = "The Optic DSL query for retrieving rows; must use op.fromView as an accessor.")
+    @CommandLine.Option(
+        names = "--query",
+        description = "The Optic DSL query for retrieving rows; must use op.fromView as an accessor.",
+        required = true
+    )
     private String query;
 
     @CommandLine.Option(names = "--batch-size", description = "Approximate number of rows to retrieve in each call to MarkLogic; defaults to 100000.")

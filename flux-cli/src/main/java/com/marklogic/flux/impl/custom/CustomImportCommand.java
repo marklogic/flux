@@ -46,7 +46,11 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
     public static class CustomReadParams implements CustomReadOptions {
 
-        @CommandLine.Option(names = "--source", description = "Identifier for the Spark connector that is the source of data to import.")
+        @CommandLine.Option(
+            names = "--source",
+            description = "Identifier for the Spark connector that is the source of data to import.",
+            required = true
+        )
         private String source;
 
         @CommandLine.Option(
