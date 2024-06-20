@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 
 @CommandLine.Command(
     name = "import-rdf-files",
-    abbreviateSynopsis = true,
     description = "Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic."
 )
 public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesImporter> implements RdfFilesImporter {

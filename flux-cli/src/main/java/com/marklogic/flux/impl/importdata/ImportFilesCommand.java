@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-files",
-    abbreviateSynopsis = true,
     description = "Read local, HDFS, and S3 files and write the contents of each file as a document in MarkLogic."
 )
 public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesImporter> implements GenericFilesImporter {

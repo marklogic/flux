@@ -13,10 +13,9 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-json-files",
-    abbreviateSynopsis = true,
     description = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
-    "defined at https://spark.apache.org/docs/latest/sql-data-sources-json.html , with each object being written " +
-    "as a JSON document in MarkLogic."
+    "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
+    "as a JSON document to MarkLogic."
 )
 public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
 
@@ -52,7 +51,7 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark JSON option defined at " +
-                "https://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

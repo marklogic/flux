@@ -22,8 +22,7 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
     name = "reprocess",
-    abbreviateSynopsis = true,
-    description = "Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code."
+    description = "Read any data from MarkLogic via custom code and reprocess it via custom code."
 )
 public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Reprocessor {
 

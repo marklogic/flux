@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "custom-export-rows",
-    abbreviateSynopsis = true,
     description = "Read rows from MarkLogic and write them using a custom Spark connector or data source."
 )
 public class CustomExportRowsCommand extends AbstractCustomExportCommand<CustomRowsExporter> implements CustomRowsExporter {

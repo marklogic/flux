@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Read data from MarkLogic via custom code and reprocess it (often, but not necessarily, by writing data) via custom code.
+ * Read data from MarkLogic via custom code and reprocess it via custom code.
  */
 public interface Reprocessor extends Executor<Reprocessor> {
 

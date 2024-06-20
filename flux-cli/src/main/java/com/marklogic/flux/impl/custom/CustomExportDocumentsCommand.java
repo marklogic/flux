@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "custom-export-documents",
-    abbreviateSynopsis = true,
     description = "Read documents from MarkLogic and write them using a custom Spark connector or data source."
 )
 public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<CustomDocumentsExporter> implements CustomDocumentsExporter {

@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
     name = "export-rdf-files",
-    abbreviateSynopsis = true,
     description = "Read triples from MarkLogic and write them to a local filesystem, HDFS, or S3."
 )
 public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> implements RdfFilesExporter {

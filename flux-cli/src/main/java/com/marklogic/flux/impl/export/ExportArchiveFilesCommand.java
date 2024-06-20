@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
     name = "export-archive-files",
-    abbreviateSynopsis = true,
     description = "Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3."
 )
 public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExporter> implements ArchiveFilesExporter {

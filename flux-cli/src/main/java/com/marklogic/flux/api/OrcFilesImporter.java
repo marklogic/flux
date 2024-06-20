@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 /**
  * Read ORC files from local, HDFS, and S3 locations using
  * <a href="https://spark.apache.org/docs/latest/sql-data-sources-orc.html">Spark's ORC support</a>,
- * with each row being written as a JSON or XML document in MarkLogic.
+ * and write JSON or XML documents to MarkLogic.
  */
 public interface OrcFilesImporter extends Executor<OrcFilesImporter> {
 

@@ -20,7 +20,6 @@ import java.util.function.Supplier;
 
 @CommandLine.Command(
     name = "export-files",
-    abbreviateSynopsis = true,
     description = "Read documents from MarkLogic and write them to a local filesystem, HDFS, or S3."
 )
 public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {

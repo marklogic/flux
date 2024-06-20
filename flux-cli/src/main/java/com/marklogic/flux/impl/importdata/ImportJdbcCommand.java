@@ -17,8 +17,9 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-jdbc",
-    abbreviateSynopsis = true,
-    description = "Read rows via JDBC and write JSON or XML documents to MarkLogic."
+    description = "Read rows via JDBC using Spark's support defined at " +
+        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html, and write JSON or XML documents " +
+        "to MarkLogic."
 )
 public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements JdbcImporter {
 

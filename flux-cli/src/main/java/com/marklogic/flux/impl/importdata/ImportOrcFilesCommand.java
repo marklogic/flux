@@ -16,10 +16,9 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-orc-files",
-    abbreviateSynopsis = true,
     description = "Read ORC files from local, HDFS, and S3 locations using Spark's support " +
-    "defined at https://spark.apache.org/docs/latest/sql-data-sources-orc.html, with each row being " +
-    "written as a JSON or XML document in MarkLogic."
+        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html, and write JSON or " +
+        "XML documents to MarkLogic."
 )
 public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesImporter> implements OrcFilesImporter {
 
@@ -49,7 +48,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark ORC data source option defined at " +
-                "https://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -PmergeSchema=true. " +
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -PmergeSchema=true. " +
                 "Spark configuration options must be defined via '-C'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
