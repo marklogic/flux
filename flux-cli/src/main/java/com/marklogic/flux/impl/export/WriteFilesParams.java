@@ -16,7 +16,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
     private String path;
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
 
     @CommandLine.Option(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")

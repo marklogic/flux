@@ -43,7 +43,8 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
 
     public static class ReadRdfFilesParams extends ReadFilesParams<ReadRdfFilesOptions> implements ReadRdfFilesOptions {
 
-        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
+            + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private CompressionType compressionType;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")

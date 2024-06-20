@@ -38,5 +38,5 @@ specify a namespace for the root element that will then be inherited by every ch
 ## Advanced options
 
 The `import-avro-files` command reuses Spark's support for reading Avro files. You can include any of
-the [Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` dynamic option
-to control how Avro content is read. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option
+to control how Avro content is read. These options are expressed as `-PoptionName=optionValue`.

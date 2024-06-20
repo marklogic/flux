@@ -38,8 +38,8 @@ specify a namespace for the root element that will then be inherited by every ch
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
-the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` dynamic option
-to control how delimited text is read. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` option
+to control how delimited text is read. These options are expressed as `-PoptionName=optionValue`.
 
 The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for

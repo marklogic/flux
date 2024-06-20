@@ -32,7 +32,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         super.validateCommandLineOptions(parseResult);
         OptionsUtil.verifyHasAtLeastOneOption(parseResult,
-            "--graphs", "--query", "--uris", "--string-query", "--collections", "--directory");
+            "--collections", "--directory", "--graphs", "--query", "--string-query", "--uris");
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.SaveMode;
 import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.flux.impl.SparkUtil;
 import org.apache.spark.sql.DataFrameWriter;
@@ -24,7 +25,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
     public static class CustomWriteParams implements CustomExportWriteOptions {
 
-        @CommandLine.ArgGroup(exclusive = false)
+        @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
 
         @CommandLine.Option(
@@ -42,7 +43,8 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
-                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information.")
+                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
+                + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private SaveMode saveMode = SaveMode.APPEND;
 
         @Override

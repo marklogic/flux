@@ -92,5 +92,5 @@ related objects.
 ## Advanced options
 
 The `import-jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of
-the [Spark JDBC options](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html) via the `-P` dynamic option
-to control how JDBC is used. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark JDBC options](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html) via the `-P` option
+to control how JDBC is used. These options are expressed as `-PoptionName=optionValue`.

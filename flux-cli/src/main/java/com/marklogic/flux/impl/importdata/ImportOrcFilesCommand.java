@@ -53,7 +53,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @CommandLine.ArgGroup(exclusive = false)
+        @CommandLine.Mixin
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override

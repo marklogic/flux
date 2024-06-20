@@ -2,7 +2,7 @@
 layout: default
 title: Exporting to custom targets
 parent: Exporting Data
-nav_order: 5
+nav_order: 6
 ---
 
 The `custom-export-rows` and `custom-export-documents` commands allow you to read rows and documents respectively from 

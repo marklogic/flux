@@ -24,7 +24,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     protected final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
     // This is declared before CommonParams so that it appears first in the picocli usage.
-    @CommandLine.ArgGroup(exclusive = false, heading = "Connection Options%n")
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nConnection Options%n")
     private ConnectionParams connectionParams = new ConnectionParams();
 
     @CommandLine.ArgGroup(exclusive = false, heading = "%nCommon Options%n")

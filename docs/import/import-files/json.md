@@ -41,8 +41,8 @@ row will then be nested under this root field.
 ## Advanced options
 
 The `import-json-files` command reuses Spark's support for reading JSON files. You can include any of
-the [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` dynamic option
-to control how JSON content is read. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option
+to control how JSON content is read. These options are expressed as `-PoptionName=optionValue`.
 
 To support the more common use case of reading files containing JSON objects and arrays, the command defaults to setting
 the `multiLine` option to `true`. The `--json-lines` option is thus effectively a shortcut for changing the `multiLine`

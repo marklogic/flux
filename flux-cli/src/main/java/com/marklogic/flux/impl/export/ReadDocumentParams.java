@@ -19,7 +19,7 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
 
     @SuppressWarnings("java:S2386") // Sonar mistakenly thinks this can be protected.
     public static final String[] REQUIRED_QUERY_OPTIONS = new String[]{
-        "--query", "--uris", "--string-query", "--collections", "--directory"
+        "--collections", "--directory", "--query", "--string-query", "--uris"
     };
 
     @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +

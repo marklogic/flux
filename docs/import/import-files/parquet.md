@@ -38,5 +38,5 @@ specify a namespace for the root element that will then be inherited by every ch
 ## Advanced options
 
 The `import-parquet-files` command reuses Spark's support for reading Parquet files. You can include any of
-the [Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` dynamic option
-to control how Parquet content is read. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option
+to control how Parquet content is read. These options are expressed as `-PoptionName=optionValue`.

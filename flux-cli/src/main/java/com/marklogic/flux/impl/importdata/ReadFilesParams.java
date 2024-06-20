@@ -28,7 +28,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     @CommandLine.Option(names = "--recursive-file-lookup", arity = "1", description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
     private Boolean recursiveFileLookup = true;
 
-    @CommandLine.ArgGroup(exclusive = false)
+    @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
 
     public boolean hasAtLeastOnePath() {

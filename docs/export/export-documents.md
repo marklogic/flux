@@ -25,13 +25,13 @@ The following options then control which documents are selected to be exported:
 
 | Option | Description | 
 | --- |--- |
-| --string-query | A string query utilizing MarkLogic's search grammar. |
-| --query | A structured, serialized CTS, or combined query expressed as JSON or XML. |
-| --options | Name of a REST API search options document; typically used with a string query. |
 | --collections | Comma-delimited sequence of collection names. |
 | --directory | A database directory for constraining on URIs. |
+| --options | Name of a REST API search options document; typically used with a string query. |
+| --query | A structured, serialized CTS, or combined query expressed as JSON or XML. |
+| --string-query | A string query utilizing MarkLogic's search grammar. |
 
-You must specify at least one of `--string-query`, `--query`, `--collections`, or `--directory`. You may specify any
+You must specify at least one of `--collections`, `--directory`, `--query`, or `--string-query`. You may specify any
 combination of those options as well.
 
 ## Transforming document content
