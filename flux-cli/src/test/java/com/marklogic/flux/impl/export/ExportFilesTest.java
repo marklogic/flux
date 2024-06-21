@@ -149,7 +149,7 @@ class ExportFilesTest extends AbstractTest {
         });
 
         assertTrue(
-            stderr.contains("Must specify at least one of the following options: [--query, --uris, --string-query, --collections, --directory]."),
+            stderr.contains("Must specify at least one of the following options: [--collections, --directory, --query, --string-query, --uris]."),
             "Unexpected stderr: " + stderr
         );
     }

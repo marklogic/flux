@@ -65,7 +65,7 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         private String uriNamespace;
 
         @CommandLine.Option(names = "--compression",
-            description = "When importing compressed files, specify the type of compression used."
+            description = "When importing compressed files, specify the type of compression used. " + OptionsUtil.VALID_VALUES_DESCRIPTION
         )
         private CompressionType compressionType;
 

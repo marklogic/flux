@@ -62,7 +62,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private CompressionType compressionType;
 
         @Override
-        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used.")
+        @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
+            + OptionsUtil.VALID_VALUES_DESCRIPTION)
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
             return this;

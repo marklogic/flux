@@ -74,28 +74,46 @@ a notional example of doing so:
 
 ## Exporting to files
 
-Rows selected via an Optic query can be exported to either Avro, ORC, or Parquet files. 
+Rows selected via an Optic query can be exported to any of the formats described below.. 
 
 ### Avro
 
 The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Avro files. You can include any of the 
-[Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` dynamic option to
-control how Avro content is written. Dynamic options are expressed as `-PoptionName=optionValue`.
+[Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
+control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
+
+### Delimited text
+
+The `export-delimited-text-files` command writes one or more delimited text (commonly CSV) files to the directory 
+specified by the `--path` option. This command reuses Spark's support for writing delimited text files. You can include
+any of the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` 
+option to control how delimited text is written. These options are expressed as `-PoptionName=optionValue`. 
+
+The `export-delimited-text-files` command defaults to setting the Spark CSV `header` option to `true` so that column
+names from your Optic query for selecting rows from MarkLogic are included in each output file. You can override this
+via `-Pheader=false` if desired.
+
+### JSON Lines
+
+The `export-json-lines-files` command writes one or more [JSON Lines](https://jsonlines.org/) to the directory 
+specified by the `--path` option. This command reuses Spark's support for writing JSON files. You can include any of the
+[Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option to control
+how JSON Lines files are written. These options are expressed as `-PoptionName=optionValue`.
 
 ### ORC
 
 The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing ORC files. You can include any of the
-[Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` dynamic option to
-control how ORC content is written. Dynamic options are expressed as `-PoptionName=optionValue`.
+[Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
+control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
 
 ### Parquet
 
 The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Parquet files. You can include any of the
-[Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` dynamic option to
-control how Parquet content is written. Dynamic options are expressed as `-PoptionName=optionValue`.
+[Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to
+control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
 
 ## Controlling the save mode
 

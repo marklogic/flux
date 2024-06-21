@@ -79,7 +79,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
             description = "A SQL query used to read data from the JDBC data source.")
         private String query;
 
-        @CommandLine.ArgGroup(exclusive = false)
+        @CommandLine.Mixin
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override

@@ -8,6 +8,7 @@ import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
 import com.marklogic.flux.impl.ConnectionInputs;
+import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
 import java.lang.reflect.Method;
@@ -89,7 +90,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @CommandLine.Option(
         names = "--output-connection-type",
-        description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
+        description = "Defines whether connections can be made directly to each host in the MarkLogic cluster. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
@@ -111,7 +112,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-auth-type",
-        description = "Type of authentication to use."
+        description = "Type of authentication to use. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions authenticationType(AuthenticationType authType) {
         this.authType = authType;
@@ -206,7 +207,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-ssl-hostname-verifier",
-        description = "Hostname verification strategy when connecting via SSL."
+        description = "Hostname verification strategy when connecting via SSL. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
         this.sslHostnameVerifier = sslHostnameVerifier;

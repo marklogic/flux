@@ -12,6 +12,8 @@ import java.util.Map;
 
 public abstract class OptionsUtil {
 
+    public static final String VALID_VALUES_DESCRIPTION = "Valid values: ${COMPLETION-CANDIDATES} .";
+
     /**
      * Avoids adding options with a null value, which can cause errors with some Spark data sources.
      *

@@ -53,7 +53,7 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @CommandLine.ArgGroup(exclusive = false)
+        @CommandLine.Mixin
         private AggregationParams aggregationParams = new AggregationParams();
 
         @Override

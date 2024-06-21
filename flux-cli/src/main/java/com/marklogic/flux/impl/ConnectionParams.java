@@ -9,7 +9,6 @@ import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
 import picocli.CommandLine;
 
-//@CommandLine.Command(parametersValidators = ConnectionParamsValidator.class)
 public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     @Override
@@ -65,7 +64,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @CommandLine.Option(
         names = "--connection-type",
-        description = "Defines whether connections can be made directly to each host in the MarkLogic cluster."
+        description = "Defines whether connections can be made directly to each host in the MarkLogic cluster. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
@@ -90,7 +89,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--auth-type",
-        description = "Type of authentication to use."
+        description = "Type of authentication to use. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions authenticationType(AuthenticationType authType) {
         this.authType = authType;
@@ -185,7 +184,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--ssl-hostname-verifier",
-        description = "Hostname verification strategy when connecting via SSL."
+        description = "Hostname verification strategy when connecting via SSL. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
         this.sslHostnameVerifier = sslHostnameVerifier;

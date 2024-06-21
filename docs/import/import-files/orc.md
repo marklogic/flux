@@ -38,6 +38,6 @@ specify a namespace for the root element that will then be inherited by every ch
 ## Advanced options
 
 The `import-orc-files` command reuses Spark's support for reading ORC files. You can include any of
-the [Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` dynamic option
-to control how Avro content is read. Dynamic options are expressed as `-PoptionName=optionValue`.
+the [Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option
+to control how Avro content is read. These options are expressed as `-PoptionName=optionValue`.
 

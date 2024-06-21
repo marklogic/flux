@@ -66,7 +66,7 @@ class ExportRdfFilesTest extends AbstractTest {
         ));
 
         assertTrue(stderr.contains("Must specify at least one of the following options: " +
-                "[--graphs, --query, --uris, --string-query, --collections, --directory]."),
+                "[--collections, --directory, --graphs, --query, --string-query, --uris]."),
             "Unexpected stderr: " + stderr);
     }
 }

@@ -59,7 +59,7 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
-        @CommandLine.ArgGroup(exclusive = false)
+        @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
 
         @Override
