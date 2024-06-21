@@ -3,7 +3,7 @@ layout: default
 title: Importing RDF
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 6
+nav_order: 7
 ---
 
 Flux can import a variety of RDF files in a fashion similar to that of 

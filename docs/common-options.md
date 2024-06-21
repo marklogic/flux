@@ -12,6 +12,21 @@ This guide describes options common to every command in Flux.
 - TOC
 {:toc}
 
+## Viewing usage
+
+You can view usage for all Flux commands by running Flux without any command name or options:
+
+    ./bin/flux
+
+To see a list of options for a particular command, run the `help` command followed by the name of the command
+you are interested in:
+
+    ./bin/flux help import-jdbc
+
+The "help" for each command will first list the command-specific options, with each required option having an asterisk
+next to it. The command-specific options are followed by the connection options for connecting to MarkLogic, and those
+are followed by a list of options common to every Flux command. 
+
 ## Connecting to MarkLogic
 
 Every command in Flux will need to connect to a MarkLogic database, either for reading data or writing data or both. 
@@ -125,6 +140,29 @@ The following shows an example of only importing the first 10 rows from a delimi
     --collections employee \
     --uri-template "/employee/{id}.json" \
     --limit 10
+```
+
+## Counting records to process
+
+Instead of viewing a preview of data or limiting how much data is processed by Flux, you may want to first obtain a 
+count of records that will be read from the data source associated with the Flux command you are executing. This can be 
+useful when dealing with a data source where it can be difficult to know how much data will be read, such as with very 
+large aggregate XML or Parquet files. 
+
+To view a count, include the `--count` option, which results in Flux reading all the data but not writing any of it
+to the destination associated with the command:
+
+```
+./bin/flux import-delimited-files \
+    --path ../data/employees.csv.gz \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --count
+```
+
+Flux will then log the count:
+
+```
+[main] INFO com.marklogic.flux: Count of rows read: 1000
 ```
 
 ## Repartitioning

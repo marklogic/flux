@@ -55,39 +55,8 @@ specify a namespace for the root element that will then be inherited by every ch
 
 ## Aggregating rows
 
-In many scenarios, simply reading rows from a single table and creating a document for each row in MarkLogic does not
-best utilize the variety of indexing options in MarkLogic. Nor does it allow for data to be stored in hierarchical
-structures that better represent complex entities. 
-
-To facilitate producing hierarchical documents with multiple sets of related data, the following options can be used
-to combine multiple rows from a SQL query (which typically will include one or more joins) into hierarchical documents:
-
-- `--group-by` specifies a column name to group rows by; this is typically the column used in a join.
-- `--aggregate` specifies a string of the form `new_column_name=column1,column2,column3`. The `new_column_name` column
-  will contain an array of objects, with each object having columns of `column`, `column2`, and `column3`.
-
-For example, consider the [Postgres tutorial database](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
-that features 15 tables with multiple relationships. One such relationship is between customers and payments. Depending
-on the needs of an application, it may be beneficial for payments to be stored in the related customer document. The
-following options would be used to achieve that (connection details are omitted for brevity):
-
-```
-./bin/flux import-jdbc \
-    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
-    --group-by customer_id \
-    --aggregate "payments=payment_id,amount,payment_date"
-```
-
-The options above result in the following aggregation being performed:
-
-1. Rows retrieved from the Postgres are grouped together based on values in the `customer_id` column.
-2. For each payment for a given customer, the values in a payment row are added to a struct that is then added to an array 
-in a new column named `payments`.
-3. The `payment_id`, `amount`, and `payment_date` columns are removed.
-
-Each customer JSON document will as a result have a top-level `payments` array containing one object for each related
-payment. The approach can be used for many joins as well, thus producing multiple top-level array fields containing
-related objects.
+The `import-jdbc` command supports aggregating related rows together to produce hierarchical documents. See
+[Aggregating rows](aggregating-rows.md) for more information.
 
 ## Advanced options
 
