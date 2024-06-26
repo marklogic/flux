@@ -3,7 +3,7 @@ layout: default
 title: Importing JSON
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 5
+nav_order: 6
 ---
 
 Flux can import JSON files - both files containing JSON objects and arrays and also files conforming to the 

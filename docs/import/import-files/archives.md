@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Importing archive files
+title: Importing archives
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 7
+nav_order: 5
 ---
 
 Flux can import archive files containing documents and their associated metadata. This includes archives written via 

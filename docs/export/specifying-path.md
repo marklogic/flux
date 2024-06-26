@@ -21,3 +21,10 @@ To enable this, include the `--s3-add-credentials` option:
 ```
 ./bin/flux export-files --path "s3a://my-bucket/some/path" --s3-add-credentials
 ```
+
+You can also explicitly define your AWS credentials via `--s3-access-key-id` and `--s3-secret-access-key`. To avoid
+typing these in plaintext, you may want to store these in a file and reference the file via "@my-options.txt". See
+the documentation on [Common Options](../common-options.md) for more information.
+
+You can also specify an S3 endpoint via `--s3-endpoint`. This may be required when running Flux in AWS in one region
+while trying to access S3 in a separate region. 

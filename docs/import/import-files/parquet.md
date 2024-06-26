@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Importing Parquet files
+title: Importing Parquet
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 7
+nav_order: 9
 ---
 
 Flux can import Parquet files, with each row being written as a document in MarkLogic.
@@ -34,6 +34,11 @@ a value for the name of the root field. The data read from a row will then be ne
 To create XML documents for the rows in a Parquet file instead of JSON documents, include the `--xml-root-name`
 option to specify the name of the root element in each XML document. You can optionally include `--xml-namespace` to
 specify a namespace for the root element that will then be inherited by every child element as well.
+
+## Aggregating rows
+
+The `import-parquet` command supports aggregating related rows together to produce hierarchical documents. See
+[Aggregating rows](../aggregating-rows.md) for more information.
 
 ## Advanced options
 
