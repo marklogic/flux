@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -12,10 +13,19 @@ import java.util.function.Consumer;
  */
 public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter> {
 
-    DelimitedFilesImporter from(Consumer<ReadTabularFilesOptions> consumer);
+    DelimitedFilesImporter from(Consumer<ReadDelimitedFilesOptions> consumer);
 
     DelimitedFilesImporter from(String... paths);
 
     DelimitedFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 
+    interface ReadDelimitedFilesOptions extends ReadFilesOptions<ReadDelimitedFilesOptions> {
+        ReadDelimitedFilesOptions additionalOptions(Map<String, String> options);
+
+        ReadDelimitedFilesOptions groupBy(String columnName);
+
+        ReadDelimitedFilesOptions aggregateColumns(String newColumnName, String... columns);
+
+        ReadDelimitedFilesOptions encoding(String encoding);
+    }
 }

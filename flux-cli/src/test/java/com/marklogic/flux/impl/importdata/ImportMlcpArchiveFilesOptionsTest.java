@@ -10,16 +10,18 @@ import org.junit.jupiter.api.Test;
 class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
 
     @Test
-    void numPartitions() {
+    void test() {
         ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
             "import-mlcp-archive-files",
             "--path", "src/test/resources/archive-files",
             "--preview", "10",
-            "--partitions", "7"
+            "--partitions", "7",
+            "--encoding", "UTF-16"
         );
 
         assertOptions(command.getReadParams().makeOptions(),
-            Options.READ_NUM_PARTITIONS, "7"
+            Options.READ_NUM_PARTITIONS, "7",
+            Options.READ_FILES_ENCODING, "UTF-16"
         );
     }
 }

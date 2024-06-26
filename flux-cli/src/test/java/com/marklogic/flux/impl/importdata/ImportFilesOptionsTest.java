@@ -23,6 +23,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--abort-on-write-failure",
             "--batch-size", "50",
             "--collections", "collection1",
+            "--encoding", "UTF-16",
             "--failed-documents-path", "/my/failures",
             "--permissions", "role1,read,role2,update",
             "--temporal-collection", "temporal1",
@@ -44,7 +45,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
         );
 
         assertOptions(command.getReadParams().makeOptions(),
-            Options.READ_NUM_PARTITIONS, "6"
+            Options.READ_NUM_PARTITIONS, "6",
+            Options.READ_FILES_ENCODING, "UTF-16"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),

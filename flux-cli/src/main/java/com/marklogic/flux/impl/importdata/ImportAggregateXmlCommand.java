@@ -69,6 +69,9 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         )
         private CompressionType compressionType;
 
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        private String encoding;
+
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
@@ -76,6 +79,7 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(
                 super.makeOptions(),
+                Options.READ_FILES_ENCODING, encoding,
                 Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null,
                 Options.READ_AGGREGATES_XML_ELEMENT, element,
                 Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
@@ -83,6 +87,12 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
                 Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace,
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
             );
+        }
+
+        @Override
+        public ReadXmlFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
         }
 
         @Override

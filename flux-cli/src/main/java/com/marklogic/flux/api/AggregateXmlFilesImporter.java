@@ -21,6 +21,8 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
 
         ReadXmlFilesOptions compressionType(CompressionType compressionType);
 
+        ReadXmlFilesOptions encoding(String encoding);
+
         ReadXmlFilesOptions partitions(Integer partitions);
     }
 

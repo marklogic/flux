@@ -52,13 +52,23 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        private String encoding;
+
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "archive",
+                Options.READ_FILES_ENCODING, encoding,
                 Options.READ_ARCHIVES_CATEGORIES, categories,
                 Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
             );
+        }
+
+        @Override
+        public ReadArchiveFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
         }
 
         @Override
