@@ -48,6 +48,9 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
         )
         private Boolean jsonLines;
 
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        private String encoding;
+
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark JSON option defined at " +
@@ -63,6 +66,9 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
             if (jsonLines == null || !jsonLines.booleanValue()) {
                 options.put("multiLine", "true");
             }
+            if (encoding != null) {
+                options.put("encoding", encoding);
+            }
             options.putAll(additionalOptions);
             return options;
         }
@@ -70,6 +76,12 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
         @Override
         public ReadJsonFilesOptions jsonLines(Boolean value) {
             this.jsonLines = value;
+            return this;
+        }
+
+        @Override
+        public ReadJsonFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
             return this;
         }
 

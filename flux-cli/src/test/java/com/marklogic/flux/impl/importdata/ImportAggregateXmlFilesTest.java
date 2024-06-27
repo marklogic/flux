@@ -196,6 +196,43 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         assertCollectionSize("agg-xml", 0);
     }
 
+    /**
+     * This demonstrates that this command can import an XML document as-is.
+     */
+    @Test
+    void topLevelElement() {
+        run(
+            "import-aggregate-xml-files",
+            "--path", "src/test/resources/xml-file/people.xml",
+            "--element", "people",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "top-level-test",
+            "--uri-replace", ".*/xml-file,''"
+        );
+
+        assertCollectionSize("top-level-test", 1);
+    }
+
+    @Test
+    void withEncoding() {
+        run(
+            "import-aggregate-xml-files",
+            "--path", "src/test/resources/encoding/medline.iso-8859-1.txt",
+            "--element", "MedlineCitation",
+            "--encoding", "ISO-8859-1",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "encoding-test",
+            "--uri-element", "PMID",
+            "--uri-suffix", ".xml"
+        );
+
+        assertCollectionSize("encoding-test", 2);
+        readXmlDocument("10605436.xml").assertElementExists("/MedlineCitation");
+        readXmlDocument("12261559.xml").assertElementExists("/MedlineCitation");
+    }
+
     private void verifyDoc(String uri, String name, String company, String xpath) {
         XmlNode doc = readXmlDocument(uri);
         doc.assertElementValue(String.format(xpath, "name"), name);

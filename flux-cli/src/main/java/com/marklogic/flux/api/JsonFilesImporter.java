@@ -15,7 +15,7 @@ public interface JsonFilesImporter extends Executor<JsonFilesImporter> {
 
     interface ReadJsonFilesOptions extends ReadFilesOptions<ReadJsonFilesOptions> {
         ReadJsonFilesOptions jsonLines(Boolean value);
-
+        ReadJsonFilesOptions encoding(String encoding);
         ReadJsonFilesOptions additionalOptions(Map<String, String> additionalOptions);
     }
 

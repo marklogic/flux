@@ -14,6 +14,8 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
         ReadArchiveFilesOptions categories(String... categories);
 
         ReadArchiveFilesOptions partitions(Integer partitions);
+
+        ReadArchiveFilesOptions encoding(String encoding);
     }
 
     ArchiveFilesImporter from(Consumer<ReadArchiveFilesOptions> consumer);

@@ -4,7 +4,6 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.DelimitedFilesImporter;
-import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -43,7 +42,10 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         return writeParams;
     }
 
-    public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
+    public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadDelimitedFilesOptions> implements ReadDelimitedFilesOptions {
+
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        private String encoding;
 
         @CommandLine.Option(
             names = "-P",
@@ -60,24 +62,33 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
             Map<String, String> options = super.makeOptions();
             options.putIfAbsent("header", "true");
             options.putIfAbsent("inferSchema", "true");
+            if (encoding != null) {
+                options.putIfAbsent("encoding", encoding);
+            }
             options.putAll(additionalOptions);
             return options;
         }
 
         @Override
-        public ReadTabularFilesOptions additionalOptions(Map<String, String> options) {
+        public ReadDelimitedFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
+        }
+
+        @Override
+        public ReadDelimitedFilesOptions additionalOptions(Map<String, String> options) {
             this.additionalOptions = options;
             return this;
         }
 
         @Override
-        public ReadTabularFilesOptions groupBy(String columnName) {
+        public ReadDelimitedFilesOptions groupBy(String columnName) {
             aggregationParams.setGroupBy(columnName);
             return this;
         }
 
         @Override
-        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
+        public ReadDelimitedFilesOptions aggregateColumns(String newColumnName, String... columns) {
             aggregationParams.addAggregationExpression(newColumnName, columns);
             return this;
         }
@@ -89,7 +100,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     }
 
     @Override
-    public DelimitedFilesImporter from(Consumer<ReadTabularFilesOptions> consumer) {
+    public DelimitedFilesImporter from(Consumer<ReadDelimitedFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }

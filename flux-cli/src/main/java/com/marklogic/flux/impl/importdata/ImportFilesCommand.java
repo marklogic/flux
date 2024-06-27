@@ -59,24 +59,34 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     public static class ReadGenericFilesParams extends ReadFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
 
-        private CompressionType compressionType;
-
-        @Override
         @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
-        public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
-            this.compressionType = compressionType;
-            return this;
-        }
+        private CompressionType compressionType;
+
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
         @Override
+        public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
+            this.compressionType = compressionType;
+            return this;
+        }
+
+        @Override
+        public ReadGenericFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
+        }
+
+        @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null,
-                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
+                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
+                Options.READ_FILES_ENCODING, encoding
             );
         }
 

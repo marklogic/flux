@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -254,6 +255,24 @@ class ImportFilesTest extends AbstractTest {
         assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abort-read-on-failure, " +
             "the command should fail when it encounters an invalid gzipped file.");
         assertCollectionSize("files", 0);
+    }
+
+    @Test
+    void customEncoding() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/encoding/medline.iso-8859-1.txt",
+            "--connection-string", makeConnectionString(),
+            "--encoding", "ISO-8859-1",
+            "--collections", "encoded-xml",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/encoding,''",
+            "--uri-suffix", ".xml"
+        );
+
+        assertCollectionSize("encoded-xml", 1);
+        XmlNode doc = readXmlDocument("/medline.iso-8859-1.txt.xml");
+        doc.assertElementExists("/MedlineCitationSet");
     }
 
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {
