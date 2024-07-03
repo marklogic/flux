@@ -5,7 +5,6 @@ package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.api.DelimitedFilesExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
-import com.marklogic.flux.api.WriteSparkFilesOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
@@ -33,7 +32,10 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
         return writeParams;
     }
 
-    public static class WriteDelimitedFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
+    public static class WriteDelimitedFilesParams extends WriteStructuredFilesParams<WriteDelimitedFilesOptions> implements WriteDelimitedFilesOptions {
+
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 for writing files.")
+        private String encoding;
 
         @CommandLine.Option(
             names = {"-P"},
@@ -44,12 +46,21 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
         @Override
         public Map<String, String> get() {
             Map<String, String> options = OptionsUtil.makeOptions("header", "true");
+            if (encoding != null) {
+                options.put("encoding", encoding);
+            }
             options.putAll(additionalOptions);
             return options;
         }
 
         @Override
-        public WriteSparkFilesOptions additionalOptions(Map<String, String> options) {
+        public WriteDelimitedFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
+        }
+
+        @Override
+        public WriteDelimitedFilesOptions additionalOptions(Map<String, String> options) {
             this.additionalOptions = options;
             return this;
         }
@@ -68,7 +79,7 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
     }
 
     @Override
-    public DelimitedFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
+    public DelimitedFilesExporter to(Consumer<WriteDelimitedFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

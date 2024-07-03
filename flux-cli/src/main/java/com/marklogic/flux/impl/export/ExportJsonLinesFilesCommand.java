@@ -6,7 +6,6 @@ package com.marklogic.flux.impl.export;
 import com.marklogic.flux.api.JsonLinesFilesExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.flux.api.WriteFilesOptions;
-import com.marklogic.flux.api.WriteSparkFilesOptions;
 import picocli.CommandLine;
 
 import java.util.HashMap;
@@ -23,7 +22,10 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
     @CommandLine.Mixin
     private WriteJsonFilesParams writeParams = new WriteJsonFilesParams();
 
-    public static class WriteJsonFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
+    public static class WriteJsonFilesParams extends WriteStructuredFilesParams<WriteJsonLinesFilesOptions> implements WriteJsonLinesFilesOptions {
+
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 for writing files.")
+        private String encoding;
 
         @CommandLine.Option(
             names = "-P",
@@ -34,11 +36,22 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
 
         @Override
         public Map<String, String> get() {
-            return additionalOptions;
+            Map<String, String> options = new HashMap<>();
+            if (encoding != null) {
+                options.put("encoding", encoding);
+            }
+            options.putAll(additionalOptions);
+            return options;
         }
 
         @Override
-        public WriteSparkFilesOptions additionalOptions(Map<String, String> options) {
+        public WriteJsonLinesFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
+        }
+
+        @Override
+        public WriteJsonLinesFilesOptions additionalOptions(Map<String, String> options) {
             this.additionalOptions = options;
             return this;
         }
@@ -66,7 +79,7 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
     }
 
     @Override
-    public JsonLinesFilesExporter to(Consumer<WriteSparkFilesOptions> consumer) {
+    public JsonLinesFilesExporter to(Consumer<WriteJsonLinesFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -15,7 +16,13 @@ public interface JsonLinesFilesExporter extends Executor<JsonLinesFilesExporter>
 
     JsonLinesFilesExporter from(String opticQuery);
 
-    JsonLinesFilesExporter to(Consumer<WriteSparkFilesOptions> consumer);
+    JsonLinesFilesExporter to(Consumer<WriteJsonLinesFilesOptions> consumer);
 
     JsonLinesFilesExporter to(String path);
+
+    interface WriteJsonLinesFilesOptions extends WriteFilesOptions<WriteJsonLinesFilesOptions> {
+        WriteJsonLinesFilesOptions encoding(String encoding);
+
+        WriteJsonLinesFilesOptions additionalOptions(Map<String, String> options);
+    }
 }
