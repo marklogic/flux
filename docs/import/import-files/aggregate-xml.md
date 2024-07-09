@@ -46,3 +46,10 @@ You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make
 
 Flux supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
 `ZIP`. 
+
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your aggregate XML files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+
+    ./bin/flux import-aggregate-xml-files --path source --encoding ISO-8859-1 ...

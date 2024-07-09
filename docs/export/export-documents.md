@@ -55,6 +55,13 @@ To write multiple files to one or more ZIP files, include `--compression ZIP`. A
 partition that was created when reading data via Optic. You can include `--repartition 1` to force all documents to be
 written to a single ZIP file. See the next section on "Understanding partitions" for more information. 
 
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+You can specify an alternate encoding when exporting documents to files via the `--encoding` option - e.g.:
+
+    ./bin/flux export-generic-files --path destination --encoding ISO-8859-1 ...
+
 ## Understanding partitions
 
 As Flux is built on top of Apache Spark, it is heavily influenced by how Spark
