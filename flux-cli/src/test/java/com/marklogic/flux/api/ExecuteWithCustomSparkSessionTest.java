@@ -47,7 +47,7 @@ class ExecuteWithCustomSparkSessionTest extends AbstractTest {
                 .collections("custom-session")
                 .permissionsString(DEFAULT_PERMISSIONS));
 
-        FluxException ex = assertThrowsNtException(() -> importer.withSparkSession("This will cause an error"));
+        FluxException ex = assertThrowsFluxException(() -> importer.withSparkSession("This will cause an error"));
         assertEquals("The session object must be an instance of org.apache.spark.sql.SparkSession", ex.getMessage());
     }
 

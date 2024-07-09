@@ -50,7 +50,7 @@ class DocumentCopierTest extends AbstractTest {
         DocumentCopier copier = Flux.copyDocuments()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> copier.execute());
+        FluxException ex = assertThrowsFluxException(() -> copier.execute());
         assertEquals("Must specify at least one of the following for the documents to copy: " +
                 "collections; a directory; a string query; a structured, serialized, or combined query; or URIs.",
             ex.getMessage());

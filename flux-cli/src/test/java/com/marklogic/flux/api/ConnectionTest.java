@@ -31,7 +31,7 @@ class ConnectionTest extends AbstractTest {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connectionString(connectionString);
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Invalid value for connection string; must be username:password@host:port/optionalDatabaseName",
             ex.getMessage());
     }
@@ -85,7 +85,7 @@ class ConnectionTest extends AbstractTest {
             .outputConnectionString("not@valid:port")
             .from(options -> options.collections("anything"));
 
-        FluxException ex = assertThrowsNtException(() -> copier.execute());
+        FluxException ex = assertThrowsFluxException(() -> copier.execute());
         assertEquals(
             "Invalid value for output connection string; must be username:password@host:port/optionalDatabaseName",
             ex.getMessage()

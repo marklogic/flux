@@ -62,7 +62,7 @@ class JdbcImporterTest extends AbstractTest {
             .from(options -> options.query(QUERY))
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify a JDBC URL", ex.getMessage());
     }
 
@@ -72,7 +72,7 @@ class JdbcImporterTest extends AbstractTest {
             .from(options -> options.url(PostgresUtil.URL))
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify a query", ex.getMessage());
     }
 }

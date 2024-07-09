@@ -147,7 +147,7 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         return sparkSession;
     }
 
-    protected final FluxException assertThrowsNtException(Runnable r) {
+    protected final FluxException assertThrowsFluxException(Runnable r) {
         return assertThrows(FluxException.class, () -> r.run());
     }
 
