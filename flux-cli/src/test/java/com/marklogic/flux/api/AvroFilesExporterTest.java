@@ -4,6 +4,7 @@
 package com.marklogic.flux.api;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -11,6 +12,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AvroFilesExporterTest extends AbstractTest {
 
@@ -39,6 +41,18 @@ class AvroFilesExporterTest extends AbstractTest {
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".avro"));
         assertEquals(1, files.length);
+    }
+
+    @Test
+    void noQuery() {
+        AvroFilesExporter exporter = Flux.exportAvroFiles()
+            .connectionString(makeConnectionString())
+            .to("build/doesnt-matter");
+
+        ConnectorException ex = assertThrows(ConnectorException.class, () -> exporter.execute());
+        assertEquals("Must define an Optic query", ex.getMessage(), "Verifying that a friendly error message that " +
+            "doesn't have a connector option name in it is shown. This is expected to be shown for any command " +
+            "that depends on running an Optic query.");
     }
 
     @Test
