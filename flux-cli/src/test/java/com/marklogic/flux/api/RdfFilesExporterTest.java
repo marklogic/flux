@@ -68,4 +68,16 @@ class RdfFilesExporterTest extends AbstractTest {
         assertEquals(1, files.length);
         assertTrue(files[0].getName().endsWith(".nq.gz"));
     }
+
+    @Test
+    void noQuerySpecified() {
+        RdfFilesExporter exporter = Flux.exportRdfFiles()
+            .connectionString(makeConnectionString())
+            .to(options -> options.path("build/doesnt-matter"));
+
+        FluxException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify at least one of the following for the triples to export: " +
+                "collections; a directory; graphs; a string query; a structured, serialized, or combined query; or URIs.",
+            ex.getMessage());
+    }
 }

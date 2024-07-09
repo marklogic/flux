@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.export;
 
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.RdfFilesExporter;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -27,6 +28,14 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     @CommandLine.Mixin
     protected WriteRdfFilesParams writeParams = new WriteRdfFilesParams();
+
+    @Override
+    protected void validateDuringApiUsage() {
+        if (readParams.getQueryOptions().isEmpty()) {
+            throw new FluxException("Must specify at least one of the following for the triples to export: " +
+                "collections; a directory; graphs; a string query; a structured, serialized, or combined query; or URIs.");
+        }
+    }
 
     @Override
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
@@ -91,15 +100,20 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
         private Integer partitionsPerForest = 4;
 
-        @Override
-        public Map<String, String> get() {
+        public Map<String, String> getQueryOptions() {
             return OptionsUtil.makeOptions(
                 Options.READ_TRIPLES_GRAPHS, graphs,
                 Options.READ_TRIPLES_COLLECTIONS, collections,
                 Options.READ_TRIPLES_QUERY, query,
                 Options.READ_TRIPLES_STRING_QUERY, stringQuery,
                 Options.READ_TRIPLES_URIS, uris,
-                Options.READ_TRIPLES_DIRECTORY, directory,
+                Options.READ_TRIPLES_DIRECTORY, directory
+            );
+        }
+
+        @Override
+        public Map<String, String> get() {
+            return OptionsUtil.addOptions(getQueryOptions(),
                 Options.READ_TRIPLES_OPTIONS, options,
                 Options.READ_TRIPLES_BASE_IRI, baseIri,
                 Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest.toString(),
