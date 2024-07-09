@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.export;
 
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.ReadDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -58,19 +59,31 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
     private Integer partitionsPerForest = 4;
 
+    public void verifyAtLeastOneQueryOptionIsSet(String verbForErrorMessage) {
+        if (makeQueryOptions().isEmpty()) {
+            throw new FluxException(String.format("Must specify at least one of the following for the documents to %s: " +
+                "collections; a directory; a string query; a structured, serialized, or combined query; or URIs.", verbForErrorMessage));
+        }
+    }
+
     public Map<String, String> makeOptions() {
-        return OptionsUtil.makeOptions(
-            Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
-            Options.READ_DOCUMENTS_URIS, uris,
-            Options.READ_DOCUMENTS_QUERY, query,
+        return OptionsUtil.addOptions(makeQueryOptions(),
             Options.READ_DOCUMENTS_OPTIONS, options,
-            Options.READ_DOCUMENTS_COLLECTIONS, collections,
-            Options.READ_DOCUMENTS_DIRECTORY, directory,
             Options.READ_DOCUMENTS_TRANSFORM, transform,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS, transformParams,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
             Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
             Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest != null ? partitionsPerForest.toString() : null
+        );
+    }
+
+    private Map<String, String> makeQueryOptions() {
+        return OptionsUtil.makeOptions(
+            Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
+            Options.READ_DOCUMENTS_URIS, uris,
+            Options.READ_DOCUMENTS_QUERY, query,
+            Options.READ_DOCUMENTS_COLLECTIONS, collections,
+            Options.READ_DOCUMENTS_DIRECTORY, directory
         );
     }
 

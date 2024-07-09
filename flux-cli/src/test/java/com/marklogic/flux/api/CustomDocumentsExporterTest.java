@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CustomDocumentsExporterTest extends AbstractTest {
@@ -30,5 +31,16 @@ class CustomDocumentsExporterTest extends AbstractTest {
 
         getUrisInCollection("exported-authors", 15)
             .forEach(uri -> assertTrue(uri.startsWith("/exported/author/"), "Unexpected URI: " + uri));
+    }
+
+    @Test
+    void noQuerySpecified() {
+        CustomDocumentsExporter exporter = Flux.customExportDocuments()
+            .connectionString(makeConnectionString());
+
+        FluxException ex = assertThrowsNtException(() -> exporter.execute());
+        assertEquals("Must specify at least one of the following for the documents to export: " +
+                "collections; a directory; a string query; a structured, serialized, or combined query; or URIs.",
+            ex.getMessage());
     }
 }

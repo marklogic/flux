@@ -6,6 +6,8 @@ package com.marklogic.flux.api;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class DocumentCopierTest extends AbstractTest {
 
     @Test
@@ -41,5 +43,16 @@ class DocumentCopierTest extends AbstractTest {
 
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
+    }
+
+    @Test
+    void noQuerySpecified() {
+        DocumentCopier copier = Flux.copyDocuments()
+            .connectionString(makeConnectionString());
+
+        FluxException ex = assertThrowsNtException(() -> copier.execute());
+        assertEquals("Must specify at least one of the following for the documents to copy: " +
+                "collections; a directory; a string query; a structured, serialized, or combined query; or URIs.",
+            ex.getMessage());
     }
 }

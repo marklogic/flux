@@ -288,6 +288,11 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     }
 
     @Override
+    protected void validateDuringApiUsage() {
+        readParams.verifyAtLeastOneQueryOptionIsSet("copy");
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())

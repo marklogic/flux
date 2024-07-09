@@ -33,6 +33,11 @@ public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<Cu
     }
 
     @Override
+    protected void validateDuringApiUsage() {
+        readParams.verifyAtLeastOneQueryOptionIsSet("export");
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
