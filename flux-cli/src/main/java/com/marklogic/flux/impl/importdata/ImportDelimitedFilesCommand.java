@@ -44,7 +44,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
     public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadDelimitedFilesOptions> implements ReadDelimitedFilesOptions {
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
         @CommandLine.Option(

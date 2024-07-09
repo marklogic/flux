@@ -14,9 +14,13 @@ public interface ArchiveFilesExporter extends Executor<ArchiveFilesExporter> {
         ReadArchiveDocumentOptions categories(String... categories);
     }
 
+    interface WriteArchiveFilesOptions extends WriteFilesOptions<WriteArchiveFilesOptions> {
+        WriteArchiveFilesOptions encoding(String encoding);
+    }
+
     ArchiveFilesExporter from(Consumer<ReadArchiveDocumentOptions> consumer);
 
-    ArchiveFilesExporter to(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer);
+    ArchiveFilesExporter to(Consumer<WriteArchiveFilesOptions> consumer);
 
     ArchiveFilesExporter to(String path);
 }
