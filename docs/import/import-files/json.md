@@ -38,6 +38,13 @@ can help with indexing purposes in MarkLogic as well. To include a JSON root fie
 `import-json-files, use the `--json-root-name` option with a value for the name of the root field. The data read from a 
 row will then be nested under this root field.
 
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your JSON files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+
+    ./bin/flux import-json-files --path source --encoding ISO-8859-1 ...
+
 ## Advanced options
 
 The `import-json-files` command reuses Spark's support for reading JSON files. You can include any of

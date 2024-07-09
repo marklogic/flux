@@ -54,3 +54,10 @@ archive ZIP file:
     --categories collections,properties
 
 The `--categories` option can be used to restrict metadata for both `import-archive-files` and `import-mlcp-archive-files`.
+
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your archive files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+
+    ./bin/flux import-archive-files --path source --encoding ISO-8859-1 ...

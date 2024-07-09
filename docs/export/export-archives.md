@@ -60,3 +60,12 @@ to each document before it is written to an archive. A transform is configured v
 | --transform | Name of a MarkLogic REST transform to apply to the document before writing it. |
 | --transform-params | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
 | --transform-params-delimiter | Delimiter for `--transform-params`; typically set when a value contains a comma. |
+
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+You can specify an alternate encoding when exporting archives via the `--encoding` option - e.g.:
+
+    ./bin/flux export-archives --path destination --encoding ISO-8859-1 ...
+
+The encoding will be used for both document and metadata entries in each archive zip file. 

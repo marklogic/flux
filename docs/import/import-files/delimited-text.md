@@ -35,6 +35,13 @@ To create XML documents for the rows in a delimited text file instead of JSON do
 option to specify the name of the root element in each XML document. You can optionally include `--xml-namespace` to 
 specify a namespace for the root element that will then be inherited by every child element as well.
 
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your delimited text files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+
+    ./bin/flux import-delimited-text-files --path source --encoding ISO-8859-1 ...
+
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of

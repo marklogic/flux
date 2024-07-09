@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Importing regular files
+title: Importing generic files
 parent: Importing files
 grand_parent: Importing Data
 nav_order: 2
 ---
 
 Flux can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
-"regular files" is used in this context to refer to files that do not require any special processing
+"generic files" is used in this context to refer to files that do not require any special processing
 other than potentially decompressing the files.
 
 ## Table of contents
@@ -37,6 +37,13 @@ The type of each document written to MarkLogic is determined by the file extensi
 set of [MIME types configured in MarkLogic](https://docs.marklogic.com/admin-help/mimetype). For unrecognized file
 extensions, or URIs that do not have a file extension, you can force a document type via the `--document-type` option.
 The value of this option must be one of `JSON`, `XML`, or `TEXT`.
+
+## Specifying an encoding
+
+MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+
+    ./bin/flux import-files --path source --encoding ISO-8859-1 ...
 
 ## Importing Gzip files
 

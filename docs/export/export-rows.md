@@ -94,12 +94,22 @@ The `export-delimited-text-files` command defaults to setting the Spark CSV `hea
 names from your Optic query for selecting rows from MarkLogic are included in each output file. You can override this
 via `-Pheader=false` if desired.
 
+By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the 
+`--encoding` option - e.g. 
+
+    ./bin/flux export-delimited-text-files --path destination --encoding ISO-8859-1 ...
+
 ### JSON Lines
 
 The `export-json-lines-files` command writes one or more [JSON Lines](https://jsonlines.org/) to the directory 
 specified by the `--path` option. This command reuses Spark's support for writing JSON files. You can include any of the
 [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option to control
 how JSON Lines files are written. These options are expressed as `-PoptionName=optionValue`.
+
+By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the
+`--encoding` option - e.g.
+
+    ./bin/flux export-delimited-text-files --path destination --encoding ISO-8859-1 ...
 
 ### ORC
 
