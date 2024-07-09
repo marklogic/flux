@@ -34,7 +34,7 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
 
     public static class WriteDelimitedFilesParams extends WriteStructuredFilesParams<WriteDelimitedFilesOptions> implements WriteDelimitedFilesOptions {
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 for writing files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding for writing files.")
         private String encoding;
 
         @CommandLine.Option(

@@ -44,4 +44,18 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey(Options.WRITE_FILES_PRETTY_PRINT));
         assertEquals("ZIP", options.get(Options.WRITE_FILES_COMPRESSION));
     }
+
+    @Test
+    void encoding() {
+        ExportFilesCommand command = (ExportFilesCommand) getCommand(
+            "export-files",
+            "--connection-string", "test:test@host:8000",
+            "--collections", "anything",
+            "--path", "anywhere",
+            "--encoding", "ISO-8859-1"
+        );
+
+        Map<String, String> options = command.writeParams.get();
+        assertEquals("ISO-8859-1", options.get(Options.WRITE_FILES_ENCODING));
+    }
 }

@@ -69,7 +69,7 @@ public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<Aggreg
         )
         private CompressionType compressionType;
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")

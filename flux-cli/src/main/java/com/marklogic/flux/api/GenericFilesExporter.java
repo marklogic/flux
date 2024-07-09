@@ -17,6 +17,8 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
 
         WriteGenericFilesOptions prettyPrint(Boolean value);
 
+        WriteGenericFilesOptions encoding(String encoding);
+
         WriteGenericFilesOptions zipFileCount(Integer zipFileCount);
 
         WriteGenericFilesOptions s3AddCredentials();

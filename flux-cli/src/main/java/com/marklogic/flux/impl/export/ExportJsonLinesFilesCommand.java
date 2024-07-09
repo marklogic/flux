@@ -24,7 +24,7 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
 
     public static class WriteJsonFilesParams extends WriteStructuredFilesParams<WriteJsonLinesFilesOptions> implements WriteJsonLinesFilesOptions {
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 for writing files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding for writing files.")
         private String encoding;
 
         @CommandLine.Option(

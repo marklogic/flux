@@ -78,6 +78,9 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @CommandLine.Option(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")
         private Boolean prettyPrint;
 
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding for writing files.")
+        private String encoding;
+
         @CommandLine.Option(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
         private Integer zipFileCount;
 
@@ -85,7 +88,8 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         public Map<String, String> get() {
             return OptionsUtil.makeOptions(
                 Options.WRITE_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint != null ? prettyPrint.toString() : null
+                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint != null ? prettyPrint.toString() : null,
+                Options.WRITE_FILES_ENCODING, encoding
             );
         }
 
@@ -104,6 +108,12 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @Override
         public WriteGenericFilesOptions prettyPrint(Boolean value) {
             this.prettyPrint = value;
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
             return this;
         }
 

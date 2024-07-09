@@ -4,7 +4,6 @@
 package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.api.ArchiveFilesExporter;
-import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -26,7 +25,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     private ReadArchiveDocumentsParams readParams = new ReadArchiveDocumentsParams();
 
     @CommandLine.Mixin
-    private WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
+    protected WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
     @Override
     protected void validateDuringApiUsage() {
@@ -61,11 +60,23 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
             .save(writeParams.getPath());
     }
 
-    public static class WriteArchiveFilesParams extends WriteFilesParams<WriteArchiveFilesParams> {
+    public static class WriteArchiveFilesParams extends WriteFilesParams<WriteArchiveFilesOptions> implements WriteArchiveFilesOptions {
+
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding for writing files.")
+        private String encoding;
+
+        @Override
+        public WriteArchiveFilesOptions encoding(String encoding) {
+            this.encoding = encoding;
+            return this;
+        }
 
         @Override
         public Map<String, String> get() {
-            return OptionsUtil.makeOptions(Options.WRITE_FILES_COMPRESSION, "zip");
+            return OptionsUtil.makeOptions(
+                Options.WRITE_FILES_COMPRESSION, "zip",
+                Options.WRITE_FILES_ENCODING, encoding
+            );
         }
     }
 
@@ -109,7 +120,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     }
 
     @Override
-    public ArchiveFilesExporter to(Consumer<WriteFilesOptions<? extends WriteFilesOptions>> consumer) {
+    public ArchiveFilesExporter to(Consumer<WriteArchiveFilesOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

@@ -48,7 +48,7 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
         )
         private Boolean jsonLines;
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
         @CommandLine.Option(

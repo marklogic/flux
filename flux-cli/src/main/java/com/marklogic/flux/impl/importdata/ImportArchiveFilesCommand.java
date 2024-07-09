@@ -52,7 +52,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private Integer partitions;
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
         @Override

@@ -63,7 +63,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private CompressionType compressionType;
 
-        @CommandLine.Option(names = "--encoding", description = "Specify an encoding other than UTF-8 when reading files.")
+        @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
