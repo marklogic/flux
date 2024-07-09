@@ -55,7 +55,7 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
                 .saveMode(SaveMode.ERRORIFEXISTS)
             );
 
-        FluxException ex = assertThrowsNtException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
         assertEquals("Must specify a JDBC URL", ex.getMessage());
     }
 
@@ -69,7 +69,7 @@ class JdbcExporterTest extends AbstractExportJdbcTest {
                 .saveMode(SaveMode.ERRORIFEXISTS)
             );
 
-        FluxException ex = assertThrowsNtException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
         assertEquals("Must specify a table", ex.getMessage());
     }
 }

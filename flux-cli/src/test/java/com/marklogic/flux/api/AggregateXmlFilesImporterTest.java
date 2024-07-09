@@ -64,7 +64,7 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify an aggregate XML element name", ex.getMessage());
     }
 
@@ -79,7 +79,7 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

@@ -73,7 +73,7 @@ class GenericFilesImporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from("path/doesnt/exist");
 
-        FluxException ex = assertThrowsNtException(() -> command.execute());
+        FluxException ex = assertThrowsFluxException(() -> command.execute());
         assertTrue(ex.getMessage().contains("Path does not exist"),
             "Unexpected message: " + ex.getMessage() + ". And I'm not sure we want this Spark-specific " +
                 "exception to escape. Think we need for AbstractCommand to catch Throwable and look for a " +
@@ -99,7 +99,7 @@ class GenericFilesImporterTest extends AbstractTest {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

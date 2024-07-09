@@ -61,7 +61,7 @@ class AvroFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(READ_AUTHORS_OPTIC_QUERY);
 
-        FluxException ex = assertThrowsNtException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
         assertEquals("Must specify a file path", ex.getMessage());
     }
 

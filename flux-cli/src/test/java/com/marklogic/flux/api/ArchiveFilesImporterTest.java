@@ -34,7 +34,7 @@ class ArchiveFilesImporterTest extends AbstractTest {
         ArchiveFilesImporter importer = Flux.importArchiveFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

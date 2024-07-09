@@ -39,7 +39,7 @@ class ReprocessorTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .to(options -> options.invoke("/writeDocument.sjs"));
 
-        FluxException ex = assertThrowsNtException(() -> r.execute());
+        FluxException ex = assertThrowsFluxException(() -> r.execute());
         assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for reading from MarkLogic", ex.getMessage());
     }
 
@@ -52,7 +52,7 @@ class ReprocessorTest extends AbstractTest {
                 .partitionsXquery("something else"))
             .to(options -> options.invoke("/writeDocument.sjs"));
 
-        FluxException ex = assertThrowsNtException(() -> r.execute());
+        FluxException ex = assertThrowsFluxException(() -> r.execute());
         assertEquals("Can only specify one approach for defining partitions that are sent to the code for reading from MarkLogic", ex.getMessage());
     }
 
@@ -62,7 +62,7 @@ class ReprocessorTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(options -> options.invoke("anything"));
 
-        FluxException ex = assertThrowsNtException(() -> r.execute());
+        FluxException ex = assertThrowsFluxException(() -> r.execute());
         assertEquals("Must specify either JavaScript code, XQuery code, or an invokable module for writing to MarkLogic", ex.getMessage());
     }
 }

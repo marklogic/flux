@@ -39,7 +39,7 @@ class OrcFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test"));
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("IllegalArgumentException: For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
             "invalid value for the ORC 'mergeSchema' option.");
     }
@@ -49,7 +49,7 @@ class OrcFilesImporterTest extends AbstractTest {
         OrcFilesImporter importer = Flux.importOrcFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

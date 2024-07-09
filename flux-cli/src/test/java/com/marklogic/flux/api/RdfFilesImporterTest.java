@@ -63,7 +63,7 @@ class RdfFilesImporterTest extends AbstractTest {
         RdfFilesImporter importer = Flux.importRdfFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsNtException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }
