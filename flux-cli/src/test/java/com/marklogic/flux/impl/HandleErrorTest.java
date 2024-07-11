@@ -53,6 +53,11 @@ class HandleErrorTest extends AbstractTest {
             () -> run("import-files", "--connection-string", makeConnectionString()),
             "Missing required option: '--path <path>'"
         );
+
+        assertStderrContains(
+            () -> run("import-files", "--connection-string", makeConnectionString()),
+            "Run './bin/flux help import-files' for more information."
+        );
     }
 
     /**

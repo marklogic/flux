@@ -24,8 +24,7 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         err.print(cmd.getHelp().fullSynopsis());
 
         CommandLine.Model.CommandSpec spec = cmd.getCommandSpec();
-        err.printf("Run '%s --help' for more information.%n", spec.qualifiedName());
-
+        err.printf("Run '%s' for more information.%n", spec.qualifiedName(" help "));
         return cmd.getExitCodeExceptionMapper() != null
             ? cmd.getExitCodeExceptionMapper().getExitCode(ex)
             : spec.exitCodeOnInvalidInput();
