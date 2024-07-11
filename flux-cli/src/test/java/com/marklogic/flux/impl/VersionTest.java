@@ -16,6 +16,8 @@ class VersionTest extends AbstractTest {
     @Test
     void verbose() {
         String stdout = runAndReturnStdout(() -> run("version", "--verbose"));
-        assertTrue(stdout.contains("Build time:"), "Unexpected stdout: " + stdout);
+        assertTrue(stdout.contains("\"buildTime\""), "When using --verbose, the output should be a JSON object " +
+            "that includes the build time for performance tests and can thus be easily parsed by another program; " +
+            "unexpected stdout: " + stdout);
     }
 }
