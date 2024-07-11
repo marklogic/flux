@@ -49,6 +49,16 @@ If you would like to test our the Flux distribution - as either a tar or zip - p
 
 You can now run `./bin/flux` to test out various commands. 
 
+## Configuring the version
+
+You can specify a version for Flux when building Flux via any of the following:
+
+    ./gradlew distTar -Pversion=changeme
+    ./gradlew distZip -Pversion=changeme
+    ./gradlew installDist -Pversion=changeme
+
+The version can then be viewed by running `./bin/flux version`. 
+
 ## Running the tests
 
 *You must use Java 11* or higher to run any Gradle tasks in this project, due to the inclusion of the Sonar Gradle 
