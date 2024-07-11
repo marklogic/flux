@@ -11,3 +11,4 @@ flux/bin
 flux/conf
 flux/export
 export
+flux-version.properties

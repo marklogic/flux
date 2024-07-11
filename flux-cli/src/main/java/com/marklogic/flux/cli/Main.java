@@ -3,10 +3,7 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.Command;
-import com.marklogic.flux.impl.Preview;
-import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.*;
 import com.marklogic.flux.impl.copy.CopyCommand;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
@@ -57,7 +54,8 @@ import java.util.Optional;
         ImportOrcFilesCommand.class,
         ImportParquetFilesCommand.class,
         ImportRdfFilesCommand.class,
-        ReprocessCommand.class
+        ReprocessCommand.class,
+        VersionCommand.class
     }
 )
 public class Main {

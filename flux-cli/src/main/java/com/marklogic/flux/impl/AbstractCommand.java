@@ -18,10 +18,7 @@ import java.util.function.Consumer;
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
-    protected static final String READER_OPTIONS_HEADING = "\nReader Options\n";
-    protected static final String WRITER_OPTIONS_HEADING = "\nWriter Options\n";
-
-    protected final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
+    protected static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
     // This is declared before CommonParams so that it appears first in the picocli usage.
     @CommandLine.ArgGroup(exclusive = false, heading = "%nConnection Options%n")

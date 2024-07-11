@@ -101,6 +101,19 @@ startScripts {
   applicationName = "flux"
 }
 
+tasks.register("createVersionFile") {
+  description = "Create a gitignored file that is available on the classpath for use by the CLI's 'version' command."
+  doLast {
+    file("src/main/resources/flux-version.properties").text = "version=${version}\nbuildTime=${new Date().format("yyyy-MM-dd HH:mm:ss")}"
+  }
+}
+
+// Only need the version file in the context of the CLI, not the API.
+installDist.dependsOn createVersionFile
+distZip.dependsOn createVersionFile
+distTar.dependsOn createVersionFile
+test.dependsOn createVersionFile
+
 tasks.register("deleteTool", Delete) {
   delete "../flux"
 }
