@@ -23,7 +23,7 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
 
     @CommandLine.Option(
         names = "--xml-root-name",
-        description = "Causes XML documents to be written instead of JSON, with the documents having a root element with this name."
+        description = "Causes XML documents to be written instead of JSON, with each document having a root element with this name."
     )
     private String xmlRootName;
 

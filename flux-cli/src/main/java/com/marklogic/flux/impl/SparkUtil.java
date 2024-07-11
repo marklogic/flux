@@ -26,9 +26,9 @@ public class SparkUtil {
     }
 
     /**
-     * Converts an instance of our SaveMode enum into Spark's SaveMode. Our SaveMode shields API users from
-     * the Spark API and also plays nicely with JCommander's support for enums. JCommander doesn't automatically
-     * support the Spark SaveMode enum values since they are upper-camel-case.
+     * Converts an instance of our SaveMode enum into Spark's SaveMode. This was originally created because JCommander
+     * could not deal with Spark's SaveMode on account of the values being camel case. Not sure yet if picocli requires
+     * this, so it's being left in place.
      *
      * @param saveMode
      * @return

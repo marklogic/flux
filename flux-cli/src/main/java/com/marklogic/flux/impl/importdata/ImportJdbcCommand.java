@@ -76,7 +76,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
         @CommandLine.Option(names = "--query", required = true,
-            description = "A SQL query used to read data from the JDBC data source.")
+            description = "The SQL query to execute to read data from the JDBC data source.")
         private String query;
 
         @CommandLine.Mixin

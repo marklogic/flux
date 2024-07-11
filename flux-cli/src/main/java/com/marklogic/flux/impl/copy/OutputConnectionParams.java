@@ -40,7 +40,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = {"--output-connection-string"},
-        description = "Defines a connection string as user:password@host:port; only usable when using 'DIGEST' or 'BASIC' authentication.",
+        description = "Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using 'DIGEST' or 'BASIC' authentication.",
         converter = ConnectionStringValidator.class
     )
     public ConnectionOptions connectionString(String connectionString) {
@@ -81,7 +81,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-database",
-        description = "Name of a database to connect if it differs from the one associated with the app server identified by 'port'."
+        description = "Name of a database to connect to if it differs from the one associated with the app server identified by '--output-port'."
     )
     public ConnectionOptions database(String database) {
         this.database = database;
@@ -90,7 +90,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
 
     @CommandLine.Option(
         names = "--output-connection-type",
-        description = "Defines whether connections can be made directly to each host in the MarkLogic cluster. " + OptionsUtil.VALID_VALUES_DESCRIPTION
+        description = "Set to 'DIRECT' if connections can be made directly to each host in the MarkLogic cluster. Defaults to 'GATEWAY'. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
         this.connectionType = connectionType;
@@ -166,7 +166,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-cloud-api-key",
-        description = "API key for authenticating with a MarkLogic Cloud cluster."
+        description = "API key for authenticating with a MarkLogic Cloud cluster when using 'CLOUD' authentication."
     )
     public ConnectionOptions cloudApiKey(String cloudApiKey) {
         this.cloudApiKey = cloudApiKey;

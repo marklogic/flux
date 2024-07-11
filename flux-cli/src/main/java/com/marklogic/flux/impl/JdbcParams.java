@@ -14,7 +14,7 @@ public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
     @CommandLine.Option(names = "--jdbc-url", required = true, description = "The JDBC URL to connect to.")
     private String url;
 
-    @CommandLine.Option(names = "--jdbc-driver", description = "The class name of the JDBC driver to use.")
+    @CommandLine.Option(names = "--jdbc-driver", description = "The fully qualified Java class name of the JDBC driver to use.")
     private String driver;
 
     @CommandLine.Option(names = "--jdbc-user", description = "The user to authenticate as, if not specified in the JDBC URL.")
@@ -22,7 +22,7 @@ public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
 
     @CommandLine.Option(
         names = "--jdbc-password",
-        description = "The password to user for authentication, if not specified in the JDBC URL.",
+        description = "The password to use for authentication, if not specified in the JDBC URL.",
         interactive = true,
         arity = "0..1"
     )
@@ -31,7 +31,7 @@ public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
     @CommandLine.Option(
         names = "-P",
         description = "Specify any Spark JDBC option defined at " +
-            "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. -Pfetchsize=100."
+            "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. -Pfetchsize=100 ."
     )
     private Map<String, String> additionalOptions = new HashMap<>();
 

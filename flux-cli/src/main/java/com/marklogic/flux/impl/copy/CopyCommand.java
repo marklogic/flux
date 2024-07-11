@@ -61,13 +61,13 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-batch-size",
-            description = "The number of documents written in a call to MarkLogic."
+            description = "The maximum number of documents written in a single call to MarkLogic."
         )
         private Integer batchSize = 100;
 
         @CommandLine.Option(
             names = "--output-collections",
-            description = "Comma-delimited string of collection names to add to each document."
+            description = "Comma-delimited sequence of collection names to add to each document."
         )
         private String collections;
 
@@ -79,7 +79,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-permissions",
-            description = "Comma-delimited string of role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
+            description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
         )
         private String permissions;
 
@@ -109,7 +109,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-transform-params",
-            description = "Comma-delimited string of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
+            description = "Comma-delimited sequence of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
         )
         private String transformParams;
 
@@ -141,7 +141,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @CommandLine.Option(
             names = "--output-uri-template",
             description = "String defining a template for constructing each document URI. " +
-                "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
+                "See the Flux user guide on controlling document URIs for more information."
         )
         private String uriTemplate;
 
