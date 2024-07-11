@@ -1,5 +1,6 @@
 package com.marklogic.flux.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.spark.sql.SparkSession;
 import picocli.CommandLine;
 
@@ -21,11 +22,19 @@ public class VersionCommand implements Command {
     @Override
     public Optional<Preview> execute(SparkSession session) {
         ResourceBundle versionProperties = getResourceBundle();
-        commandLine.getOut().println("Flux version: " + versionProperties.getString("version"));
-        commandLine.getOut().println("Java version: " + System.getProperty("java.version"));
-        commandLine.getOut().println("Spark version: " + session.version());
+        final String version = versionProperties.getString("version");
+        final String javaVersion = System.getProperty("java.version");
+        final String sparkVersion = session.version();
         if (verbose) {
-            commandLine.getOut().println("Build time: " + versionProperties.getString("buildTime"));
+            commandLine.getOut().println(new ObjectMapper().createObjectNode()
+                .put("fluxVersion", version)
+                .put("buildTime", versionProperties.getString("buildTime"))
+                .put("javaVersion", javaVersion)
+                .put("sparkVersion", sparkVersion));
+        } else {
+            commandLine.getOut().println("Flux version: " + version);
+            commandLine.getOut().println("Java version: " + javaVersion);
+            commandLine.getOut().println("Spark version: " + sparkVersion);
         }
         return Optional.empty();
     }
