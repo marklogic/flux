@@ -72,7 +72,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         private String uris;
 
         @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
-            "see https://docs.marklogic.com/guide/search-dev/string-query for more information.")
+            "see %nhttps://docs.marklogic.com/guide/search-dev/string-query for more information.")
         private String stringQuery;
 
         @CommandLine.Option(names = "--query", description = "A JSON or XML representation of a structured query, serialized CTS query, or combined query. " +

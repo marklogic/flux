@@ -154,7 +154,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-certificate-password",
-        description = "Password for the keystore referenced by '--certificate-file'.",
+        description = "Password for the keystore referenced by '--output-certificate-file'.",
         interactive = true,
         arity = "0..1"
     )
@@ -227,7 +227,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-keystore-password",
-        description = "Password for the keystore identified by '--keystore-path'.",
+        description = "Password for the keystore identified by '--output-keystore-path'.",
         interactive = true,
         arity = "0..1"
     )
@@ -239,7 +239,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-keystore-type",
-        description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
+        description = "Type of the keystore identified by '--output-keystore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions keyStoreType(String keyStoreType) {
         this.keyStoreType = keyStoreType;
@@ -249,7 +249,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-keystore-algorithm",
-        description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
+        description = "Algorithm of the keystore identified by '--output-keystore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions keyStoreAlgorithm(String keyStoreAlgorithm) {
         this.keyStoreAlgorithm = keyStoreAlgorithm;
@@ -269,7 +269,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-truststore-password",
-        description = "Password for the truststore identified by '--truststore-path'.",
+        description = "Password for the truststore identified by '--output-truststore-path'.",
         interactive = true,
         arity = "0..1"
     )
@@ -281,7 +281,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-truststore-type",
-        description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
+        description = "Type of the truststore identified by '--output-truststore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions trustStoreType(String trustStoreType) {
         this.trustStoreType = trustStoreType;
@@ -291,7 +291,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = "--output-truststore-algorithm",
-        description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
+        description = "Algorithm of the truststore identified by '--output-truststore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;

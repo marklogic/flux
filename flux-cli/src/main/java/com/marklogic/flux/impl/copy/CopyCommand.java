@@ -55,7 +55,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-abort-on-write-failure",
-            description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
+            description = "Causes the command to fail when a batch of documents cannot be written to MarkLogic."
         )
         private Boolean abortOnWriteFailure;
 
@@ -73,7 +73,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-failed-documents-path",
-            description = "File path for writing an archive file containing failed documents and their metadata."
+            description = "File path for writing an archive file containing failed documents and their metadata. " +
+                "The documents in the archive file can then be retried via the 'import-archive-files' command."
         )
         private String failedDocumentsPath;
 
@@ -115,7 +116,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-transform-params-delimiter",
-            description = "Delimiter to use instead of a comma for the '--transform-params' parameter."
+            description = "Delimiter to use instead of a comma for the '--output-transform-params' parameter."
         )
         private String transformParamsDelimiter;
 
@@ -127,8 +128,9 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-uri-replace",
-            description = "Modify the URI for a document via a comma-delimited list of regular expression " +
-                "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
+            description = "Comma-delimited sequence of regular expressions and replacement strings for modifying " +
+                "the URI of each document - e.g. regex,'value',regex,'value'. " +
+                "Each replacement string must be enclosed by single quotes."
         )
         private String uriReplace;
 
@@ -140,7 +142,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @CommandLine.Option(
             names = "--output-uri-template",
-            description = "String defining a template for constructing each document URI. " +
+            description = "Defines a template for constructing each document URI. " +
                 "See the Flux user guide on controlling document URIs for more information."
         )
         private String uriTemplate;
@@ -268,7 +270,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     @CommandLine.Mixin
     protected final CopyWriteDocumentsParams writeParams = new CopyWriteDocumentsParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "\nOutput Connection Options\n")
+    @CommandLine.ArgGroup(exclusive = false, heading = "\nOutput Connection Options\n", order = 2)
     private OutputConnectionParams outputConnectionParams = new OutputConnectionParams();
 
     @Override

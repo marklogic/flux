@@ -20,11 +20,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
     protected static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
-    // This is declared before CommonParams so that it appears first in the picocli usage.
-    @CommandLine.ArgGroup(exclusive = false, heading = "%nConnection Options%n")
+    // The order values of 1 and 3 allow for CopyCommand to include Output Connection Options in between them. Feel free
+    // to tweak these in the future as needed.
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nConnection Options%n", order = 1)
     private ConnectionParams connectionParams = new ConnectionParams();
 
-    @CommandLine.ArgGroup(exclusive = false, heading = "%nCommon Options%n")
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nCommon Options%n", order = 3)
     private CommonParams commonParams = new CommonParams();
 
     private SparkSession sparkSession;
