@@ -18,40 +18,40 @@ import java.util.Map;
  */
 public class CommonParams {
 
-    @CommandLine.Option(names = "--limit", description = "Number of rows to read from the data source.")
+    @CommandLine.Option(names = "--limit", description = "Number of records to read from the data source.")
     private Integer limit;
 
-    @CommandLine.Option(names = "--count", description = "Show a count of rows to be read from the data source without writing any of the rows.")
+    @CommandLine.Option(names = "--count", description = "Show a count of records to be read from the data source without writing any of the data.")
     private boolean count;
 
-    @CommandLine.Option(names = "--preview", description = "Show up to the first N rows of data read by the command.")
+    @CommandLine.Option(names = "--preview", description = "Show up to the first N records of data read by the command.")
     private Integer preview;
 
     @CommandLine.Option(names = "--preview-drop", description = "Specify one or more columns to drop when using --preview.", arity = "*")
     private List<String> previewColumnsToDrop = new ArrayList<>();
 
     @CommandLine.Option(names = "--preview-vertical", description = "Preview the data in a vertical format instead of in a table.")
-    private Boolean previewVertical;
+    private boolean previewVertical;
 
-    @CommandLine.Option(names = "--repartition", description = "Specify the number of partitions / workers to be used for writing data.")
+    @CommandLine.Option(names = "--repartition", description = "Specify the number of partitions to be used for writing data.")
     private Integer repartition;
 
     // This is declared here so a user will see it in when viewing command usage, but the Main program does not need
     // it as it can easily check for it in the list of arguments it receives.
-    @CommandLine.Option(names = "--stacktrace", description = "If included and a command fails, the stacktrace will be printed.")
+    @CommandLine.Option(names = "--stacktrace", description = "Print the stacktrace when a command fails.")
     private Boolean showStacktrace;
 
     // Hidden for now since showing it for every command in its "help" seems confusing for most users that will likely
     // never need to know about this.
     @CommandLine.Option(
         names = "--master-url",
-        description = "Specify the Spark master URL for connecting to a Spark cluster."
+        description = "Specify the Spark master URL for configuring the local Spark cluster created by Flux."
     )
     private String sparkMasterUrl = "local[*]";
 
     @CommandLine.Option(
         names = "-C",
-        description = "Specify any key and value to be added to the Spark runtime configuration; e.g. -Cspark.logConf=true."
+        description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true."
     )
     private Map<String, String> configParams = new HashMap<>();
 
@@ -66,11 +66,7 @@ public class CommonParams {
     }
 
     public Preview makePreview(Dataset<Row> dataset) {
-        boolean vertical = false;
-        if (previewVertical != null) {
-            vertical = previewVertical.booleanValue();
-        }
-        return new Preview(dataset, preview, previewColumnsToDrop, vertical);
+        return new Preview(dataset, preview, previewColumnsToDrop, previewVertical);
     }
 
     public void setCount(boolean count) {

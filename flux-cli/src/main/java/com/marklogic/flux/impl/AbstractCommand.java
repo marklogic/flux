@@ -47,7 +47,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             dataset = afterDatasetLoaded(dataset);
             dataset = commonParams.applyParams(dataset);
             if (commonParams.isCount()) {
-                logger.info("Count of rows read: {}", dataset.count());
+                logger.info("Count: {}", dataset.count());
             } else if (commonParams.isPreviewRequested()) {
                 return Optional.of(commonParams.makePreview(dataset));
             } else {
@@ -130,7 +130,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     /**
-     * Because we cannot reuse validation expressed via JCommander annotations - such as "required=true" - some
+     * Because we cannot reuse validation expressed via picocli annotations - such as "required=true" - some
      * subclasses may need to perform their own validation when the user is using the API.
      */
     protected void validateDuringApiUsage() {

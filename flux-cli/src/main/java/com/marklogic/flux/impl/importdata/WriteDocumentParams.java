@@ -27,25 +27,26 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--batch-size",
-        description = "The number of documents written in a call to MarkLogic."
+        description = "The maximum number of documents written in a single call to MarkLogic."
     )
     private Integer batchSize = 200;
 
     @CommandLine.Option(
         names = "--collections",
-        description = "Comma-delimited string of collection names to add to each document."
+        description = "Comma-delimited sequence of collection names to add to each document - e.g. collection1,collection2."
     )
     private String collections;
 
     @CommandLine.Option(
         names = "--failed-documents-path",
-        description = "File path for writing an archive file containing failed documents and their metadata."
+        description = "File path for writing an archive file containing failed documents and their metadata. " +
+            "The documents in the archive file can then be retried via the 'import-archive-files' command."
     )
     private String failedDocumentsPath;
 
     @CommandLine.Option(
         names = "--permissions",
-        description = "Comma-delimited string of role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
+        description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
     )
     private String permissions;
 
@@ -63,7 +64,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--total-thread-count",
-        description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
+        description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic. " +
+            "Takes precedence over the '--thread-count' option."
     )
     private Integer totalThreadCount;
 
@@ -75,7 +77,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--transform-params",
-        description = "Comma-delimited string of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
+        description = "Comma-delimited sequence of REST API transform parameter names and values - e.g. param1,value1,param2,value2."
     )
     private String transformParams;
 
@@ -93,8 +95,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--uri-replace",
-        description = "Modify the URI for a document via a comma-delimited list of regular expression " +
-            "and replacement string pairs - e.g. regex,'value',regex,'value'. Each replacement string must be enclosed by single quotes."
+        description = "Comma-delimited sequence of regular expressions and replacement strings for modifying " +
+            "the URI of each document - e.g. regex,'value',regex,'value'. " +
+            "Each replacement string must be enclosed by single quotes."
     )
     private String uriReplace;
 
@@ -106,8 +109,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--uri-template",
-        description = "String defining a template for constructing each document URI. " +
-            "See https://marklogic.github.io/marklogic-spark-connector/writing.html for more information."
+        description = "Defines a template for constructing each document URI. " +
+            "See the Flux user guide on controlling document URIs for more information."
     )
     private String uriTemplate;
 

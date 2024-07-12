@@ -39,7 +39,7 @@ Follow these steps to run the examples in this guide:
 5. Run `./gradlew -i mlDeploy` to deploy the example application.
 
 This will create a new REST API app server on port 8004 in your local MarkLogic installation, unless you modified the
-values of `mlHost` and `mlRestPort`. It also creates an "flux-example-user" MarkLogic user that has the necessary MarkLogic roles
+values of `mlHost` and `mlRestPort`. It also creates a "flux-example-user" MarkLogic user that has the necessary MarkLogic roles
 and privileges for running the examples in this guide. Finally, the application includes a 
 [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE) that creates a view in MarkLogic for the purpose
 of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.marklogic.com/guide/app-dev/OpticAPI).
@@ -62,7 +62,7 @@ or `--host` and `--port` be specified so that the tool knows which MarkLogic clu
 
 The `--connection-string` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
 app server you connect to requires basic or digest authentication. Its value is of the form 
-`(user):(password)@(host):(port)`. For example:
+`(user):(password)@(host):(port)/(optionalDatabaseName)`. For example:
 
     ./bin/flux import-files --connection-string "my-user:my-secret@localhost:8000" ...
 
@@ -71,9 +71,10 @@ Options can also be read from a file; see the [Common Options](common-options.md
 ## Importing data
 
 Flux allows for data to be imported from a variety of data sources, such as a local filesystem, S3, or any database 
-accessible via a JDBC driver. The example project contains a gzipped CSV file generated via 
-[Mockaroo](https://mockaroo.com/). Run the following to load this file, allowing for other Flux capabilities to be 
-demonstrated:
+accessible via a [JDBC driver](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html). 
+The example project contains a gzipped CSV file generated via 
+[Mockaroo](https://mockaroo.com/). Run the below command to load this file; the data loaded will then be used to demonstrate other Flux 
+capabilities:
 
 ```
 ./bin/flux import-delimited-files \
@@ -86,6 +87,7 @@ demonstrated:
 
 By accessing your [MarkLogic qconsole](https://docs.marklogic.com/guide/qconsole), you can see that the `employee`
 collection in the `flux-example-content` database now has 1000 JSON documents, one for each line in the gzipped CSV file. 
+Each JSON document has a URI based on the value of the "id" row used to construct the document.
 
 ### Importing via JDBC
 
@@ -205,7 +207,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees', '')" \
+    --query "op.fromView('Example', 'Employees')" \
     --path export/parquet \
     --preview 10
 ```
@@ -225,19 +227,28 @@ documents:
     --write-javascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
 
-In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. 
+In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. Or, use
+Flux and its `--count` option, which allows you to get a count of all the data read by a command without processing or 
+writing any of the data:
+
+```
+./bin/flux export-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --path export --collections reprocessed --count 
+```
 
 For more information, please see the [Reprocessing guide](reprocess.md).
 
 ## Copying data
 
 The `copy` command in Flux is similar to the commands for exporting data, but instead allows you to read documents
-from one database and write them to another. When copying, you may want to include metadata for each document - 
+from one MarkLogic database and write them to another MarkLogic. When copying, you may want to include different categories 
+of metadata for each document - 
 collections, permissions, quality, properties, and metadata values. This is accomplished via the `--categories`
 option, with the default value of `content,metadata` returning both the document and all of its metadata.
 
 The following shows how to copy the 1000 employee documents to the out-of-the-box Documents database in your 
-MarkLogic instance:
+MarkLogic instance via the App-Services app server assumed to be listening on port 8000:
 
 ```
 ./bin/flux copy \
