@@ -346,7 +346,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @CommandLine.Option(
             names = "--abort-on-write-failure",
-            description = "Include this option to cause the command to fail when a batch of documents cannot be written to MarkLogic."
+            description = "Causes the command to fail when a batch of documents cannot be written to MarkLogic."
         )
         private Boolean abortOnWriteFailure;
 
