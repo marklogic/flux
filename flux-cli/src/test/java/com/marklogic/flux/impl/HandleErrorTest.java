@@ -84,7 +84,10 @@ class HandleErrorTest extends AbstractTest {
                 "--repartition", "2",
                 "--connection-string", makeConnectionString(),
                 "--permissions", "invalid-role,read,rest-writer,update",
-                "--abort-on-write-failure"
+                "--abort-on-write-failure",
+                // Including this to ensure it doesn't cause any problems. Not yet able to capture its output as it's
+                // via a logger.
+                "--stacktrace"
             ),
             "Command failed, cause: Local message: failed to apply resource at documents"
         );
@@ -102,7 +105,7 @@ class HandleErrorTest extends AbstractTest {
                 "--stacktrace",
                 "--abort-on-write-failure"
             ),
-            "com.marklogic.spark.ConnectorException: Local message: failed to apply resource at documents"
+            "Command failed, cause: Local message: failed to apply resource at documents"
         );
     }
 
