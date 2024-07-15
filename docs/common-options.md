@@ -154,6 +154,19 @@ Note that in the case of previewing an import, Flux will show the data as it has
 Spark rows with columns. The data is not shown as a set of documents yet, as the transformation of rows to documents 
 occurs when the data is written to MarkLogic.
 
+For some commands, it may be helpful to see the schema of the data read from the command's data source. For example, 
+when exporting data with a MarkLogic Optic query, you may wish to verify that the datatypes of each column are what you
+expect before writing the data to a Parquet file or relational database. Use the `--preview-schema` option to request 
+that Flux log the schema and not write any data:
+
+```
+./bin/flux export-parquet-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --query "op.fromView('Example', 'Employees')" \
+    --path export/parquet \
+    --preview-schema
+```
+
 ## Applying a limit
 
 For many use cases, it can be useful to only process a small subset of the source data to ensure that the results

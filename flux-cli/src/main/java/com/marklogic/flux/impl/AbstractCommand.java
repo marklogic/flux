@@ -46,7 +46,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             Dataset<Row> dataset = readDataset(session);
             if (commonParams.isCount()) {
                 logger.info("Count: {}", dataset.count());
-            } else if (commonParams.isPreviewRequested()) {
+            } else if (commonParams.getPreview().isPreviewRequested()) {
                 commonParams.getPreview().showPreview(dataset);
             } else {
                 applyWriter(session, dataset.write());

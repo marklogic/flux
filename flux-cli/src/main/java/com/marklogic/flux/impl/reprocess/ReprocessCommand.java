@@ -84,9 +84,6 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
     }
 
     private void validateWriteParams(CommandLine.ParseResult parseResult) {
-        if (parseResult.subcommand().hasMatchedOption("--preview")) {
-            return;
-        }
         String[] options = new String[]{
             "--write-invoke", "--write-javascript", "--write-xquery", "--write-javascript-file", "--write-xquery-file"
         };

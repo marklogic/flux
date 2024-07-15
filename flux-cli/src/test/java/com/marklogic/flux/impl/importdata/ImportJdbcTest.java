@@ -93,8 +93,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", "not.valid.driver.value",
             "--connection-string", makeConnectionString(),
-            "--query", "select * from customer",
-            "--preview", "10"
+            "--query", "select * from customer"
         ), "Command failed, cause: Unable to load class: not.valid.driver.value; " +
             "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
     }

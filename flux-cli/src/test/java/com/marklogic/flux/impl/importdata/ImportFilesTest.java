@@ -5,7 +5,6 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
@@ -16,7 +15,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportFilesTest extends AbstractTest {
 
@@ -84,30 +84,6 @@ class ImportFilesTest extends AbstractTest {
             .xquery("xdmp:node-kind(doc('/hello.xml.unknown')/node())")
             .evalAs(String.class);
         assertEquals("element", kind);
-    }
-
-    /**
-     * preview = show the first N rows from the reader, and don't invoke the writer.
-     */
-    @Test
-    @Disabled("Another stdout test that runs fine by itself, but fails when the suite is run.")
-    void preview() {
-        String stdout = runAndReturnStdout(() -> run(
-            "import-files",
-            "--path", "src/test/resources/mixed-files",
-            "--preview", "2",
-            "--preview-drop", "content", "modificationTime",
-            "--preview-vertical"
-        ));
-
-        String message = "Unexpected output to stdout: " + stdout;
-        assertTrue(stdout.contains("RECORD 0"), message);
-        assertTrue(stdout.contains("RECORD 1"), message);
-        assertFalse(stdout.contains("RECORD 2"), message);
-        assertTrue(stdout.contains("path"), message);
-        assertTrue(stdout.contains("length"), message);
-        assertFalse(stdout.contains("content"), message);
-        assertFalse(stdout.contains("modificationTime"), message);
     }
 
     @Test

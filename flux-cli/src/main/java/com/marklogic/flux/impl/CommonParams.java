@@ -59,16 +59,8 @@ public class CommonParams {
         return dataset;
     }
 
-    public void setCount(boolean count) {
-        this.count = count;
-    }
-
     public boolean isCount() {
         return count;
-    }
-
-    public boolean isPreviewRequested() {
-        return preview != null && preview.getNumberRows() > 0;
     }
 
     public void setLimit(Integer limit) {
