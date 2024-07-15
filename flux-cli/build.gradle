@@ -8,11 +8,6 @@ plugins {
   id 'signing'
 }
 
-repositories {
-  mavenCentral()
-  mavenLocal()
-}
-
 configurations {
   // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
   shadowDependencies

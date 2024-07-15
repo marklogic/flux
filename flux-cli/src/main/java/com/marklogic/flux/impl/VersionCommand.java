@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 )
 public class VersionCommand implements Command {
 
+    private static final String BUILD_TIME = "buildTime";
+
     private CommandLine commandLine;
 
     @CommandLine.Option(names = "--verbose", description = "Print additional details about Flux.")
@@ -28,7 +30,7 @@ public class VersionCommand implements Command {
         if (verbose) {
             commandLine.getOut().println(new ObjectMapper().createObjectNode()
                 .put("fluxVersion", version)
-                .put("buildTime", versionProperties.getString("buildTime"))
+                .put(BUILD_TIME, versionProperties.getString(BUILD_TIME))
                 .put("javaVersion", javaVersion)
                 .put("sparkVersion", sparkVersion));
         } else {
@@ -55,7 +57,7 @@ public class VersionCommand implements Command {
                 protected Object[][] getContents() {
                     return new Object[][]{
                         {"version", "Unknown; please ensure that flux-version.properties exists on the classpath."},
-                        {"buildTime", "Unknown."}
+                        {BUILD_TIME, "Unknown."}
                     };
                 }
             };

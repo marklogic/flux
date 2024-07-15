@@ -89,8 +89,6 @@ public class Main {
             .setUseSimplifiedAtFiles(true);
     }
 
-    // Sonar's not happy about stderr/stdout usage; will revisit this, ignoring warnings for now.
-    @SuppressWarnings({"java:S106", "java:S4507"})
     private int executeCommand(CommandLine.ParseResult parseResult) {
         final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
         try {
@@ -105,9 +103,10 @@ public class Main {
             }
         } catch (Exception ex) {
             if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
-                ex.printStackTrace();
+                logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
             }
-            System.err.println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
+            parseResult.commandSpec().commandLine().getErr()
+                .println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
             return CommandLine.ExitCode.SOFTWARE;
         }
         return CommandLine.ExitCode.OK;
