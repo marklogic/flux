@@ -48,14 +48,14 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
         @CommandLine.Option(
             names = "--source",
-            description = "Identifier for the Spark connector that is the source of data to import.",
+            description = "Identifier for the Spark connector or data source that is used to read data.",
             required = true
         )
         private String source;
 
         @CommandLine.Option(
             names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--source'."
+            description = "Specify any number of options to be passed to the connector identified by '--source' - e.g. -PmyOption=someValue."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

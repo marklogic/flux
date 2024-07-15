@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-jdbc",
     description = "Read rows via Optic from MarkLogic and write them to a table using Spark's support defined at" +
-        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html."
+        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html ."
 )
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 

@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-avro-files",
     description = "Read rows via Optic from MarkLogic and write them to Avro files on a local filesystem, HDFS, or S3 " +
-        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html."
+        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html ."
 )
 public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<AvroFilesExporter> implements AvroFilesExporter {
 

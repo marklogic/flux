@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-orc-files",
     description = "Read rows via Optic from MarkLogic and write them to ORC files on a local filesystem, HDFS, or S3 " +
-        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html."
+        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html ."
 )
 public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcFilesExporter> implements OrcFilesExporter {
 
