@@ -37,7 +37,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
         @CommandLine.Option(
             names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--target'."
+            description = "Specify any number of options to be passed to the connector identified by '--target' - e.g. -PmyOption=someValue."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

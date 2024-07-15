@@ -227,14 +227,15 @@ documents:
     --write-javascript "declareUpdate(); xdmp.documentAddCollections(URI, 'reprocessed')" 
 ```
 
-In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. Or, use
-Flux and its `--count` option, which allows you to get a count of all the data read by a command without processing or 
+In qconsole, you can see that the 1000 employee documents are now also in the `reprocessed` collection. You can also
+use Flux and its `--count` option, which allows you to get a count of all the data read by a command without processing or 
 writing any of the data:
 
 ```
 ./bin/flux export-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --path export --collections reprocessed --count 
+    --path export --collections reprocessed \
+    --count 
 ```
 
 For more information, please see the [Reprocessing guide](reprocess.md).
