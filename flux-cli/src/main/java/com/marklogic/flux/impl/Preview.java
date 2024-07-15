@@ -5,24 +5,22 @@ package com.marklogic.flux.impl;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import picocli.CommandLine;
 
 import java.util.List;
 
 public class Preview {
 
-    private final int numberRows;
-    private final Dataset<Row> dataset;
-    private final List<String> columnsToDrop;
-    private final boolean vertical;
+    @CommandLine.Option(names = "--preview", description = "Show up to the first N records of data read by the command.")
+    private int numberRows;
 
-    public Preview(Dataset<Row> dataset, int numberRows, List<String> columnsToDrop, boolean vertical) {
-        this.dataset = dataset;
-        this.numberRows = numberRows;
-        this.columnsToDrop = columnsToDrop;
-        this.vertical = vertical;
-    }
+    @CommandLine.Option(names = "--preview-drop", description = "Specify one or more columns to drop when using --preview.", arity = "*")
+    private List<String> columnsToDrop;
 
-    public void showPreview() {
+    @CommandLine.Option(names = "--preview-vertical", description = "Preview the data in a vertical format instead of in a table.")
+    private boolean vertical;
+
+    public void showPreview(Dataset<Row> dataset) {
         Dataset<Row> datasetPreview = dataset;
         if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
             datasetPreview = datasetPreview.drop(columnsToDrop.toArray(new String[]{}));
@@ -31,7 +29,7 @@ public class Preview {
         datasetPreview.show(numberRows, Integer.MAX_VALUE, vertical);
     }
 
-    public Dataset<Row> getDataset() {
-        return dataset;
+    public int getNumberRows() {
+        return numberRows;
     }
 }

@@ -7,9 +7,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,14 +22,10 @@ public class CommonParams {
     @CommandLine.Option(names = "--count", description = "Show a count of records to be read from the data source without writing any of the data.")
     private boolean count;
 
-    @CommandLine.Option(names = "--preview", description = "Show up to the first N records of data read by the command.")
-    private Integer preview;
-
-    @CommandLine.Option(names = "--preview-drop", description = "Specify one or more columns to drop when using --preview.", arity = "*")
-    private List<String> previewColumnsToDrop = new ArrayList<>();
-
-    @CommandLine.Option(names = "--preview-vertical", description = "Preview the data in a vertical format instead of in a table.")
-    private boolean previewVertical;
+    // picocli doesn't allow a Mixin on an ArgGroup, so we use another ArgGroup here. No need for a heading though as
+    // we still want these to show up in the Common Options section in each command's "help" output.
+    @CommandLine.ArgGroup(exclusive = false)
+    private Preview preview = new Preview();
 
     @CommandLine.Option(names = "--repartition", description = "Specify the number of partitions to be used for writing data.")
     private Integer repartition;
@@ -65,10 +59,6 @@ public class CommonParams {
         return dataset;
     }
 
-    public Preview makePreview(Dataset<Row> dataset) {
-        return new Preview(dataset, preview, previewColumnsToDrop, previewVertical);
-    }
-
     public void setCount(boolean count) {
         this.count = count;
     }
@@ -77,12 +67,8 @@ public class CommonParams {
         return count;
     }
 
-    public void setPreview(Integer preview) {
-        this.preview = preview;
-    }
-
     public boolean isPreviewRequested() {
-        return preview != null;
+        return preview != null && preview.getNumberRows() > 0;
     }
 
     public void setLimit(Integer limit) {
@@ -99,5 +85,9 @@ public class CommonParams {
 
     public Map<String, String> getConfigParams() {
         return configParams;
+    }
+
+    public Preview getPreview() {
+        return preview;
     }
 }
