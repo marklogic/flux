@@ -14,8 +14,8 @@ public class ConnectionParamsValidator {
         this.paramNames = new ParamNames(isOutput);
     }
 
-    public void validate(ConnectionInputs connectionInputs, CommonParams commonParams) {
-        if (connectionInputs.connectionString != null || (commonParams != null && commonParams.isPreviewRequested())) {
+    public void validate(ConnectionInputs connectionInputs) {
+        if (connectionInputs.connectionString != null) {
             return;
         }
 
@@ -31,14 +31,18 @@ public class ConnectionParamsValidator {
         AuthenticationType authType = connectionInputs.authType;
         boolean isDigestOrBasicAuth = authType == null || (AuthenticationType.DIGEST.equals(authType) || AuthenticationType.BASIC.equals(authType));
         if (isDigestOrBasicAuth) {
-            if (connectionInputs.username == null) {
-                throw new FluxException(String.format("Must specify a MarkLogic user via %s when using 'BASIC' or 'DIGEST' authentication.",
-                    paramNames.username));
-            }
-            if (connectionInputs.password == null) {
-                throw new FluxException(String.format("Must specify a password via %s when using 'BASIC' or 'DIGEST' authentication.",
-                    paramNames.password));
-            }
+            validateUsernameAndPassword(connectionInputs);
+        }
+    }
+
+    private void validateUsernameAndPassword(ConnectionInputs connectionInputs) {
+        if (connectionInputs.username == null) {
+            throw new FluxException(String.format("Must specify a MarkLogic user via %s when using 'BASIC' or 'DIGEST' authentication.",
+                paramNames.username));
+        }
+        if (connectionInputs.password == null) {
+            throw new FluxException(String.format("Must specify a password via %s when using 'BASIC' or 'DIGEST' authentication.",
+                paramNames.password));
         }
     }
 

@@ -5,7 +5,6 @@ import org.apache.spark.sql.SparkSession;
 import picocli.CommandLine;
 
 import java.util.ListResourceBundle;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 @CommandLine.Command(
@@ -22,7 +21,7 @@ public class VersionCommand implements Command {
     private boolean verbose;
 
     @Override
-    public Optional<Preview> execute(SparkSession session) {
+    public void execute(SparkSession session) {
         ResourceBundle versionProperties = getResourceBundle();
         final String version = versionProperties.getString("version");
         final String javaVersion = System.getProperty("java.version");
@@ -38,7 +37,6 @@ public class VersionCommand implements Command {
             commandLine.getOut().println("Java version: " + javaVersion);
             commandLine.getOut().println("Spark version: " + sparkVersion);
         }
-        return Optional.empty();
     }
 
     @Override

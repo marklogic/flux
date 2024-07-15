@@ -3,7 +3,10 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.*;
+import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.Command;
+import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.VersionCommand;
 import com.marklogic.flux.impl.copy.CopyCommand;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
@@ -15,8 +18,6 @@ import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
-
-import java.util.Optional;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -97,10 +98,7 @@ public class Main {
             if (logger.isDebugEnabled()) {
                 logger.debug("Spark master URL: {}", session.sparkContext().master());
             }
-            Optional<Preview> preview = command.execute(session);
-            if (preview.isPresent()) {
-                preview.get().showPreview();
-            }
+            command.execute(session);
         } catch (Exception ex) {
             if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
                 logger.error("Displaying stacktrace due to use of --stacktrace option", ex);

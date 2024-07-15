@@ -119,6 +119,7 @@ class ImportParquetFilesTest extends AbstractTest {
     void invalidParquetFile() {
         String stderr = runAndReturnStderr(() ->
             run("import-parquet-files",
+                "--connection-string", makeConnectionString(),
                 "--path", "src/test/resources/parquet/individual/invalid.parquet",
                 "--preview", "10",
                 "--abort-on-read-failure"

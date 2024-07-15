@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
@@ -32,11 +31,11 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
 
     @Override
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
-        new ConnectionParamsValidator(false).validate(connectionParams, commonParams);
+        new ConnectionParamsValidator(false).validate(connectionParams);
     }
 
     @Override
-    public final Optional<Preview> execute(SparkSession session) {
+    public final void execute(SparkSession session) {
         try {
             commonParams.getConfigParams().entrySet().stream()
                 .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
@@ -44,25 +43,71 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
                 logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());
             }
             long start = System.currentTimeMillis();
-            Dataset<Row> dataset = loadDataset(session, session.read());
-            dataset = afterDatasetLoaded(dataset);
-            dataset = commonParams.applyParams(dataset);
+            Dataset<Row> dataset = readDataset(session);
             if (commonParams.isCount()) {
                 logger.info("Count: {}", dataset.count());
             } else if (commonParams.isPreviewRequested()) {
-                return Optional.of(commonParams.makePreview(dataset));
+                commonParams.getPreview().showPreview(dataset);
             } else {
                 applyWriter(session, dataset.write());
-                if (logger.isInfoEnabled()) {
-                    logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
-                }
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
             }
         } catch (ConnectorException ex) {
             throw ex;
         } catch (Exception ex) {
             handleException(ex);
         }
-        return Optional.empty();
+    }
+
+    /**
+     * Entry point for using commands via the API instead of the CLI.
+     */
+    @Override
+    public void execute() {
+        SparkSession session = prepareApiExecution();
+        execute(session);
+    }
+
+    @Override
+    public long count() {
+        try {
+            SparkSession session = prepareApiExecution();
+            return readDataset(session).count();
+        } catch (ConnectorException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            handleException(ex);
+            return 0;
+        }
+    }
+
+    /**
+     * Captures common logic for the normal API execute call and for the API count call. Expected to be usable for
+     * future API calls like count() that need to invoke a method on the Spark Dataset.
+     *
+     * @return
+     */
+    private SparkSession prepareApiExecution() {
+        connectionParams.validateConnectionString("connection string");
+        validateDuringApiUsage();
+        return this.sparkSession != null ? this.sparkSession : SparkUtil.buildSparkSession();
+    }
+
+    /**
+     * Handles reading a dataset, which includes loading it via the subclass and applying some of the common params
+     * to it as well. Intended to be reused by CLI command execution and for API calls like count() that only need
+     * to read a Dataset and then call some method on it.
+     *
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    private Dataset<Row> readDataset(SparkSession session) throws Exception {
+        Dataset<Row> dataset = loadDataset(session, session.read());
+        dataset = afterDatasetLoaded(dataset);
+        return commonParams.applyParams(dataset);
     }
 
     /**
@@ -97,9 +142,15 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         throw new FluxException(ex.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
     }
 
+    /**
+     * This where the subclass defines how data is actually read from a source and loaded into a Spark dataset.
+     */
     @SuppressWarnings("java:S112")
     protected abstract Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) throws Exception;
 
+    /**
+     * This is where the subclass defines how the Spark dataset is written to some destination.
+     */
     @SuppressWarnings("java:S112")
     protected abstract void applyWriter(SparkSession session, DataFrameWriter<Row> writer) throws Exception;
 
@@ -109,25 +160,6 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
 
     public final CommonParams getCommonParams() {
         return commonParams;
-    }
-
-    /**
-     * Entry point for using commands via the API instead of the CLI.
-     */
-    @Override
-    public void execute() {
-        doExecute();
-    }
-
-    /**
-     * Extracted so that it can be reused by {@code count()} and any future API methods that want access to the Dataset.
-     *
-     * @return
-     */
-    private Optional<Preview> doExecute() {
-        connectionParams.validateConnectionString("connection string");
-        validateDuringApiUsage();
-        return execute(this.sparkSession != null ? this.sparkSession : SparkUtil.buildSparkSession());
     }
 
     /**
@@ -145,15 +177,6 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         }
         this.sparkSession = (SparkSession) sparkSession;
         return (T) this;
-    }
-
-    @Override
-    public long count() {
-        // The actual preview value doesn't matter; we set this so that we can get back the Dataset without
-        // writing any data.
-        getCommonParams().setPreview(Integer.MAX_VALUE);
-        Optional<Preview> preview = doExecute();
-        return preview.isPresent() ? preview.get().getDataset().count() : 0;
     }
 
     @Override

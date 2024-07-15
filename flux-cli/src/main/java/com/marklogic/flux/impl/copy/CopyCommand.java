@@ -284,7 +284,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         super.validateCommandLineOptions(parseResult);
         if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
             CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
-            new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams, copyCommand.getCommonParams());
+            new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }
         OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
     }

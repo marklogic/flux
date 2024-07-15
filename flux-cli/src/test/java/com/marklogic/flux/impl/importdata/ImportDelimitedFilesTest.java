@@ -138,6 +138,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             run(
                 "import-delimited-files",
                 "--path", "src/test/resources/delimited-files/three-rows.csv",
+                "--connection-string", makeConnectionString(),
                 "--limit", "1",
                 "--preview", "3",
                 "--preview-vertical"
