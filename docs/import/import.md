@@ -5,5 +5,6 @@ nav_order: 4
 has_children: true
 ---
 
-Flux supports importing data from a variety of file sources, as well as from databases that offer a 
-[JDBC driver](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html). 
+Flux supports importing data from files in a variety of formats from a local filesystem or Amazon S3, 
+as well as from data sources that are accessible via a [JDBC driver](https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html), including those supported by 
+[Postgres Data Direct JDBC drivers](https://www.progress.com/jdbc).

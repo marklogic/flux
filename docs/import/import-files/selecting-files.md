@@ -18,7 +18,7 @@ of specifying paths are described below.
 ## Specifying paths
 
 The `--path` option controls where files are read from. You can specify multiple occurrences of `--path`, each with a 
-different value, to import files from many sources. 
+different value, to import files from many sources in a single command invocation. 
 
 The value of the `--path` option can be any directory or file path. You can use wildcards in any part of the path. For
 example, the following, would select every file starting with `example` in any child directory of the root `/data`
@@ -35,15 +35,18 @@ In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux u
 To enable this, include the `--s3-add-credentials` option:
 
 ```
-./bin/flux import-files --path "s3a://my-bucket/some/path" --s3-add-credentials
+./bin/flux import-files \
+    --path "s3a://my-bucket/some/path" \
+    --s3-add-credentials \
+    --connection-string etc... 
 ```
 
 You can also explicitly define your AWS credentials via `--s3-access-key-id` and `--s3-secret-access-key`. To avoid 
-typing these in plaintext, you may want to store these in a file and reference the file via "@my-options.txt". See
-the documentation on [Common Options](../../common-options.md) for more information.
+typing these in plaintext, you may want to store these in a file and reference the file via an options file. See
+[Common Options](../../common-options.md) for more information on how to use options files.
 
-You can also specify an S3 endpoint via `--s3-endpoint`. This may be required when running Flux in AWS in one region 
-while trying to access S3 in a separate region. 
+You can also specify an S3 endpoint via `--s3-endpoint`. This is typically required when running Flux in AWS in one 
+region while trying to access S3 in a separate region. 
 
 ## Ignoring child directories
 
@@ -58,4 +61,3 @@ You can restrict which files are read from a directory by specifying a standard
 [glob expression](https://en.wikipedia.org/wiki/Glob_(programming)) via the `--filter` option:
 
     --path /data/examples --filter some*.json
-
