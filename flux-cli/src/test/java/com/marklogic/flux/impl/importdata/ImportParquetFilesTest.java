@@ -121,7 +121,6 @@ class ImportParquetFilesTest extends AbstractTest {
             run("import-parquet-files",
                 "--connection-string", makeConnectionString(),
                 "--path", "src/test/resources/parquet/individual/invalid.parquet",
-                "--preview", "10",
                 "--abort-on-read-failure"
             )
         );

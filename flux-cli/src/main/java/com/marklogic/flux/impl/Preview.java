@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl;
 
+import com.marklogic.spark.Util;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -20,16 +21,24 @@ public class Preview {
     @CommandLine.Option(names = "--preview-vertical", description = "Preview the data in a vertical format instead of in a table.")
     private boolean vertical;
 
+    @CommandLine.Option(names = "--preview-schema", description = "Show the schema of the data read by the command.")
+    private boolean showSchema;
+
     public void showPreview(Dataset<Row> dataset) {
         Dataset<Row> datasetPreview = dataset;
         if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
             datasetPreview = datasetPreview.drop(columnsToDrop.toArray(new String[]{}));
         }
-        // Not truncating at all. For now, users can drop columns if their values are too long.
-        datasetPreview.show(numberRows, Integer.MAX_VALUE, vertical);
+        if (showSchema && Util.MAIN_LOGGER.isInfoEnabled()) {
+            Util.MAIN_LOGGER.info("Spark schema of the data read by this command:\n{}", datasetPreview.schema().prettyJson());
+        }
+        if (numberRows > 0) {
+            // Not truncating at all. For now, users can drop columns if their values are too long.
+            datasetPreview.show(numberRows, Integer.MAX_VALUE, vertical);
+        }
     }
 
-    public int getNumberRows() {
-        return numberRows;
+    public boolean isPreviewRequested() {
+        return numberRows > 0 || showSchema;
     }
 }

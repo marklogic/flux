@@ -10,7 +10,6 @@ import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,29 +124,6 @@ class ImportDelimitedFilesTest extends AbstractTest {
         assertEquals(JsonNodeType.STRING, doc.get("number").getNodeType());
         assertEquals(JsonNodeType.STRING, doc.get("color").getNodeType());
         assertEquals(JsonNodeType.STRING, doc.get("flag").getNodeType());
-    }
-
-    /**
-     * We expect limit and preview to work for every command; this is just a simple sanity check
-     * for this command.
-     */
-    @Test
-    @Disabled("stdout isn't being captured correctly for this test, will debug soon.")
-    void limitAndPreview() {
-        String stdout = runAndReturnStdout(() -> {
-            run(
-                "import-delimited-files",
-                "--path", "src/test/resources/delimited-files/three-rows.csv",
-                "--connection-string", makeConnectionString(),
-                "--limit", "1",
-                "--preview", "3",
-                "--preview-vertical"
-            );
-        });
-
-        String message = "Unexpected stdout: " + stdout;
-        assertTrue(stdout.contains("number | 1"), message);
-        assertFalse(stdout.contains("number | 2"), message);
     }
 
     @Test

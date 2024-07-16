@@ -37,8 +37,8 @@ via `custom-export-rows`:
 
 When using `custom-export-rows` with an Optic query to select rows from MarkLogic, each row sent to the connector or 
 data source defined by `--target` will have a schema based on the output of the Optic query. You may find the 
-`--preview` option helpful in understanding what data will be these rows. See [Common Options](../common-options.md) 
-for more information.
+`--preview` and `--preview-schema` options helpful in understanding what data will be in these rows. 
+See [Common Options](../common-options.md) for more information.
 
 ## Exporting documents
 
