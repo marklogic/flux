@@ -10,29 +10,30 @@ JSON or XML documents that often better resemble the logical entities associated
 this capability for each of the following data sources:
 
 - [Avro](import-files/avro.md)
+- [Delimited text](import-files/delimited-text.md)
 - [JDBC](import-jdbc.md)
 - [ORC](import-files/orc.md)
 - [Parquet](import-files/parquet.md)
 
 As an example, consider a scenario where you are importing customer data from a relational database via JDBC. Each 
-customer record can have one or more related address record, which are stored in a separate table. You could simply
-import all customer rows and all address rows as separate documents in MarkLogic. But for a variety of reasons - including
+customer record can have one or more related address records, which are stored in a separate table. You could simply
+import all customer rows and all address rows as separate documents in MarkLogic. But for a variety of use cases - including
 searching and security - you may want each customer document to contain all of its related addresses. Flux allows you
-to achieve that goal by aggregating the customer and address rows together before writing the customer documents to 
-MarkLogic. 
+to achieve that goal by aggregating related data such that hierarchical documents are written to MarkLogic containing 
+one or more arrays of related records. 
 
 ## Usage
 
-To aggregate rows together when using `import-avro-files`, `import-jdbc`, `import-orc-files`, or `import-parquet-files`, 
-use the following options:
+To aggregate rows together when using `import-avro-files`, `import-delimited-files`, `import-jdbc`, `import-orc-files`, 
+or `import-parquet-files`, use the following options:
 
 - `--group-by` specifies a column name to group rows by; this is typically the column used in a join.
 - `--aggregate` specifies a string of the form `new_column_name=column1,column2,column3`. The `new_column_name` column
-  will contain an array of objects, with each object having columns of `column`, `column2`, and `column3`.
+  will contain an array of objects, with each object having columns of `column1`, `column2`, and `column3`.
 
 For example, consider the [Postgres tutorial database](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
 that features 15 tables with multiple relationships. One such relationship is between customers and payments. The
-following options would be used to write customer documents with each customer document containing an array of all of 
+following options would be used to write customer documents with each customer document containing an array of 
 its related payments (connection details are omitted for brevity):
 
 ```
@@ -45,8 +46,8 @@ its related payments (connection details are omitted for brevity):
 The options above result in the following aggregation being performed:
 
 1. Rows retrieved from the Postgres database are grouped together based on values in the `customer_id` column.
-2. For each payment for a given customer, the values in a payment row are added to a struct that is then added to an array
-   in a new column named `payments`.
+2. For each payment for a given customer, the values in a payment row - `payment_id`, `amount`, and `payment_date` - 
+are added to a struct that is then added to an array in a new column named `payments`.
 3. The `payment_id`, `amount`, and `payment_date` columns are removed.
 
 Each customer JSON document will as a result have a top-level `payments` array containing one object for each related
