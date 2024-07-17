@@ -106,13 +106,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/CustomImporter.CustomReadOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/CustomImporter.CustomReadOptions.html" title="interface in com.marklogic.flux.api">CustomImporter.CustomReadOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesExporter.WriteDelimitedFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesExporter.WriteDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesExporter.WriteDelimitedFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JdbcOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JdbcOptions.html" title="interface in com.marklogic.flux.api">JdbcOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonFilesImporter.ReadJsonFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonFilesImporter.ReadJsonFilesOptions.html" title="interface in com.marklogic.flux.api">JsonFilesImporter.ReadJsonFilesOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonLinesFilesExporter.WriteJsonLinesFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonLinesFilesExporter.WriteJsonLinesFilesOptions.html" title="interface in com.marklogic.flux.api">JsonLinesFilesExporter.WriteJsonLinesFilesOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ReadTabularFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteSparkFilesOptions.html#additionalOptions(java.util.Map)">additionalOptions(Map&lt;String, String&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteSparkFilesOptions.html" title="interface in com.marklogic.flux.api">WriteSparkFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html#aggregateColumns(java.lang.String,java.lang.String...)">aggregateColumns(String, String...)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JdbcImporter.ReadJdbcOptions.html#aggregateColumns(java.lang.String,java.lang.String...)">aggregateColumns(String, String...)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JdbcImporter.ReadJdbcOptions.html" title="interface in com.marklogic.flux.api">JdbcImporter.ReadJdbcOptions</a></dt>
 <dd>&nbsp;</dd>
@@ -133,6 +141,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Read documents and their metadata from MarkLogic and write them to ZIP files on a local filesystem, HDFS, or S3.</div>
 </dd>
 <dt><a href="com/marklogic/flux/api/ArchiveFilesExporter.ReadArchiveDocumentOptions.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">ArchiveFilesExporter.ReadArchiveDocumentOptions</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/marklogic/flux/api/ArchiveFilesExporter.WriteArchiveFilesOptions.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">ArchiveFilesExporter.WriteArchiveFilesOptions</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/marklogic/flux/api/ArchiveFilesImporter.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">ArchiveFilesImporter</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
 <dd>
@@ -282,12 +292,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Read rows via Optic from MarkLogic and write them to delimited text files on a local filesystem, HDFS, or S3
  using <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>.</div>
 </dd>
+<dt><a href="com/marklogic/flux/api/DelimitedFilesExporter.WriteDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">DelimitedFilesExporter.WriteDelimitedFilesOptions</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/marklogic/flux/api/DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">DelimitedFilesImporter</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
 <dd>
 <div class="block">Read delimited text files from local, HDFS, and S3 locations using
  <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>,
  and write JSON or XML documents to MarkLogic.</div>
 </dd>
+<dt><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">DelimitedFilesImporter.ReadDelimitedFilesOptions</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html#delimiter(java.lang.String)">delimiter(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AuthenticationType.html#DIGEST">DIGEST</a></span> - com.marklogic.flux.api.<a href="com/marklogic/flux/api/AuthenticationType.html" title="enum in com.marklogic.flux.api">AuthenticationType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html#directory(java.lang.String)">directory(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html" title="interface in com.marklogic.flux.api">RdfFilesExporter.ReadTriplesDocumentsOptions</a></dt>
@@ -315,6 +331,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h2 class="title">E</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AggregateXmlFilesImporter.ReadXmlFilesOptions.html#element(java.lang.String)">element(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/AggregateXmlFilesImporter.ReadXmlFilesOptions.html" title="interface in com.marklogic.flux.api">AggregateXmlFilesImporter.ReadXmlFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AggregateXmlFilesImporter.ReadXmlFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/AggregateXmlFilesImporter.ReadXmlFilesOptions.html" title="interface in com.marklogic.flux.api">AggregateXmlFilesImporter.ReadXmlFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ArchiveFilesExporter.WriteArchiveFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ArchiveFilesExporter.WriteArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">ArchiveFilesExporter.WriteArchiveFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ArchiveFilesImporter.ReadArchiveFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ArchiveFilesImporter.ReadArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">ArchiveFilesImporter.ReadArchiveFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesExporter.WriteDelimitedFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesExporter.WriteDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesExporter.WriteDelimitedFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/GenericFilesExporter.WriteGenericFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/GenericFilesExporter.WriteGenericFilesOptions.html" title="interface in com.marklogic.flux.api">GenericFilesExporter.WriteGenericFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/GenericFilesImporter.ReadGenericFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/GenericFilesImporter.ReadGenericFilesOptions.html" title="interface in com.marklogic.flux.api">GenericFilesImporter.ReadGenericFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonFilesImporter.ReadJsonFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonFilesImporter.ReadJsonFilesOptions.html" title="interface in com.marklogic.flux.api">JsonFilesImporter.ReadJsonFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonLinesFilesExporter.WriteJsonLinesFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonLinesFilesExporter.WriteJsonLinesFilesOptions.html" title="interface in com.marklogic.flux.api">JsonLinesFilesExporter.WriteJsonLinesFilesOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions.html#encoding(java.lang.String)">encoding(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/SaveMode.html#ERRORIFEXISTS">ERRORIFEXISTS</a></span> - com.marklogic.flux.api.<a href="com/marklogic/flux/api/SaveMode.html" title="enum in com.marklogic.flux.api">SaveMode</a></dt>
 <dd>&nbsp;</dd>
@@ -419,6 +455,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/CustomImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;CustomImporter.CustomReadOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/CustomImporter.html" title="interface in com.marklogic.flux.api">CustomImporter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;DelimitedFilesImporter.ReadDelimitedFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DocumentCopier.html#from(java.util.function.Consumer)">from(Consumer&lt;DocumentCopier.CopyReadDocumentsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DocumentCopier.html" title="interface in com.marklogic.flux.api">DocumentCopier</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/GenericFilesImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;GenericFilesImporter.ReadGenericFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/GenericFilesImporter.html" title="interface in com.marklogic.flux.api">GenericFilesImporter</a></dt>
@@ -452,8 +490,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ParquetFilesExporter.html#from(java.util.function.Consumer)">from(Consumer&lt;ReadRowsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ParquetFilesExporter.html" title="interface in com.marklogic.flux.api">ParquetFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AvroFilesImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;ReadTabularFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/AvroFilesImporter.html" title="interface in com.marklogic.flux.api">AvroFilesImporter</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;ReadTabularFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/OrcFilesImporter.html#from(java.util.function.Consumer)">from(Consumer&lt;ReadTabularFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/OrcFilesImporter.html" title="interface in com.marklogic.flux.api">OrcFilesImporter</a></dt>
 <dd>&nbsp;</dd>
@@ -490,6 +526,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesImporter.WriteTriplesDocumentsOptions.html#graphOverride(java.lang.String)">graphOverride(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesImporter.WriteTriplesDocumentsOptions.html" title="interface in com.marklogic.flux.api">RdfFilesImporter.WriteTriplesDocumentsOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html#graphs(java.lang.String...)">graphs(String...)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html" title="interface in com.marklogic.flux.api">RdfFilesExporter.ReadTriplesDocumentsOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html#groupBy(java.lang.String)">groupBy(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JdbcImporter.ReadJdbcOptions.html#groupBy(java.lang.String)">groupBy(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JdbcImporter.ReadJdbcOptions.html" title="interface in com.marklogic.flux.api">JdbcImporter.ReadJdbcOptions</a></dt>
 <dd>&nbsp;</dd>
@@ -589,6 +627,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Read rows via Optic from MarkLogic and write them to JSON Lines files on a local filesystem, HDFS, or S3 using
  <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support</a>.</div>
 </dd>
+<dt><a href="com/marklogic/flux/api/JsonLinesFilesExporter.WriteJsonLinesFilesOptions.html" title="interface in com.marklogic.flux.api"><span class="typeNameLink">JsonLinesFilesExporter.WriteJsonLinesFilesOptions</span></a> - Interface in <a href="com/marklogic/flux/api/package-summary.html">com.marklogic.flux.api</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteStructuredDocumentsOptions.html#jsonRootName(java.lang.String)">jsonRootName(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -888,15 +928,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesExporter.html#to(java.lang.String)">to(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesExporter.html" title="interface in com.marklogic.flux.api">RdfFilesExporter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ArchiveFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;ArchiveFilesExporter.WriteArchiveFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ArchiveFilesExporter.html" title="interface in com.marklogic.flux.api">ArchiveFilesExporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/CustomDocumentsExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;CustomExportWriteOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/CustomDocumentsExporter.html" title="interface in com.marklogic.flux.api">CustomDocumentsExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/CustomRowsExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;CustomExportWriteOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/CustomRowsExporter.html" title="interface in com.marklogic.flux.api">CustomRowsExporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;DelimitedFilesExporter.WriteDelimitedFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesExporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/GenericFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;GenericFilesExporter.WriteGenericFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/GenericFilesExporter.html" title="interface in com.marklogic.flux.api">GenericFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/GenericFilesImporter.html#to(java.util.function.Consumer)">to(Consumer&lt;GenericFilesImporter.WriteGenericDocumentsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/GenericFilesImporter.html" title="interface in com.marklogic.flux.api">GenericFilesImporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JdbcExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;JdbcExporter.WriteRowsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JdbcExporter.html" title="interface in com.marklogic.flux.api">JdbcExporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonLinesFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;JsonLinesFilesExporter.WriteJsonLinesFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonLinesFilesExporter.html" title="interface in com.marklogic.flux.api">JsonLinesFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;RdfFilesExporter.WriteRdfFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesExporter.html" title="interface in com.marklogic.flux.api">RdfFilesExporter</a></dt>
 <dd>&nbsp;</dd>
@@ -912,13 +958,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/MlcpArchiveFilesImporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteDocumentsOptions&lt;? extends WriteDocumentsOptions&gt;&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/MlcpArchiveFilesImporter.html" title="interface in com.marklogic.flux.api">MlcpArchiveFilesImporter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ArchiveFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteFilesOptions&lt;? extends WriteFilesOptions&gt;&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ArchiveFilesExporter.html" title="interface in com.marklogic.flux.api">ArchiveFilesExporter</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AvroFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteSparkFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/AvroFilesExporter.html" title="interface in com.marklogic.flux.api">AvroFilesExporter</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/DelimitedFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteSparkFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/DelimitedFilesExporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesExporter</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/JsonLinesFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteSparkFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/JsonLinesFilesExporter.html" title="interface in com.marklogic.flux.api">JsonLinesFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/OrcFilesExporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteSparkFilesOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/OrcFilesExporter.html" title="interface in com.marklogic.flux.api">OrcFilesExporter</a></dt>
 <dd>&nbsp;</dd>
