@@ -16,7 +16,7 @@ Flux can import Avro files, with each row being written as a document in MarkLog
 
 ## Usage
 
-The `import-avro-files` command is used to read Avro files and write the contents of each file as one or more JSON
+The `import-avro-files` command reads Avro files and writes the contents of each file as one or more JSON
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 

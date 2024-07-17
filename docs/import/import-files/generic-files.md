@@ -46,7 +46,8 @@ The value of this option must be one of `JSON`, `XML`, or `TEXT`.
 ## Specifying an encoding
 
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
-If your files use a different encoding, you must specify that via the `--encoding` option:
+If your files use a different encoding, you must specify that via the `--encoding` option so that
+the content can be correctly translated to UTF-8 when written to MarkLogic:
 
     ./bin/flux import-files --path source --encoding ISO-8859-1 ...
 

@@ -70,7 +70,8 @@ documents with the following format:
 ## Specifying an encoding
 
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
-If your delimited text files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+If your delimited text files use a different encoding, you must specify that via the `--encoding` option so that
+the content can be correctly translated to UTF-8 when written to MarkLogic - e.g.:
 
 ```
 ./bin/flux import-delimited-text-files \

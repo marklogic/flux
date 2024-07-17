@@ -3,12 +3,12 @@ layout: default
 title: Importing archives
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 5
+nav_order: 6
 ---
 
 Flux can import archive files containing documents and their associated metadata. This includes archives written via 
 the [`export-archive-files` command](../../export/export-archives.md) as well as archives written by 
-[MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/importing-content-into-marklogic-server/loading-content-and-metadata-from-an-archive.html), 
+[MarkLogic Content Pump](https://docs.marklogic.com/11.0/guide/mlcp-guide/en/exporting-content-from-marklogic-server/exporting-to-an-archive.html), 
 which are hereafter referred to as "MLCP archives".
 
 ## Table of contents
@@ -23,7 +23,11 @@ The `import-archive-files` command will import the documents and metadata files 
 `export-archive-files` command. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
-    ./bin/flux import-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
+```
+./bin/flux import-archive-files \
+    --path /path/to/files \
+    --connection-string "user:password@localhost:8000"
+```
 
 ## Importing MLCP archives
 
@@ -32,14 +36,19 @@ You can also import
 that were produced via the `EXPORT` command in MLCP. The `import-mlcp-archive-files` command is used instead, and it also
 requires at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
-    ./bin/flux import-mlcp-archive-files --path /path/to/files --connection-string "user:password@localhost:8000"
+```
+./bin/flux import-mlcp-archive-files \
+    --path /path/to/files \
+    --connection-string "user:password@localhost:8000"
+```
 
 ## Restricting metadata
 
-By default, all metadata associated with a document will be included when the document is written to MarkLogic. This is
-true for both the `import-archive-files` command the `import-mlcp-archive-files` command. 
+By default, all metadata associated with a document in an archive will be included when the document is written to MarkLogic. 
+This is true for both the `import-archive-files` command and the `import-mlcp-archive-files` command. This is typically 
+desirable so that metadata like collections and permissions in the archive can be applied to the imported documents. 
 
-You can restrict which types of metadata are included via the `--categories` option. This option accepts a comma-delimited
+You can instead restrict which types of metadata are included via the `--categories` option. This option accepts a comma-delimited
 sequence of the following metadata types:
 
 - `collections`
@@ -49,15 +58,19 @@ sequence of the following metadata types:
 - `metadatavalues`
 
 For example, the following option will only include the collections and properties found in each metadata entry in an 
-archive ZIP file:
+archive ZIP file or MLCP archive ZIP file:
 
     --categories collections,properties
 
-The `--categories` option can be used to restrict metadata for both `import-archive-files` and `import-mlcp-archive-files`.
-
 ## Specifying an encoding
 
-MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
-If your archive files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your archive files use a different encoding, you must specify that via the `--encoding` option so that
+the content can be correctly translated to UTF-8 when written to MarkLogic - e.g.:
 
-    ./bin/flux import-archive-files --path source --encoding ISO-8859-1 ...
+```
+./bin/flux import-archive-files \
+    --path source \
+    --encoding ISO-8859-1 \
+    etc...
+```
