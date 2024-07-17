@@ -40,7 +40,7 @@ MarkLogic. It is often useful to have a single "root" field in a JSON document s
 can help with indexing purposes in MarkLogic as well. To include a JSON root field, use the `--json-root-name` option with
 a value for the name of the root field. The data read from a row will then be nested under this root field.
 
-For example, including an option of `--json-root-name` will produce JSON documents with the following format:
+For example, including an option of `--json-root-name Customer` will produce JSON documents with the following format:
 
 ```
 {
@@ -79,6 +79,11 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
     --encoding ISO-8859-1 \
     etc...
 ```
+
+## Aggregating rows
+
+The `import-delimited-files` command supports aggregating related rows together to produce hierarchical documents. See
+[Aggregating rows](../aggregating-rows.md) for more information.
 
 ## Advanced options
 
