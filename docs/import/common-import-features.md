@@ -5,7 +5,7 @@ parent: Importing Data
 nav_order: 1
 ---
 
-Regardless from where an Flux import command reads data, it will ultimately write one or more documents to MarkLogic.
+Each Flux import command will write one or more documents to MarkLogic, regardless of the data source. 
 The sections below detail the common features for writing documents that are available for every import command, unless
 otherwise noted by the documentation for that command.
 
@@ -18,7 +18,7 @@ otherwise noted by the documentation for that command.
 ## Controlling document URIs
 
 Each import command will generate an initial URI for each document, typically based on the data source from which the 
-command reads. You can use the following command line options to control the URI for each document:
+command reads. The following command line options offer further control over each URI:
 
 | Option | Description | 
 | --- | --- |
@@ -29,16 +29,17 @@ command reads. You can use the following command line options to control the URI
 
 ### Replacing URI contents
 
-When importing data from files where the initial URI is based on an absolute file path, the `--uri-replace` option can 
-be used to remove much of the file path from the URI, though this is not required. For example, if you import files 
-from a path of `/path/to/my/data` and you only want to include `/data` in your URIs, you would include the following 
-option:
+The `--uri-replace` option supports replacing one or more parts of an initial URI. Each part is identified by a 
+regular expression, and the replacement for each part is surrounded in single quotes. Replacing parts of the URI 
+is often useful when importing data from files where the initial URI is based on an absolute file path. For example, 
+if you import files from a path of `/path/to/my/data` and you only want to include `/data` in your URIs, you would 
+include the following option:
 
     --uri-replace ".*/data,'/data'"
 
 ### Configuring URIs via a template
 
-The `--uri-template` option allows you to configure a URI based on a JSON representation of each row that a command
+The `--uri-template` option supports configuring a URI based on a JSON representation of each record that a command
 reads from its associated data source. This option is supported for the following commands:
 
 - `import-avro-files`
@@ -53,8 +54,9 @@ By default, each of the above commands will write each record that it reads as a
 template is applied against that JSON representation of each record. This is true even when electing to write XML 
 documents to MarkLogic instead. 
 
-A URI template is a string consisting of one or more expressions surrounded by single braces. Each expression must refer
-to either a top-level field name in the JSON representation of a record, or it must be a 
+A URI template is a string containing any text you wish to include in every URI along with one or more expressions 
+surrounded by single braces. Each expression must refer to either a top-level field name in the JSON representation of 
+a record, or it must be a 
 [JSON Pointer expression](https://www.rfc-editor.org/rfc/rfc6901) that points to a non-empty value in the JSON representation.
 
 For example, consider an employee data source where the JSON representation of each record from that data source has 
@@ -70,13 +72,20 @@ JSON document with this root field applied, so you would need to use JSON Pointe
 
     --json-root-name employee --uri-template "/employee/{/employee/id}/{/employee/last_name}.json"
 
+The following techniques can assist you with writing a URI template:
+
+1. Run the import command with `--limit 1` to write a single JSON document to MarkLogic. You can then see the JSON 
+fields that can be referenced in your template.
+2. Run the import command with `--preview 1` to see a tabular representation of a single record read from the command's 
+data source. This also helps you understand the fields that can be referenced in your template.
+
 ## Configuring document metadata
 
-When writing documents, you can optionally configure any number of 
+When writing documents, you can configure any number of 
 [collections](https://docs.marklogic.com/guide/search-dev/collections), any number of 
 [permissions](https://docs.marklogic.com/11.0/guide/security-guide/en/protecting-documents.html), and a 
 [temporal collection](https://docs.marklogic.com/guide/temporal/intro). Collections are useful for organizing documents
-into related sets and provide a convenient mechanism for restricting queries. You will typically want to configure at 
+into related sets and provide a convenient mechanism for queries. You will typically want to configure at 
 least one set of `read` and `update` permissions for your documents to ensure that non-admin users can access your data.
 A temporal collection is only necessary when leveraging MarkLogic's support for querying bi-temporal data. 
 
@@ -106,3 +115,12 @@ to each document before it is written. A transform is configured via the followi
 | --transform | Name of a MarkLogic REST transform to apply to the document before writing it. |
 | --transform-params | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
 | --transform-params-delimiter | Delimiter for `--transform-params`; typically set when a value contains a comma. |
+
+The following shows an example of each option:
+
+```
+--transform my-transform
+--transform-params param1;value1;param2;value2
+--transform-params-delimiter ;
+```
+
