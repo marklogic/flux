@@ -222,7 +222,7 @@ Set `SPARK_HOME` to the location of Spark - e.g. `/Users/myname/.sdkman/candidat
 Next, start a Spark master node:
 
     cd $SPARK_HOME/bin
-    ./start-master.sh
+    start-master.sh
 
 You will need the address at which the Spark master node can be reached. To find it, open the log file that Spark
 created under `$SPARK_HOME/logs` - it will have the word "master" in its filename - and look for text like the following
@@ -232,7 +232,7 @@ near the end of the log file:
 
 Now start a Spark worker node by referencing that address:
 
-    ./start-worker.sh spark://NYWHYC3G0W:7077
+    start-worker.sh spark://NYWHYC3G0W:7077
 
 To verify that Spark is running correctly, go to <http://localhost:8080>. You should see the Spark Master web interface,
 along with a link to the worker that you started. You are now able to run tests against this Spark cluster.
@@ -249,16 +249,18 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/flux-cli-1.0-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
 cluster:
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-cli-1.0-SNAPSHOT-all.jar \
-import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files --preview 5 --preview-drop content
+$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar \
+import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
+--connection-string "admin:admin@localhost:8000" \
+--preview 5 --preview-drop content
 ```
 
 After spark-submit completes, you can refresh <http://localhost:8080> to see evidence of the completed application.
@@ -269,7 +271,7 @@ previewing an import of files from an S3 bucket by including the AWS SDK as pack
 to something you can access :
 
 ```
-$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.cli.Submit \
+$SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-cli-0.1-SNAPSHOT-all.jar \
 import-files --path "s3a://changeme/*.*" --preview 10 --preview-drop content
@@ -295,7 +297,7 @@ Once your cluster is created, you'll add a "Step" in order to run spark-submit:
 
 1. Choose "Spark application" for the type of job.
 2. For "JAR location", select the assembly jar that you uploaded to S3.
-3. For "Spark-submit options", enter `--class com.marklogic.flux.cli.Submit`.
+3. For "Spark-submit options", enter `--class com.marklogic.flux.spark.Submit`.
 4. For "Arguments", enter the CLI command all the args you would normally enter when using the CLI.
 
 If your CLI command will be accessing S3, you most likely should not include `--s3-add-credentials`. The EMR EC2 instance
