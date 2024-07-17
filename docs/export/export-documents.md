@@ -15,7 +15,7 @@ Flux can export documents to files, with each document being written as a separa
 
 ## Usage
 
-The `export-files` command is used to select documents in a MarkLogic database and write them to a filesystem.
+The `export-files` command selects documents in a MarkLogic database and write them to a filesystem.
 You must specify a `--path` option for where files should be written along with connection information for the
 MarkLogic database you wish to write to:
 
@@ -57,7 +57,7 @@ written to a single ZIP file. See the next section on "Understanding partitions"
 
 ## Specifying an encoding
 
-MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
 You can specify an alternate encoding when exporting documents to files via the `--encoding` option - e.g.:
 
     ./bin/flux export-generic-files --path destination --encoding ISO-8859-1 ...

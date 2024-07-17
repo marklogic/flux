@@ -63,7 +63,7 @@ to each document before it is written to an archive. A transform is configured v
 
 ## Specifying an encoding
 
-MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
 You can specify an alternate encoding when exporting archives via the `--encoding` option - e.g.:
 
     ./bin/flux export-archives --path destination --encoding ISO-8859-1 ...
