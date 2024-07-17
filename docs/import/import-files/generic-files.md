@@ -18,11 +18,16 @@ other than potentially decompressing the files.
 
 ## Usage
 
-The `import-files` command is used to import a set of files into MarkLogic, with each file being written as a separate
+The `import-files` command imports a set of files into MarkLogic, with each file being written as a separate
 document. You must specify at least one `--path` option along with connection information for the MarkLogic database
 you wish to write to. For example:
 
-    ./bin/flux import-files --path /path/to/files --connection-string user:password@localhost:8000
+```
+./bin/flux import-files \
+    --path /path/to/files \
+    --connection-string user:password@localhost:8000 \
+    --permissions rest-reader,read,rest-writer,update
+```
 
 ## Controlling document URIs
 
@@ -40,8 +45,8 @@ The value of this option must be one of `JSON`, `XML`, or `TEXT`.
 
 ## Specifying an encoding
 
-MarkLogic stores all data [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
-If your files use a different encoding, you must specify that via the `--encoding` option - e.g.:
+MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
+If your files use a different encoding, you must specify that via the `--encoding` option:
 
     ./bin/flux import-files --path source --encoding ISO-8859-1 ...
 

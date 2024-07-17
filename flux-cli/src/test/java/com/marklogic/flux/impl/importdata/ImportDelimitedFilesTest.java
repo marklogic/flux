@@ -70,6 +70,24 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
+            "--delimiter", ";",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-test",
+            "--uri-template", "/delimited/{number}.json"
+        );
+
+        assertCollectionSize("delimited-test", 3);
+        verifyDoc("/delimited/1.json", 1, "blue", true);
+        verifyDoc("/delimited/2.json", 2, "red", false);
+        verifyDoc("/delimited/3.json", 3, "green", true);
+    }
+
+    @Test
+    void customDelimiterViaSparkOption() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
             "-Psep=;",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,

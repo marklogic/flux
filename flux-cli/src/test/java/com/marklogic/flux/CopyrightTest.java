@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class CopyrightTest {
 
     /**
@@ -37,12 +39,11 @@ class CopyrightTest {
                     try (FileReader reader = new FileReader(file.toFile())) {
                         String content = FileCopyUtils.copyToString(reader);
                         String message = String.format("Does not start with copyright comment: %s", file.toFile().getAbsolutePath());
-                        if (!content.startsWith("/*")) {
-                            throw new RuntimeException(message);
-                        }
-                        if (!content.contains("Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.")) {
-                            throw new RuntimeException(message);
-                        }
+                        assertTrue(content.startsWith("/*"), message);
+                        assertTrue(
+                            content.contains("Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved."),
+                            message
+                        );
                     }
                 }
                 return FileVisitResult.CONTINUE;

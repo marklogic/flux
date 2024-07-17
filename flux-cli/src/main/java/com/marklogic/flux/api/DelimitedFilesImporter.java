@@ -20,6 +20,8 @@ public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter>
     DelimitedFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 
     interface ReadDelimitedFilesOptions extends ReadFilesOptions<ReadDelimitedFilesOptions> {
+        ReadDelimitedFilesOptions delimiter(String delimiter);
+
         ReadDelimitedFilesOptions additionalOptions(Map<String, String> options);
 
         ReadDelimitedFilesOptions groupBy(String columnName);
