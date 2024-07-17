@@ -44,6 +44,9 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
     public static class ReadDelimitedFilesParams extends ReadFilesParams<ReadDelimitedFilesOptions> implements ReadDelimitedFilesOptions {
 
+        @CommandLine.Option(names = "--delimiter", description = "Specify a delimiter; defaults to a comma.")
+        private String delimiter;
+
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
@@ -62,11 +65,20 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
             Map<String, String> options = super.makeOptions();
             options.putIfAbsent("header", "true");
             options.putIfAbsent("inferSchema", "true");
+            if (delimiter != null) {
+                options.putIfAbsent("sep", delimiter);
+            }
             if (encoding != null) {
                 options.putIfAbsent("encoding", encoding);
             }
             options.putAll(additionalOptions);
             return options;
+        }
+
+        @Override
+        public ReadDelimitedFilesOptions delimiter(String delimiter) {
+            this.delimiter = delimiter;
+            return this;
         }
 
         @Override

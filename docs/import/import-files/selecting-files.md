@@ -18,7 +18,9 @@ of specifying paths are described below.
 ## Specifying paths
 
 The `--path` option controls where files are read from. You can specify multiple occurrences of `--path`, each with a 
-different value, to import files from many sources in a single command invocation. 
+different value, to import files from many sources in a single command invocation:
+
+    --path relative/path/to/files --path /absolute/path/to/files
 
 The value of the `--path` option can be any directory or file path. You can use wildcards in any part of the path. For
 example, the following, would select every file starting with `example` in any child directory of the root `/data`
