@@ -138,7 +138,7 @@ you can preview an import without writing any of the data to MarkLogic:
 ```
 
 The number after `--preview` specifies how many records to show. You can use `--preview-drop` to specify potentially
-verbose columns to drop from the preview. And you can use `--preview-vertical` to see the results in a vertical display
+verbose columns to drop from the preview. And you can use `--preview-list` to see the results in a list
 instead of in a table:
 
 ```
@@ -147,7 +147,7 @@ instead of in a table:
     --path export/parquet \
     --preview 10 \
     --preview-drop job_title,department \
-    --preview-vertical
+    --preview-list
 ```
 
 Note that in the case of previewing an import, Flux will show the data as it has been read, which consists of a set of

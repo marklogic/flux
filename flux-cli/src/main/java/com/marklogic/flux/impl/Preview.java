@@ -18,8 +18,8 @@ public class Preview {
     @CommandLine.Option(names = "--preview-drop", description = "Specify one or more columns to drop when using --preview.", arity = "*")
     private List<String> columnsToDrop;
 
-    @CommandLine.Option(names = "--preview-vertical", description = "Preview the data in a vertical format instead of in a table.")
-    private boolean vertical;
+    @CommandLine.Option(names = "--preview-list", description = "Preview the data in a list instead of in a table.")
+    private boolean displayAsList;
 
     @CommandLine.Option(names = "--preview-schema", description = "Show the schema of the data read by the command.")
     private boolean showSchema;
@@ -34,7 +34,7 @@ public class Preview {
         }
         if (numberRows > 0) {
             // Not truncating at all. For now, users can drop columns if their values are too long.
-            datasetPreview.show(numberRows, Integer.MAX_VALUE, vertical);
+            datasetPreview.show(numberRows, Integer.MAX_VALUE, displayAsList);
         }
     }
 

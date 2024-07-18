@@ -21,7 +21,7 @@ class PreviewTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--limit", "1",
             "--preview", "3",
-            "--preview-vertical",
+            "--preview-list",
             "--collections", "sample"
         );
 
@@ -37,7 +37,7 @@ class PreviewTest extends AbstractTest {
             "--path", "src/test/resources/mixed-files",
             "--preview", "2",
             "--preview-drop", "content", "modificationTime",
-            "--preview-vertical",
+            "--preview-list",
             "--collections", "sample"
         );
 
