@@ -5,6 +5,7 @@ package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,6 +45,43 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         doc = readJsonDocument("/json-object/4.json");
         assertEquals(4, doc.get("number").asInt());
         assertEquals("object 4", doc.get("hello").asText());
+    }
+
+    @Test
+    void arrayOfObjects() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "array-objects",
+            "--uri-template", "/array-object/{number}.json"
+        );
+
+        assertCollectionSize("array-objects", 2);
+        JsonNode doc = readJsonDocument("/array-object/1.json");
+        assertEquals("world", doc.get("hello").asText());
+        doc = readJsonDocument("/array-object/2.json");
+        assertEquals("This is different from the first object.", doc.get("description").asText());
+    }
+
+    @Test
+    void arrayOfObjectsAsXml() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "array-objects",
+            "--xml-root-name", "test",
+            "--uri-template", "/array-object/{number}.xml"
+        );
+
+        assertCollectionSize("array-objects", 2);
+        XmlNode doc = readXmlDocument("/array-object/1.xml");
+        doc.assertElementValue("/test/hello", "world");
+        doc = readXmlDocument("/array-object/2.xml");
+        doc.assertElementValue("/test/description", "This is different from the first object.");
     }
 
     @Test
