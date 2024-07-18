@@ -13,7 +13,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-json-files",
-    description = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
+    description = "Read either JSON Lines files or files containing arrays of JSON objects from " +
+        "local, HDFS, and S3 locations using Spark's support " +
     "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
     "as a JSON document to MarkLogic."
 )

@@ -6,8 +6,10 @@ grand_parent: Importing Data
 nav_order: 4
 ---
 
-Flux can import JSON files - both files containing JSON objects and arrays and also files conforming to the 
-[JSON Lines format](https://jsonlines.org/).
+Flux provides special handling for JSON files that either conform to the
+[JSON Lines format](https://jsonlines.org/) or contain arrays of objects, where each object should become a separate 
+document in MarkLogic. If you wish to import JSON files as-is, you may find it simpler to 
+[import them as generic files](generic-files.md) instead. 
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -17,11 +19,9 @@ Flux can import JSON files - both files containing JSON objects and arrays and a
 
 ## Usage
 
-The `import-json-files` command reads JSON files and writes the contents of each file as one or more JSON
-documents in MarkLogic. If a file contains a single JSON object, it will be written as a single document to MarkLogic.
-If a file contains an array of JSON objects, each object will be written as a separate document to MarkLogic. To avoid
-this behavior for an array of JSON objects, use the `import-files` command instead which loads files without any 
-additional processing.
+The `import-json-files` command defaults to writing a single document to MarkLogic if a file contains a
+JSON object and writing multiple documents to MarkLogic if a file contains an array of JSON objects. If you would 
+rather a file with an array of object be written as a single document, use the `import-files` command instead.
 
 You must specify at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
