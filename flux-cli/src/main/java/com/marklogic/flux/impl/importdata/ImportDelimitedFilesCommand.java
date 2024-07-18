@@ -5,6 +5,7 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.DelimitedFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import com.marklogic.flux.impl.SparkUtil;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -51,6 +52,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         private String encoding;
 
         @CommandLine.Option(
+            names = "--uri-include-file-path",
+            description = "If true, each document URI will include the path of the originating file."
+        )
+        private boolean uriIncludeFilePath;
+
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark CSV option defined at " +
                 "%nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
@@ -94,6 +101,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         }
 
         @Override
+        public ReadDelimitedFilesOptions uriIncludeFilePath(boolean value) {
+            this.uriIncludeFilePath = value;
+            return this;
+        }
+
+        @Override
         public ReadDelimitedFilesOptions groupBy(String columnName) {
             aggregationParams.setGroupBy(columnName);
             return this;
@@ -108,6 +121,9 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        if (readParams.uriIncludeFilePath) {
+            dataset = SparkUtil.addFilePathColumn(dataset);
+        }
         return readParams.aggregationParams.applyGroupBy(dataset);
     }
 

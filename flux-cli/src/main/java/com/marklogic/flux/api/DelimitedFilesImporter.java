@@ -29,5 +29,7 @@ public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter>
         ReadDelimitedFilesOptions aggregateColumns(String newColumnName, String... columns);
 
         ReadDelimitedFilesOptions encoding(String encoding);
+
+        ReadDelimitedFilesOptions uriIncludeFilePath(boolean value);
     }
 }

@@ -36,6 +36,24 @@ class ImportParquetFilesTest extends AbstractTest {
     }
 
     @Test
+    void uriIncludeFilePath() {
+        run(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "parquet-test",
+            "--uri-include-file-path",
+            "--uri-replace", ".*/individual,''"
+        );
+
+        getUrisInCollection("parquet-test", 32).forEach(uri -> {
+            assertTrue(uri.startsWith("/cars.parquet/"), "Actual URI: " + uri);
+            assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
+        });
+    }
+
+    @Test
     void aggregate() {
         run(
             "import-parquet-files",
