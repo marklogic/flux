@@ -19,7 +19,7 @@ import java.util.function.Supplier;
     name = "import-aggregate-xml-files",
     description = "Read aggregate XML files from local, HDFS, and S3 locations with each row being written to MarkLogic."
 )
-public class ImportAggregateXmlCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
+public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<AggregateXmlFilesImporter> implements AggregateXmlFilesImporter {
 
     @CommandLine.Mixin
     private ReadXmlFilesParams readParams = new ReadXmlFilesParams();

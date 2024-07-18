@@ -7,21 +7,27 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using
+ * Read either JSON Lines files or files containing arrays of JSON objects from local, HDFS, and S3 locations using
  * <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support</a>,
  * and write each object as a JSON document to MarkLogic.
  */
-public interface JsonFilesImporter extends Executor<JsonFilesImporter> {
+public interface AggregateJsonFilesImporter extends Executor<AggregateJsonFilesImporter> {
 
     interface ReadJsonFilesOptions extends ReadFilesOptions<ReadJsonFilesOptions> {
+        /**
+         * @param value set to true to read JSON Lines files. Defaults to reading files that either contain an array
+         *              of JSON objects or a single JSON object.
+         */
         ReadJsonFilesOptions jsonLines(Boolean value);
+
         ReadJsonFilesOptions encoding(String encoding);
+
         ReadJsonFilesOptions additionalOptions(Map<String, String> additionalOptions);
     }
 
-    JsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer);
+    AggregateJsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer);
 
-    JsonFilesImporter from(String... paths);
+    AggregateJsonFilesImporter from(String... paths);
 
-    JsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
+    AggregateJsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer);
 }

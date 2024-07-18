@@ -10,12 +10,12 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ImportJsonFilesOptionsTest extends AbstractOptionsTest {
+class ImportAggregateJsonFilesOptionsTest extends AbstractOptionsTest {
 
     @Test
     void test() {
-        ImportJsonFilesCommand command = (ImportJsonFilesCommand) getCommand(
-            "import-json-files",
+        ImportAggregateJsonFilesCommand command = (ImportAggregateJsonFilesCommand) getCommand(
+            "import-aggregate-json-files",
             "--path", "anywhere",
             "--encoding", "UTF-16"
         );

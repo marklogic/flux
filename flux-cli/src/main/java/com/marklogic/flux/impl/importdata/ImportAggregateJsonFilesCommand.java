@@ -3,7 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.api.JsonFilesImporter;
+import com.marklogic.flux.api.AggregateJsonFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import picocli.CommandLine;
 
@@ -12,12 +12,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @CommandLine.Command(
-    name = "import-json-files",
-    description = "Read JSON files, including JSON Lines files, from local, HDFS, and S3 locations using Spark's support " +
+    name = "import-aggregate-json-files",
+    description = "Read either JSON Lines files or files containing arrays of JSON objects from " +
+        "local, HDFS, and S3 locations using Spark's support " +
     "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
     "as a JSON document to MarkLogic."
 )
-public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFilesImporter> implements JsonFilesImporter {
+public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<AggregateJsonFilesImporter> implements AggregateJsonFilesImporter {
 
     @CommandLine.Mixin
     private ReadJsonFilesParams readParams = new ReadJsonFilesParams();
@@ -93,19 +94,19 @@ public class ImportJsonFilesCommand extends AbstractImportFilesCommand<JsonFiles
     }
 
     @Override
-    public JsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer) {
+    public AggregateJsonFilesImporter from(Consumer<ReadJsonFilesOptions> consumer) {
         consumer.accept(readParams);
         return this;
     }
 
     @Override
-    public JsonFilesImporter from(String... paths) {
+    public AggregateJsonFilesImporter from(String... paths) {
         readParams.paths(paths);
         return this;
     }
 
     @Override
-    public JsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
+    public AggregateJsonFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

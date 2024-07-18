@@ -69,11 +69,19 @@ public abstract class Flux {
     }
 
     /**
+     * @return an object that can import aggregate JSON files, where the files to import either contains an array of
+     * JSON objects or conforms to the JSON Lines format.
+     */
+    public static AggregateJsonFilesImporter importAggregateJsonFiles() {
+        return new ImportAggregateJsonFilesCommand();
+    }
+
+    /**
      * @return an object that can import aggregate XML files, where each instance of a particular child element is
      * written to MarkLogic as a separate document.
      */
     public static AggregateXmlFilesImporter importAggregateXmlFiles() {
-        return new ImportAggregateXmlCommand();
+        return new ImportAggregateXmlFilesCommand();
     }
 
     /**
@@ -101,10 +109,6 @@ public abstract class Flux {
 
     public static JdbcImporter importJdbc() {
         return new ImportJdbcCommand();
-    }
-
-    public static JsonFilesImporter importJsonFiles() {
-        return new ImportJsonFilesCommand();
     }
 
     /**
