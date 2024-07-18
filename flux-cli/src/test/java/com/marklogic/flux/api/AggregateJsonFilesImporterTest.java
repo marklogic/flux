@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class JsonFilesImporterTest extends AbstractTest {
+class AggregateJsonFilesImporterTest extends AbstractTest {
 
     @Test
     void test() {
-        Flux.importJsonFiles()
+        Flux.importAggregateJsonFiles()
             .connectionString(makeConnectionString())
             .from(options -> options
                 .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
@@ -41,7 +41,7 @@ class JsonFilesImporterTest extends AbstractTest {
 
     @Test
     void missingPath() {
-        JsonFilesImporter importer = Flux.importJsonFiles()
+        AggregateJsonFilesImporter importer = Flux.importAggregateJsonFiles()
             .connectionString(makeConnectionString());
 
         FluxException ex = assertThrowsFluxException(() -> importer.execute());

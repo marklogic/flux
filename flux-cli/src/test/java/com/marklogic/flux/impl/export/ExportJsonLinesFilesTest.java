@@ -29,7 +29,7 @@ class ExportJsonLinesFilesTest extends AbstractTest {
 
         // Import in to verify.
         run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--json-lines",
             "--connection-string", makeConnectionString(),

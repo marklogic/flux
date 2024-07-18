@@ -42,11 +42,11 @@ include the following option:
 The `--uri-template` option supports configuring a URI based on a JSON representation of each record that a command
 reads from its associated data source. This option is supported for the following commands:
 
+- `import-aggregate-json-files`
 - `import-avro-files`
 - `import-delimited-files`
 - `import-files`, but only for JSON files and JSON entries in zip files.
 - `import-jdbc`
-- `import-json-files`
 - `import-orc-files`
 - `import-parquet-files`
 

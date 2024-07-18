@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ImportJsonFilesTest extends AbstractTest {
+class ImportAggregateJsonFilesTest extends AbstractTest {
 
     /**
      * Verifies that both files containing a single object and files containing an array of objects can be read, with
@@ -18,7 +18,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void objectFilesAndArrayOfObjectsFile() {
         run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/json-files",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -49,7 +49,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonLines() {
         run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--json-lines",
             "--connection-string", makeConnectionString(),
@@ -67,7 +67,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonRootName() {
         run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--json-lines",
             "--connection-string", makeConnectionString(),
@@ -84,7 +84,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void jsonLinesWithCustomDelimiter() {
         run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/custom-delimiter-json.txt",
             "--json-lines",
             "-PlineSep=:\n",
@@ -133,7 +133,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void dontAbortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--json-lines",
@@ -155,7 +155,7 @@ class ImportJsonFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
-            "import-json-files",
+            "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--json-lines",
