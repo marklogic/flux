@@ -18,6 +18,8 @@ class DocumentCopierTest extends AbstractTest {
             .to(options -> options
                 .collections("author-copies")
                 .uriPrefix("/copied")
+                .batchSize(5)
+                .logProgress(5)
                 .permissionsString(DEFAULT_PERMISSIONS))
             .execute();
 

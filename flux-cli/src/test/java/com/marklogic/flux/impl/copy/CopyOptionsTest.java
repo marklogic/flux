@@ -170,6 +170,10 @@ class CopyOptionsTest extends AbstractOptionsTest {
                 count++;
             }
         }
+        // Add 1 to account for "--log-progress", which does not have the "output" prefix but is still treated as a
+        // "write" param. It does not have "output" prefixed to it since it is considered a "common" option that isn't
+        // yet supported for Export commands.
+        count++;
         return count;
     }
 }

@@ -37,6 +37,24 @@ class ReprocessTest extends AbstractTest {
         }
     }
 
+    /**
+     * This is used primarily for manual inspection of the progress messages. We don't yet have a reliable way of
+     * asserting on log messages, so using manual inspection for now.
+     */
+    @Test
+    void logProgressTest() {
+        run(
+            "reprocess",
+            "--connection-string", makeConnectionString(),
+            "--read-xquery", "for $i in 1 to 100 return $i",
+            "--write-invoke", "/writeDocument.sjs",
+            "--write-var", "theValue=my value",
+            "--log-progress", "10"
+        );
+
+        assertCollectionSize("reprocess-test", 100);
+    }
+
     @Test
     void missingReadParam() {
         String stderr = runAndReturnStderr(() -> run(

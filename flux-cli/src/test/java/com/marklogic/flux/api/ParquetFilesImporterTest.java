@@ -23,7 +23,9 @@ class ParquetFilesImporterTest extends AbstractTest {
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("parquet-test")
-                .uriTemplate("/parquet/{color}.json"))
+                .uriTemplate("/parquet/{color}.json")
+                .batchSize(3)
+                .logProgress(6))
             .execute();
 
         assertCollectionSize("parquet-test", 6);

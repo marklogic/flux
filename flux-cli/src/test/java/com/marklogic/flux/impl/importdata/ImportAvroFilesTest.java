@@ -21,7 +21,11 @@ class ImportAvroFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "--uri-template", "/avro/{color}.json"
+            "--uri-template", "/avro/{color}.json",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         assertCollectionSize("avro-test", 6);

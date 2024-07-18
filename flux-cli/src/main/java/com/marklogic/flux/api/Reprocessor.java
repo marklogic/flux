@@ -55,6 +55,8 @@ public interface Reprocessor extends Executor<Reprocessor> {
         WriteOptions abortOnWriteFailure(Boolean value);
 
         WriteOptions batchSize(Integer batchSize);
+
+        WriteOptions logProgress(Integer numberOfItems);
     }
 
     Reprocessor from(Consumer<ReadOptions> consumer);

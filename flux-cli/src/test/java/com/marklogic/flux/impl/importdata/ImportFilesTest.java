@@ -32,7 +32,11 @@ class ImportFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
-            "--uri-replace", ".*/mixed-files,''"
+            "--uri-replace", ".*/mixed-files,''",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         verifyDocsWereWritten(uris.length, uris);

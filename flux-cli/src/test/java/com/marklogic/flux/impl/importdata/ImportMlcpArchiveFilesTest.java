@@ -21,7 +21,11 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
         run(
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
-            "--connection-string", makeConnectionString()
+            "--connection-string", makeConnectionString(),
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         for (String uri : getUrisInCollection("collection1", 2)) {

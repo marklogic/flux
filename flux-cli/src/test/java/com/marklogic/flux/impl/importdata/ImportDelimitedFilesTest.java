@@ -24,7 +24,11 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
-            "--uri-template", "/delimited/{number}.json"
+            "--uri-template", "/delimited/{number}.json",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         assertCollectionSize("delimited-test", 3);

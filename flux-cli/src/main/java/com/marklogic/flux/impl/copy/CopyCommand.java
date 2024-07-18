@@ -79,6 +79,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private String failedDocumentsPath;
 
         @CommandLine.Option(
+            names = "--log-progress",
+            description = "Log a count of documents written every time this many documents are written."
+        )
+        private Integer logProgress;
+
+        @CommandLine.Option(
             names = "--output-permissions",
             description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each document - e.g. role1,read,role2,update,role3,execute."
         )
@@ -153,6 +159,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
                 Options.WRITE_COLLECTIONS, collections,
+                Options.WRITE_LOG_PROGRESS, logProgress != null ? logProgress.toString() : null,
                 Options.WRITE_PERMISSIONS, permissions,
                 Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
                 Options.WRITE_THREAD_COUNT, threadCount != null ? threadCount.toString() : null,
@@ -194,6 +201,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams failedDocumentsPath(String path) {
             this.failedDocumentsPath = path;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsParams logProgress(Integer numberOfDocuments) {
+            this.logProgress = numberOfDocuments;
             return this;
         }
 
