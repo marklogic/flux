@@ -15,11 +15,11 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
 
         WriteGenericFilesOptions compressionType(CompressionType compressionType);
 
-        WriteGenericFilesOptions prettyPrint(Boolean value);
+        WriteGenericFilesOptions prettyPrint(boolean value);
 
         WriteGenericFilesOptions encoding(String encoding);
 
-        WriteGenericFilesOptions zipFileCount(Integer zipFileCount);
+        WriteGenericFilesOptions zipFileCount(int zipFileCount);
 
         WriteGenericFilesOptions s3AddCredentials();
 

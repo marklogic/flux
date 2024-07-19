@@ -5,7 +5,7 @@ package com.marklogic.flux.api;
 
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
-    T abortOnWriteFailure(Boolean value);
+    T abortOnWriteFailure(boolean value);
 
     T batchSize(int batchSize);
 
@@ -15,7 +15,7 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T failedDocumentsPath(String path);
 
-    T logProgress(Integer numberOfDocuments);
+    T logProgress(int numberOfDocuments);
 
     T permissionsString(String rolesAndCapabilities);
 

@@ -20,7 +20,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     private S3Params s3Params = new S3Params();
 
     @CommandLine.Option(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
-    protected Integer fileCount;
+    protected int fileCount;
 
     public String getPath() {
         return path;
@@ -30,7 +30,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
         return s3Params;
     }
 
-    public Integer getFileCount() {
+    public int getFileCount() {
         return fileCount;
     }
 
@@ -76,7 +76,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     @Override
-    public T fileCount(Integer fileCount) {
+    public T fileCount(int fileCount) {
         this.fileCount = fileCount;
         return (T) this;
     }

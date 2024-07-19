@@ -81,7 +81,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
         names = "--disable-gzipped-responses",
         description = "If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
     )
-    public ConnectionOptions disableGzippedResponses(Boolean disableGzippedResponses) {
+    public ConnectionOptions disableGzippedResponses(boolean disableGzippedResponses) {
         this.disableGzippedResponses = disableGzippedResponses;
         return this;
     }

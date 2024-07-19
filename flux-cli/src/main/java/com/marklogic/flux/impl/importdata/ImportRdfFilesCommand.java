@@ -48,14 +48,14 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
         private CompressionType compressionType;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private Integer partitions;
+        private int partitions;
 
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "rdf",
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
+                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
             );
         }
 
@@ -66,7 +66,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
         }
 
         @Override
-        public ReadRdfFilesOptions partitions(Integer partitions) {
+        public ReadRdfFilesOptions partitions(int partitions) {
             this.partitions = partitions;
             return this;
         }

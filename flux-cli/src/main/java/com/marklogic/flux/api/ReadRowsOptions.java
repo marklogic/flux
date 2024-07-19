@@ -7,9 +7,9 @@ public interface ReadRowsOptions {
 
     ReadRowsOptions opticQuery(String opticQuery);
 
-    ReadRowsOptions disableAggregationPushDown(Boolean value);
+    ReadRowsOptions disableAggregationPushDown(boolean value);
 
-    ReadRowsOptions batchSize(Integer batchSize);
+    ReadRowsOptions batchSize(int batchSize);
 
-    ReadRowsOptions partitions(Integer partitions);
+    ReadRowsOptions partitions(int partitions);
 }

@@ -23,7 +23,7 @@ public interface ReadDocumentsOptions<T extends ReadDocumentsOptions> {
 
     T transformParamsDelimiter(String delimiter);
 
-    T batchSize(Integer batchSize);
+    T batchSize(int batchSize);
 
-    T partitionsPerForest(Integer partitionsPerForest);
+    T partitionsPerForest(int partitionsPerForest);
 }

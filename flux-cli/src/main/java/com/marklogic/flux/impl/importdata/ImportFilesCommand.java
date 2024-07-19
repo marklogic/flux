@@ -67,7 +67,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private Integer partitions;
+        private int partitions;
 
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
@@ -84,14 +84,14 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null,
+                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.READ_FILES_ENCODING, encoding
             );
         }
 
         @Override
-        public ReadGenericFilesOptions partitions(Integer partitions) {
+        public ReadGenericFilesOptions partitions(int partitions) {
             this.partitions = partitions;
             return this;
         }

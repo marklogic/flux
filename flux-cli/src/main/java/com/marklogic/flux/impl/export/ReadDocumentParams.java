@@ -54,10 +54,10 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     private String transformParamsDelimiter;
 
     @CommandLine.Option(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
-    private Integer batchSize = 500;
+    private int batchSize = 500;
 
     @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
-    private Integer partitionsPerForest = 4;
+    private int partitionsPerForest = 4;
 
     public void verifyAtLeastOneQueryOptionIsSet(String verbForErrorMessage) {
         if (makeQueryOptions().isEmpty()) {
@@ -72,8 +72,8 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
             Options.READ_DOCUMENTS_TRANSFORM, transform,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS, transformParams,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
-            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
-            Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest != null ? partitionsPerForest.toString() : null
+            Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+            Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest)
         );
     }
 
@@ -142,13 +142,13 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     }
 
     @Override
-    public T batchSize(Integer batchSize) {
+    public T batchSize(int batchSize) {
         this.batchSize = batchSize;
         return (T) this;
     }
 
     @Override
-    public T partitionsPerForest(Integer partitionsPerForest) {
+    public T partitionsPerForest(int partitionsPerForest) {
         this.partitionsPerForest = partitionsPerForest;
         return (T) this;
     }

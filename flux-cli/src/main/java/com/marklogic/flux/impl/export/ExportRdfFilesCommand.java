@@ -46,8 +46,8 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        final Integer fileCount = writeParams.getFileCount();
-        if (fileCount != null && fileCount > 0) {
+        final int fileCount = writeParams.getFileCount();
+        if (fileCount > 0) {
             getCommonParams().setRepartition(fileCount);
         }
         return reader.format(MARKLOGIC_CONNECTOR)
@@ -95,10 +95,10 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         private String baseIri;
 
         @CommandLine.Option(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
-        private Integer batchSize = 100;
+        private int batchSize = 100;
 
         @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
-        private Integer partitionsPerForest = 4;
+        private int partitionsPerForest = 4;
 
         public Map<String, String> getQueryOptions() {
             return OptionsUtil.makeOptions(
@@ -116,8 +116,8 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
             return OptionsUtil.addOptions(getQueryOptions(),
                 Options.READ_TRIPLES_OPTIONS, options,
                 Options.READ_TRIPLES_BASE_IRI, baseIri,
-                Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, partitionsPerForest.toString(),
-                Options.READ_BATCH_SIZE, batchSize.toString()
+                Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest),
+                Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize)
             );
         }
 
@@ -170,13 +170,13 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         }
 
         @Override
-        public RdfFilesExporter.ReadTriplesDocumentsOptions batchSize(Integer batchSize) {
+        public RdfFilesExporter.ReadTriplesDocumentsOptions batchSize(int batchSize) {
             this.batchSize = batchSize;
             return this;
         }
 
         @Override
-        public RdfFilesExporter.ReadTriplesDocumentsOptions partitionsPerForest(Integer partitionsPerForest) {
+        public RdfFilesExporter.ReadTriplesDocumentsOptions partitionsPerForest(int partitionsPerForest) {
             this.partitionsPerForest = partitionsPerForest;
             return this;
         }

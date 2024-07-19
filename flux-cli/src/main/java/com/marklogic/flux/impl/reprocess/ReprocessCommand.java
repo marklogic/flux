@@ -345,19 +345,19 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             names = "--abort-on-write-failure",
             description = "Causes the command to fail when a batch of documents cannot be written to MarkLogic."
         )
-        private Boolean abortOnWriteFailure;
+        private boolean abortOnWriteFailure;
 
         @CommandLine.Option(
             names = "--batch-size",
             description = "The number of values sent to the code for writing data in a single call."
         )
-        private Integer batchSize = 1;
+        private int batchSize = 1;
 
         @CommandLine.Option(
             names = "--log-progress",
             description = "Log a count of items processed every time this many items are processed."
         )
-        private Integer logProgress;
+        private int logProgress;
 
         public void validateWriter() {
             Map<String, String> options = get();
@@ -377,9 +377,9 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 Options.WRITE_XQUERY_FILE, writeXqueryFile,
                 Options.WRITE_EXTERNAL_VARIABLE_NAME, externalVariableName,
                 Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, externalVariableDelimiter,
-                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
-                Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
-                Options.WRITE_LOG_PROGRESS, logProgress != null ? logProgress.toString() : null
+                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
+                Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+                Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress)
             );
 
             if (writeVars != null) {
@@ -446,19 +446,19 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         }
 
         @Override
-        public WriteOptions abortOnWriteFailure(Boolean value) {
+        public WriteOptions abortOnWriteFailure(boolean value) {
             this.abortOnWriteFailure = value;
             return this;
         }
 
         @Override
-        public WriteOptions batchSize(Integer batchSize) {
+        public WriteOptions batchSize(int batchSize) {
             this.batchSize = batchSize;
             return this;
         }
 
         @Override
-        public WriteOptions logProgress(Integer numberOfItems) {
+        public WriteOptions logProgress(int numberOfItems) {
             this.logProgress = numberOfItems;
             return this;
         }

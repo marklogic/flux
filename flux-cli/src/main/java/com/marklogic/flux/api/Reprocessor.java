@@ -52,11 +52,11 @@ public interface Reprocessor extends Executor<Reprocessor> {
 
         WriteOptions vars(Map<String, String> namesAndValues);
 
-        WriteOptions abortOnWriteFailure(Boolean value);
+        WriteOptions abortOnWriteFailure(boolean value);
 
-        WriteOptions batchSize(Integer batchSize);
+        WriteOptions batchSize(int batchSize);
 
-        WriteOptions logProgress(Integer numberOfItems);
+        WriteOptions logProgress(int numberOfItems);
     }
 
     Reprocessor from(Consumer<ReadOptions> consumer);

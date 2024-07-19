@@ -52,7 +52,7 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private Integer partitions;
+        private int partitions;
 
         @Override
         public Map<String, String> makeOptions() {
@@ -60,7 +60,7 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
                 Options.READ_FILES_TYPE, "mlcp_archive",
                 Options.READ_ARCHIVES_CATEGORIES, categories,
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
+                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
             );
         }
 
@@ -77,7 +77,7 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         }
 
         @Override
-        public ReadMlcpArchiveFilesOptions partitions(Integer partitions) {
+        public ReadMlcpArchiveFilesOptions partitions(int partitions) {
             this.partitions = partitions;
             return this;
         }

@@ -44,8 +44,8 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        final Integer zipFileCount = writeParams.zipFileCount;
-        if (zipFileCount != null && zipFileCount > 0) {
+        final int zipFileCount = writeParams.zipFileCount;
+        if (zipFileCount > 0) {
             getCommonParams().setRepartition(zipFileCount);
         }
         return reader.format(MARKLOGIC_CONNECTOR)
@@ -77,19 +77,19 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         private CompressionType compressionType;
 
         @CommandLine.Option(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")
-        private Boolean prettyPrint;
+        private boolean prettyPrint;
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding for writing files.")
         private String encoding;
 
         @CommandLine.Option(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
-        private Integer zipFileCount;
+        private int zipFileCount;
 
         @Override
         public Map<String, String> get() {
             return OptionsUtil.makeOptions(
                 Options.WRITE_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint != null ? prettyPrint.toString() : null,
+                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint ? "true": null,
                 Options.WRITE_FILES_ENCODING, encoding
             );
         }
@@ -107,7 +107,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         @Override
-        public WriteGenericFilesOptions prettyPrint(Boolean value) {
+        public WriteGenericFilesOptions prettyPrint(boolean value) {
             this.prettyPrint = value;
             return this;
         }
@@ -119,7 +119,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         @Override
-        public WriteGenericFilesOptions zipFileCount(Integer zipFileCount) {
+        public WriteGenericFilesOptions zipFileCount(int zipFileCount) {
             this.zipFileCount = zipFileCount;
             return this;
         }

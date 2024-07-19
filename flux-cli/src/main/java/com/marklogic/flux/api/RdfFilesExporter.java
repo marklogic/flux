@@ -28,9 +28,9 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
 
         ReadTriplesDocumentsOptions baseIri(String baseIri);
 
-        ReadTriplesDocumentsOptions batchSize(Integer batchSize);
+        ReadTriplesDocumentsOptions batchSize(int batchSize);
 
-        ReadTriplesDocumentsOptions partitionsPerForest(Integer partitionsPerForest);
+        ReadTriplesDocumentsOptions partitionsPerForest(int partitionsPerForest);
     }
 
     interface WriteRdfFilesOptions extends WriteFilesOptions<WriteRdfFilesOptions> {

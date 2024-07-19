@@ -9,9 +9,9 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T filter(String filter);
 
-    T recursiveFileLookup(Boolean value);
+    T recursiveFileLookup(boolean value);
 
-    T abortOnReadFailure(Boolean value);
+    T abortOnReadFailure(boolean value);
 
     T s3AddCredentials();
 

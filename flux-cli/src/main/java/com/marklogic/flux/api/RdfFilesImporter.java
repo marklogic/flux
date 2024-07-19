@@ -12,7 +12,7 @@ public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
 
     interface ReadRdfFilesOptions extends ReadFilesOptions<ReadRdfFilesOptions> {
         ReadRdfFilesOptions compressionType(CompressionType compressionType);
-        ReadRdfFilesOptions partitions(Integer partitions);
+        ReadRdfFilesOptions partitions(int partitions);
     }
 
     interface WriteTriplesDocumentsOptions extends WriteDocumentsOptions<WriteTriplesDocumentsOptions> {

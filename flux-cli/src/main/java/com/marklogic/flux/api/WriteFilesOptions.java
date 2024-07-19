@@ -7,7 +7,7 @@ public interface WriteFilesOptions<T extends WriteFilesOptions> {
 
     T path(String path);
 
-    T fileCount(Integer fileCount);
+    T fileCount(int fileCount);
 
     T s3AddCredentials();
 

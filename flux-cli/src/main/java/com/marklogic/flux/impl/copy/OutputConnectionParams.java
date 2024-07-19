@@ -103,7 +103,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     }
 
     @Override
-    public ConnectionOptions disableGzippedResponses(Boolean value) {
+    public ConnectionOptions disableGzippedResponses(boolean value) {
         // disableGzippedResponses doesn't apply for the output connection for a COPY procedure.
         return this;
     }

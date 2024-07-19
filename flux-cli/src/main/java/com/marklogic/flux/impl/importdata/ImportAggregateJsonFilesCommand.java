@@ -50,7 +50,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
             names = "--json-lines",
             description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
         )
-        private Boolean jsonLines;
+        private boolean jsonLines;
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
@@ -73,7 +73,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
             Map<String, String> options = super.makeOptions();
             // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
             // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
-            if (jsonLines == null || !jsonLines.booleanValue()) {
+            if (!jsonLines) {
                 options.put("multiLine", "true");
             }
             if (encoding != null) {
@@ -84,7 +84,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         }
 
         @Override
-        public ReadJsonFilesOptions jsonLines(Boolean value) {
+        public ReadJsonFilesOptions jsonLines(boolean value) {
             this.jsonLines = value;
             return this;
         }

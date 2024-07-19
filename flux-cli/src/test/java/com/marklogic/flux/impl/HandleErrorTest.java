@@ -121,6 +121,6 @@ class HandleErrorTest extends AbstractTest {
         ));
 
         assertFalse(stderr.contains("Command failed"), "The command should not have failed since it defaults to not " +
-            "aborting on a write failure.");
+            "aborting on a write failure. Actual stderr: " + stderr);
     }
 }

@@ -18,7 +18,7 @@ public interface AggregateJsonFilesImporter extends Executor<AggregateJsonFilesI
          * @param value set to true to read JSON Lines files. Defaults to reading files that either contain an array
          *              of JSON objects or a single JSON object.
          */
-        ReadJsonFilesOptions jsonLines(Boolean value);
+        ReadJsonFilesOptions jsonLines(boolean value);
 
         ReadJsonFilesOptions encoding(String encoding);
 

@@ -50,7 +50,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         private String categories;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private Integer partitions;
+        private int partitions;
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
@@ -61,7 +61,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
                 Options.READ_FILES_TYPE, "archive",
                 Options.READ_FILES_ENCODING, encoding,
                 Options.READ_ARCHIVES_CATEGORIES, categories,
-                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
+                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
             );
         }
 
@@ -78,7 +78,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         }
 
         @Override
-        public ReadArchiveFilesOptions partitions(Integer partitions) {
+        public ReadArchiveFilesOptions partitions(int partitions) {
             this.partitions = partitions;
             return this;
         }
