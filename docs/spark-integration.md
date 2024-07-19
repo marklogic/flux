@@ -52,9 +52,9 @@ to the Flux jar - the "application jar" - must be globally visible inside your c
 If you wish to run a Flux command that accesses an S3 path, you must use the `--packages` option with `spark-submit`
 to include the necessary dependencies to allow for Spark to access S3, as shown below:
 
-    --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6
+    --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4
 
-The above packages are not included in the Flux jar file, as the version required by your Spark cluster may differ. 
+The above packages are not included in the Flux jar file, as the version required by your Spark cluster may differ.
 
 ### Using Avro data with spark-submit
 
