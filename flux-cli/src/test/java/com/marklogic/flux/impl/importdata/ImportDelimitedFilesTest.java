@@ -38,6 +38,28 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void useFilePathInUri() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-test",
+            "--uri-include-file-path",
+            "--uri-replace", ".*resources,''"
+        );
+
+        getUrisInCollection("delimited-test", 3).forEach(uri -> {
+            assertTrue(uri.startsWith("/delimited-files/three-rows.csv/"),
+                "--uri-include-file-path should tell Flux to add a column named 'marklogic_spark_file_path' that " +
+                    "contains the Spark-determined file path from which a row originates. It should then be " +
+                    "prepended onto the initial URI for a row, followed by a UUID to guarantee uniqueness. " +
+                    "Actual URI: " + uri);
+            assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
+        });
+    }
+
+    @Test
     void jsonRootName() {
         run(
             "import-delimited-files",

@@ -4,6 +4,9 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.SaveMode;
+import org.apache.spark.sql.Column;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 public class SparkUtil {
@@ -44,5 +47,13 @@ public class SparkUtil {
             return org.apache.spark.sql.SaveMode.Overwrite;
         }
         return null;
+    }
+
+    public static Dataset<Row> addFilePathColumn(Dataset<Row> dataset) {
+        // The MarkLogic Spark connector has special processing for this column. If it's found by the writer, the
+        // value of this column will be used to construct an initial URI for the associated document. The column
+        // will then have its value set to null so that the value is not included in the JSON or XML
+        // serialization of the row.
+        return dataset.withColumn("marklogic_spark_file_path", new Column("_metadata.file_path"));
     }
 }

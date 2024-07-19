@@ -38,6 +38,25 @@ class ImportAvroFilesTest extends AbstractTest {
     }
 
     @Test
+    void uriIncludeFilePath() {
+        run(
+            "import-avro-files",
+            "--path", "src/test/resources/avro/colors.avro",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--xml-root-name", "myAvroData",
+            "--collections", "avro-test",
+            "--uri-include-file-path",
+            "--uri-replace", ".*/resources,''"
+        );
+
+        getUrisInCollection("avro-test", 3).forEach(uri -> {
+            assertTrue(uri.startsWith("/avro/colors.avro/"), "Actual URI: " + uri);
+            assertTrue(uri.endsWith(".xml"), "Actual URI: " + uri);
+        });
+    }
+
+    @Test
     void jsonRootName() {
         run(
             "import-avro-files",

@@ -48,6 +48,24 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     }
 
     @Test
+    void uriIncludeFilePath() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "array-objects",
+            "--uri-include-file-path",
+            "--uri-replace", ".*resources,''"
+        );
+
+        getUrisInCollection("array-objects", 2).forEach(uri -> {
+            assertTrue(uri.startsWith("/json-files/array-of-objects.json/"), "Actual URI: " + uri);
+            assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
+        });
+    }
+
+    @Test
     void arrayOfObjects() {
         run(
             "import-aggregate-json-files",

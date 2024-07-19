@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.ParquetFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import com.marklogic.flux.impl.SparkUtil;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -46,6 +47,12 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
     public static class ReadParquetFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
 
         @CommandLine.Option(
+            names = "--uri-include-file-path",
+            description = "If true, each document URI will include the path of the originating file."
+        )
+        private boolean uriIncludeFilePath;
+
+        @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark Parquet data source option defined at " +
                 "%nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
@@ -80,10 +87,19 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
             aggregationParams.addAggregationExpression(newColumnName, columns);
             return this;
         }
+
+        @Override
+        public ReadTabularFilesOptions uriIncludeFilePath(boolean value) {
+            this.uriIncludeFilePath = value;
+            return this;
+        }
     }
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        if (readParams.uriIncludeFilePath) {
+            dataset = SparkUtil.addFilePathColumn(dataset);
+        }
         return readParams.aggregationParams.applyGroupBy(dataset);
     }
 

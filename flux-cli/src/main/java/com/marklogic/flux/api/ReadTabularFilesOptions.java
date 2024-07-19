@@ -16,4 +16,6 @@ public interface ReadTabularFilesOptions extends ReadFilesOptions<ReadTabularFil
     ReadTabularFilesOptions groupBy(String columnName);
 
     ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns);
+
+    ReadTabularFilesOptions uriIncludeFilePath(boolean value);
 }

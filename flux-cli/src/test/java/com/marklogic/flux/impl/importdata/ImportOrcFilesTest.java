@@ -32,6 +32,24 @@ class ImportOrcFilesTest extends AbstractTest {
     }
 
     @Test
+    void uriIncludeFilePath() {
+        run(
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "orcFile-test",
+            "--uri-include-file-path",
+            "--uri-replace", ".*resources,''"
+        );
+
+        getUrisInCollection("orcFile-test", 15).forEach(uri -> {
+            assertTrue(uri.startsWith("/orc-files/authors.orc/"), "Actual URI: " + uri);
+            assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
+        });
+    }
+
+    @Test
     void aggregate() {
         run(
             "import-orc-files",
