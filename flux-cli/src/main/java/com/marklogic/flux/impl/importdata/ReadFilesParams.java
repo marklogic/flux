@@ -20,13 +20,13 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     private List<String> path = new ArrayList<>();
 
     @CommandLine.Option(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
-    private Boolean abortOnReadFailure = false;
+    private boolean abortOnReadFailure;
 
     @CommandLine.Option(names = "--filter", description = "A glob filter for selecting only files with file names matching the pattern.")
     private String filter;
 
     @CommandLine.Option(names = "--recursive-file-lookup", arity = "1", description = "If true, files will be loaded recursively from child directories and partition inferring is disabled.")
-    private Boolean recursiveFileLookup = true;
+    private boolean recursiveFileLookup = true;
 
     @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
@@ -37,7 +37,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
-        if (abortOnReadFailure != null && abortOnReadFailure) {
+        if (abortOnReadFailure) {
             addOptionsToFailOnReadError(options);
         } else {
             addOptionsToNotFailOnReadError(options);
@@ -46,8 +46,8 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
         if (filter != null) {
             options.put("pathGlobFilter", filter);
         }
-        if (recursiveFileLookup != null) {
-            options.put("recursiveFileLookup", recursiveFileLookup.toString());
+        if (recursiveFileLookup) {
+            options.put("recursiveFileLookup", "true");
         }
         return options;
     }
@@ -101,13 +101,13 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     @Override
-    public T recursiveFileLookup(Boolean value) {
+    public T recursiveFileLookup(boolean value) {
         this.recursiveFileLookup = value;
         return (T) this;
     }
 
     @Override
-    public T abortOnReadFailure(Boolean value) {
+    public T abortOnReadFailure(boolean value) {
         this.abortOnReadFailure = value;
         return (T) this;
     }

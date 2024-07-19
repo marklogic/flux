@@ -23,13 +23,13 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         names = "--abort-on-write-failure",
         description = "Causes the command to fail when a batch of documents cannot be written to MarkLogic."
     )
-    private Boolean abortOnWriteFailure;
+    private boolean abortOnWriteFailure;
 
     @CommandLine.Option(
         names = "--batch-size",
         description = "The maximum number of documents written in a single call to MarkLogic."
     )
-    private Integer batchSize = 200;
+    private int batchSize = 200;
 
     @CommandLine.Option(
         names = "--collections",
@@ -48,7 +48,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         names = "--log-progress",
         description = "Log a count of documents written every time this many documents are written."
     )
-    private Integer logProgress;
+    private int logProgress;
 
     @CommandLine.Option(
         names = "--permissions",
@@ -66,14 +66,14 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         names = "--thread-count",
         description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic."
     )
-    private Integer threadCount = 4;
+    private int threadCount = 4;
 
     @CommandLine.Option(
         names = "--total-thread-count",
         description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic. " +
             "Takes precedence over the '--thread-count' option."
     )
-    private Integer totalThreadCount;
+    private int totalThreadCount;
 
     @CommandLine.Option(
         names = "--transform",
@@ -122,15 +122,15 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
-            Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
+            Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
-            Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
+            Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
             Options.WRITE_COLLECTIONS, collections,
-            Options.WRITE_LOG_PROGRESS, logProgress != null ? logProgress.toString() : null,
+            Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress),
             Options.WRITE_PERMISSIONS, permissions,
             Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
-            Options.WRITE_THREAD_COUNT, threadCount != null ? threadCount.toString() : null,
-            Options.WRITE_TOTAL_THREAD_COUNT, totalThreadCount != null ? totalThreadCount.toString() : null,
+            Options.WRITE_THREAD_COUNT, OptionsUtil.intOption(threadCount),
+            Options.WRITE_TOTAL_THREAD_COUNT, OptionsUtil.intOption(totalThreadCount),
             Options.WRITE_TRANSFORM_NAME, transform,
             Options.WRITE_TRANSFORM_PARAMS, transformParams,
             Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
@@ -147,7 +147,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T abortOnWriteFailure(Boolean value) {
+    public T abortOnWriteFailure(boolean value) {
         this.abortOnWriteFailure = value;
         return (T) this;
     }
@@ -177,7 +177,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T logProgress(Integer numberOfDocuments) {
+    public T logProgress(int numberOfDocuments) {
         this.logProgress = numberOfDocuments;
         return (T) this;
     }

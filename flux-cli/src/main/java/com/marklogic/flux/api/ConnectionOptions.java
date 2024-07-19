@@ -19,7 +19,7 @@ public interface ConnectionOptions {
 
     ConnectionOptions connectionType(String connectionType);
 
-    ConnectionOptions disableGzippedResponses(Boolean value);
+    ConnectionOptions disableGzippedResponses(boolean value);
 
     ConnectionOptions username(String username);
 

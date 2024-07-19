@@ -41,8 +41,8 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        final Integer fileCount = writeParams.getFileCount();
-        if (fileCount != null && fileCount > 0) {
+        final int fileCount = writeParams.getFileCount();
+        if (fileCount > 0) {
             getCommonParams().setRepartition(fileCount);
         }
         return reader.format(MARKLOGIC_CONNECTOR)

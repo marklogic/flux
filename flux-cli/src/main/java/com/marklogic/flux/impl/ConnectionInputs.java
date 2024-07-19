@@ -36,11 +36,11 @@ public abstract class ConnectionInputs {
 
     protected String connectionString;
     protected String host;
-    protected Integer port;
+    protected int port;
     protected String basePath;
     protected String database;
     protected DatabaseClient.ConnectionType connectionType;
-    protected Boolean disableGzippedResponses;
+    protected boolean disableGzippedResponses;
     protected AuthenticationType authType;
     protected String username;
     protected String password;
@@ -84,8 +84,8 @@ public abstract class ConnectionInputs {
         return OptionsUtil.makeOptions(
             Options.CLIENT_URI, connectionString,
             Options.CLIENT_HOST, host,
-            Options.CLIENT_PORT, port != null ? port.toString() : null,
-            "spark.marklogic.client.disableGzippedResponses", disableGzippedResponses != null ? Boolean.toString(disableGzippedResponses) : null,
+            Options.CLIENT_PORT, OptionsUtil.intOption(port),
+            "spark.marklogic.client.disableGzippedResponses", disableGzippedResponses ? "true" : null,
             "spark.marklogic.client.basePath", basePath,
             Options.CLIENT_DATABASE, database,
             Options.CLIENT_CONNECTION_TYPE, connectionType != null ? connectionType.name() : null,

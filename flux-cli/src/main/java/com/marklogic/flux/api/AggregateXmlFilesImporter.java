@@ -23,7 +23,7 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
 
         ReadXmlFilesOptions encoding(String encoding);
 
-        ReadXmlFilesOptions partitions(Integer partitions);
+        ReadXmlFilesOptions partitions(int partitions);
     }
 
     AggregateXmlFilesImporter from(Consumer<ReadXmlFilesOptions> consumer);

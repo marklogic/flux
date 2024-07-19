@@ -23,24 +23,24 @@ public class ReadRowsParams implements ReadRowsOptions {
     private String query;
 
     @CommandLine.Option(names = "--batch-size", description = "Approximate number of rows to retrieve in each call to MarkLogic; defaults to 100000.")
-    private Integer batchSize;
+    private int batchSize;
 
     // Not yet showing this in usage as it is confusing for a typical user to understand and would only need to be
     // set if push down aggregation is producing incorrect results. See the MarkLogic Spark connector documentation
     // for more information.
     @CommandLine.Option(names = "--disable-aggregation-push-down", hidden = true)
-    private Boolean disableAggregationPushDown;
+    private boolean disableAggregationPushDown;
 
     @CommandLine.Option(names = "--partitions", description = "Number of partitions to create when reading rows from MarkLogic. " +
         "Increasing this may improve performance as the number of rows to read increases.")
-    private Integer partitions;
+    private int partitions;
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.READ_OPTIC_QUERY, query,
-            Options.READ_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
-            Options.READ_PUSH_DOWN_AGGREGATES, disableAggregationPushDown != null ? Boolean.toString(!disableAggregationPushDown) : null,
-            Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null
+            Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+            Options.READ_PUSH_DOWN_AGGREGATES, disableAggregationPushDown ? "true" : null,
+            Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
         );
     }
 
@@ -51,19 +51,19 @@ public class ReadRowsParams implements ReadRowsOptions {
     }
 
     @Override
-    public ReadRowsOptions disableAggregationPushDown(Boolean value) {
+    public ReadRowsOptions disableAggregationPushDown(boolean value) {
         this.disableAggregationPushDown = value;
         return this;
     }
 
     @Override
-    public ReadRowsOptions batchSize(Integer batchSize) {
+    public ReadRowsOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
     }
 
     @Override
-    public ReadRowsOptions partitions(Integer partitions) {
+    public ReadRowsOptions partitions(int partitions) {
         this.partitions = partitions;
         return this;
     }

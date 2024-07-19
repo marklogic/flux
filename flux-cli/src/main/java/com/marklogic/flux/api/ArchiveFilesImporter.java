@@ -13,7 +13,7 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
     interface ReadArchiveFilesOptions extends ReadFilesOptions<ReadArchiveFilesOptions> {
         ReadArchiveFilesOptions categories(String... categories);
 
-        ReadArchiveFilesOptions partitions(Integer partitions);
+        ReadArchiveFilesOptions partitions(int partitions);
 
         ReadArchiveFilesOptions encoding(String encoding);
     }

@@ -17,7 +17,7 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
     interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
         ReadGenericFilesOptions compressionType(CompressionType compressionType);
 
-        ReadGenericFilesOptions partitions(Integer partitions);
+        ReadGenericFilesOptions partitions(int partitions);
 
         ReadGenericFilesOptions encoding(String encoding);
     }

@@ -73,14 +73,14 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         private String encoding;
 
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private Integer partitions;
+        private int partitions;
 
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(
                 super.makeOptions(),
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_NUM_PARTITIONS, partitions != null ? partitions.toString() : null,
+                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_AGGREGATES_XML_ELEMENT, element,
                 Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
                 Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement,
@@ -126,7 +126,7 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         }
 
         @Override
-        public ReadXmlFilesOptions partitions(Integer partitions) {
+        public ReadXmlFilesOptions partitions(int partitions) {
             this.partitions = partitions;
             return this;
         }
