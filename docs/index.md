@@ -25,4 +25,8 @@ Flux has the following system requirements:
 Earlier versions of MarkLogic 9 and 10 will support any features not involving Optic queries.
 Additionally, the latest version of MarkLogic 11 is recommended if possible.
 
+Flux is built on top of [Apache Spark](https://spark.apache.org/), but you do not need to know anything about Spark
+to use Flux. If you are already making use of Spark for other use cases, see the 
+[Spark Integration guide](spark-integration.md) for information on using Flux with your existing Spark cluster.
+
 Please see the [Getting Started guide](getting-started.md) to begin using Flux.  

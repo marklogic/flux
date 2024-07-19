@@ -33,6 +33,10 @@ The command uses a comma as the default delimiter. You can override this via `--
     --connection-string "user:password@localhost:8000" etc...
 ```
 
+The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
+include the `--uri-include-file-path` option. You can also make use of the
+[common import features](../common-import-features.md) for controlling document URIs.
+
 ## Specifying a JSON root name
 
 By default, each column in a delimited text file will become a top-level field in a JSON document written to 

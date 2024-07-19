@@ -273,8 +273,12 @@ to something you can access :
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-cli-0.1-SNAPSHOT-all.jar \
-import-files --path "s3a://changeme/*.*" --preview 10 --preview-drop content
+--master spark://NYWHYC3G0W:7077 \
+flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar \
+import-files --path "s3a://changeme/" \
+--connection-string "admin:admin@localhost:8000" \
+--s3-add-credentials \
+--preview 10 --preview-drop content
 ```
 
 ### Testing with AWS EMR

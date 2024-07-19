@@ -31,6 +31,10 @@ you wish to write to:
     --connection-string "user:password@localhost:8000"
 ```
 
+The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
+include the `--uri-include-file-path` option. You can also make use of the
+[common import features](../common-import-features.md) for controlling document URIs.
+
 ## Importing JSON Lines files
 
 If your files conform to the [JSON Lines format](https://jsonlines.org/), 

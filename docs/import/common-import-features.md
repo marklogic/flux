@@ -105,6 +105,13 @@ The following shows an example of each option:
 --temporal-collection my-temporal-data
 ```
 
+## Logging progress
+
+Flux will log a message at the `INFO` level stating how many documents it has written as a form of showing progress. 
+It defaults to logging this message every time approximately 10,000 documents are written. You can adjust this value by 
+using the `--log-progress` option. For example, for more frequent logging, you could include `--log-progress 1000` to 
+configure Flux to log a message every time it writes 1,000 documents.
+
 ## Transforming content
 
 For each import command, you can apply a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms)

@@ -1,9 +1,8 @@
 ---
 layout: default
 title: Handling errors
-parent: Importing files
-grand_parent: Importing Data
-nav_order: 10
+parent: Importing Data
+nav_order: 7
 ---
 
 ## Table of contents
