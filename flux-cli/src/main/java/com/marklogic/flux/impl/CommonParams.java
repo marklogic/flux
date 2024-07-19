@@ -38,7 +38,7 @@ public class CommonParams {
     // Hidden for now since showing it for every command in its "help" seems confusing for most users that will likely
     // never need to know about this.
     @CommandLine.Option(
-        names = "--master-url",
+        names = "--spark-master-url",
         description = "Specify the Spark master URL for configuring the local Spark cluster created by Flux."
     )
     private String sparkMasterUrl = "local[*]";

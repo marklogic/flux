@@ -101,3 +101,10 @@ In the above example, the code defined by `--read-javascript` will be invoked on
 defined by `--read-partitions-javascript`. The value of `PARTITION` - a forest ID - is then passed to the 
 [cts.uris](https://docs.marklogic.com/cts.uris) function to constrain it to a particular forest. With this approach, 
 the query is broken up into N queries that run in parallel, with N equalling the number of forests in the database.
+
+## Logging progress
+
+Flux will log a message at the `INFO` level stating how many items it has processed as a form of showing progress.
+It defaults to logging this message every time 10,000 items are processed. You can adjust this value by using
+the `--log-progress` option. For example, for more frequent logging, you could include `--log-progress 1000` to
+configure Flux to log a message every time it processes 1,000 items.

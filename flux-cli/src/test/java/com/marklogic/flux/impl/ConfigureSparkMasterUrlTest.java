@@ -26,7 +26,7 @@ class ConfigureSparkMasterUrlTest extends AbstractTest {
     void validMasterUrl() {
         run(
             "import-parquet-files",
-            "--master-url", "local[2]",
+            "--spark-master-url", "local[2]",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -41,7 +41,7 @@ class ConfigureSparkMasterUrlTest extends AbstractTest {
     void invalidMasterUrl() {
         run(
             "import-parquet-files",
-            "--master-url", "just-not-valid-at-all",
+            "--spark-master-url", "just-not-valid-at-all",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
@@ -49,7 +49,7 @@ class ConfigureSparkMasterUrlTest extends AbstractTest {
 
         assertStderrContains(() -> run(
             "import-parquet-files",
-            "--master-url", "just-not-valid-at-all",
+            "--spark-master-url", "just-not-valid-at-all",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS

@@ -16,31 +16,32 @@ This guide describes how to get started with Flux with some examples demonstrati
 
 The examples in this guide, along with examples found throughout this documentation, depend on a small application in the 
 `./examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
-a MarkLogic instance and that Flux will be run from the `./examples/getting-started` directory as well. However, you are 
+a MarkLogic instance and that Flux will be run from the `./examples/getting-started/flux` directory as well. However, you are 
 free to install Flux anywhere and use the examples as a reference for running Flux on your own data. 
 
 ### Obtaining Flux
 
-Flux can either be downloaded from [its GitHub releases page](https://github.com/marklogic/flux/releases), 
-from the [internal Wiki](https://wiki.marklogic.com/display/PM/Spark+ETL+0.1+Release), or built locally. 
-If you wish to build it locally, please see the `CONTRIBUTING.md` file in this repository for instructions.
+If you would like to use Flux to run the examples below, 
+follow these steps:
 
-After downloading or building Flux, extract it into the `./examples/getting-started` directory in this repository to 
-test it with the examples. 
+1. Download the `flux-1.0.0.zip` file from the [GitHub releases page](https://github.com/marklogic/flux/releases/tag/1.0.0).
+2. Clone this repository using git. 
+3. Extract the `flux-1.0.0.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
+This should result in an `./examples/getting-started/flux` directory that contains the Flux software.
 
 ### Deploying the example application
 
 Follow these steps to run the examples in this guide:
 
-1. Clone this repository if you have not already.
-2. `cd examples/getting-started`
+1. Clone this repository using git if you have not already.
+2. Run `cd examples/getting-started`.
 3. Create the file `gradle-local.properties` and add `mlPassword=your admin user password` to it.
 4. Change `mlHost` and `mlRestPort` as needed based on your MarkLogic installation.
 5. Run `./gradlew -i mlDeploy` to deploy the example application.
 
-This will create a new REST API app server on port 8004 in your local MarkLogic installation, unless you modified the
-values of `mlHost` and `mlRestPort`. It also creates a "flux-example-user" MarkLogic user that has the necessary MarkLogic roles
-and privileges for running the examples in this guide. Finally, the application includes a 
+The example application consists of a REST API app server on port 8004 in your MarkLogic installation, unless you modified the
+values of `mlHost` and `mlRestPort`. The application also includes a "flux-example-user" MarkLogic user that has the 
+necessary MarkLogic roles and privileges for running the examples in this guide. Finally, the application includes a 
 [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE) that creates a view in MarkLogic for the purpose
 of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.marklogic.com/guide/app-dev/OpticAPI).
 
