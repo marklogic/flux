@@ -26,7 +26,11 @@ class ImportJdbcTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/customer/{customer_id}.json",
-            "--collections", "customer"
+            "--collections", "customer",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "2",
+            "--log-progress", "4"
         );
 
         verifyTenCustomersWereImported();

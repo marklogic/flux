@@ -93,7 +93,11 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test",
-            "--uri-template", "/delimited/{lastName}.json"
+            "--uri-template", "/delimited/{lastName}.json",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         assertCollectionSize("delimited-json-test", 3);

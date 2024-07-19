@@ -44,7 +44,11 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "withElement-test",
-            "--uri-replace", ".*/xml-file,''"
+            "--uri-replace", ".*/xml-file,''",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "2"
         );
 
         assertCollectionSize("withElement-test", 3);

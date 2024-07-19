@@ -21,7 +21,11 @@ class ImportOrcFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orcFile-test",
-            "--uri-template", "/orc-test/{LastName}.json"
+            "--uri-template", "/orc-test/{LastName}.json",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "5",
+            "--log-progress", "5"
         );
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);

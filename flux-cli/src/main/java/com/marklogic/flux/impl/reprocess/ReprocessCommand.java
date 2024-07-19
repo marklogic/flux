@@ -353,6 +353,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         )
         private Integer batchSize = 1;
 
+        @CommandLine.Option(
+            names = "--log-progress",
+            description = "Log a count of items processed every time this many items are processed."
+        )
+        private Integer logProgress;
+
         public void validateWriter() {
             Map<String, String> options = get();
             if (Stream.of(Options.WRITE_INVOKE, Options.WRITE_JAVASCRIPT, Options.WRITE_JAVASCRIPT_FILE,
@@ -372,7 +378,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 Options.WRITE_EXTERNAL_VARIABLE_NAME, externalVariableName,
                 Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, externalVariableDelimiter,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure != null ? Boolean.toString(abortOnWriteFailure) : "false",
-                Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null
+                Options.WRITE_BATCH_SIZE, batchSize != null ? batchSize.toString() : null,
+                Options.WRITE_LOG_PROGRESS, logProgress != null ? logProgress.toString() : null
             );
 
             if (writeVars != null) {
@@ -447,6 +454,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         @Override
         public WriteOptions batchSize(Integer batchSize) {
             this.batchSize = batchSize;
+            return this;
+        }
+
+        @Override
+        public WriteOptions logProgress(Integer numberOfItems) {
+            this.logProgress = numberOfItems;
             return this;
         }
     }

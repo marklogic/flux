@@ -22,7 +22,11 @@ class CopyTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--output-collections", "author-copies",
             "--output-uri-prefix", "/copied",
-            "--output-permissions", DEFAULT_PERMISSIONS
+            "--output-permissions", DEFAULT_PERMISSIONS,
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "5",
+            "--log-progress", "5"
         );
 
         assertCollectionSize("author", 15);

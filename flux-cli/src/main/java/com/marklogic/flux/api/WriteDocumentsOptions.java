@@ -15,6 +15,8 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T failedDocumentsPath(String path);
 
+    T logProgress(Integer numberOfDocuments);
+
     T permissionsString(String rolesAndCapabilities);
 
     T temporalCollection(String temporalCollection);

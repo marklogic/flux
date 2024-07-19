@@ -19,7 +19,11 @@ class ImportRdfFilesTest extends AbstractTest {
             "--path", "src/test/resources/rdf/englishlocale.ttl",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "my-triples"
+            "--collections", "my-triples",
+
+            // Including these for manual verification of progress logging.
+            "--batch-size", "1",
+            "--log-progress", "1"
         );
 
         assertCollectionSize(
