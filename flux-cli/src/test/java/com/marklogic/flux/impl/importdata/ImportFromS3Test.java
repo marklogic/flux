@@ -15,18 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * ensure that your AWS credentials are set up locally and correctly. This is not an actual test as we don't yet have a
  * way for Jenkins to authenticate with an S3 bucket.
  */
+@Disabled("Only intended for ad hoc testing by using explicit S3 auth values.")
 class ImportFromS3Test extends AbstractTest {
 
-    @Disabled("Only intended for ad hoc testing.")
+    private final static String PATH = "s3a://changeme/";
+
     @Test
     void test() {
-        final String path = "s3a://changeme";
-
         String stdout = runAndReturnStdout(() -> run(
             "import-files",
-            "--path", path,
+            "--path", PATH,
             "--preview", "10",
             "--preview-drop", "content", "modificationTime",
+            "--connection-string", makeConnectionString(),
             "--s3-add-credentials"
         ));
 
@@ -34,14 +35,26 @@ class ImportFromS3Test extends AbstractTest {
         logger.info("Results: {}", stdout);
     }
 
-    @Disabled("Only intended for ad hoc testing by using explicit S3 auth values.")
+    @Test
+    void exportTest() {
+        String stdout = runAndReturnStdout(() -> run(
+            "export-files",
+            "--path", PATH,
+            "--connection-string", makeConnectionString(),
+            "--collections", "author",
+            "--limit", "1",
+            "--s3-add-credentials"
+        ));
+
+        assertNotNull(stdout);
+        logger.info("Results: {}", stdout);
+    }
+
     @Test
     void api() {
-        final String path = "s3a://changeme";
-
         Flux.importGenericFiles()
             .from(options -> options
-                .paths(path)
+                .paths(PATH)
                 .s3AccessKeyId("changeme")
                 .s3SecretAccessKey("changeme"))
             .connectionString(makeConnectionString())

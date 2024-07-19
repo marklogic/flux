@@ -21,14 +21,17 @@ dependencies {
   implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
 
-  // hadoop-aws depends on aws-java-sdk-bundle, which clocks in as a single 380mb jar. We only need the S3 portion of
-  // the AWS SDK, so the bundle is excluded in favor of the S3 API in the SDK.
-  implementation("org.apache.hadoop:hadoop-aws:3.3.6") {
+  // Spark 3.4.1 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262.
+  // We don't include the entire aws-java-sdk-bundle, as that clocks in as a single 380mb jar. We only need the S3
+  // portion of the AWS SDK. However, in version 1.12.262, the dynamodb SDK is also needed; otherwise, a
+  // NoClassDefFoundError occurs.
+  implementation("org.apache.hadoop:hadoop-aws:3.3.4") {
     exclude module: "aws-java-sdk-bundle"
   }
-  implementation "com.amazonaws:aws-java-sdk-s3:1.12.367"
+  implementation "com.amazonaws:aws-java-sdk-s3:1.12.262"
+  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
 
-  implementation "org.apache.hadoop:hadoop-client:3.3.6"
+  implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.4.1"
