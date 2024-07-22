@@ -33,10 +33,19 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private String xmlNamespace;
 
+    @CommandLine.Option(
+        names = "--ignore-null-fields",
+        description = "Ignore fields with null values in the data source when writing JSON or XML documents to MarkLogic."
+    )
+    private boolean ignoreNullFields;
+
     @Override
     public Map<String, String> makeOptions() {
-        return OptionsUtil.addOptions(
-            super.makeOptions(),
+        Map<String, String> options = super.makeOptions();
+        if (ignoreNullFields) {
+            options.put(Options.WRITE_JSON_SERIALIZATION_OPTION_PREFIX + "ignoreNullFields", "true");
+        }
+        return OptionsUtil.addOptions(options,
             Options.WRITE_JSON_ROOT_NAME, jsonRootName,
             Options.WRITE_XML_ROOT_NAME, xmlRootName,
             Options.WRITE_XML_NAMESPACE, xmlNamespace
@@ -58,6 +67,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     @Override
     public WriteStructuredDocumentsOptions xmlNamespace(String xmlNamespace) {
         this.xmlNamespace = xmlNamespace;
+        return this;
+    }
+
+    @Override
+    public WriteStructuredDocumentsOptions ignoreNullFields(boolean value) {
+        this.ignoreNullFields = value;
         return this;
     }
 }

@@ -64,6 +64,23 @@ documents with the following format:
 </Customer>
 ```
 
+## Ignoring null fields
+
+By default, Flux will include any fields in an ORC file that have a null value
+when creating JSON or XML documents. You can instead ignore fields with a null value
+via the `--ignore-null-fields` option:
+
+```
+./bin/flux import-orc-files \
+    --path /path/to/files \
+    --ignore-null-fields \
+    --connection-string "user:password@localhost:8000" etc...
+```
+
+The decision on whether to include null fields will depend on your application requirements. For example, if your
+documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,
+it may be important to query for documents that have a particular field with a value of null.
+
 ## Aggregating rows
 
 The `import-orc-files` command supports aggregating related rows together to produce hierarchical documents. See

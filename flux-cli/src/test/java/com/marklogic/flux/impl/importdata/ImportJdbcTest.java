@@ -9,8 +9,7 @@ import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportJdbcTest extends AbstractTest {
 
@@ -100,6 +99,35 @@ class ImportJdbcTest extends AbstractTest {
             "--query", "select * from customer"
         ), "Command failed, cause: Unable to load class: not.valid.driver.value; " +
             "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
+    }
+
+    @Test
+    void ignoreNullFields() {
+        // First export our author rows, as those have lots of null values.
+        run(
+            "export-jdbc",
+            "--connection-string", makeConnectionString(),
+            "--query", READ_AUTHORS_OPTIC_QUERY,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--table", "test_authors",
+            "--mode", "overwrite"
+        );
+
+        run(
+            "import-jdbc",
+            "--connection-string", makeConnectionString(),
+            "--query", "select * from test_authors",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/null-test/{LastName}.json",
+            "--ignore-null-fields"
+        );
+
+        JsonNode doc = readJsonDocument("/null-test/Edeler.json");
+        assertFalse(doc.has("Base64Value"), "With Base64Value having a null value in the Postgres table and with " +
+            "--ignore-null-fields being used, the document in MarkLogic should not have Base64Value.");
     }
 
     private void verifyTenCustomersWereImported() {

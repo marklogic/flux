@@ -218,7 +218,7 @@ class ImportParquetFilesTest extends AbstractTest {
             assertEquals(expectedNumber, doc.get("number").asText());
             assertEquals(JsonNodeType.STRING, doc.get("number").getNodeType());
         } else {
-            assertFalse(doc.has("number"));
+            assertEquals(JsonNodeType.NULL, doc.get("number").getNodeType());
         }
 
         assertEquals(expectedColor, doc.get("color").asText());
@@ -227,7 +227,7 @@ class ImportParquetFilesTest extends AbstractTest {
             assertEquals(expectedHex, doc.get("hex").asText());
             assertEquals(JsonNodeType.STRING, doc.get("hex").getNodeType());
         } else {
-            assertFalse(doc.has("hex"));
+            assertEquals(JsonNodeType.NULL, doc.get("hex").getNodeType());
         }
     }
 
