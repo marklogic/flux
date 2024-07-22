@@ -7,8 +7,8 @@ nav_order: 1
 
 ## Specifying a path
 
-Every command for exporting data to files must specify a path to which files should be written. The `--path` option 
-is used to specify the path. The value of the `--path` option can be any valid directory, and it must already exist.
+Every command for exporting data to files must specify a path to which files should be written via the `--path` option. 
+The value of the `--path` option can be any valid directory or S3 bucket, and it must already exist.
 
 ## Exporting to S3
 

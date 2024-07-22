@@ -22,14 +22,15 @@ The following options control which documents are read from MarkLogic:
 
 | Option | Description | 
 | --- |--- |
-| --string-query | A string query utilizing MarkLogic's search grammar. |
-| --query | A structured, serialized CTS, or combined query expressed as JSON or XML. |
-| --options | Name of a REST API search options document; typically used with a string query. |
-| --collections | Comma-delimited sequence of collection names. |
-| --directory | A database directory for constraining on URIs. |
+| `--collections` | Comma-delimited sequence of collection names. |
+| `--directory` | A database directory for constraining on URIs. |
+| `--options` | Name of a REST API search options document; typically used with a string query. |
+| `--query` | A structured, serialized CTS, or combined query expressed as JSON or XML. |
+| `--string-query` | A string query utilizing MarkLogic's search grammar. |
+| `--uris` | Newline-delimited sequence of document URIs to retrieve. |
 
-You must specify at least one of `--string-query`, `--query`, `--collections`, or `--directory`. You may specify any
-combination of those options as well.
+You must specify at least one of `--collections`, `--directory`, `--query`, `--string-query`, or `--uris`. You may specify any
+combination of those options as well, with the exception that `--query` will be ignored if `--uris` is specified.
 
 For examples of what the `--query` option support, please see 
 [the MarkLogic search documentation](https://docs.marklogic.com/guide/rest-dev/search#id_49329).

@@ -22,10 +22,10 @@ command reads. The following command line options offer further control over eac
 
 | Option | Description | 
 | --- | --- |
-| --uri-prefix | A prefix to apply to each URI. |
-| --uri-suffix | A suffix to apply to each URI. |
-| --uri-replace | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
-| --uri-template | Template for each URI containing one or more column names. |
+| `--uri-prefix` | A prefix to apply to each URI. |
+| `--uri-suffix` | A suffix to apply to each URI. |
+| `--uri-replace` | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
+| `--uri-template` | Template for each URI containing one or more column names. |
 
 ### Replacing URI contents
 
@@ -93,9 +93,9 @@ Each of the above types of metadata can be configured via the following options:
 
 | Option | Description | 
 | --- | --- |
-| --collections | Comma-delimited list of collection names to add to each document. |
-| --permissions | Comma-delimited list of MarkLogic role names and capabilities - e.g. `rest-reader,read,rest-writer,update`. |
-| --temporal-collection | Name of a MarkLogic temporal collection to assign to each document. |
+| `--collections` | Comma-delimited list of collection names to add to each document. |
+| `--permissions` | Comma-delimited list of MarkLogic role names and capabilities - e.g. `rest-reader,read,rest-writer,update`. |
+| `--temporal-collection` | Name of a MarkLogic temporal collection to assign to each document. |
 
 The following shows an example of each option:
 
@@ -119,9 +119,9 @@ to each document before it is written. A transform is configured via the followi
 
 | Option | Description | 
 | --- | --- |
-| --transform | Name of a MarkLogic REST transform to apply to the document before writing it. |
-| --transform-params | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
-| --transform-params-delimiter | Delimiter for `--transform-params`; typically set when a value contains a comma. |
+| `--transform` | Name of a MarkLogic REST transform to apply to the document before writing it. |
+| `--transform-params` | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
+| `--transform-params-delimiter` | Delimiter for `--transform-params`; typically set when a value contains a comma. |
 
 The following shows an example of each option:
 
