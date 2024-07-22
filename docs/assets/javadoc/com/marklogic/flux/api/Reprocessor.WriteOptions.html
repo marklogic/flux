@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,12 +149,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abortOnWriteFailure(java.lang.Boolean)">abortOnWriteFailure</a></span>&#8203;(java.lang.Boolean&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abortOnWriteFailure(boolean)">abortOnWriteFailure</a></span>&#8203;(boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(java.lang.Integer)">batchSize</a></span>&#8203;(java.lang.Integer&nbsp;batchSize)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>&#8203;(int&nbsp;batchSize)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
@@ -184,15 +184,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#vars(java.util.Map)">vars</a></span>&#8203;(java.util.Map&lt;java.lang.String,&#8203;java.lang.String&gt;&nbsp;namesAndValues)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#logProgress(int)">logProgress</a></span>&#8203;(int&nbsp;numberOfItems)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xquery(java.lang.String)">xquery</a></span>&#8203;(java.lang.String&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#vars(java.util.Map)">vars</a></span>&#8203;(java.util.Map&lt;java.lang.String,&#8203;java.lang.String&gt;&nbsp;namesAndValues)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xquery(java.lang.String)">xquery</a></span>&#8203;(java.lang.String&nbsp;query)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xqueryFile(java.lang.String)">xqueryFile</a></span>&#8203;(java.lang.String&nbsp;path)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -286,22 +291,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;vars&#8203;(java.util.Map&lt;java.lang.String,&#8203;java.lang.String&gt;&nbsp;namesAndValues)</pre>
 </li>
 </ul>
-<a id="abortOnWriteFailure(java.lang.Boolean)">
+<a id="abortOnWriteFailure(boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>abortOnWriteFailure</h4>
-<pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;abortOnWriteFailure&#8203;(java.lang.Boolean&nbsp;value)</pre>
+<pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;abortOnWriteFailure&#8203;(boolean&nbsp;value)</pre>
 </li>
 </ul>
-<a id="batchSize(java.lang.Integer)">
+<a id="batchSize(int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>batchSize</h4>
+<pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;batchSize&#8203;(int&nbsp;batchSize)</pre>
+</li>
+</ul>
+<a id="logProgress(int)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>batchSize</h4>
-<pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;batchSize&#8203;(java.lang.Integer&nbsp;batchSize)</pre>
+<h4>logProgress</h4>
+<pre class="methodSignature"><a href="Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a>&nbsp;logProgress&#8203;(int&nbsp;numberOfItems)</pre>
 </li>
 </ul>
 </li>
