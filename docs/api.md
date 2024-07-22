@@ -84,5 +84,5 @@ public class App {
 
 ## Javadocs
 
-Please see [the Flux API Javadocs](https://special-adventure-5m8egoy.pages.github.io/assets/javadoc) for a list of all
+Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
 available public classes and methods.

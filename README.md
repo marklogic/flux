@@ -17,4 +17,4 @@ Flux leverages the [MarkLogic Spark connector](https://github.com/marklogic/mark
 the new data sources and formats that may have required custom development in the past to integrate with 
 MarkLogic.
 
-For more information, please see [the user guide](https://special-adventure-5m8egoy.pages.github.io/).
+For more information, please see [the user guide](https://marklogic.github.io/flux/).
