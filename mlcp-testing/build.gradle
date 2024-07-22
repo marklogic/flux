@@ -38,6 +38,21 @@ task mlcpImportMixed(type: JavaExec) {
   ]
 }
 
+task mlcpImportDelimited(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args = [
+    "IMPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-input_file_path", "../flux-cli/src/test/resources/delimited-files/empty-values.csv",
+    "-output_permissions", "rest-reader,read,rest-writer,update",
+    "-input_file_type", "delimited_text"
+  ]
+}
+
 task mlcpImportAggregateXml(type: Exec) {
   workingDir = "."
   commandLine "mlcp.sh", "IMPORT",

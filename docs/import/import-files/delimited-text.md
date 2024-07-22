@@ -71,6 +71,23 @@ documents with the following format:
 </Customer>
 ```
 
+## Ignoring null fields
+
+By default, Flux will include any fields in a delimited text file that have a null value (this does not include
+a value that has whitespace) when creating JSON or XML documents. You can instead ignore fields with a null value
+via the `--ignore-null-fields` option:
+
+```
+./bin/flux import-delimited-files \
+    --path /path/to/files --delimiter ; \
+    --ignore-null-fields \
+    --connection-string "user:password@localhost:8000" etc...
+```
+
+The decision on whether to include null fields will depend on your application requirements. For example, if your
+documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,
+it may be important to query for documents that have a particular field with a value of null.
+
 ## Specifying an encoding
 
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).

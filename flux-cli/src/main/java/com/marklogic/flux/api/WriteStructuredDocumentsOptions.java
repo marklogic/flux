@@ -14,4 +14,11 @@ public interface WriteStructuredDocumentsOptions extends WriteDocumentsOptions<W
     WriteStructuredDocumentsOptions xmlRootName(String xmlRootName);
 
     WriteStructuredDocumentsOptions xmlNamespace(String xmlNamespace);
+
+    /**
+     * @param value Ignore fields with null values in the data source when writing JSON or XML documents to MarkLogic.
+     *              Fields with null values are included by default.
+     * @return an instance of these options.
+     */
+    WriteStructuredDocumentsOptions ignoreNullFields(boolean value);
 }

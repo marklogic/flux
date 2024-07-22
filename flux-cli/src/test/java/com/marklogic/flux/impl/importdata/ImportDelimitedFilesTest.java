@@ -244,6 +244,39 @@ class ImportDelimitedFilesTest extends AbstractTest {
         assertEquals(true, objects.get(1).get("flag").asBoolean());
     }
 
+    @Test
+    void emptyValuesIncluded() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/empty-values.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/delimited/{number}.json"
+        );
+
+        JsonNode doc = readJsonDocument("/delimited/1.json");
+        assertEquals(3, doc.size(), "With null fields included, 'flag' should be present.");
+        assertEquals(JsonNodeType.NULL, doc.get("flag").getNodeType());
+    }
+
+    @Test
+    void emptyValuesIgnored() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/empty-values.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/delimited/{number}.json",
+            "--ignore-null-fields"
+        );
+
+        JsonNode doc = readJsonDocument("/delimited/1.json");
+        assertEquals(2, doc.size(), "The doc should only have 'number' and 'color' since 'flag' is null.");
+        assertEquals(1, doc.get("number").asInt());
+        assertEquals("blue", doc.get("color").asText());
+    }
+
+
     private void verifyDoc(String uri, int expectedNumber, String expectedColor, boolean expectedFlag) {
         JsonNode doc = readJsonDocument(uri);
 

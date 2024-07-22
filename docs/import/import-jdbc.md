@@ -53,6 +53,22 @@ To create an XML document for each row instead of a JSON document, include the `
 option to specify the name of the root element in each XML document. You can optionally include `--xml-namespace` to
 specify a namespace for the root element that will then be inherited by every child element as well.
 
+## Ignoring null fields
+
+By default, Flux will include any fields in a data source that have a null value 
+when creating JSON or XML documents. You can instead ignore fields with a null value
+via the `--ignore-null-fields` option:
+
+```
+./bin/flux import-jdbc \
+    --ignore-null-fields \
+    --connection-string "user:password@localhost:8000" etc...
+```
+
+The decision on whether to include null fields will depend on your application requirements. For example, if your
+documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,
+it may be important to query for documents that have a particular field with a value of null.
+
 ## Aggregating rows
 
 The `import-jdbc` command supports aggregating related rows together to produce hierarchical documents. See
