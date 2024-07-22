@@ -106,6 +106,12 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
 The `import-delimited-files` command supports aggregating related rows together to produce hierarchical documents. See
 [Aggregating rows](../aggregating-rows.md) for more information.
 
+## Reading compressed files
+
+Flux will automatically read files compressed with GZIP when they have a filename ending in `.gz`; you do not need to
+specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
+explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically.
+
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
