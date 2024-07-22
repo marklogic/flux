@@ -13,10 +13,9 @@ Batch size is configured via the `--batch-size` option, which defaults to a valu
 your documents, you may find improved performance by raising this value significantly for smaller documents, such as 500
 or even 1000.
 
-For the number of threads used to send requests to MarkLogic, two factors come into play. The product of the
-number of partitions and the value of the `--thread-count` option determines how many total threads will be used to send
-requests. For example, if the import command uses 4 partitions to read data and `--thread-count` is set to 4 (its
-default value), 16 total threads will send requests to MarkLogic.
+For the number of threads used to send requests to MarkLogic, two factors come into play.
+The value of the `--thread-count` option determines how many total threads will be used across all partitions to send
+requests. You can alternatively configure a number of threads per partition using `--thread-count-per-partition`.
 
 The number of partitions is determined by how data is read and differs across the various import commands.
 Flux will log the number of partitions for each import command as shown below:
@@ -35,7 +34,7 @@ by placing a load balancer in front of MarkLogic or by configuring direct connec
 
 The rule of thumb can thus be expressed as:
 
-    Number of partitions * Value of --thread-count <= Number of hosts * number of app server threads
+    Value of --thread-count <= Number of hosts * number of app server threads
 
 ### Direct connections to each host
 

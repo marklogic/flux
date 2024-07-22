@@ -64,16 +64,16 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--thread-count",
-        description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic."
+        description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic."
     )
     private int threadCount = 4;
 
     @CommandLine.Option(
-        names = "--total-thread-count",
-        description = "The total number of threads used across all partitions when writing batches of documents to MarkLogic. " +
+        names = "--thread-count-per-partition",
+        description = "The number of threads used by each partition worker when writing batches of documents to MarkLogic. " +
             "Takes precedence over the '--thread-count' option."
     )
-    private int totalThreadCount;
+    private int threadCountPerPartition;
 
     @CommandLine.Option(
         names = "--transform",
@@ -130,7 +130,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_PERMISSIONS, permissions,
             Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
             Options.WRITE_THREAD_COUNT, OptionsUtil.intOption(threadCount),
-            Options.WRITE_TOTAL_THREAD_COUNT, OptionsUtil.intOption(totalThreadCount),
+            Options.WRITE_THREAD_COUNT_PER_PARTITION, OptionsUtil.intOption(threadCountPerPartition),
             Options.WRITE_TRANSFORM_NAME, transform,
             Options.WRITE_TRANSFORM_PARAMS, transformParams,
             Options.WRITE_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
@@ -201,8 +201,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T totalThreadCount(int totalThreadCount) {
-        this.totalThreadCount = totalThreadCount;
+    public T threadCountPerPartition(int threadCountPerPartition) {
+        this.threadCountPerPartition = threadCountPerPartition;
         return (T) this;
     }
 

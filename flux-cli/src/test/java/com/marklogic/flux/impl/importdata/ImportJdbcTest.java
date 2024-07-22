@@ -82,7 +82,7 @@ class ImportJdbcTest extends AbstractTest {
             "--collections", "customer",
             "--repartition", "2",
             // Just verifying that these work without causing any errors.
-            "--total-thread-count", "16",
+            "--thread-count-per-partition", "8",
             "--batch-size", "10"
         );
 

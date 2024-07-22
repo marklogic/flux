@@ -30,7 +30,7 @@ class ErrorMessagesTest {
         assertEquals("--graph-override", bundle.getString(Options.WRITE_GRAPH_OVERRIDE));
         assertEquals("--json-root-name", bundle.getString(Options.WRITE_JSON_ROOT_NAME));
         assertEquals("--thread-count", bundle.getString(Options.WRITE_THREAD_COUNT));
-        assertEquals("--total-thread-count", bundle.getString(Options.WRITE_TOTAL_THREAD_COUNT));
+        assertEquals("--thread-count-per-partition", bundle.getString(Options.WRITE_THREAD_COUNT_PER_PARTITION));
         assertEquals("--transform-params", bundle.getString(Options.WRITE_TRANSFORM_PARAMS));
         assertEquals("--uri-template", bundle.getString(Options.WRITE_URI_TEMPLATE));
         assertEquals("--xml-root-name", bundle.getString(Options.WRITE_XML_ROOT_NAME));
