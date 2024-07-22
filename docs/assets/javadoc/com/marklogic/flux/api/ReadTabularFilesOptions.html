@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -166,13 +166,18 @@ extends <a href="ReadFilesOptions.html" title="interface in com.marklogic.flux.a
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#groupBy(java.lang.String)">groupBy</a></span>&#8203;(java.lang.String&nbsp;columnName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uriIncludeFilePath(boolean)">uriIncludeFilePath</a></span>&#8203;(boolean&nbsp;value)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.com.marklogic.flux.api.ReadFilesOptions">
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.marklogic.flux.api.<a href="ReadFilesOptions.html" title="interface in com.marklogic.flux.api">ReadFilesOptions</a></h3>
-<code><a href="ReadFilesOptions.html#abortOnReadFailure(java.lang.Boolean)">abortOnReadFailure</a>, <a href="ReadFilesOptions.html#filter(java.lang.String)">filter</a>, <a href="ReadFilesOptions.html#paths(java.lang.String...)">paths</a>, <a href="ReadFilesOptions.html#recursiveFileLookup(java.lang.Boolean)">recursiveFileLookup</a>, <a href="ReadFilesOptions.html#s3AccessKeyId(java.lang.String)">s3AccessKeyId</a>, <a href="ReadFilesOptions.html#s3AddCredentials()">s3AddCredentials</a>, <a href="ReadFilesOptions.html#s3Endpoint(java.lang.String)">s3Endpoint</a>, <a href="ReadFilesOptions.html#s3SecretAccessKey(java.lang.String)">s3SecretAccessKey</a></code></li>
+<code><a href="ReadFilesOptions.html#abortOnReadFailure(boolean)">abortOnReadFailure</a>, <a href="ReadFilesOptions.html#filter(java.lang.String)">filter</a>, <a href="ReadFilesOptions.html#paths(java.lang.String...)">paths</a>, <a href="ReadFilesOptions.html#recursiveFileLookup(boolean)">recursiveFileLookup</a>, <a href="ReadFilesOptions.html#s3AccessKeyId(java.lang.String)">s3AccessKeyId</a>, <a href="ReadFilesOptions.html#s3AddCredentials()">s3AddCredentials</a>, <a href="ReadFilesOptions.html#s3Endpoint(java.lang.String)">s3Endpoint</a>, <a href="ReadFilesOptions.html#s3SecretAccessKey(java.lang.String)">s3SecretAccessKey</a></code></li>
 </ul>
 </li>
 </ul>
@@ -211,11 +216,20 @@ extends <a href="ReadFilesOptions.html" title="interface in com.marklogic.flux.a
 <a id="aggregateColumns(java.lang.String,java.lang.String...)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>aggregateColumns</h4>
 <pre class="methodSignature"><a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a>&nbsp;aggregateColumns&#8203;(java.lang.String&nbsp;newColumnName,
                                          java.lang.String...&nbsp;columns)</pre>
+</li>
+</ul>
+<a id="uriIncludeFilePath(boolean)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>uriIncludeFilePath</h4>
+<pre class="methodSignature"><a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a>&nbsp;uriIncludeFilePath&#8203;(boolean&nbsp;value)</pre>
 </li>
 </ul>
 </li>

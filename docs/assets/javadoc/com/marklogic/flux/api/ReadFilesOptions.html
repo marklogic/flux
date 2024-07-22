@@ -123,7 +123,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Subinterfaces:</dt>
-<dd><code><a href="AggregateXmlFilesImporter.ReadXmlFilesOptions.html" title="interface in com.marklogic.flux.api">AggregateXmlFilesImporter.ReadXmlFilesOptions</a></code>, <code><a href="ArchiveFilesImporter.ReadArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">ArchiveFilesImporter.ReadArchiveFilesOptions</a></code>, <code><a href="DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></code>, <code><a href="GenericFilesImporter.ReadGenericFilesOptions.html" title="interface in com.marklogic.flux.api">GenericFilesImporter.ReadGenericFilesOptions</a></code>, <code><a href="JsonFilesImporter.ReadJsonFilesOptions.html" title="interface in com.marklogic.flux.api">JsonFilesImporter.ReadJsonFilesOptions</a></code>, <code><a href="MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions</a></code>, <code><a href="RdfFilesImporter.ReadRdfFilesOptions.html" title="interface in com.marklogic.flux.api">RdfFilesImporter.ReadRdfFilesOptions</a></code>, <code><a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a></code></dd>
+<dd><code><a href="AggregateJsonFilesImporter.ReadJsonFilesOptions.html" title="interface in com.marklogic.flux.api">AggregateJsonFilesImporter.ReadJsonFilesOptions</a></code>, <code><a href="AggregateXmlFilesImporter.ReadXmlFilesOptions.html" title="interface in com.marklogic.flux.api">AggregateXmlFilesImporter.ReadXmlFilesOptions</a></code>, <code><a href="ArchiveFilesImporter.ReadArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">ArchiveFilesImporter.ReadArchiveFilesOptions</a></code>, <code><a href="DelimitedFilesImporter.ReadDelimitedFilesOptions.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter.ReadDelimitedFilesOptions</a></code>, <code><a href="GenericFilesImporter.ReadGenericFilesOptions.html" title="interface in com.marklogic.flux.api">GenericFilesImporter.ReadGenericFilesOptions</a></code>, <code><a href="MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions.html" title="interface in com.marklogic.flux.api">MlcpArchiveFilesImporter.ReadMlcpArchiveFilesOptions</a></code>, <code><a href="RdfFilesImporter.ReadRdfFilesOptions.html" title="interface in com.marklogic.flux.api">RdfFilesImporter.ReadRdfFilesOptions</a></code>, <code><a href="ReadTabularFilesOptions.html" title="interface in com.marklogic.flux.api">ReadTabularFilesOptions</a></code></dd>
 </dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">ReadFilesOptions&lt;T extends ReadFilesOptions&gt;</span></pre>
@@ -149,7 +149,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abortOnReadFailure(java.lang.Boolean)">abortOnReadFailure</a></span>&#8203;(java.lang.Boolean&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abortOnReadFailure(boolean)">abortOnReadFailure</a></span>&#8203;(boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -164,7 +164,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#recursiveFileLookup(java.lang.Boolean)">recursiveFileLookup</a></span>&#8203;(java.lang.Boolean&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#recursiveFileLookup(boolean)">recursiveFileLookup</a></span>&#8203;(boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
@@ -222,22 +222,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a>&nbsp;filter&#8203;(java.lang.String&nbsp;filter)</pre>
 </li>
 </ul>
-<a id="recursiveFileLookup(java.lang.Boolean)">
+<a id="recursiveFileLookup(boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>recursiveFileLookup</h4>
-<pre class="methodSignature"><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a>&nbsp;recursiveFileLookup&#8203;(java.lang.Boolean&nbsp;value)</pre>
+<pre class="methodSignature"><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a>&nbsp;recursiveFileLookup&#8203;(boolean&nbsp;value)</pre>
 </li>
 </ul>
-<a id="abortOnReadFailure(java.lang.Boolean)">
+<a id="abortOnReadFailure(boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>abortOnReadFailure</h4>
-<pre class="methodSignature"><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a>&nbsp;abortOnReadFailure&#8203;(java.lang.Boolean&nbsp;value)</pre>
+<pre class="methodSignature"><a href="ReadFilesOptions.html" title="type parameter in ReadFilesOptions">T</a>&nbsp;abortOnReadFailure&#8203;(boolean&nbsp;value)</pre>
 </li>
 </ul>
 <a id="s3AddCredentials()">

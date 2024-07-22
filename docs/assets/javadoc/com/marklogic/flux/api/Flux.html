@@ -219,38 +219,38 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
+<td class="colFirst"><code>static <a href="AggregateJsonFilesImporter.html" title="interface in com.marklogic.flux.api">AggregateJsonFilesImporter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importAggregateJsonFiles()">importAggregateJsonFiles</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="AggregateXmlFilesImporter.html" title="interface in com.marklogic.flux.api">AggregateXmlFilesImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importAggregateXmlFiles()">importAggregateXmlFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="ArchiveFilesImporter.html" title="interface in com.marklogic.flux.api">ArchiveFilesImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importArchiveFiles()">importArchiveFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="AvroFilesImporter.html" title="interface in com.marklogic.flux.api">AvroFilesImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importAvroFiles()">importAvroFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="DelimitedFilesImporter.html" title="interface in com.marklogic.flux.api">DelimitedFilesImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importDelimitedFiles()">importDelimitedFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="GenericFilesImporter.html" title="interface in com.marklogic.flux.api">GenericFilesImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importGenericFiles()">importGenericFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="JdbcImporter.html" title="interface in com.marklogic.flux.api">JdbcImporter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importJdbc()">importJdbc</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i19" class="rowColor">
-<td class="colFirst"><code>static <a href="JsonFilesImporter.html" title="interface in com.marklogic.flux.api">JsonFilesImporter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importJsonFiles()">importJsonFiles</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i20" class="altColor">
@@ -419,6 +419,20 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public static&nbsp;<a href="RdfFilesExporter.html" title="interface in com.marklogic.flux.api">RdfFilesExporter</a>&nbsp;exportRdfFiles()</pre>
 </li>
 </ul>
+<a id="importAggregateJsonFiles()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>importAggregateJsonFiles</h4>
+<pre class="methodSignature">public static&nbsp;<a href="AggregateJsonFilesImporter.html" title="interface in com.marklogic.flux.api">AggregateJsonFilesImporter</a>&nbsp;importAggregateJsonFiles()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an object that can import aggregate JSON files, where the files to import either contains an array of
+ JSON objects or conforms to the JSON Lines format.</dd>
+</dl>
+</li>
+</ul>
 <a id="importAggregateXmlFiles()">
 <!--   -->
 </a>
@@ -485,15 +499,6 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>importJdbc</h4>
 <pre class="methodSignature">public static&nbsp;<a href="JdbcImporter.html" title="interface in com.marklogic.flux.api">JdbcImporter</a>&nbsp;importJdbc()</pre>
-</li>
-</ul>
-<a id="importJsonFiles()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>importJsonFiles</h4>
-<pre class="methodSignature">public static&nbsp;<a href="JsonFilesImporter.html" title="interface in com.marklogic.flux.api">JsonFilesImporter</a>&nbsp;importJsonFiles()</pre>
 </li>
 </ul>
 <a id="importMlcpArchiveFiles()">
