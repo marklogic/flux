@@ -72,31 +72,31 @@ All available connection options are shown in the table below:
 
 | Option | Description | 
 | --- | --- |
-| --auth-type | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
-| --base-path | Path to prepend to each call to a MarkLogic [REST API app server](https://docs.marklogic.com/guide/rest-dev). |
-| --certificate-file | File path for a keystore to be used for `CERTIFICATE` authentication. |
-| --certificate-password | Password for the keystore referenced by `--certificate-file`. |
-| --connection-string |  Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using `DIGEST` or `BASIC` authentication. |
-| --cloud-api-key | API key for authenticating with a MarkLogic Cloud cluster when authentication type is `CLOUD`. |
-| --connection-type |  Set to `DIRECT` if connections can be made directly to each host in the MarkLogic cluster. Defaults to `GATEWAY`. Possible values are `DIRECT` and `GATEWAY`. |
-| --database | Name of a database to connect if it differs from the one associated with the app server identified by `--port`. |
-| --disable-gzipped-responses | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
-| --host | The MarkLogic host to connect to. |
-| --kerberos-principal | Principal to be used with `KERBEROS` authentication. |
-| --keystore-algorithm |  Algorithm of the keystore identified by `--keystore-path`; defaults to `SunX509`. |
-| --keystore-password | Password for the keystore identified by `--keystore-path`. |
-| --keystore-path | File path for a keystore for two-way SSL connections. |
-| --keystore-type | Type of the keystore identified by `--keystore-path`; defaults to `JKS`. |
-| --password | Password when using `DIGEST` or `BASIC` authentication. |
-| --port | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
-| --saml-token | Token to be used with `SAML` authentication. |
-| --ssl-hostname-verifier | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
-| --ssl-protocol | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore or truststore is configured, defaults to `TLSv1.2`. |
-| --truststore-algorithm | Algorithm of the truststore identified by `--truststore-path`; defaults to `SunX509`. |
-| --truststore-password | Password for the truststore identified by `--truststore-path`. |
-| --truststore-path | File path for a truststore for establishing trust with the certificate used by the MarkLogic app server. |
-| --truststore-type | Type of the truststore identified by `--truststore-path`; defaults to `JKS`. |
-| --username | Username when using `DIGEST` or `BASIC` authentication. |
+| `--auth-type` | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
+| `--base-path` | Path to prepend to each call to a MarkLogic [REST API app server](https://docs.marklogic.com/guide/rest-dev). |
+| `--certificate-file` | File path for a keystore to be used for `CERTIFICATE` authentication. |
+| `--certificate-password` | Password for the keystore referenced by `--certificate-file`. |
+| `--connection-string` |  Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using `DIGEST` or `BASIC` authentication. |
+| `--cloud-api-key` | API key for authenticating with a MarkLogic Cloud cluster when authentication type is `CLOUD`. |
+| `--connection-type` |  Set to `DIRECT` if connections can be made directly to each host in the MarkLogic cluster. Defaults to `GATEWAY`. Possible values are `DIRECT` and `GATEWAY`. |
+| `--database` | Name of a database to connect if it differs from the one associated with the app server identified by `--port`. |
+| `--disable-gzipped-responses` | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
+| `--host` | The MarkLogic host to connect to. |
+| `--kerberos-principal` | Principal to be used with `KERBEROS` authentication. |
+| `--keystore-algorithm` |  Algorithm of the keystore identified by `--keystore-path`; defaults to `SunX509`. |
+| `--keystore-password` | Password for the keystore identified by `--keystore-path`. |
+| `--keystore-path` | File path for a keystore for two-way SSL connections. |
+| `--keystore-type` | Type of the keystore identified by `--keystore-path`; defaults to `JKS`. |
+| `--password` | Password when using `DIGEST` or `BASIC` authentication. |
+| `--port` | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
+| `--saml-token` | Token to be used with `SAML` authentication. |
+| `--ssl-hostname-verifier` | Hostname verification strategy when connecting via SSL. Possible values are `ANY`, `COMMON`, and `STRICT`. |
+| `--ssl-protocol` | SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore or truststore is configured, defaults to `TLSv1.2`. |
+| `--truststore-algorithm` | Algorithm of the truststore identified by `--truststore-path`; defaults to `SunX509`. |
+| `--truststore-password` | Password for the truststore identified by `--truststore-path`. |
+| `--truststore-path` | File path for a truststore for establishing trust with the certificate used by the MarkLogic app server. |
+| `--truststore-type` | Type of the truststore identified by `--truststore-path`; defaults to `JKS`. |
+| `--username` | Username when using `DIGEST` or `BASIC` authentication. |
 
 
 ## Reading options from a file

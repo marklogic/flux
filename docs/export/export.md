@@ -5,7 +5,7 @@ nav_order: 5
 has_children: true
 ---
 
-Flux can export data from MarkLogic both as documents and as rows, writing data either to files or to another database
-via JDBC. Documents and their metadata can also be exported as "archive files" - ZIP files that contain entries both
-for document content and metadata.
+Flux can export data from MarkLogic as documents, rows, or RDF triples. Data can be written to a variety of file 
+formats, or to another database via JDBC. Documents can also be exported to ZIP files - known as "archive" files - 
+that contain both documents and their MarkLogic metadata. 
 

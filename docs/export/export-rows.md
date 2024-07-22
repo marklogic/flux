@@ -16,26 +16,21 @@ them either to files or to another database via JDBC.
 
 ## Querying for rows
 
-The following commands all support executing an Optic query and exporting the matching rows to an external data source:
+The following commands support executing an Optic query and exporting the matching rows to an external data source:
 
 - `export-avro-files`
+- `export-delimited-files`
 - `export-jdbc`
 - `export-orc-files`
 - `export-parquet-files`
 
 An Optic query is specified via the `--query` option. The query must be defined using the 
-[Optic DSL](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_46710) and must being with `op.fromView`. The 
+[Optic DSL](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_46710) and must begin with the `op.fromView` data accessor. The 
 [MarkLogic Spark connector documentation](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#optic-query-requirements)
 provides additional guidance on how to write an Optic query. 
 
 You must also specify connection information for the MarkLogic database you wish to query. Please see the 
 [guide on common options](../common-options.md) for instructions on doing so.
-
-The `--batch-size` and `--partitions` query are used to tune performance by controlling how many rows are retrieved in
-a single call to MarkLogic and how many requests are made in parallel. It is recommended to first test your command
-without setting these options to see if the performance is acceptable. When you are ready to attempt to optimize the 
-performance of your export command, please see the 
-[this guide on Optic query performance](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#tuning-performance).
 
 ## Exporting to JDBC
 
@@ -65,16 +60,17 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 a notional example of doing so:
 
 ```
-./bin/flux export-jdbc --connection-string user:password@localhost:8000 \
-  --query "op.fromView('example', 'employee', '')" \
-  --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
-  --jdbc-driver "org.postgresql.Driver" \
-  --table "marklogic-employee-data"
+./bin/flux export-jdbc \
+    --connection-string user:password@localhost:8000 \
+    --query "op.fromView('example', 'employee', '')" \
+    --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
+    --jdbc-driver "org.postgresql.Driver" \
+    --table "marklogic-employee-data"
 ```
 
 ## Exporting to files
 
-Rows selected via an Optic query can be exported to any of the formats described below.. 
+Rows selected via an Optic query can be exported to any of the below file formats.
 
 ### Avro
 
@@ -85,19 +81,28 @@ control how Avro content is written. These options are expressed as `-PoptionNam
 
 ### Delimited text
 
-The `export-delimited-text-files` command writes one or more delimited text (commonly CSV) files to the directory 
+The `export-delimited-files` command writes one or more delimited text (commonly CSV) files to the directory 
 specified by the `--path` option. This command reuses Spark's support for writing delimited text files. You can include
 any of the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` 
 option to control how delimited text is written. These options are expressed as `-PoptionName=optionValue`. 
 
-The `export-delimited-text-files` command defaults to setting the Spark CSV `header` option to `true` so that column
+The command defaults to setting the Spark CSV `header` option to `true` so that column
 names from your Optic query for selecting rows from MarkLogic are included in each output file. You can override this
 via `-Pheader=false` if desired.
+
+The command also defaults to setting the Spark CSV `inferSchema` option to `true`. This results in Flux, via Spark CSV,
+attempting to determine a type for each column in the delimited text file. To disable this behavior, resulting in 
+every column having a type of `string`, include `-PinferSchema=false`. 
 
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the 
 `--encoding` option - e.g. 
 
-    ./bin/flux export-delimited-text-files --path destination --encoding ISO-8859-1 ...
+```
+./bin/flux export-delimited-files \
+    --path destination \
+    --encoding ISO-8859-1 \
+    etc...
+```
 
 ### JSON Lines
 
@@ -109,7 +114,12 @@ how JSON Lines files are written. These options are expressed as `-PoptionName=o
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the
 `--encoding` option - e.g.
 
-    ./bin/flux export-delimited-text-files --path destination --encoding ISO-8859-1 ...
+```
+./bin/flux export-delimited-files \
+    --path destination \
+    --encoding ISO-8859-1 \
+    etc...
+```
 
 ### ORC
 
@@ -132,7 +142,18 @@ location where data already exists. This option supports the following values:
 
 - `Append` = append data if the destination already exists.
 - `Overwrite` = replace data if the destination already exists. 
-- `ErrorIfExists` = throw an error if the destination already exists.
+- `ErrorIfExists` = throw an error if the destination already exists. This is the default mode.
 - `Ignore` = do not write any data if the destination already exists. 
 
 For convenience, the above values are case-sensitive so that you can ignore casing when choosing a value. 
+
+For further information on each mode, please see 
+[the Spark documentation](https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes).
+
+## Tuning query performance
+
+The `--batch-size` and `--partitions` options are used to tune performance by controlling how many rows are retrieved in
+a single call to MarkLogic and how many requests are made in parallel to MarkLogic. It is recommended to first test your command
+without setting these options to see if the performance is acceptable. When you are ready to attempt to optimize the
+performance of your export command, please see the
+[this guide on Optic query performance](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#tuning-performance).
