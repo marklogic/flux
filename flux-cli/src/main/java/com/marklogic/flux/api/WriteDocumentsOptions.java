@@ -23,7 +23,7 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T threadCount(int threadCount);
 
-    T totalThreadCount(int totalThreadCount);
+    T threadCountPerPartition(int threadCountPerPartition);
 
     T transform(String transform);
 

@@ -46,7 +46,8 @@ of the `person` element in the document:
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
     --connection-string user:password@localhost:8000 \
-    --element employee --namespace org:example
+    --element person \
+    --namespace org:example
 ```
 
 ## Controlling document URIs
@@ -60,8 +61,8 @@ based on the value of each `id` element in the `org:example` namespace:
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
     --connection-string user:password@localhost:8000 \
-    --element employee --namespace org:example \
-    --uri-element id --namespace org:example
+    --element person --namespace org:example \
+    --uri-element id --uri-namespace org:example
 ```
 
 You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make the URI more self-describing. For

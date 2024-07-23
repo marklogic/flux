@@ -21,7 +21,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "--total-thread-count", "1",
+            "--thread-count", "1",
             "--uri-template", "/parquet/{model}.json",
 
             // Including these for manual verification of progress logging.
