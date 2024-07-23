@@ -76,8 +76,11 @@ Rows selected via an Optic query can be exported to any of the below file format
 
 The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Avro files. You can include any of the 
-[Spark Avro options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
+[Spark Avro data source options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
 control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
+
+For configuration options listed in the above Spark Avro guide, use the `-C` option instead. For example,
+`-Cspark.sql.avro.compression.codec=deflate` would change the type of compression used for writing Avro files.
 
 ### Delimited text
 
@@ -125,15 +128,21 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
 
 The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing ORC files. You can include any of the
-[Spark ORC options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
+[Spark ORC data source options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
 control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
+
+For configuration options listed in the above Spark ORC guide, use the `-C` option instead. For example,
+`-Cspark.sql.orc.impl=hive` would change the type of ORC implementation.
 
 ### Parquet
 
 The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Parquet files. You can include any of the
-[Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to
+[Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to
 control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
+
+For configuration options listed in the above Spark Parquet guide, use the `-C` option instead. For example, 
+`-Cspark.sql.parquet.compression.codec=gzip` would change the compressed used for writing Parquet files.
 
 ## Controlling the save mode
 

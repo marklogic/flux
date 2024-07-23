@@ -95,5 +95,8 @@ explicitly specify a compression algorithm if Flux is not able to read your comp
 ## Advanced options
 
 The `import-parquet-files` command reuses Spark's support for reading Parquet files. You can include any of
-the [Spark Parquet options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option
+the [Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option
 to control how Parquet content is read. These options are expressed as `-PoptionName=optionValue`.
+
+For the configuration options listed in the above Spark Parquet guide, use the `-C` option instead. For example,
+`-Cspark.sql.parquet.filterPushdown=false` would configure Spark Parquet to not push down filters.

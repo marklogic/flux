@@ -25,7 +25,10 @@ class ImportAvroFilesTest extends AbstractTest {
 
             // Including these for manual verification of progress logging.
             "--batch-size", "1",
-            "--log-progress", "2"
+            "--log-progress", "2",
+
+            // Including this to ensure a valid -C option doesn't cause an error.
+            "-Cspark.sql.avro.filterPushdown.enabled=false"
         );
 
         assertCollectionSize("avro-test", 6);

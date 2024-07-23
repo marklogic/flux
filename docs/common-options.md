@@ -254,3 +254,29 @@ potentially being helpful. The initial error message displayed by Flux is intend
 Flux uses a [Log4J2 properties file](https://logging.apache.org/log4j/2.x/manual/configuration.html#Properties) to 
 configure its logging. The file is located in a Flux installation at `./conf/log4j2.properties`. You are free to 
 customize this file to meet your needs for logging.
+
+## Advanced Spark options
+
+Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 
+configuring the underlying Spark runtime environment used by Flux. 
+
+### Configuring a Spark URL
+
+By default, Flux creates a Spark session with a master URL of `local[*]`. You can change this via the 
+`--spark-master-url` option; please see 
+[the Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls) for examples
+of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
+[Spark Integration guide](spark-integration.md) for details on integrating Flux with `spark-submit`.
+
+### Configuring the Spark runtime
+
+Some Flux commands reuse [Spark data sources](https://spark.apache.org/docs/latest/sql-data-sources.html) that 
+accept configuration items via the Spark runtime. You can provide these configuration items via the `-C` option. 
+For example, the [Spark Avro data source](https://spark.apache.org/docs/latest/sql-data-sources-avro.html#configuration)
+identifies several configuration items, such as `spark.sql.avro.compression.codec`. You can set this value by 
+including `-Cspark.sql.avro.compression.codec=snappy` as a command line option. 
+
+Note that the majority of [Spark cluster configuration properties](https://spark.apache.org/docs/latest/configuration.html)
+cannot be set via the `-C` option as those options must be set before a Spark session is created. For further control 
+over the Spark session, please see the [Spark Integration guide](spark-integration.md) for details on integrating Flux
+with `spark-submit`.
