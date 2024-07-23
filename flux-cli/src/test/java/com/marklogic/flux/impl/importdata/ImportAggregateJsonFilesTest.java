@@ -125,6 +125,28 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     }
 
     @Test
+    void gzippedJsonLines() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/delimited-files/line-delimited-json.txt.gz",
+            "--json-lines",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-json-test",
+            "--uri-template", "/delimited/{lastName}.json"
+        );
+
+        assertCollectionSize(
+            "Spark data sources will automatically handle .gz files without -Pcompression=gzip being specified.",
+            "delimited-json-test", 3
+        );
+        verifyDoc("/delimited/lastName-1.json", "firstName-1", "lastName-1");
+        verifyDoc("/delimited/lastName-2.json", "firstName-2", "lastName-2");
+        verifyDoc("/delimited/lastName-3.json", "firstName-3", "lastName-3");
+    }
+
+
+    @Test
     void jsonRootName() {
         run(
             "import-aggregate-json-files",

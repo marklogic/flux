@@ -32,10 +32,10 @@ are followed by a list of options common to every Flux command.
 You can specify a command name without entering its full name, as long as you enter a sufficient number of characters
 such that Flux can uniquely identify the command name.
 
-For example, instead of entering `import-aggregate-xml-files`, you can enter `import-ag` as it is the only command in
-Flux with that sequence of letters:
+For example, instead of entering `import-parquet-files`, you can enter `import-p` as it is the only command in
+Flux beginning with that sequence of letters:
 
-    ./bin/flux import-ag --path path/to/data etc...
+    ./bin/flux import-p --path path/to/data etc...
 
 If Flux cannot uniquely identify the command name, it will print an error and list the command names that match what
 you entered.
