@@ -225,9 +225,32 @@ Flux will then log the count:
 [main] INFO com.marklogic.flux: Count: 1000
 ```
 
+## Viewing progress
+
+For commands that write data to MarkLogic - which includes all import, copy, and reprocess commands - Flux will log
+messages at the `INFO` level showing progress in terms of how much data has been sent to MarkLogic. For import and 
+copy commands, Flux defaults to logging a message every time approximately 10,000 documents are written. For the 
+reprocess command, Flux defaults to logging a message every time approximately 10,000 items are reprocessed by 
+MarkLogic. These values can be adjusted via the `--log-progress` option. The guides on import, copy, and reprocess
+provide further details on logging progress. 
+
+For export commands, Flux does not log progress as it does not always have visibility into how much data has been 
+written to an external data source (whereas it does have visibility into how much data has been written to 
+MarkLogic). You can instead include the `--spark-show-progress-bar` option to enable the progress bar provided
+by the underlying [Apache Spark software](https://spark.apache.org/). The Spark progress bar provides details at a
+lower level that may not provide visibility into the amount of data that has been exported, but it will at least avoid
+the impression that Flux is stuck. Typically, the best approach for monitoring progress for export commands 
+will be to examine the target destination to see how much data has been written. 
+
 ## Viewing a stacktrace
 
 When a command fails, Flux will stop execution of the command and display an error message. If you wish to see the 
 underlying stacktrace associated with the error, run the command with the `--stacktrace` option included. This is 
 included primarily for debugging purposes, as the stacktrace may be fairly long with only a small portion of it 
 potentially being helpful. The initial error message displayed by Flux is intended to be as helpful as possible. 
+
+## Configuring logging
+
+Flux uses a [Log4J2 properties file](https://logging.apache.org/log4j/2.x/manual/configuration.html#Properties) to 
+configure its logging. The file is located in a Flux installation at `./conf/log4j2.properties`. You are free to 
+customize this file to meet your needs for logging.

@@ -35,13 +35,17 @@ public class CommonParams {
     @CommandLine.Option(names = "--stacktrace", description = "Print the stacktrace when a command fails.")
     private boolean showStacktrace;
 
-    // Hidden for now since showing it for every command in its "help" seems confusing for most users that will likely
-    // never need to know about this.
     @CommandLine.Option(
         names = "--spark-master-url",
         description = "Specify the Spark master URL for configuring the local Spark cluster created by Flux."
     )
     private String sparkMasterUrl = "local[*]";
+
+    @CommandLine.Option(
+        names = "--spark-show-progress-bar",
+        description = "Show the Spark progress bar in the console, which will periodically log Spark stage progress."
+    )
+    private boolean sparkShowProgressBar;
 
     @CommandLine.Option(
         names = "-C",
@@ -81,5 +85,9 @@ public class CommonParams {
 
     public Preview getPreview() {
         return preview;
+    }
+
+    public boolean isSparkShowProgressBar() {
+        return sparkShowProgressBar;
     }
 }
