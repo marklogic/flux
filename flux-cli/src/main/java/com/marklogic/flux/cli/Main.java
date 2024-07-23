@@ -3,10 +3,7 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.Command;
-import com.marklogic.flux.impl.SparkUtil;
-import com.marklogic.flux.impl.VersionCommand;
+import com.marklogic.flux.impl.*;
 import com.marklogic.flux.impl.copy.CopyCommand;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
@@ -112,11 +109,15 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
+        boolean showProgressBar = false;
         if (selectedCommand instanceof AbstractCommand) {
-            masterUrl = ((AbstractCommand) selectedCommand).getCommonParams().getSparkMasterUrl();
+            CommonParams commonParams = ((AbstractCommand) selectedCommand).getCommonParams();
+            masterUrl = commonParams.getSparkMasterUrl();
+            showProgressBar = commonParams.isSparkShowProgressBar();
         }
+
         return masterUrl != null && masterUrl.trim().length() > 0 ?
-            SparkUtil.buildSparkSession(masterUrl) :
+            SparkUtil.buildSparkSession(masterUrl, showProgressBar) :
             SparkUtil.buildSparkSession();
     }
 }
