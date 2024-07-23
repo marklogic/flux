@@ -17,16 +17,31 @@ of specifying paths are described below.
 
 ## Specifying paths
 
-The `--path` option controls where files are read from. You can specify multiple occurrences of `--path`, each with a 
-different value, to import files from many sources in a single command invocation:
+Each command that imports from files requires the use of the `--path` option with at least one value - for example:
 
-    --path relative/path/to/files --path /absolute/path/to/files
+    --path path/to/files
+
+You can include multiple values for the `--path` option, which can utilize both relative and absolute file paths:
+
+    --path relative/path/to/files /absolute/path/to/files
+
 
 The value of the `--path` option can be any directory or file path. You can use wildcards in any part of the path. For
 example, the following, would select every file starting with `example` in any child directory of the root `/data`
 directory:
 
     --path /data/*/example*
+
+## Filtering files
+
+You can restrict which files are read from a directory by specifying a standard
+[glob expression](https://en.wikipedia.org/wiki/Glob_(programming)) via the `--filter` option:
+
+    --path /data/examples --filter "example*.json"
+
+Depending on your shell environment, you may need to include the value of `--filter` in double quotes as shown above to
+ensure that each asterisk is interpreted correctly. However, if you include `--filter` in an options file as 
+described in [Common Options](../../common-options.md), you do not need double quotes around the value. 
 
 ## Reading from S3
 
@@ -56,10 +71,3 @@ By default, child directories of each directory specified by `--path` are includ
 option:
 
     --recursive-file-lookup false
-
-## Filtering files
-
-You can restrict which files are read from a directory by specifying a standard
-[glob expression](https://en.wikipedia.org/wiki/Glob_(programming)) via the `--filter` option:
-
-    --path /data/examples --filter some*.json

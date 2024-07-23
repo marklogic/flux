@@ -40,6 +40,33 @@ Flux beginning with that sequence of letters:
 If Flux cannot uniquely identify the command name, it will print an error and list the command names that match what
 you entered.
 
+## Reading options from a file
+
+Flux supports reading options from a file. In a text file, you can either add each option name and value to a separate
+line:
+
+```
+--host
+localhost
+--port
+8000
+etc...
+```
+
+Or you can put one or more options on the same line:
+
+```
+--host localhost
+--port 8000
+etc...
+```
+
+You then reference the file via the `@` symbol followed by a filename:
+
+    ./bin/flux import-files @my-options.txt
+
+You can reference multiple files this way and also include additional options on the command line.
+
 ## Connecting to MarkLogic
 
 Every command in Flux will need to connect to a MarkLogic database, either for reading data or writing data or both. 
@@ -48,6 +75,8 @@ Generally, you must include at least the following information for each command:
 - The name of a MarkLogic host.
 - The port of a [MarkLogic REST API app server](https://docs.marklogic.com/guide/rest-dev) connected to the database you wish to interact with.
 - Authentication information.
+
+### Using a connection string
 
 For the common use case of using digest or basic authentication with a MarkLogic app server, you can use the 
 `--connection-string` option to specify the host, port, username, and password in a single concise option:
@@ -67,6 +96,22 @@ password of `sp@r:k`, you would use the following string:
 
 For other authentication mechanisms, you must use the `--host` and `--port` options to define the host and port for 
 your MarkLogic app server. 
+
+### Determining the connection type
+
+The `--connection-type` option determines which of the following approaches Flux uses for connecting to MarkLogic:
+
+- `GATEWAY` = the default value; Flux assumes that it cannot directly connect to each host in the MarkLogic cluster, most
+likely due to the value of `--host` or the host value found in `--connection-string` being that of a load balancer that
+controls access to MarkLogic.
+- `DIRECT` = Flux will try to connect to each host in the MarkLogic cluster. 
+
+If you do not have a load balancer in front of MarkLogic, and if Flux is able to connect to each host that hosts one
+or more forests for the database you wish to access, then you can set `--connection-type` to a value of `DIRECT`. This
+will often improve performance as Flux will be able to both connect to multiple hosts, thereby utilizing the app server
+threads available on each host, and also write directly to a forest on the host that it connects to. 
+
+### Connection options
 
 All available connection options are shown in the table below:
 
@@ -98,33 +143,6 @@ All available connection options are shown in the table below:
 | `--truststore-type` | Type of the truststore identified by `--truststore-path`; defaults to `JKS`. |
 | `--username` | Username when using `DIGEST` or `BASIC` authentication. |
 
-
-## Reading options from a file
-
-Flux supports reading options from a file. In a text file, you can either add each option name and value to a separate
-line:
-
-```
---host
-localhost
---port
-8000
-etc...
-```
-
-Or you can put one or more options on the same line:
-
-```
---host localhost
---port 8000
-etc...
-```
-
-You then reference the file via the `@` symbol followed by a filename:
-
-    ./bin/flux import-files @my-options.txt
-
-You can reference multiple files this way and also include additional options on the command line.
 
 ## Previewing data
 

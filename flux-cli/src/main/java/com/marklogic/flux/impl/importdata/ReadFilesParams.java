@@ -16,7 +16,15 @@ import java.util.*;
 public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T> {
 
     // "path" is the name so that picocli shows "--path <path>" instead of "--path <paths>".
-    @CommandLine.Option(required = true, names = "--path", description = "Specify one or more path expressions for selecting files to import.")
+    @CommandLine.Option(
+        required = true,
+        names = "--path",
+        description = "One or more path expressions for selecting files to import.",
+        // For a path like "/opt/data*.xml", the user's shell may resolve the asterisk and determine a list of all the
+        // files that match. Each file then becomes a value passed to this List. In order for that to work properly,
+        // we need arity set to allow for unlimited values. See https://picocli.info/#_arity for more information.
+        arity = "1..*"
+    )
     private List<String> path = new ArrayList<>();
 
     @CommandLine.Option(names = "--abort-on-read-failure", description = "Causes the command to abort when it fails to read a file.")
