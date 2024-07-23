@@ -32,7 +32,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         assertStderrContains(() -> run(
             "import-aggregate-xml-files",
             "--connection-string", makeConnectionString()
-        ), "Missing required options: '--path <path>', '--element <element>'");
+        ), "Missing required options: '--element <element>', '--path <path>'");
     }
 
     @Test

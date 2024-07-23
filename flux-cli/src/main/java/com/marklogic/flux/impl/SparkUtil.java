@@ -22,7 +22,6 @@ public class SparkUtil {
     public static SparkSession buildSparkSession(String masterUrl) {
         return SparkSession.builder()
             .master(masterUrl)
-            // These can be overridden via the "-C" CLI option.
             .config("spark.ui.showConsoleProgress", "true")
             .config("spark.sql.session.timeZone", "UTC")
             .getOrCreate();

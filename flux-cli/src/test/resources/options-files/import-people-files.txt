@@ -1,0 +1,2 @@
+--path src/test/resources/xml-file/temp
+--filter people*.xml

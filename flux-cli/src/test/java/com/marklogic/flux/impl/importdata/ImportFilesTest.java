@@ -43,6 +43,42 @@ class ImportFilesTest extends AbstractTest {
     }
 
     @Test
+    void pathAndFilterWithWildcardInOptionsFile() {
+        run(
+            "import-files",
+            "@src/test/resources/options-files/import-people-files.txt",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "people-files",
+            "--uri-replace", ".*/xml-file,''"
+        );
+
+        assertCollectionSize(
+            "Verifying that when --filter is included in an options file, double quotes should not be used for " +
+                "the value of --filter.",
+            "people-files", 2
+        );
+    }
+
+    @Test
+    void pathWithArityofTwo() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello.txt", "src/test/resources/mixed-files/hello.xml",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "people-files",
+            "--uri-replace", ".*/xml-file,''"
+        );
+
+        assertCollectionSize(
+            "Verifying that --path accepts multiple values, which is needed in order for an asterisk to work " +
+                "in some shell environments.",
+            "people-files", 2
+        );
+    }
+
+    @Test
     void withUsernameAndPasswordAndAuthType() {
         run(
             "import-files",
