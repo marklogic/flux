@@ -25,7 +25,10 @@ class ImportOrcFilesTest extends AbstractTest {
 
             // Including these for manual verification of progress logging.
             "--batch-size", "5",
-            "--log-progress", "5"
+            "--log-progress", "5",
+
+            // Including this to ensure a valid -C option doesn't cause an error.
+            "-Cspark.sql.orc.filterPushdown=false"
         );
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);

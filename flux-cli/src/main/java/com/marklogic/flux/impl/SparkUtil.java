@@ -22,6 +22,10 @@ public class SparkUtil {
     public static SparkSession buildSparkSession(String masterUrl, boolean showConsoleProgress) {
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
+            // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
+            // options now that are defined by the user is that they won't work when used with spark-submit, which
+            // handles constructing a SparkSession. We may eventually provide a feature though for providing options
+            // at this point for local users that want more control over the SparkSession itself.
             .config("spark.sql.session.timeZone", "UTC");
 
         if (showConsoleProgress) {

@@ -26,7 +26,10 @@ class ImportParquetFilesTest extends AbstractTest {
 
             // Including these for manual verification of progress logging.
             "--batch-size", "5",
-            "--log-progress", "10"
+            "--log-progress", "10",
+
+            // Including this to ensure a valid -C option doesn't cause an error.
+            "-Cspark.sql.parquet.filterPushdown=false"
         );
 
         assertCollectionSize("parquet-test", 32);
