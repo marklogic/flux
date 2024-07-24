@@ -357,7 +357,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             names = "--log-progress",
             description = "Log a count of items processed every time this many items are processed."
         )
-        private int logProgress;
+        private int logProgress = 10000;
 
         public void validateWriter() {
             Map<String, String> options = get();

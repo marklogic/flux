@@ -48,7 +48,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         names = "--log-progress",
         description = "Log a count of documents written every time this many documents are written."
     )
-    private int logProgress;
+    private int logProgress = 10000;
 
     @CommandLine.Option(
         names = "--permissions",
