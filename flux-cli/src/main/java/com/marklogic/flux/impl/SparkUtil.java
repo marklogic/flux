@@ -16,10 +16,10 @@ public class SparkUtil {
     }
 
     public static SparkSession buildSparkSession() {
-        return buildSparkSession("local[*]", false);
+        return buildSparkSession("local[*]");
     }
 
-    public static SparkSession buildSparkSession(String masterUrl, boolean showConsoleProgress) {
+    public static SparkSession buildSparkSession(String masterUrl) {
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
             // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
@@ -27,15 +27,6 @@ public class SparkUtil {
             // handles constructing a SparkSession. We may eventually provide a feature though for providing options
             // at this point for local users that want more control over the SparkSession itself.
             .config("spark.sql.session.timeZone", "UTC");
-
-        if (showConsoleProgress) {
-            // The main value of this is in showing pixels moving. The info provided by Spark - about tasks and stages -
-            // is usually going to be too low-level for a typical user. But because the Spark progress consoles shows
-            // an ASCII spinner and some things being updated, it at least gives the user comfort that Flux is not
-            // frozen. Note as well that for import, copy, and reprocess commands, the --log-progress feature provides
-            // much more useful progress status.
-            builder = builder.config("spark.ui.showConsoleProgress", "true");
-        }
 
         return builder.getOrCreate();
     }

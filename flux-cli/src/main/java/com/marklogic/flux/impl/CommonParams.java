@@ -42,12 +42,6 @@ public class CommonParams {
     private String sparkMasterUrl = "local[*]";
 
     @CommandLine.Option(
-        names = "--spark-show-progress-bar",
-        description = "Show the Spark progress bar in the console, which will periodically log Spark stage progress."
-    )
-    private boolean sparkShowProgressBar;
-
-    @CommandLine.Option(
         names = "-C",
         description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true."
     )
@@ -85,9 +79,5 @@ public class CommonParams {
 
     public Preview getPreview() {
         return preview;
-    }
-
-    public boolean isSparkShowProgressBar() {
-        return sparkShowProgressBar;
     }
 }
