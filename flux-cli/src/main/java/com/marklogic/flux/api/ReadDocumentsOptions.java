@@ -17,6 +17,8 @@ public interface ReadDocumentsOptions<T extends ReadDocumentsOptions> {
 
     T directory(String directory);
 
+    T logProgress(int interval);
+
     T transform(String transform);
 
     T transformParams(String delimitedNamesAndValues);

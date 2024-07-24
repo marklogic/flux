@@ -12,4 +12,6 @@ public interface ReadRowsOptions {
     ReadRowsOptions batchSize(int batchSize);
 
     ReadRowsOptions partitions(int partitions);
+
+    ReadRowsOptions logProgress(int interval);
 }

@@ -100,6 +100,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
         private int partitionsPerForest = 4;
 
+        @CommandLine.Option(
+            names = "--log-progress",
+            description = "Log a count of total triples read every time this many triples are read."
+        )
+        private int progressInterval = 10000;
+
         public Map<String, String> getQueryOptions() {
             return OptionsUtil.makeOptions(
                 Options.READ_TRIPLES_GRAPHS, graphs,
@@ -117,7 +123,8 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
                 Options.READ_TRIPLES_OPTIONS, options,
                 Options.READ_TRIPLES_BASE_IRI, baseIri,
                 Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest),
-                Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize)
+                Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+                Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
             );
         }
 
@@ -178,6 +185,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Override
         public RdfFilesExporter.ReadTriplesDocumentsOptions partitionsPerForest(int partitionsPerForest) {
             this.partitionsPerForest = partitionsPerForest;
+            return this;
+        }
+
+        @Override
+        public ReadTriplesDocumentsOptions logProgress(int interval) {
+            this.progressInterval = interval;
             return this;
         }
     }
