@@ -109,15 +109,13 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
-        boolean showProgressBar = false;
         if (selectedCommand instanceof AbstractCommand) {
             CommonParams commonParams = ((AbstractCommand) selectedCommand).getCommonParams();
             masterUrl = commonParams.getSparkMasterUrl();
-            showProgressBar = commonParams.isSparkShowProgressBar();
         }
 
         return masterUrl != null && masterUrl.trim().length() > 0 ?
-            SparkUtil.buildSparkSession(masterUrl, showProgressBar) :
+            SparkUtil.buildSparkSession(masterUrl) :
             SparkUtil.buildSparkSession();
     }
 }
