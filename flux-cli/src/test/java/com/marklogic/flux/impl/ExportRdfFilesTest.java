@@ -32,7 +32,9 @@ class ExportRdfFilesTest extends AbstractTest {
             "--graphs", "my-triples",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--format", "nq",
-            "--file-count", "1"
+            "--file-count", "1",
+            "--batch-size", "5",
+            "--log-progress", "10"
         );
 
         File[] files = tempDir.toFile().listFiles();

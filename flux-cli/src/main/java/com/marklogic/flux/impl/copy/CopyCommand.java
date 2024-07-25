@@ -79,8 +79,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private String failedDocumentsPath;
 
         @CommandLine.Option(
-            names = "--log-progress",
-            description = "Log a count of documents written every time this many documents are written."
+            names = "--output-log-progress",
+            description = "Log a count of total documents written every time this many documents are written."
         )
         private int logProgress = 10000;
 
@@ -206,8 +206,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
 
         @Override
-        public CopyWriteDocumentsParams logProgress(int numberOfDocuments) {
-            this.logProgress = numberOfDocuments;
+        public CopyWriteDocumentsParams logProgress(int interval) {
+            this.logProgress = interval;
             return this;
         }
 

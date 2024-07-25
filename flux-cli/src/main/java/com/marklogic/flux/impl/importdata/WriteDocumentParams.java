@@ -46,9 +46,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @CommandLine.Option(
         names = "--log-progress",
-        description = "Log a count of documents written every time this many documents are written."
+        description = "Log a count of total documents written every time this many documents are written."
     )
-    private int logProgress = 10000;
+    private int progressInterval = 10000;
 
     @CommandLine.Option(
         names = "--permissions",
@@ -126,7 +126,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
             Options.WRITE_COLLECTIONS, collections,
-            Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress),
+            Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(progressInterval),
             Options.WRITE_PERMISSIONS, permissions,
             Options.WRITE_TEMPORAL_COLLECTION, temporalCollection,
             Options.WRITE_THREAD_COUNT, OptionsUtil.intOption(threadCount),
@@ -177,8 +177,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T logProgress(int numberOfDocuments) {
-        this.logProgress = numberOfDocuments;
+    public T logProgress(int interval) {
+        this.progressInterval = interval;
         return (T) this;
     }
 

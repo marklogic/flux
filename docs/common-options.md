@@ -225,22 +225,25 @@ Flux will then log the count:
 [main] INFO com.marklogic.flux: Count: 1000
 ```
 
+The performance of using `--count` is dependent on how quickly data can be read from the command's data source. For 
+example, commands that export documents from MarkLogic must read every document to be exported in order to calculate 
+a count. For a scenario like that, you can likely much more quickly determine a count by running your query in 
+MarkLogic's qconsole application.
+
 ## Viewing progress
 
-For commands that write data to MarkLogic - which includes all import, copy, and reprocess commands - Flux will log
-messages at the `INFO` level showing progress in terms of how much data has been sent to MarkLogic. For import and 
-copy commands, Flux defaults to logging a message every time approximately 10,000 documents are written. For the 
-reprocess command, Flux defaults to logging a message every time approximately 10,000 items are reprocessed by 
-MarkLogic. These values can be adjusted via the `--log-progress` option. The guides on import, copy, and reprocess
-provide further details on logging progress. 
+Each Flux command supports a `--log-progress` option that you can use to specify how often you want a message logged
+indicating progress. Import commands will show progress in terms of writing data to MarkLogic, while export 
+commands will show progress in terms of reading data from MarkLogic. The `copy` command can show both types of progress, 
+with `--log-progress` specifying an interval for logging data that has been read and `--output-log-progress` 
+specifying an interval for logging data that has been written. The `reprocess` command is similar to import commands
+in that it shows progress in terms of processing data that has been read from MarkLogic.
 
-For export commands, Flux does not log progress as it does not always have visibility into how much data has been 
-written to an external data source (whereas it does have visibility into how much data has been written to 
-MarkLogic). You can instead include the `--spark-show-progress-bar` option to enable the progress bar provided
-by the underlying [Apache Spark software](https://spark.apache.org/). The Spark progress bar provides details at a
-lower level that may not provide visibility into the amount of data that has been exported, but it will at least avoid
-the impression that Flux is stuck. Typically, the best approach for monitoring progress for export commands 
-will be to examine the target destination to see how much data has been written. 
+The `--log-progress` option defaults to a value of 10,000, with one exception - export commands that read rows from 
+MarkLogic defaults `--log-progress` to a value of 100,000. For an import command with a value of 10,000, 
+Flux will log a message at the `INFO` level every time it reads 10,000 documents - so at 10,000, 20,000, etc. 
+You can change this value to suit your needs, though you typically will want it to be significantly larger than 
+the value of `--batch-size` if the command supports that option.
 
 ## Viewing a stacktrace
 

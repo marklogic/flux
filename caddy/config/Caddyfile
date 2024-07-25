@@ -1,7 +1,7 @@
 # See https://caddyserver.com/docs/caddyfile-tutorial for more information.
 
 :8006 {
-  reverse_proxy mlperfr-009.bedford.progress.com:8015 mlperfr-010.bedford.progress.com:8015 mlperfr-011.bedford.progress.com:8015 {
+  reverse_proxy marklogic:8000 {
     transport http {
       dial_timeout 31s
     }
@@ -12,7 +12,7 @@
 }
 
 :8007 {
-  reverse_proxy mlperfr-009.bedford.progress.com:8016 mlperfr-010.bedford.progress.com:8016 mlperfr-011.bedford.progress.com:8016 {
+  reverse_proxy marklogic:8004 {
     transport http {
       dial_timeout 31s
     }

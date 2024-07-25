@@ -355,9 +355,9 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @CommandLine.Option(
             names = "--log-progress",
-            description = "Log a count of items processed every time this many items are processed."
+            description = "Log a count of total items processed every time this many items are processed."
         )
-        private int logProgress = 10000;
+        private int progressInterval = 10000;
 
         public void validateWriter() {
             Map<String, String> options = get();
@@ -379,7 +379,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 Options.WRITE_EXTERNAL_VARIABLE_DELIMITER, externalVariableDelimiter,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
-                Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress)
+                Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
             );
 
             if (writeVars != null) {
@@ -459,7 +459,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @Override
         public WriteOptions logProgress(int numberOfItems) {
-            this.logProgress = numberOfItems;
+            this.progressInterval = numberOfItems;
             return this;
         }
     }

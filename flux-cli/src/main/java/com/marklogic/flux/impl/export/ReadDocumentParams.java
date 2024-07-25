@@ -59,6 +59,12 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
     private int partitionsPerForest = 4;
 
+    @CommandLine.Option(
+        names = "--log-progress",
+        description = "Log a count of total documents read every time this many documents are read."
+    )
+    private int progressInterval = 10000;
+
     public void verifyAtLeastOneQueryOptionIsSet(String verbForErrorMessage) {
         if (makeQueryOptions().isEmpty()) {
             throw new FluxException(String.format("Must specify at least one of the following for the documents to %s: " +
@@ -73,7 +79,8 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS, transformParams,
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
             Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
-            Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest)
+            Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest),
+            Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
         );
     }
 
@@ -120,6 +127,12 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     @Override
     public T directory(String directory) {
         this.directory = directory;
+        return (T) this;
+    }
+
+    @Override
+    public T logProgress(int interval) {
+        this.progressInterval = interval;
         return (T) this;
     }
 

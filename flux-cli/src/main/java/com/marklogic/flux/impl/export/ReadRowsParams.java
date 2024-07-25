@@ -35,12 +35,19 @@ public class ReadRowsParams implements ReadRowsOptions {
         "Increasing this may improve performance as the number of rows to read increases.")
     private int partitions;
 
+    @CommandLine.Option(
+        names = "--log-progress",
+        description = "Log a count of total rows read every time this many rows are read."
+    )
+    private int progressInterval = 100000;
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.READ_OPTIC_QUERY, query,
             Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
             Options.READ_PUSH_DOWN_AGGREGATES, disableAggregationPushDown ? "true" : null,
-            Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
+            Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
+            Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
         );
     }
 
@@ -65,6 +72,12 @@ public class ReadRowsParams implements ReadRowsOptions {
     @Override
     public ReadRowsOptions partitions(int partitions) {
         this.partitions = partitions;
+        return this;
+    }
+
+    @Override
+    public ReadRowsOptions logProgress(int interval) {
+        this.progressInterval = interval;
         return this;
     }
 }

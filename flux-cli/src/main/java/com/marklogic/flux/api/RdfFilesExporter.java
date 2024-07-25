@@ -31,6 +31,8 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
         ReadTriplesDocumentsOptions batchSize(int batchSize);
 
         ReadTriplesDocumentsOptions partitionsPerForest(int partitionsPerForest);
+
+        ReadTriplesDocumentsOptions logProgress(int interval);
     }
 
     interface WriteRdfFilesOptions extends WriteFilesOptions<WriteRdfFilesOptions> {
