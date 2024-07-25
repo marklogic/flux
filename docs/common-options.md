@@ -263,6 +263,20 @@ customize this file to meet your needs for logging.
 Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 
 configuring the underlying Spark runtime environment used by Flux. 
 
+### Configuring the number of partitions 
+
+Flux uses Spark partitions to allow for data to be read and written in parallel. Each partition can be thought of as 
+a separate worker, operating in parallel with each other worker. 
+
+A number of partitions will be determined by the command that you run before it reads data. The nature of the data 
+source directly impacts the number of partitions that will be created. 
+
+If you find that an insufficient number of partitions are created - i.e. the writer phase of your Flux command is not
+sending as much data to MarkLogic as it could - consider using the `--repartition` option to force a number of 
+partitions to be created after the data has been read. The downside to using `--repartition` is that all the data must
+be read first. Generally, this option will help when data can be read quickly and the performance of writing can be 
+improved by using more partitions than were created when reading data.
+
 ### Configuring a Spark URL
 
 By default, Flux creates a Spark session with a master URL of `local[*]`. You can change this via the 

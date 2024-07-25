@@ -37,6 +37,24 @@ class ReprocessTest extends AbstractTest {
         }
     }
 
+    @Test
+    void processBatchOfItems() {
+        run(
+            "reprocess",
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "var collection; cts.uris(null, null, cts.collectionQuery('author'))",
+            "--write-invoke", "/writeBatch.sjs",
+            "--batch-size", "10"
+        );
+
+        // reprocess-batch-test is used by writeBatch.sjs.
+        assertCollectionSize(
+            "writeBatch.sjs is expected to receive a comma-delimited list of URIs. This approach typically offers " +
+                "much better performance as it allows for the writer module to handle multiple items in a single call " +
+                "to MarkLogic as opposed to making one call per item.",
+            "reprocess-batch-test", 15);
+    }
+
     /**
      * This is used primarily for manual inspection of the progress messages. We don't yet have a reliable way of
      * asserting on log messages, so using manual inspection for now.
