@@ -62,7 +62,7 @@ Per the [Spark Avro documentation](https://spark.apache.org/docs/latest/sql-data
 dependency is not included in Spark by default. If you wish to run either `import-avro-files` or `export-avro-files`
 with Flux and `spark-submit`, you must include the following line in your `spark-submit` invocation:
 
-    --packages org.apache.spark:spark-avro_2.12:3.4.1
+    --packages org.apache.spark:spark-avro_2.12:3.4.3
 
 You should change the version number of this dependency to match that of your Spark cluster.
 
