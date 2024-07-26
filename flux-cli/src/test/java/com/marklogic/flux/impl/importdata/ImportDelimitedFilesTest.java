@@ -38,6 +38,31 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void multiLine() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/multi-line.txt",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "multi-test",
+            "-PmultiLine=true",
+            "--ignore-null-fields",
+            "--uri-template", "/multi/{MonitoringLocationIdentifier}.json"
+        );
+
+        assertCollectionSize(
+            "Using -PmultiLine will tell Spark CSV to include those ^M symbols in the test file as part of the value " +
+                "for the MonitoringLocationDescriptionText column.",
+            "multi-test", 6);
+
+        JsonNode doc = readJsonDocument("/multi/ARS-MDCR-MDCR_3001LTC.json");
+        String text = doc.get("MonitoringLocationDescriptionText").asText();
+        String message = "Unexpected text: " + text;
+        assertTrue(text.contains("Choptank river mouth"), message);
+        assertTrue(text.contains("below the water surface (0.1 m)^M\nalong the navigable"), message);
+    }
+
+    @Test
     void useFilePathInUri() {
         run(
             "import-delimited-files",
