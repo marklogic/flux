@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -152,15 +152,20 @@ extends <a href="WriteDocumentsOptions.html" title="interface in com.marklogic.f
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#jsonRootName(java.lang.String)">jsonRootName</a></span>&#8203;(java.lang.String&nbsp;jsonRootName)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ignoreNullFields(boolean)">ignoreNullFields</a></span>&#8203;(boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xmlNamespace(java.lang.String)">xmlNamespace</a></span>&#8203;(java.lang.String&nbsp;xmlNamespace)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#jsonRootName(java.lang.String)">jsonRootName</a></span>&#8203;(java.lang.String&nbsp;jsonRootName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xmlNamespace(java.lang.String)">xmlNamespace</a></span>&#8203;(java.lang.String&nbsp;xmlNamespace)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#xmlRootName(java.lang.String)">xmlRootName</a></span>&#8203;(java.lang.String&nbsp;xmlRootName)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -171,7 +176,7 @@ extends <a href="WriteDocumentsOptions.html" title="interface in com.marklogic.f
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.marklogic.flux.api.<a href="WriteDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteDocumentsOptions</a></h3>
-<code><a href="WriteDocumentsOptions.html#abortOnWriteFailure(boolean)">abortOnWriteFailure</a>, <a href="WriteDocumentsOptions.html#batchSize(int)">batchSize</a>, <a href="WriteDocumentsOptions.html#collections(java.lang.String...)">collections</a>, <a href="WriteDocumentsOptions.html#collectionsString(java.lang.String)">collectionsString</a>, <a href="WriteDocumentsOptions.html#failedDocumentsPath(java.lang.String)">failedDocumentsPath</a>, <a href="WriteDocumentsOptions.html#logProgress(int)">logProgress</a>, <a href="WriteDocumentsOptions.html#permissionsString(java.lang.String)">permissionsString</a>, <a href="WriteDocumentsOptions.html#temporalCollection(java.lang.String)">temporalCollection</a>, <a href="WriteDocumentsOptions.html#threadCount(int)">threadCount</a>, <a href="WriteDocumentsOptions.html#totalThreadCount(int)">totalThreadCount</a>, <a href="WriteDocumentsOptions.html#transform(java.lang.String)">transform</a>, <a href="WriteDocumentsOptions.html#transformParams(java.lang.String)">transformParams</a>, <a href="WriteDocumentsOptions.html#transformParamsDelimiter(java.lang.String)">transformParamsDelimiter</a>, <a href="WriteDocumentsOptions.html#uriPrefix(java.lang.String)">uriPrefix</a>, <a href="WriteDocumentsOptions.html#uriReplace(java.lang.String)">uriReplace</a>, <a href="WriteDocumentsOptions.html#uriSuffix(java.lang.String)">uriSuffix</a>, <a href="WriteDocumentsOptions.html#uriTemplate(java.lang.String)">uriTemplate</a></code></li>
+<code><a href="WriteDocumentsOptions.html#abortOnWriteFailure(boolean)">abortOnWriteFailure</a>, <a href="WriteDocumentsOptions.html#batchSize(int)">batchSize</a>, <a href="WriteDocumentsOptions.html#collections(java.lang.String...)">collections</a>, <a href="WriteDocumentsOptions.html#collectionsString(java.lang.String)">collectionsString</a>, <a href="WriteDocumentsOptions.html#failedDocumentsPath(java.lang.String)">failedDocumentsPath</a>, <a href="WriteDocumentsOptions.html#logProgress(int)">logProgress</a>, <a href="WriteDocumentsOptions.html#permissionsString(java.lang.String)">permissionsString</a>, <a href="WriteDocumentsOptions.html#temporalCollection(java.lang.String)">temporalCollection</a>, <a href="WriteDocumentsOptions.html#threadCount(int)">threadCount</a>, <a href="WriteDocumentsOptions.html#threadCountPerPartition(int)">threadCountPerPartition</a>, <a href="WriteDocumentsOptions.html#transform(java.lang.String)">transform</a>, <a href="WriteDocumentsOptions.html#transformParams(java.lang.String)">transformParams</a>, <a href="WriteDocumentsOptions.html#transformParamsDelimiter(java.lang.String)">transformParamsDelimiter</a>, <a href="WriteDocumentsOptions.html#uriPrefix(java.lang.String)">uriPrefix</a>, <a href="WriteDocumentsOptions.html#uriReplace(java.lang.String)">uriReplace</a>, <a href="WriteDocumentsOptions.html#uriSuffix(java.lang.String)">uriSuffix</a>, <a href="WriteDocumentsOptions.html#uriTemplate(java.lang.String)">uriTemplate</a></code></li>
 </ul>
 </li>
 </ul>
@@ -210,10 +215,26 @@ extends <a href="WriteDocumentsOptions.html" title="interface in com.marklogic.f
 <a id="xmlNamespace(java.lang.String)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>xmlNamespace</h4>
 <pre class="methodSignature"><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a>&nbsp;xmlNamespace&#8203;(java.lang.String&nbsp;xmlNamespace)</pre>
+</li>
+</ul>
+<a id="ignoreNullFields(boolean)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>ignoreNullFields</h4>
+<pre class="methodSignature"><a href="WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a>&nbsp;ignoreNullFields&#8203;(boolean&nbsp;value)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - Ignore fields with null values in the data source when writing JSON or XML documents to MarkLogic.
+              Fields with null values are included by default.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an instance of these options.</dd>
+</dl>
 </li>
 </ul>
 </li>

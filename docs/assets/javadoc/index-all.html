@@ -561,6 +561,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/SaveMode.html#IGNORE">IGNORE</a></span> - com.marklogic.flux.api.<a href="com/marklogic/flux/api/SaveMode.html" title="enum in com.marklogic.flux.api">SaveMode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteStructuredDocumentsOptions.html#ignoreNullFields(boolean)">ignoreNullFields(boolean)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteStructuredDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteStructuredDocumentsOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/Flux.html#importAggregateJsonFiles()">importAggregateJsonFiles()</a></span> - Static method in class com.marklogic.flux.api.<a href="com/marklogic/flux/api/Flux.html" title="class in com.marklogic.flux.api">Flux</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/Flux.html#importAggregateXmlFiles()">importAggregateXmlFiles()</a></span> - Static method in class com.marklogic.flux.api.<a href="com/marklogic/flux/api/Flux.html" title="class in com.marklogic.flux.api">Flux</a></dt>
@@ -659,6 +661,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Limit the number of records read from the executor's data source.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/RdfFilesExporter.ReadTriplesDocumentsOptions.html" title="interface in com.marklogic.flux.api">RdfFilesExporter.ReadTriplesDocumentsOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ReadDocumentsOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ReadDocumentsOptions.html" title="interface in com.marklogic.flux.api">ReadDocumentsOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ReadRowsOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ReadRowsOptions.html" title="interface in com.marklogic.flux.api">ReadRowsOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/Reprocessor.ReadOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/Reprocessor.ReadOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.ReadOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/Reprocessor.WriteOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/Reprocessor.WriteOptions.html" title="interface in com.marklogic.flux.api">Reprocessor.WriteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteDocumentsOptions.html#logProgress(int)">logProgress(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteDocumentsOptions</a></dt>
@@ -916,6 +926,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteDocumentsOptions.html#threadCount(int)">threadCount(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteDocumentsOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteDocumentsOptions.html#threadCountPerPartition(int)">threadCountPerPartition(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteDocumentsOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ArchiveFilesExporter.html#to(java.lang.String)">to(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ArchiveFilesExporter.html" title="interface in com.marklogic.flux.api">ArchiveFilesExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/AvroFilesExporter.html#to(java.lang.String)">to(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/AvroFilesExporter.html" title="interface in com.marklogic.flux.api">AvroFilesExporter</a></dt>
@@ -981,8 +993,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/OrcFilesImporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteStructuredDocumentsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/OrcFilesImporter.html" title="interface in com.marklogic.flux.api">OrcFilesImporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ParquetFilesImporter.html#to(java.util.function.Consumer)">to(Consumer&lt;WriteStructuredDocumentsOptions&gt;)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ParquetFilesImporter.html" title="interface in com.marklogic.flux.api">ParquetFilesImporter</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/marklogic/flux/api/WriteDocumentsOptions.html#totalThreadCount(int)">totalThreadCount(int)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/WriteDocumentsOptions.html" title="interface in com.marklogic.flux.api">WriteDocumentsOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/marklogic/flux/api/ReadDocumentsOptions.html#transform(java.lang.String)">transform(String)</a></span> - Method in interface com.marklogic.flux.api.<a href="com/marklogic/flux/api/ReadDocumentsOptions.html" title="interface in com.marklogic.flux.api">ReadDocumentsOptions</a></dt>
 <dd>&nbsp;</dd>
