@@ -118,6 +118,9 @@ The `import-delimited-files` command reuses Spark's support for reading delimite
 the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` option
 to control how delimited text is read. These options are expressed as `-PoptionName=optionValue`.
 
+A common option to include is `-PmultiLine=true` for when your files have rows with values that include newline 
+symbols. 
+
 The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for
 example:

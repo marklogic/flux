@@ -1,0 +1,33 @@
+OrganizationIdentifier,OrganizationFormalName,MonitoringLocationIdentifier,MonitoringLocationName,MonitoringLocationTypeName,MonitoringLocationDescriptionText,HUCEightDigitCode,DrainageAreaMeasure/MeasureValue,DrainageAreaMeasure/MeasureUnitCode,ContributingDrainageAreaMeasure/MeasureValue,ContributingDrainageAreaMeasure/MeasureUnitCode,LatitudeMeasure,LongitudeMeasure,SourceMapScaleNumeric,HorizontalAccuracyMeasure/MeasureValue,HorizontalAccuracyMeasure/MeasureUnitCode,HorizontalCollectionMethodName,HorizontalCoordinateReferenceSystemDatumName,VerticalMeasure/MeasureValue,VerticalMeasure/MeasureUnitCode,VerticalAccuracyMeasure/MeasureValue,VerticalAccuracyMeasure/MeasureUnitCode,VerticalCollectionMethodName,VerticalCoordinateReferenceSystemDatumName,CountryCode,StateCode,CountyCode,AquiferName,FormationTypeText,AquiferTypeName,ConstructionDateText,WellDepthMeasure/MeasureValue,WellDepthMeasure/MeasureUnitCode,WellHoleDepthMeasure/MeasureValue,WellHoleDepthMeasure/MeasureUnitCode,ProviderName
+ARS,USDA Agricultural Research Service,ARS-INSJ-INSJCME,INSJCME,,"INSJCME is a man made tile fed surface drainage ditch water quality and flow discharge monitoring station located 4.7 km W of Waterloo, IN.  10 minute interval velocity and stage data is collected. Daily and high intensity triggered based watersampling occurs from mid March through mid November. Water samples from this site have been analyzed for acetochlor, alachlor, atrazine, metolachlor, alechlor, glyphosate, simazine, nitrate nitrogen and total phosphorus. Weather data is also collected.",04100003,373,ha,,,41.434843186,-85.07550506,,,,,NAD83,,,,,,,US,18,033,,,,,,,,,STEWARDS
+ARS,USDA Agricultural Research Service,ARS-INSJ-INSJF34,INSJF34,,"INSJF34 is a dredged and natural stream  water quality and flow discharge monitoring station located 3.1 km S of Waterloo, IN.  10 minute interval velocity and stage data is collected. Daily and high intensity event  triggered  water sampling occurs from mid March through mid November. Since 2006 bi weekly samples occur from mid November through mid March. Water samples from this site have been analyzed for acetochlor, alachlor, atrazine, metolachlor, alechlor, glyphosate, simazine, nitrate nitrogen and total phosphorus.",04100003,19341,ha,,,41.4045874413,-85.01417061,,,,,NAD83,,,,,,,US,18,033,,,,,,,,,STEWARDS
+ARS,USDA Agricultural Research Service,ARS-MDCR-MDCR_3001LTC,MDCR_3001LTC,,"Aprroximately 5.6 km downstream from the US-50 bridge    5 meters upstream from green buoy #19 at Choptank river mouth Samples were taken from a small research vessel    ^M
+Water samples were collected from just below the water surface (0.1 m)^M
+along the navigable portion of the Choptank River ^M
+using a small research vessel. Sampling dates were selected to^M
+represent base flow or near-base flow conditions in the watershed^M
+tributaries, at least two days after any significant (greater than^M
+10 mm) rainfall event and flow less than 5 m3/s at the local USGS^M
+monitoring stations. Samples were collected on^M
+thirteen dates between March 2005 and April 2008",02060005,,,,,38.6026729334,-76.118933899,,,,,NAD83,,,,,,,US,24,041,,,,,,,,,STEWARDS
+ARS,USDA Agricultural Research Service,ARS-MDCR-MDCR_3002LTC,MDCR_3002LTC,,"0.48 km downstream from the US-50 bridge,  ^M
+just off shore from the town of Cambridge, MD   5 meters downstream from red bouy #2 just south of Hwy 50 bridge  Samples were taken from a small research vessel ^M
+Water samples were collected from just below the water surface (0.1 m)^M
+along the navigable portion of the Choptank River ^M
+using a small research vessel. Sampling dates were selected to^M
+represent base flow or near-base flow conditions in the watershed^M
+tributaries, at least two days after any significant (greater than^M
+10 mm) rainfall event and flow less than 5 m3/s at the local USGS^M
+monitoring stations. Samples were collected on^M
+thirteen dates between March 2005 and April 2008",02060005,,,,,38.5779129441,-76.066423901,,,,,NAD83,,,,,,,US,24,019,,,,,,,,,STEWARDS
+ARS,USDA Agricultural Research Service,ARS-MDCR-MDCR_3003WC,MDCR_3003WC,,"At the bridge of State Hwy 331^M
+7 km east of Easton, MD  10 meters downstream from red buoy #38    Samples were taken from a small research vessel ^M
+Water samples were collected from just below the water surface (0.1 m)^M
+along the navigable portion of the Choptank River ^M
+using a small research vessel. Sampling dates were selected to^M
+represent base flow or near-base flow conditions in the watershed^M
+tributaries, at least two days after any significant (greater than^M
+10 mm) rainfall event and flow less than 5 m3/s at the local USGS^M
+monitoring stations. Samples were collected on^M
+thirteen dates between March 2005 and April 2008",02060005,,,,,38.7561829186,-75.998803946,,,,,NAD83,,,,,,,US,24,041,,,,,,,,,STEWARDS
+ARS,USDA Agricultural Research Service,ARS-IASF-IABC264,IABC264   ,Land Runoff,"A drainage ditch monitoring site on 195th Street at the bridge 1 mile (1.6 km) east of county road S-45.  Water quality grab samples are taken and analyzed for sediment concentration, nitrate, and total phosphorus.",07080207,,,,,42.419180453,-93.180514077,,,,GPS Code (Pseudo Range) Differential,NAD83,,,,,,,US,19,083,,,,,,,,,STEWARDS
