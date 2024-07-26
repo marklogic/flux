@@ -17,4 +17,14 @@ Flux leverages the [MarkLogic Spark connector](https://github.com/marklogic/mark
 the new data sources and formats that may have required custom development in the past to integrate with 
 MarkLogic.
 
+You can download the latest release of Flux from [the releases page](https://github.com/marklogic/flux/releases).
+
 For more information, please see [the user guide](https://marklogic.github.io/flux/).
+
+## Support
+
+Flux is maintained by Progress MarkLogic and distributed under the 
+[Apache 2.0 license](https://github.com/marklogic/flux/blob/LICENSE). 
+Progress MarkLogic provides technical support for [all releases of Flux](https://github.com/marklogic/flux/releases) 
+to licensed customers under the terms outlined in the [Support Handbook](http://www.marklogic.com/files/Mark_Logic_Support_Handbook.pdf). 
+For more information or to sign up for support, visit [help.marklogic.com](http://help.marklogic.com).

@@ -17,21 +17,22 @@ This guide describes how to get started with Flux with some examples demonstrati
 The examples in this guide, along with examples found throughout this documentation, depend on a small application in the 
 `./examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
 a MarkLogic instance and that Flux will be run from the `./examples/getting-started/flux` directory as well. However, you are 
-free to install Flux anywhere and use the examples as a reference for running Flux on your own data. 
+free to install Flux anywhere and use the examples simply as a reference for running Flux on your own data. 
 
 ### Obtaining Flux
 
-If you would like to use Flux to run the examples below, 
-follow these steps:
+You can download the latest release of Flux from [the releases page](https://github.com/marklogic/flux/releases).
 
-1. Download the `flux-1.0.0.zip` file from the [GitHub releases page](https://github.com/marklogic/flux/releases/tag/1.0.0).
-2. Clone this repository using git. 
-3. Extract the `flux-1.0.0.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
-This should result in an `./examples/getting-started/flux` directory that contains the Flux software.
+If you would also like to use Flux to run the examples in this guide, please follow these steps:
+
+1. Clone this repository using git. 
+2. Extract the `flux-1.0.0.ea1.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
+This should result in an `./examples/getting-started/flux-1.0.0.ea1` directory that contains the Flux software.
 
 ### Deploying the example application
 
-Follow these steps to run the examples in this guide:
+The following steps will deploy a small application to your existing MarkLogic cluster, allowing you to run the 
+examples in this guide:
 
 1. Clone this repository using git if you have not already.
 2. Run `cd examples/getting-started`.
@@ -48,9 +49,13 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 ## Usage
 
 You can run Flux without any options to see the list of available commands (all examples will assume the use of
-Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`):
+Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`). If you are using Flux to run these examples, 
+first change your current directory to where you extract Flux:
 
-    cd flux
+    cd flux-1.0.0.ea1
+
+And then run the Flux executable without any options:
+
     ./bin/flux
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
