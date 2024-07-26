@@ -89,6 +89,11 @@ distributions {
   main {
     distributionBaseName = "flux"
   }
+  applicationDistribution.from("..") {
+    include "LICENSE"
+    include "NOTICE.txt"
+    into "."
+  }
 }
 
 application {
