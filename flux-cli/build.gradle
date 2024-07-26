@@ -18,7 +18,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.3.0.rc1"
+  implementation "com.marklogic:marklogic-spark-connector:2.3.0"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262.
@@ -65,7 +65,7 @@ dependencies {
     exclude module: "marklogic-client-api"
   }
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.0.rc1"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.0"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
@@ -175,13 +175,13 @@ publishing {
       version = version
       from components.java
       pom {
-        description = "Flux ETL for MarkLogic"
+        description = "Flux API for data movement with MarkLogic"
         packaging = "jar"
-        url = "https://github.com/marklogic/${project.name}"
+        url = "https://github.com/marklogic/flux"
         scm {
-          url = "git@github.com:marklogic/${project.name}.git"
-          connection = "scm:git@github.com:marklogic/${project.name}.git"
-          developerConnection = "scm:git@github.com:marklogic/${project.name}.git"
+          url = "git@github.com:marklogic/flux.git"
+          connection = "scm:git@github.com:marklogic/flux.git"
+          developerConnection = "scm:git@github.com:marklogic/flux.git"
         }
       }
     }
