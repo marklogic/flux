@@ -170,6 +170,7 @@ java {
   withJavadocJar()
   withSourcesJar()
 }
+
 publishing {
   publications {
     mainJava(MavenPublication) {
@@ -187,6 +188,25 @@ publishing {
           url = "git@github.com:marklogic/flux.git"
           connection = "scm:git@github.com:marklogic/flux.git"
           developerConnection = "scm:git@github.com:marklogic/flux.git"
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      if (project.hasProperty("mavenUser")) {
+        credentials {
+          username mavenUser
+          password mavenPassword
+        }
+        url publishUrl
+        allowInsecureProtocol = true
+      } else {
+        name = "central"
+        url = mavenCentralUrl
+        credentials {
+          username mavenCentralUsername
+          password mavenCentralPassword
         }
       }
     }
