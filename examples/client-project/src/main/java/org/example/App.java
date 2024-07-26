@@ -9,7 +9,7 @@ public class App {
         Flux.importGenericFiles()
             .connectionString("flux-test-user:password@localhost:8003")
             .from(options -> options
-                .paths("../flux-cli/src/test/resources/mixed-files"))
+                .paths("../../flux-cli/src/test/resources/mixed-files"))
             .to(options -> options
                 .collections("client-files")
                 .permissionsString("flux-test-role,read,flux-test-role,update"))

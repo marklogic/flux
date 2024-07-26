@@ -47,7 +47,7 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 
 ## Usage
 
-You can run the tool without any options to see the list of available commands (all examples will assume the use of
+You can run Flux without any options to see the list of available commands (all examples will assume the use of
 Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`):
 
     cd flux
@@ -59,7 +59,7 @@ command. To see the usage for a particular command, such as `import-files`, run:
     ./bin/flux help import-files
 
 Required options are marked with an asterisk - "*". Additionally, every command requires that either `--connection-string`
-or `--host` and `--port` be specified so that the tool knows which MarkLogic cluster to connect to. 
+or `--host` and `--port` be specified so that Flux knows which MarkLogic cluster to connect to. 
 
 The `--connection-string` option provides a succinct way of defining the host, port, username, and password when the MarkLogic
 app server you connect to requires basic or digest authentication. Its value is of the form 

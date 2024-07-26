@@ -2,3 +2,169 @@ plugins {
   id 'net.saliman.properties' version '1.5.2'
   id "com.marklogic.ml-gradle" version "4.7.0"
 }
+
+
+// Needed for mlcp 11.1.0.
+configurations {
+  mlcp {
+    attributes {
+      attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.class, TargetJvmEnvironment.STANDARD_JVM))
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  mlcp 'com.marklogic:mlcp:11.1.0'
+  mlcp files("lib")
+}
+
+task mlcpImportMixed(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args = [
+    "IMPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-input_file_path", "../flux-cli/src/test/resources/mixed-files",
+    "-output_collections", "mlcp-mixed-files",
+    "-output_permissions", "rest-reader,read,rest-writer,update"
+  ]
+}
+
+task mlcpImportDelimited(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args = [
+    "IMPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-input_file_path", "../flux-cli/src/test/resources/delimited-files/empty-values.csv",
+    "-output_permissions", "rest-reader,read,rest-writer,update",
+    "-input_file_type", "delimited_text"
+  ]
+}
+
+task mlcpImportAggregateXml(type: Exec) {
+  workingDir = "."
+  commandLine "mlcp.sh", "IMPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-input_file_type", "aggregates",
+    "-input_file_path", "data/employees.xml",
+    "-aggregate_record_element", "Employee",
+    "-output_permissions", "rest-reader,read,rest-writer,update"
+}
+
+task mlcpImportRdf(type: Exec) {
+  workingDir = "."
+  commandLine "mlcp.sh", "IMPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-input_file_type", "rdf",
+    "-input_file_path", rdfFile,
+    "-transaction_size", "4",
+    "-thread_count", "64",
+    "-batch_size", "100",
+    "-output_permissions", "rest-reader,read,rest-writer,update"
+}
+
+task fluxImportRdf(type: Exec) {
+  description = "Intended to run against a local Caddy load balancer."
+  workingDir = "../flux/"
+  commandLine "./bin/flux", "import-rdf-files",
+    "--connection-string", "${mlUsername}:${mlPassword}@${lbHost}:${lbPort}",
+    "--path", rdfFile,
+    "--permissions", "rest-reader,read,rest-writer,update",
+    "--connection-type", "gateway",
+    "--thread-count", "64",
+    "--batch-size", "100"
+}
+
+task fluxDirectImportRdf(type: Exec) {
+  description = "For testing without a load balancer."
+  workingDir = "../flux/"
+  commandLine "./bin/flux", "import-rdf-files",
+    "--connection-string", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--path", rdfFile,
+    "--permissions", "rest-reader,read,rest-writer,update",
+    "--connection-type", "direct",
+    "--thread-count", "64",
+    "--batch-size", "100"
+}
+
+task fluxCopy(type: Exec) {
+  workingDir = "../flux/"
+  commandLine "./bin/flux", "copy",
+    "--connection-string", "${mlUsername}:${mlPassword}@${mlHost}:${mlRestPort}",
+    "--collections", "address_small",
+    "--batch-size", "500",
+    // results in 24 threads total, assuming 3 forests and 4 partitions per forests, which means 12 partitions.
+    "--output-thread-count", "2",
+    "--output-batch-size", "500",
+    "--output-permissions", "rest-reader,read,rest-writer,update",
+    "--output-connection-string", "${outputUsername}:${outputPassword}@${outputHost}:${outputPort}"
+}
+
+task mlcpCopy(type: JavaExec) {
+  classpath = configurations.mlcp
+  mainClass = "com.marklogic.contentpump.ContentPump"
+  args "COPY",
+    "-input_host", mlHost,
+    "-input_port", mlRestPort,
+    "-input_username", mlUsername,
+    "-input_password", mlPassword,
+    "-output_host", outputHost,
+    "-output_port", outputPort,
+    "-output_username", outputUsername,
+    "-output_password", outputPassword,
+    "-copy_collections", "false",
+    "-copy_permissions", "false",
+    "-copy_properties", "false",
+    "-copy_properties", "false",
+    "-copy_quality", "false",
+    "-copy_metadata", "false",
+    "-collection_filter", "address_small",
+    "-output_permissions", "rest-reader,read,rest-writer,update",
+    "-thread_count", "24",
+    "-batch_size", "500"
+}
+
+task mlcpExportArchive(type: Exec) {
+  workingDir = "."
+  commandLine "mlcp.sh", "EXPORT",
+    "-host", mlHost,
+    "-port", mlRestPort,
+    "-username", mlUsername,
+    "-password", mlPassword,
+    "-output_file_path", "export/archive",
+    "-output_type", "archive",
+    "-collection_filter", "author"
+}
+
+task fluxTwoWaySSL(type: Exec) {
+  description = "For manual testing with the Java Client's java-unittest app server when its TwoWaySSLTest has been " +
+    "paused in a debugger. You can copy the keyStore/trustStore files generated by that test to this directory and " +
+    "then run this task to ensure that two-way SSL works."
+  workingDir = "../flux/"
+  commandLine "./bin/flux", "copy",
+    "--connection-string", "rest-writer:x@localhost:8012",
+    "--collections", "zipcode",
+    "--keystore-path", "../mlcp-testing/keyStore.jks",
+    "--keystore-password", "password",
+    "--truststore-path", "../mlcp-testing/trustStore.jks",
+    "--truststore-password", "password",
+    "--ssl-hostname-verifier", "any",
+    "--preview", "10"
+}

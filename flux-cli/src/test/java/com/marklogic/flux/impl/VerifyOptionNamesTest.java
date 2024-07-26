@@ -33,9 +33,8 @@ class VerifyOptionNamesTest {
     @ValueSource(strings = {
         "src",
         "../docs",
-        "../client-project",
         "../examples",
-        "../mlcp-testing"
+        "../test-app"
     })
     void test(String path) throws IOException {
         final File dir = new File(path);
@@ -45,6 +44,8 @@ class VerifyOptionNamesTest {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 if ("../docs".equals(path) && dir.endsWith("assets")) {
                     // Don't need to check any of the docs/assets files.
+                    return FileVisitResult.SKIP_SUBTREE;
+                } else if ("../test-app".equals(path) && dir.endsWith("caddy")) {
                     return FileVisitResult.SKIP_SUBTREE;
                 }
                 return FileVisitResult.CONTINUE;
@@ -64,7 +65,6 @@ class VerifyOptionNamesTest {
                         String group = matcher.group();
                         for (int i = 0; i < group.length(); i++) {
                             if (Character.isUpperCase(group.charAt(i))) {
-                                System.out.println("HEY OHH!");
                                 throw new RuntimeException(String.format("Found option starting with '--' that " +
                                     "contains an uppercase character: %s; file: %s", group, path.toFile()));
                             }
