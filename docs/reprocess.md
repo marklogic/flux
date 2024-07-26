@@ -129,6 +129,12 @@ defined by `--read-partitions-javascript`. The value of `PARTITION` - a forest I
 [cts.uris](https://docs.marklogic.com/cts.uris) function to constrain it to a particular forest. With this approach, 
 the query is broken up into N queries that run in parallel, with N equalling the number of forests in the database.
 
+## Logging progress
+
+In addition to using `--log-progress` as described in the [Common Options guide](common-options.md) to log progress
+as items are processed, you can also set `--log-read-progress` to configure Flux to log progress as items are read. 
+`--log-read-progress` defaults to logging a message at the `INFO` level every time 10,000 items have been read. 
+
 ## Improving performance
 
 The default behavior of Flux of sending each item in an individual call to your writer code is not typically going to 

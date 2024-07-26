@@ -236,8 +236,8 @@ Each Flux command supports a `--log-progress` option that you can use to specify
 indicating progress. Import commands will show progress in terms of writing data to MarkLogic, while export 
 commands will show progress in terms of reading data from MarkLogic. The `copy` command can show both types of progress, 
 with `--log-progress` specifying an interval for logging data that has been read and `--output-log-progress` 
-specifying an interval for logging data that has been written. The `reprocess` command is similar to import commands
-in that it shows progress in terms of processing data that has been read from MarkLogic.
+specifying an interval for logging data that has been written. The `reprocess` command supports both `--log-progress`
+for processing data in MarkLogic and `--log-read-progress` for reading data from MarkLogic.
 
 The `--log-progress` option defaults to a value of 10,000, with one exception - export commands that read rows from 
 MarkLogic defaults `--log-progress` to a value of 100,000. For an import command with a value of 10,000, 

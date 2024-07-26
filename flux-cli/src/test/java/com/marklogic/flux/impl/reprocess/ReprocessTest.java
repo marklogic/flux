@@ -65,6 +65,7 @@ class ReprocessTest extends AbstractTest {
             "reprocess",
             "--connection-string", makeConnectionString(),
             "--read-xquery", "for $i in 1 to 100 return $i",
+            "--log-read-progress", "10",
             "--write-invoke", "/writeDocument.sjs",
             "--write-var", "theValue=my value",
             "--log-progress", "10"
