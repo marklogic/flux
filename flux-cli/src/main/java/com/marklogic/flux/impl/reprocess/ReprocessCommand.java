@@ -176,6 +176,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         )
         private List<String> readVars = new ArrayList<>();
 
+        @CommandLine.Option(
+            names = "--log-read-progress",
+            description = "Log a count of total items read every time this many items are read."
+        )
+        private int progressInterval = 10000;
+
         public void validateReader() {
             Map<String, String> options = get();
             if (Stream.of(Options.READ_INVOKE, Options.READ_JAVASCRIPT, Options.READ_JAVASCRIPT_FILE,
@@ -206,7 +212,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
                 Options.READ_PARTITIONS_JAVASCRIPT, readPartitionsJavascript,
                 Options.READ_PARTITIONS_JAVASCRIPT_FILE, readPartitionsJavascriptFile,
                 Options.READ_PARTITIONS_XQUERY, readPartitionsXquery,
-                Options.READ_PARTITIONS_XQUERY_FILE, readPartitionsXqueryFile
+                Options.READ_PARTITIONS_XQUERY_FILE, readPartitionsXqueryFile,
+                Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
             );
 
             if (readVars != null) {
@@ -287,6 +294,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             this.readVars = namesAndValues.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.toList());
+            return this;
+        }
+
+        @Override
+        public ReadOptions logProgress(int interval) {
+            this.progressInterval = interval;
             return this;
         }
     }
@@ -458,8 +471,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         }
 
         @Override
-        public WriteOptions logProgress(int numberOfItems) {
-            this.progressInterval = numberOfItems;
+        public WriteOptions logProgress(int interval) {
+            this.progressInterval = interval;
             return this;
         }
     }

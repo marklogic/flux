@@ -33,6 +33,8 @@ public interface Reprocessor extends Executor<Reprocessor> {
         ReadOptions partitionsXqueryFile(String path);
 
         ReadOptions vars(Map<String, String> namesAndValues);
+
+        ReadOptions logProgress(int interval);
     }
 
     interface WriteOptions {
@@ -56,7 +58,7 @@ public interface Reprocessor extends Executor<Reprocessor> {
 
         WriteOptions batchSize(int batchSize);
 
-        WriteOptions logProgress(int numberOfItems);
+        WriteOptions logProgress(int interval);
     }
 
     Reprocessor from(Consumer<ReadOptions> consumer);
