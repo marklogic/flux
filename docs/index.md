@@ -29,6 +29,6 @@ Flux is built on top of [Apache Spark](https://spark.apache.org/), but you do no
 to use Flux. If you are already making use of Spark for other use cases, see the 
 [Spark Integration guide](spark-integration.md) for information on using Flux with your existing Spark cluster.
 
-You can download the latest release of Flux from [the releases page](https://github.com/marklogic/flux/releases).
+You can download the latest release of the Flux application zip from [the releases page](https://github.com/marklogic/flux/releases).
 
 Please see the [Getting Started guide](getting-started.md) to begin using Flux.  

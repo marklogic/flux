@@ -21,7 +21,7 @@ free to install Flux anywhere and use the examples simply as a reference for run
 
 ### Obtaining Flux
 
-You can download the latest release of Flux from [the releases page](https://github.com/marklogic/flux/releases).
+You can download the latest release of the Flux application zip from [the releases page](https://github.com/marklogic/flux/releases).
 
 If you would also like to use Flux to run the examples in this guide, please follow these steps:
 
