@@ -18,7 +18,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
+  implementation "com.marklogic:marklogic-spark-connector:2.3.0.rc1"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262.
@@ -45,6 +45,8 @@ dependencies {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
+    // Use the Java Client in the connector jar.
+    exclude module: "marklogic-client-api"
   }
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
@@ -55,13 +57,15 @@ dependencies {
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
   // For configuring two-way SSL in tests.
-  testImplementation ("com.marklogic:ml-app-deployer:4.7.0") {
+  testImplementation("com.marklogic:ml-app-deployer:4.7.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
+    // Use the Java Client in the connector jar.
+    exclude module: "marklogic-client-api"
   }
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.2-SNAPSHOT"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.0.rc1"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
@@ -75,7 +79,7 @@ tasks.register("deleteJavadoc", Delete) {
 tasks.register("copyJavadoc", Copy) {
   from layout.buildDirectory.dir("docs/javadoc")
   into "../docs/assets/javadoc"
-  rename { filename -> filename.endsWith(".md") ? filename.replace(".md", ".txt") : filename}
+  rename { filename -> filename.endsWith(".md") ? filename.replace(".md", ".txt") : filename }
 }
 copyJavadoc.mustRunAfter deleteJavadoc, javadoc
 tasks.register("updateJavadoc")
