@@ -18,7 +18,7 @@ With Flux, you can automate common data movement use cases including:
 
 Flux has the following system requirements:
 
-* Java 11 or higher.
+* Java 11 or Java 17.
 * MarkLogic 10.0-9 or higher.
 * A [MarkLogic REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. 
 

@@ -4,7 +4,7 @@ application installed:
 1. Clone this repository if you have not already.
 2. From the root directory of the project, run `docker-compose up -d --build`.
 3. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
-4. Run `./gradlew -i mlDeploy` to deploy this project's test application (note that Java 11 or higher is required).
+4. Run `./gradlew -i mlDeploy` to deploy this project's test application (note that Java 11 or Java 17 is required).
 
 Some of the tests depend on the Postgres instance deployed via Docker. Follow these steps to load a sample dataset
 into it:
@@ -61,8 +61,7 @@ The version can then be viewed by running `./bin/flux version`.
 
 ## Running the tests
 
-*You must use Java 11* or higher to run any Gradle tasks in this project, due to the inclusion of the Sonar Gradle 
-plugin. The tool itself only requires Java 8, but building requires Java 11.
+*You must use Java 11 or Java 17* to run any Gradle tasks in this project.
 
 You can run the tests once you've followed the instructions above for loading the DVD rental dataset into Postgres and
 publishing a local snapshot of our Spark connector. Then just run:
