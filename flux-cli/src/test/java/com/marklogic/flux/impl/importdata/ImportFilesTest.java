@@ -291,6 +291,25 @@ class ImportFilesTest extends AbstractTest {
         doc.assertElementExists("/MedlineCitationSet");
     }
 
+    /**
+     * Verifies that a file with Japanese characters in it - all valid UTF-8 - is imported correctly.
+     */
+    @Test
+    void japanese() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/japanese-files/太田佳伸のＸＭＬファイル.xml",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--uri-replace", ".*resources,''"
+        );
+
+        assertCollectionSize("files", 1);
+        XmlNode doc = readXmlDocument("/japanese-files/太田佳伸のＸＭＬファイル.xml");
+        doc.assertElementValue("/root/filename", "太田佳伸のＸＭＬファイル");
+    }
+
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {
         List<String> uris = getUrisInCollection("files", values.length);
         assertEquals(expectedUriCount, uris.size());
