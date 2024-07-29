@@ -98,10 +98,20 @@ distributions {
 
 application {
   mainClass = "com.marklogic.flux.cli.Main"
-  // Removes warnings due to Spark performing "illegal reflective access".
-  applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.nio=ALL-UNNAMED', '--add-opens', 'java.base/java.net=ALL-UNNAMED',
-                               '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-                               '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED']
+  applicationDefaultJvmArgs = [
+    // Removes warnings due to Spark performing "illegal reflective access".
+    '--add-opens', 'java.base/java.nio=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.net=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED',
+
+    // Required for Java 17 support.
+    '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED',
+
+    // Required for some Spark SQL operations.
+    '--add-opens', 'java.base/sun.util.calendar=ALL-UNNAMED'
+  ]
 }
 
 // Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.
@@ -141,6 +151,17 @@ buildToolForGettingStarted.dependsOn installDist
 
 test {
   finalizedBy jacocoTestReport
+  jvmArgs = [
+    // Needed for all Java 17 testing.
+    "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+
+    // Needed by the JDBC tests.
+    "--add-opens", "java.base/sun.util.calendar=ALL-UNNAMED",
+
+    // Needed by CustomImportTest
+    "--add-opens", "java.base/java.io=ALL-UNNAMED",
+    "--add-opens", "java.base/sun.nio.cs=ALL-UNNAMED"
+  ]
 }
 
 jacocoTestReport {

@@ -68,6 +68,27 @@ publishing a local snapshot of our Spark connector. Then just run:
 
     ./gradlew clean test
 
+You can run the tests using either Java 11 or Java 17. 
+
+In Intellij, the tests will run with Java 11. In order to run the tests in Intellij using Java 17, 
+perform the following steps:
+
+1. Go to Run -> Edit Configurations in the Intellij toolbar.
+2. Click on "Edit configuration templates".
+3. Select "JUnit". 
+4. In the text box containing JVM arguments, add the text below:
+
+```
+--add-opens java.base/sun.nio.ch=ALL-UNNAMED 
+--add-opens java.base/sun.util.calendar=ALL-UNNAMED 
+--add-opens java.base/java.io=ALL-UNNAMED 
+--add-opens java.base/sun.nio.cs=ALL-UNNAMED
+```
+
+When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to 
+pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to 
+delete that configuration first via the "Run -> Edit Configurations" panel.
+
 ## Generating code quality reports with SonarQube
 
 In order to use SonarQube, you must have used Docker to run this project's `docker-compose.yml` file, and you must
