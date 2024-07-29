@@ -202,9 +202,25 @@ publishing {
       version = version
       from components.java
       pom {
+        name = "${group}:flux-api"
         description = "Flux API for data movement with MarkLogic"
         packaging = "jar"
         url = "https://github.com/marklogic/flux"
+        licenses {
+          license {
+            name = "The Apache License, Version 2.0"
+            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+        developers {
+          developer {
+            id = "marklogic"
+            name = "MarkLogic Github Contributors"
+            email = "general@developer.marklogic.com"
+            organization = "MarkLogic"
+            organizationUrl = "https://www.marklogic.com"
+          }
+        }
         scm {
           url = "git@github.com:marklogic/flux.git"
           connection = "scm:git@github.com:marklogic/flux.git"
