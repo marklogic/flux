@@ -1,5 +1,55 @@
+def runtests(){
+  sh label:'mlsetup', script: '''#!/bin/bash
+          cd $WORKSPACE/flux;
+          sudo /usr/local/sbin/mladmin stop;
+          sudo /usr/local/sbin/mladmin remove;
+          docker-compose up -d --build;
+          sleep 30s;
+        '''
+  script{
+    timeout(time: 60, unit: 'SECONDS') {
+      waitUntil(initialRecurrencePeriod: 20000) {
+        try{
+          sh 'curl  --anyauth --user admin:admin -X GET http://localhost:8000/v1/ping'
+            return true
+        }catch(exception){
+             return false
+        }
+      }
+    }
+  }
+  sh label:'runtests', script: '''#!/bin/bash
+    export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
+    export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
+    export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+    cd $WORKSPACE/flux;
+    ./gradlew -i  mlDeploy;
+    wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
+    unzip dvdrental.zip -d docker/postgres/ ;
+    docker exec -i flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
+    docker exec -i  flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
+    cd $WORKSPACE/flux/;
+    ./gradlew --refresh-dependencies clean test || true;
+  '''
+  junit '**/*.xml'
+}
+def postCleanup(){
+  sh label:'mlcleanup', script: '''#!/bin/bash
+    cd $WORKSPACE/flux;
+    sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
+    docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
+    docker-compose rm -fsv || true;
+    echo "y" | docker volume prune --filter all=1 || true;
+  '''
+}
 pipeline{
   agent none
+  triggers{
+    parameterizedCron(env.BRANCH_NAME == "develop" ? "00 02 * * * % regressions=true" : "")
+  }
+  parameters{
+    booleanParam(name: 'regressions', defaultValue: false, description: 'indicator if build is for regressions')
+  }
   options {
     checkoutToSubdirectory 'flux'
     buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '')
@@ -14,56 +64,18 @@ pipeline{
     stage('tests'){
       agent{ label 'devExpLinuxPool'}
       steps{
-        sh label:'mlsetup', script: '''#!/bin/bash
-          cd $WORKSPACE/flux;
-          sudo /usr/local/sbin/mladmin stop;
-          sudo /usr/local/sbin/mladmin remove;
-          docker-compose up -d --build;
-          sleep 30s;
-        '''
-        script{
-          timeout(time: 60, unit: 'SECONDS') {
-            waitUntil(initialRecurrencePeriod: 20000) {
-              try{
-                sh 'curl  --anyauth --user admin:admin -X GET http://localhost:8000/v1/ping'
-                return true
-              }catch(exception){
-                return false
-              }
-            }
-          }
-        }
-        sh label:'runtests', script: '''#!/bin/bash
-          export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
-          export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
-          export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
-          cd $WORKSPACE/flux;
-          ./gradlew -i  mlDeploy;
-          wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
-          unzip dvdrental.zip -d docker/postgres/ ;
-          docker exec -i flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
-          docker exec -i  flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
-          cd $WORKSPACE/flux/;
-          ./gradlew --refresh-dependencies clean test || true;
-        '''
-        junit '**/*.xml'
+        runtests()
       }
       post{
         always{
-          sh label:'mlcleanup', script: '''#!/bin/bash
-            cd $WORKSPACE/flux;
-            sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
-            docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
-            docker-compose rm -fsv || true;
-            echo "y" | docker volume prune --filter all=1 || true;
-          '''
+          postCleanup()
         }
       }
     }
     stage('publish'){
       agent{ label 'devExpLinuxPool'}
       when {
-        branch 'main'
+        branch 'develop'
       }
       steps{
         script{
@@ -88,6 +100,27 @@ pipeline{
             }"""
             artifactory.upload(uploadSpec)
             echo "${uploadSpec}"
+        }
+      }
+    }
+    stage('regressions'){
+      when{
+        allOf{
+          branch 'develop'
+          expression {return params.regressions}
+        }
+      }
+      environment{
+        JAVA_HOME_DIR="/home/builder/java/jdk-17.0.2"
+        GRADLE_DIR   =".gradle"
+      }
+      agent{ label 'devExpLinuxPool'}
+      steps{
+        runtests()
+      }
+      post{
+        always{
+          postCleanup()
         }
       }
     }
