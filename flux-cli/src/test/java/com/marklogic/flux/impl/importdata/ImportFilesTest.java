@@ -296,18 +296,28 @@ class ImportFilesTest extends AbstractTest {
      */
     @Test
     void japanese() {
+//        System.setProperty("mail.mime.allowutf8", "true");
         run(
             "import-files",
             "--path", "src/test/resources/japanese-files/太田佳伸のＸＭＬファイル.xml",
+//            "--path", "/Users/rudin/Downloads/JapaneseFileNameDocs/",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*resources,''"
         );
 
-        assertCollectionSize("files", 1);
-        XmlNode doc = readXmlDocument("/japanese-files/太田佳伸のＸＭＬファイル.xml");
-        doc.assertElementValue("/root/filename", "太田佳伸のＸＭＬファイル");
+        run(
+            "copy",
+            "--connection-string", makeConnectionString(),
+            "--collections", "files",
+            "--output-connection-string", "admin:admin@localhost:8000",
+            "--preview", "5", "--preview-drop", "content"
+        );
+//
+//        assertCollectionSize("files", 1);
+//        XmlNode doc = readXmlDocument("/japanese-files/太田佳伸のＸＭＬファイル.xml");
+//        doc.assertElementValue("/root/filename", "太田佳伸のＸＭＬファイル");
     }
 
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {

@@ -88,6 +88,12 @@ public class Main {
     }
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
+        // Can default this here, allowing the user to override it if desired.
+        String theValue = System.getProperty("mail.mime.allowutf8");
+        if (theValue == null) {
+            System.setProperty("mail.mime.allowutf8", "true");
+        }
+
         final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
         try {
             command.validateCommandLineOptions(parseResult);

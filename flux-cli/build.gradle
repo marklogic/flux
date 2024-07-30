@@ -18,7 +18,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.3.0"
+  implementation "com.marklogic:marklogic-spark-connector:2.3-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262.
@@ -57,7 +57,7 @@ dependencies {
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
   // For configuring two-way SSL in tests.
-  testImplementation("com.marklogic:ml-app-deployer:4.7.0") {
+  testImplementation("com.marklogic:ml-app-deployer:4.8.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -65,7 +65,7 @@ dependencies {
     exclude module: "marklogic-client-api"
   }
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.0"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
