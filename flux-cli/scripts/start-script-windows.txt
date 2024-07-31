@@ -72,6 +72,8 @@ goto fail
 @rem Setup the command line
 
 set CLASSPATH=%APP_HOME%\\lib\\*;%APP_HOME%\\ext\\*;%APP_HOME%\\conf
+set HADOOP_HOME=%APP_HOME%
+set PATH=%PATH%;%HADOOP_HOME%\\bin
 
 @rem Execute ${applicationName}
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %${optsEnvironmentVar}% <% if ( appNameSystemProperty ) { %>"-D${appNameSystemProperty}=%APP_BASE_NAME%"<% } %> -classpath "%CLASSPATH%" <% if ( mainClassName.startsWith('--module ') ) { %>--module-path "%MODULE_PATH%" <% } %>${mainClassName} %*
