@@ -68,6 +68,27 @@ publishing a local snapshot of our Spark connector. Then just run:
 
     ./gradlew clean test
 
+You can run the tests using either Java 11 or Java 17. 
+
+In Intellij, the tests will run with Java 11. In order to run the tests in Intellij using Java 17, 
+perform the following steps:
+
+1. Go to Run -> Edit Configurations in the Intellij toolbar.
+2. Click on "Edit configuration templates".
+3. Select "JUnit". 
+4. In the text box containing JVM arguments, add the text below:
+
+```
+--add-opens java.base/sun.nio.ch=ALL-UNNAMED 
+--add-opens java.base/sun.util.calendar=ALL-UNNAMED 
+--add-opens java.base/java.io=ALL-UNNAMED 
+--add-opens java.base/sun.nio.cs=ALL-UNNAMED
+```
+
+When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to 
+pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to 
+delete that configuration first via the "Run -> Edit Configurations" panel.
+
 ## Generating code quality reports with SonarQube
 
 In order to use SonarQube, you must have used Docker to run this project's `docker-compose.yml` file, and you must
@@ -248,7 +269,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0.0.ea1-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0.0.ea2-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -256,7 +277,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-1.0.0.ea1-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-1.0.0.ea2-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -273,7 +294,7 @@ to something you can access :
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/flux-1.0.0.ea1-all.jar \
+flux-cli/build/libs/flux-1.0.0.ea2-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

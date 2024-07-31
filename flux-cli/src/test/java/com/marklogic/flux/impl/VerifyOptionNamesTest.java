@@ -53,7 +53,7 @@ class VerifyOptionNamesTest {
 
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                if (path.toFile().getAbsolutePath().endsWith(".jar")) {
+                if (path.toFile().getAbsolutePath().endsWith(".jar") || path.toFile().getAbsolutePath().endsWith(".dll")) {
                     // All kinds of funky chars in a jar file, we don't need to check it.
                     return FileVisitResult.CONTINUE;
                 }
