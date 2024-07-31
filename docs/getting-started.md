@@ -48,8 +48,7 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 
 ## Usage
 
-You can run Flux without any options to see the list of available commands (all examples will assume the use of
-Unix; if you are on Windows, substitute `./bin/flux` with `bin/flux`). If you are using Flux to run these examples, 
+You can run Flux without any options to see the list of available commands. If you are using Flux to run these examples, 
 first change your current directory to where you extract Flux:
 
     cd flux-1.0.0.ea1
@@ -57,6 +56,13 @@ first change your current directory to where you extract Flux:
 And then run the Flux executable without any options:
 
     ./bin/flux
+
+If you are on Windows, run the following instead:
+
+    bin\flux
+
+This guide and the rest of the documentation at this site will assume the use of Unix and thus show `./bin/flux`. For
+Windows users, just change that to `bin\flux`.
 
 As shown in the usage, every command is invoked by specifying its name and one or more options required to run the
 command. To see the usage for a particular command, such as `import-files`, run:
