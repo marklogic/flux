@@ -258,6 +258,17 @@ Flux uses a [Log4J2 properties file](https://logging.apache.org/log4j/2.x/manual
 configure its logging. The file is located in a Flux installation at `./conf/log4j2.properties`. You are free to 
 customize this file to meet your needs for logging.
 
+## Configuring JVM options
+
+The `./bin/flux` and `./bin/flux.bat` executables both apply JVM options defined by the `JAVA_OPTS` and `FLUX_OPTS`
+environment variables. The [Java documentation](https://docs.oracle.com/en/java/javase/11/tools/java.html) provides
+a list of standard and extra options that affect how the JVM performs. 
+
+As a simple example, you could run the following on a Unix OS to configure the JVM to print its version information each
+time you run Flux:
+
+    export FLUX_OPTS=--show-version
+
 ## Advanced Spark options
 
 Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 

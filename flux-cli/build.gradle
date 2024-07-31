@@ -117,6 +117,7 @@ application {
 // Modifies the application's start script to use our modified one that adds jars in the "./ext" folder to the classpath.
 startScripts {
   unixStartScriptGenerator.template = resources.text.fromFile('scripts/start-script.txt')
+  windowsStartScriptGenerator.template = resources.text.fromFile('scripts/start-script-windows.txt')
   applicationName = "flux"
 }
 

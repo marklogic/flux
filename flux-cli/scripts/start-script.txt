@@ -147,24 +147,7 @@ case "\$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
-CLASSPATH=$classpath
-<% if ( mainClassName.startsWith('--module ') ) { %>
-MODULE_PATH=$modulePath
-<% } %>
-
-# Add conf directory so user can edit the files in it.
-CLASSPATH=\${CLASSPATH}":\$APP_HOME/conf"
-
-# Add user stuff; we'll say "/ext" for now.
-for file in "\${APP_HOME}"/ext/*.jar
-do
-  if [ ! -z "\$CLASSPATH" ]; then
-    CLASSPATH=\${CLASSPATH}":"\$file
-  else
-    CLASSPATH=\$file
-  fi
-done
-
+CLASSPATH="lib/*:ext/*:conf"
 
 # Determine the Java command to use to start the JVM.
 if [ -n "\$JAVA_HOME" ] ; then
