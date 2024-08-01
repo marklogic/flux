@@ -21,22 +21,28 @@ dependencies {
   implementation "com.marklogic:marklogic-spark-connector:2.3.0"
   implementation "info.picocli:picocli:4.7.6"
 
-  // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262.
-  // However, hadoop-client 3.3.4 and hadoop-aws 3.3.4 are both flagged with a high security vulnerability -
-  // https://nvd.nist.gov/vuln/detail/CVE-2023-26031 . That CVE notes that the vulnerability is awaiting reanalysis.
-  // Out of the proverbial abundance of caution, 3.3.6 is being used for both hadoop-client and hadoop-aws.
-  // An issue for us though is that we end up mixing hadoop dependencies, as Spark 3.4.x depends on hadoop-client-api
-  // and hadoop-client-runtime 3.3.4. The alternative - forcing Spark 3.4.3 to use Hadoop 3.3.6 across the board -
-  // isn't appealing either as Spark 3.4.3 has Hadoop 3.3.4 as a direct dependency. We are choosing to only use
-  // Hadoop 3.3.6 for hadoop-aws and hadoop-client as that's what we've used for the vast majority of Flux testing.
-  implementation("org.apache.hadoop:hadoop-aws:3.3.6") {
+  // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
+  // Spark - through 3.5.1 - depend on Hadoop 3.3.4 as well.
+  // Hadoop 3.3.4 is flagged with a high security vulnerability - https://nvd.nist.gov/vuln/detail/CVE-2023-26031 .
+  // That CVE notes that the vulnerability is awaiting reanalysis.
+  //
+  // However, the CVE includes the text "If the YARN cluster is accepting work from remote (authenticated) users".
+  // Flux does not create a YARN cluster. It uses a local standalone Spark cluster. A user may choose to use Flux with
+  // spark-submit against a Spark cluster using YARN, but at that point, the user is 100% responsible for how they
+  // configure their own Spark cluster.
+  implementation("org.apache.hadoop:hadoop-aws:3.3.4") {
     // We don't include the entire aws-java-sdk-bundle, as that clocks in as a single 380mb jar. We only need the S3
     // portion of the AWS SDK.
     exclude module: "aws-java-sdk-bundle"
   }
-  implementation "com.amazonaws:aws-java-sdk-s3:1.12.367"
 
-  implementation "org.apache.hadoop:hadoop-client:3.3.6"
+  // Depending on 262, which is what hadoop-aws 3.3.4 depends on.
+  implementation "com.amazonaws:aws-java-sdk-s3:1.12.262"
+
+  // With version 262 of the AWS SDK, we get a NoClassDefFoundError if this dynamodb module is not included.
+  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
+
+  implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.4.3"
