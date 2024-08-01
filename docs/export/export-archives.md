@@ -37,6 +37,17 @@ combination of those options as well, with the exception that `--query` will be 
 
 You must then use the `--path` option to specify a directory to write archive files to.
 
+### Windows-specific issues with zip files
+
+In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a zip file
+with those URIs - which are used as the zip entry names - will produce confusing behavior on Windows. If you open the
+zip file via Windows Explorer, Windows will erroneously think the zip file is empty. If you open the zip file using
+7-Zip, you will see a top-level entry named `_` if one or more of your URIs begin with a forward slash. These are
+effectively issues that only occur when viewing the file within Windows and do not reflect the actual contents of the
+zip file. The contents of the file are correct and if you were to import them with Flux via the `import-archive-files`
+command, you will get the expected results.
+
+
 ## Controlling document metadata
 
 Each exported document will have all of its associated metadata - collections, permissions, quality, properties, and 
