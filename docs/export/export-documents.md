@@ -60,6 +60,16 @@ To write multiple files to one or more ZIP files, include `--compression ZIP`. A
 partition that was created when reading data via Optic. You can include `--zip-file-count 1` to force all documents to be
 written to a single ZIP file. See the below section on "Understanding partitions" for more information. 
 
+### Windows-specific issues with zip files
+
+In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a zip file
+with those URIs - which are used as the zip entry names - will produce confusing behavior on Windows. If you open the
+zip file via Windows Explorer, Windows will erroneously think the zip file is empty. If you open the zip file using
+7-Zip, you will see a top-level entry named `_` if one or more of your URIs begin with a forward slash. These are
+effectively issues that only occur when viewing the file within Windows and do not reflect the actual contents of the
+zip file. The contents of the file are correct and if you were to import them with Flux via the `import-files` 
+command, you will get the expected results.
+
 ## Specifying an encoding
 
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
