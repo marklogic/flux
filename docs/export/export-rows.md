@@ -21,6 +21,7 @@ The following commands support executing an Optic query and exporting the matchi
 - `export-avro-files`
 - `export-delimited-files`
 - `export-jdbc`
+- `export-json-lines-files`
 - `export-orc-files`
 - `export-parquet-files`
 
@@ -118,7 +119,7 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
 `--encoding` option - e.g.
 
 ```
-./bin/flux export-delimited-files \
+./bin/flux export-json-lines-files \
     --path destination \
     --encoding ISO-8859-1 \
     etc...
