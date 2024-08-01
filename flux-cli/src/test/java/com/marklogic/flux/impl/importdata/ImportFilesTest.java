@@ -134,7 +134,7 @@ class ImportFilesTest extends AbstractTest {
             "--connection-string\n" +
             makeConnectionString() + "\n" +
             "--uri-replace\n" +
-            ".*/mixed-files,''";
+            "\".*/mixed-files,''\"";
         FileCopyUtils.copy(options.getBytes(), optionsFile);
 
         run(

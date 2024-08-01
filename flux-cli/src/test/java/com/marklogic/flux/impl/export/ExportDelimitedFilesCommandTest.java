@@ -41,7 +41,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
      * @throws IOException
      */
     @Test
-    void optionsFileWithSpacesInIt(@TempDir Path tempDir) throws IOException {
+    void optionsFileWithWhitespaceInValues(@TempDir Path tempDir) throws IOException {
         run(
             "export-delimited-files",
             "--connection-string", makeConnectionString(),
