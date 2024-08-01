@@ -28,6 +28,10 @@ class ExportParquetFilesTest extends AbstractTest {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".snappy.parquet"));
         assertEquals(1, files.length, "Expecting 1 file as the default, with Spark defaulting to snappy for compression.");
 
+        assertEquals(1, tempDir.toFile().listFiles().length, "Flux should not include Spark SUCCESS " +
+            "files, nor checksum (.crc) files. Should just have the one .snappy.parquet file. We may later expose " +
+            "configuration options for allowing these files to be created, if we get feedback asking for that.");
+
         // Read the files back in to ensure we get 15 rows
         run(
             "import-parquet-files",

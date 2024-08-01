@@ -22,6 +22,13 @@ public class SparkUtil {
     public static SparkSession buildSparkSession(String masterUrl) {
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
+
+            // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
+            // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
+            // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
+            // user has control over this.
+            .config("spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
+
             // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
             // options now that are defined by the user is that they won't work when used with spark-submit, which
             // handles constructing a SparkSession. We may eventually provide a feature though for providing options
