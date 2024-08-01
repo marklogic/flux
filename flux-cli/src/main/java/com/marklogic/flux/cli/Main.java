@@ -84,7 +84,8 @@ public class Main {
             .setCaseInsensitiveEnumValuesAllowed(true)
             .setParameterExceptionHandler(new ShortErrorMessageHandler())
             .setExecutionStrategy(this::executeCommand)
-            .setUseSimplifiedAtFiles(true);
+            // Allows for values like Optic and serialized CTS queries to have newline symbols in them.
+            .setUseSimplifiedAtFiles(false);
     }
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
