@@ -65,7 +65,8 @@ class ConnectionTest extends AbstractTest {
             .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
-        assertEquals("Unable to connect to MarkLogic; cause: username must be of type String", ex.getMessage());
+        assertEquals("Unable to connect to MarkLogic; cause: Must specify a username when using digest authentication.",
+            ex.getMessage());
     }
 
     @Test
@@ -75,7 +76,8 @@ class ConnectionTest extends AbstractTest {
             .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
-        assertEquals("Unable to connect to MarkLogic; cause: password must be of type String", ex.getMessage());
+        assertEquals("Unable to connect to MarkLogic; cause: Must specify a password when using digest authentication.",
+            ex.getMessage());
     }
 
     @Test
