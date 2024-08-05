@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux;
 
@@ -41,7 +41,7 @@ class CopyrightTest {
                         String message = String.format("Does not start with copyright comment: %s", file.toFile().getAbsolutePath());
                         assertTrue(content.startsWith("/*"), message);
                         assertTrue(
-                            content.contains("Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved."),
+                            content.contains("Copyright © 2024 MarkLogic Corporation. All Rights Reserved."),
                             message
                         );
                     }
