@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.cli;
 
@@ -84,7 +84,8 @@ public class Main {
             .setCaseInsensitiveEnumValuesAllowed(true)
             .setParameterExceptionHandler(new ShortErrorMessageHandler())
             .setExecutionStrategy(this::executeCommand)
-            .setUseSimplifiedAtFiles(true);
+            // Allows for values like Optic and serialized CTS queries to have newline symbols in them.
+            .setUseSimplifiedAtFiles(false);
     }
 
     private int executeCommand(CommandLine.ParseResult parseResult) {

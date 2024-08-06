@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:1.0.0.ea2"
+  implementation "com.marklogic:flux-api:1.0.0.ea3"
 }
 
 task runApp(type: JavaExec) {

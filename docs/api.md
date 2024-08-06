@@ -22,7 +22,7 @@ To add Flux as a dependency to your application, add the following to your Maven
 <dependency>
   <groupId>com.marklogic</groupId>
   <artifactId>flux-api</artifactId>
-  <version>1.0.0.ea1</version>
+  <version>1.0.0.ea3</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:1.0.0.ea1"
+  implementation "com.marklogic:flux-api:1.0.0.ea3"
 }
 ```
 

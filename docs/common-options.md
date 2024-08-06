@@ -67,6 +67,21 @@ You then reference the file via the `@` symbol followed by a filename:
 
 You can reference multiple files this way and also include additional options on the command line.
 
+Values in an options file can have whitespace in them, including newline symbols. If your values have whitespace, 
+put double or single quotes around them. Within quoted values, backslashes must be escaped with another backslash. 
+Newlines must then be represented by the same character you would use for a newline symbol in a normal value on the 
+command line. For example, most Unix shells require a `\` for allowing a value to continue onto the next line.
+
+As an example, MarkLogic Optic queries are often easier to read when stretched across multiple lines. 
+The following shows an example of such a query in an options file, using a `\` to let the query continue 
+to the next line:
+
+```
+--query
+"op.fromView('Example', 'Employees', '')\
+   .limit(10)"
+```
+
 ## Connecting to MarkLogic
 
 Every command in Flux will need to connect to a MarkLogic database, either for reading data or writing data or both. 

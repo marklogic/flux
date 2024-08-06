@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -7,12 +7,15 @@ import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.spark.Util;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
 /**
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
- * more files.
+ * more files. Each subclass is expected to make use of a Spark data source for writing rows to a tabular data source.
  */
 abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
 
@@ -48,10 +51,30 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
-        writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+
+        Configuration hadoopConf = session.sparkContext().hadoopConfiguration();
+        writeParams.getS3Params().addToHadoopConfiguration(hadoopConf);
+        disableWriteChecksum(hadoopConf);
+
         writer.format(getWriteFormat())
             .options(writeParams.get())
             .mode(SparkUtil.toSparkSaveMode(writeParams.getSaveMode()))
             .save(writeParams.getPath());
+    }
+
+    /**
+     * Spark defaults to writing checksum files, which is going to be unfamiliar for Flux users that either aren't
+     * familiar with Spark and/or do not expect this having used MLCP before. Additionally, the other export commands
+     * that our the MarkLogic connector do not offer any support for checksum files. So disabling this feature for now.
+     * May expose it via an option later based on feedback.
+     *
+     * @param hadoopConf
+     */
+    private void disableWriteChecksum(Configuration hadoopConf) {
+        try {
+            FileSystem.get(hadoopConf).setWriteChecksum(false);
+        } catch (Exception e) {
+            Util.MAIN_LOGGER.warn("Unable to disable writing Spark checksum files; cause: {}", e.getMessage());
+        }
     }
 }

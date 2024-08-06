@@ -25,8 +25,8 @@ you wish to write to. For example:
 ```
 ./bin/flux import-files \
     --path /path/to/files \
-    --connection-string user:password@localhost:8000 \
-    --permissions rest-reader,read,rest-writer,update
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Controlling document URIs
@@ -49,7 +49,13 @@ MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/
 If your files use a different encoding, you must specify that via the `--encoding` option so that
 the content can be correctly translated to UTF-8 when written to MarkLogic:
 
-    ./bin/flux import-files --path source --encoding ISO-8859-1 ...
+```
+./bin/flux import-files \
+    --path source \ 
+    --encoding ISO-8859-1 \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
 
 ## Importing Gzip files
 

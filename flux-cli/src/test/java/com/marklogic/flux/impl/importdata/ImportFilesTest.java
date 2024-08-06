@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -134,7 +134,7 @@ class ImportFilesTest extends AbstractTest {
             "--connection-string\n" +
             makeConnectionString() + "\n" +
             "--uri-replace\n" +
-            ".*/mixed-files,''";
+            "\".*/mixed-files,''\"";
         FileCopyUtils.copy(options.getBytes(), optionsFile);
 
         run(

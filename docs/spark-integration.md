@@ -13,14 +13,30 @@ require more system resources than what are available when running Flux as a com
 - TOC
 {:toc}
 
+## Spark security notice
+
+As of August 2024 and the Flux 1.0.0 release, all public releases of Apache Spark 3.4.x through 3.5.1 depend on 
+Apache Hadoop 3.3.4. This version of Hadoop has a 
+[CVE filed against it](https://nvd.nist.gov/vuln/detail/CVE-2023-26031). The CVE involves Spark running with a 
+YARN cluster manager and the YARN cluster "is accepting work from remote (authenticated) users". 
+
+For normal Flux CLI usage, this CVE is a false positive as Flux does not use a YARN cluster manager. Flux uses 
+Spark's standalone cluster manager by default - see the 
+[Spark documentation](https://spark.apache.org/docs/latest/cluster-overview.html) for further information on Spark
+cluster managers. 
+
+If you use Flux with the Apache Spark `spark-submit` program as described below, you should consider the above CVE if
+you are also running a YARN cluster manager. In this scenario, you have full control and responsibility over your 
+Spark cluster, as Flux does not include any Spark or Hadoop packages when it is used with `spark-submit`.
+
 ## Submitting Flux commands
 
 Flux integrates with [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) to allow you to 
 submit a Flux command invocation to a remote Spark cluster. Every Flux command is a Spark application, and thus every
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
-To use Flux with `spark-submit`, first download the `flux-1.0.0.ea2-all.jar` file from the 
-[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.0.0.ea2). This jar file includes Flux and all of 
+To use Flux with `spark-submit`, first download the `flux-1.0.0.ea3-all.jar` file from the 
+[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.0.0.ea3). This jar file includes Flux and all of 
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
@@ -30,7 +46,7 @@ The following shows a notional example of running the Flux `import-files` comman
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
     --master spark://changeme:7077 \
-    flux-1.0.0.ea2-all.jar \
+    flux-1.0.0.ea3-all.jar \
     import-files \
     --path path/to/data
     --connection-string user:password@host:8000

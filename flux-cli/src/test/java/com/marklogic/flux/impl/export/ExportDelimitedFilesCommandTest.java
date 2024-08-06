@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -41,7 +41,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
      * @throws IOException
      */
     @Test
-    void optionsFileWithSpacesInIt(@TempDir Path tempDir) throws IOException {
+    void optionsFileWithWhitespaceInValues(@TempDir Path tempDir) throws IOException {
         run(
             "export-delimited-files",
             "--connection-string", makeConnectionString(),

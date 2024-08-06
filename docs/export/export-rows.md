@@ -21,6 +21,7 @@ The following commands support executing an Optic query and exporting the matchi
 - `export-avro-files`
 - `export-delimited-files`
 - `export-jdbc`
+- `export-json-lines-files`
 - `export-orc-files`
 - `export-parquet-files`
 
@@ -61,7 +62,8 @@ a notional example of doing so:
 
 ```
 ./bin/flux export-jdbc \
-    --connection-string user:password@localhost:8000 \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update \
     --query "op.fromView('example', 'employee', '')" \
     --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
@@ -75,7 +77,16 @@ Rows selected via an Optic query can be exported to any of the below file format
 ### Avro
 
 The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
-command reuses Spark's support for writing Avro files. You can include any of the 
+command reuses Spark's support for writing Avro files:
+
+```
+./bin/flux export-avro-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
+    --path destination
+```
+
+You can include any of the 
 [Spark Avro data source options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
 control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
 
@@ -85,7 +96,16 @@ For configuration options listed in the above Spark Avro guide, use the `-C` opt
 ### Delimited text
 
 The `export-delimited-files` command writes one or more delimited text (commonly CSV) files to the directory 
-specified by the `--path` option. This command reuses Spark's support for writing delimited text files. You can include
+specified by the `--path` option:
+
+```
+./bin/flux export-delimited-files \
+  --connection-string "flux-example-user:password@localhost:8004" \
+  --query "op.fromView('example', 'employee', '')" \
+  --path destination
+```
+
+This command reuses Spark's support for writing delimited text files. You can include
 any of the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` 
 option to control how delimited text is written. These options are expressed as `-PoptionName=optionValue`. 
 
@@ -102,6 +122,8 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
 
 ```
 ./bin/flux export-delimited-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --query "op.fromView('example', 'employee', '')" \
     --path destination \
     --encoding ISO-8859-1 \
     etc...
@@ -110,7 +132,16 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
 ### JSON Lines
 
 The `export-json-lines-files` command writes one or more [JSON Lines](https://jsonlines.org/) to the directory 
-specified by the `--path` option. This command reuses Spark's support for writing JSON files. You can include any of the
+specified by the `--path` option:
+
+```
+./bin/flux export-json-lines-files \
+  --connection-string "flux-example-user:password@localhost:8004" \
+  --query "op.fromView('example', 'employee', '')" \
+  --path destination
+```
+
+This command reuses Spark's support for writing JSON files. You can include any of the
 [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option to control
 how JSON Lines files are written. These options are expressed as `-PoptionName=optionValue`.
 
@@ -118,16 +149,25 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
 `--encoding` option - e.g.
 
 ```
-./bin/flux export-delimited-files \
+./bin/flux export-json-lines-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --query "op.fromView('example', 'employee', '')" \
     --path destination \
-    --encoding ISO-8859-1 \
-    etc...
+    --encoding ISO-8859-1
 ```
 
 ### ORC
 
-The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option. This
-command reuses Spark's support for writing ORC files. You can include any of the
+The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option:
+
+```
+./bin/flux export-orc-files \
+  --connection-string "flux-example-user:password@localhost:8004" \
+  --query "op.fromView('example', 'employee', '')" \
+  --path destination
+```
+
+This command reuses Spark's support for writing ORC files. You can include any of the
 [Spark ORC data source options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
 control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
 
@@ -136,8 +176,16 @@ For configuration options listed in the above Spark ORC guide, use the `-C` opti
 
 ### Parquet
 
-The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option. This
-command reuses Spark's support for writing Parquet files. You can include any of the
+The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option: 
+
+```
+./bin/flux export-parquet-files \
+  --connection-string "flux-example-user:password@localhost:8004" \
+  --query "op.fromView('example', 'employee', '')" \
+  --path destination
+```
+
+This command reuses Spark's support for writing Parquet files. You can include any of the
 [Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to
 control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
 

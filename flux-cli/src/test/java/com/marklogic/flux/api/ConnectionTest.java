@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -65,7 +65,8 @@ class ConnectionTest extends AbstractTest {
             .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
-        assertEquals("Unable to connect to MarkLogic; cause: username must be of type String", ex.getMessage());
+        assertEquals("Unable to connect to MarkLogic; cause: Must specify a username when using digest authentication.",
+            ex.getMessage());
     }
 
     @Test
@@ -75,7 +76,8 @@ class ConnectionTest extends AbstractTest {
             .from("src/test/resources");
 
         ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
-        assertEquals("Unable to connect to MarkLogic; cause: password must be of type String", ex.getMessage());
+        assertEquals("Unable to connect to MarkLogic; cause: Must specify a password when using digest authentication.",
+            ex.getMessage());
     }
 
     @Test

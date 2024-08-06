@@ -28,10 +28,10 @@ via `custom-export-rows`:
 
 ```
 ./bin/flux custom-export-rows \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --query "op.fromView('schema', 'view')" \
     --target text \
-    -Ppath=export \
-    --connection-string user:password@localhost:8000 \
-    --query "op.fromView('schema', 'view')" etc...
+    -Ppath=export
 ```
 
 ## Exporting rows
