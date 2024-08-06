@@ -35,8 +35,8 @@ Flux integrates with [spark-submit](https://spark.apache.org/docs/latest/submitt
 submit a Flux command invocation to a remote Spark cluster. Every Flux command is a Spark application, and thus every
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
-To use Flux with `spark-submit`, first download the `flux-1.0.0.ea3-all.jar` file from the 
-[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.0.0.ea3). This jar file includes Flux and all of 
+To use Flux with `spark-submit`, first download the `flux-1.0-SNAPSHOT-all.jar` file from the 
+[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.0-SNAPSHOT). This jar file includes Flux and all of 
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
@@ -46,7 +46,7 @@ The following shows a notional example of running the Flux `import-files` comman
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
     --master spark://changeme:7077 \
-    flux-1.0.0.ea3-all.jar \
+    flux-1.0-SNAPSHOT-all.jar \
     import-files \
     --path path/to/data
     --connection-string user:password@host:8000
