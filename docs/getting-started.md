@@ -26,8 +26,8 @@ You can download the latest release of the Flux application zip from [the releas
 If you would also like to use Flux to run the examples in this guide, please follow these steps:
 
 1. Clone this repository using git. 
-2. Extract the `flux-1.0-SNAPSHOT.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
-This should result in an `./examples/getting-started/flux-1.0-SNAPSHOT` directory that contains the Flux software.
+2. Extract the `flux-1.0.0.ea3.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
+This should result in an `./examples/getting-started/flux-1.0.0.ea3` directory that contains the Flux software.
 
 ### Deploying the example application
 
@@ -51,7 +51,7 @@ of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.ma
 You can run Flux without any options to see the list of available commands. If you are using Flux to run these examples, 
 first change your current directory to where you extract Flux:
 
-    cd flux-1.0-SNAPSHOT
+    cd flux-1.0.0.ea3
 
 And then run the Flux executable without any options:
 
