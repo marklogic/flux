@@ -22,15 +22,18 @@ The `import-delimited-files` command imports delimited text files specified via 
 ```
 ./bin/flux import-delimited-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000" etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The command uses a comma as the default delimiter. You can override this via `--delimiter`:
 
 ```
 ./bin/flux import-delimited-files \
-    --path /path/to/files --delimiter ; \
-    --connection-string "user:password@localhost:8000" etc...
+    --path /path/to/files \
+    --delimiter ; \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
@@ -79,9 +82,11 @@ via the `--ignore-null-fields` option:
 
 ```
 ./bin/flux import-delimited-files \
-    --path /path/to/files --delimiter ; \
+    --path /path/to/files \
+    --delimiter ; \
     --ignore-null-fields \
-    --connection-string "user:password@localhost:8000" etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your
@@ -98,7 +103,8 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
 ./bin/flux import-delimited-text-files \
     --path source \
     --encoding ISO-8859-1 \
-    etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Aggregating rows
@@ -125,4 +131,10 @@ The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for
 example:
 
-    ./bin/flux import-delimited-files -Pheader=false -PescapeQuotes=false ....
+```
+./bin/flux import-delimited-files \
+    -Pheader=false \
+    -PescapeQuotes=false \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```

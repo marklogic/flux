@@ -46,9 +46,9 @@ cluster:
 
 ```
 ./bin/flux copy \
-  --connection-string "user:password@localhost:8000" \
+  --connection-string "flux-example-user:password@localhost:8004" \
   --collections "example" \
-  --output-connection-string "user:password@localhost:8000" \
+  --output-connection-string "flux-example-user:password@localhost:8004" \
   --output-database "target-database"
 ```
 

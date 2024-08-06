@@ -28,7 +28,8 @@ you wish to write to:
 ```
 ./bin/flux import-aggregate-json-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
@@ -54,8 +55,8 @@ The file can be imported with the following notional command:
 ./bin/flux import-aggregate-json-files \
     --json-lines \
     --path path/to/file.txt \
-    --connection-string "user:password@host:8000" \
-    etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 Flux will write two separate JSON documents, each with a completely different schema. 
@@ -80,7 +81,8 @@ the content can be correctly translated to UTF-8 when written to MarkLogic:
 ./bin/flux import-aggregate-json-files \
     --path source \
     --encoding ISO-8859-1 \
-    etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Reading compressed files
@@ -100,5 +102,7 @@ For example, if your files use a format other than `yyyy-MM-dd` values, you can 
 ```
 ./bin/flux import-aggregate-json-files \
     --path source \
-    -PdateFormat=MM-dd-yyyy
+    -PdateFormat=MM-dd-yyyy \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```

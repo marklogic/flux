@@ -34,13 +34,15 @@ or `import-parquet-files`, use the following options:
 For example, consider the [Postgres tutorial database](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
 that features 15 tables with multiple relationships. One such relationship is between customers and payments. The
 following options would be used to write customer documents with each customer document containing an array of 
-its related payments (connection details are omitted for brevity):
+its related payments:
 
 ```
 ./bin/flux import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --group-by customer_id \
     --aggregate "payments=payment_id,amount,payment_date"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The options above result in the following aggregation being performed:

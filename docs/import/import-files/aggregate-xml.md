@@ -45,9 +45,10 @@ of the `person` element in the document:
 ```
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
-    --connection-string user:password@localhost:8000 \
     --element person \
-    --namespace org:example
+    --namespace org:example \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Controlling document URIs
@@ -60,9 +61,12 @@ based on the value of each `id` element in the `org:example` namespace:
 ```
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
-    --connection-string user:password@localhost:8000 \
-    --element person --namespace org:example \
-    --uri-element id --uri-namespace org:example
+    --element person \
+    --namespace org:example \
+    --uri-element id \
+    --uri-namespace org:example \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make the URI more self-describing. For
@@ -86,5 +90,6 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
 ./bin/flux import-aggregate-xml-files \
     --path source \
     --encoding ISO-8859-1 \
-    etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```

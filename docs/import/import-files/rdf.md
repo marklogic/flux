@@ -3,7 +3,7 @@ layout: default
 title: Importing RDF
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 7
+nav_order: 6
 ---
 
 Flux can import a variety of RDF files in a fashion similar to that of 
@@ -27,7 +27,8 @@ database you wish to write to:
 ```
 ./bin/flux import-rdf-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Supported files types

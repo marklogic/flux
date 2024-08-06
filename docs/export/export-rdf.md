@@ -16,6 +16,16 @@ triples and quads with other systems and users.
 
 ## Usage
 
+The `export-rdf-files` command requires a query for selecting documents to export and a directory path for writing
+RDF files to:
+
+```
+./bin/flux export-rdf-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
+    --path destination
+```
+
 Similar to [exporting documents](export-documents.md), the `export-rdf-files` command supports the following 
 options for selecting the documents that contain the triples you wish to export:
 
