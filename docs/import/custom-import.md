@@ -20,6 +20,7 @@ via `custom-import`:
 
 ```
 ./bin/flux custom-import --source text \
-  -Ppath=/path/to/text/files \
-  --connection-string user:password@localhost:8000 etc..
+    -Ppath=/path/to/text/files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```

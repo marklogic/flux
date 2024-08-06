@@ -33,10 +33,16 @@ Connection details are specified via the following options:
 
 ## Importing data
 
-To import all rows in a table, use the `--query` option with a SQL query selecting all rows (connection details for 
-MarkLogic are omitted for brevity):
+To import all rows in a table, use the `--query` option with a SQL query selecting all rows:
 
-    ./bin/flux import-jdbc --query "SELECT * FROM customer" 
+```
+./bin/flux import-jdbc \
+    --query "SELECT * FROM customer" \
+    --jdbc-url "..." \
+    --jdbc-driver "..." \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
 
 The SQL query can contain any syntax supported by your database. 
 
@@ -62,7 +68,8 @@ via the `--ignore-null-fields` option:
 ```
 ./bin/flux import-jdbc \
     --ignore-null-fields \
-    --connection-string "user:password@localhost:8000" etc...
+    --query "..." \ 
+    etc...
 ```
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your

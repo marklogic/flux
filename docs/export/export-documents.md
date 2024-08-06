@@ -21,8 +21,9 @@ MarkLogic database you wish to write to - for example:
 
 ```
 ./bin/flux export-files \
-    --path /path/to/files \
-    --connection-string "user:password@localhost:8000" etc..
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
+    --path destination
 ```
 
 The following options control which documents are selected to be exported:
@@ -77,9 +78,10 @@ You can specify an alternate encoding when exporting documents to files via the 
 
 ```
 ./bin/flux export-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
     --path destination \
-    --encoding ISO-8859-1 \
-    etc...
+    --encoding ISO-8859-1
 ```
 
 ## Understanding partitions
@@ -95,9 +97,10 @@ the following command below from the [Getting Started guide](getting-started.md)
 ```
 rm export/*.zip
 ./bin/flux export-files \
-    --connection-string flux-example-user:password@localhost:8004 \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
-    --path export \
+    --permissions flux-example-role,read,flux-example-role,update \
+    --path destination \
     --compression zip
 ```
 
@@ -111,9 +114,10 @@ from each forest in your database:
 ```
 rm export/*.zip
 ./bin/flux export-files \
-    --connection-string flux-example-user:password@localhost:8004 \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
-    --path export \
+    --permissions flux-example-role,read,flux-example-role,update \
+    --path destination \
     --compression zip \
     --partitions-per-forest 1
 ```
@@ -125,9 +129,11 @@ writing data, regardless of how many were used to read the data:
 
 ```
 rm export/*.zip
-./bin/flux export-files --connection-string flux-example-user:password@localhost:8004 \
+./bin/flux export-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
-    --path export --compression zip \
+    --path destination \
+    --compression zip \
     --repartition 1
 ```
 

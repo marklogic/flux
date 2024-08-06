@@ -3,7 +3,7 @@ layout: default
 title: Importing ORC
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 8
+nav_order: 9
 ---
 
 Flux can import ORC files, with each row being written as a JSON or XML document in MarkLogic.
@@ -23,7 +23,8 @@ MarkLogic database you wish to write to:
 ```
 ./bin/flux import-orc-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
@@ -74,7 +75,8 @@ via the `--ignore-null-fields` option:
 ./bin/flux import-orc-files \
     --path /path/to/files \
     --ignore-null-fields \
-    --connection-string "user:password@localhost:8000" etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your

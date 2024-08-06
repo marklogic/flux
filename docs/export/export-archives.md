@@ -19,7 +19,14 @@ database.
 ## Usage
 
 The `export-archive-files` command requires a query for selecting documents to export and a directory path for writing 
-archive files to. 
+archive files to:
+
+```
+./bin/flux export-archive-files \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
+    --path destination
+```
 
 The following options control which documents are selected to be exported:
 
@@ -80,9 +87,10 @@ You can specify an alternate encoding when exporting archives via the `--encodin
 
 ```
 ./bin/flux export-archives \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --collections example \
     --path destination \
-    --encoding ISO-8859-1 \
-    etc...
+    --encoding ISO-8859-1
 ```
 
 The encoding will be used for both document and metadata entries in each archive zip file. 

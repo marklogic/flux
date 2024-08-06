@@ -3,7 +3,7 @@ layout: default
 title: Importing archives
 parent: Importing files
 grand_parent: Importing Data
-nav_order: 6
+nav_order: 7
 ---
 
 Flux can import archive files containing documents and their associated metadata. This includes archives written via 
@@ -26,7 +26,8 @@ MarkLogic database you wish to write to:
 ```
 ./bin/flux import-archive-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Importing MLCP archives
@@ -39,7 +40,8 @@ requires at least one `--path` option along with connection information for the 
 ```
 ./bin/flux import-mlcp-archive-files \
     --path /path/to/files \
-    --connection-string "user:password@localhost:8000"
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
 
 ## Restricting metadata
@@ -72,5 +74,6 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
 ./bin/flux import-archive-files \
     --path source \
     --encoding ISO-8859-1 \
-    etc...
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
 ```
