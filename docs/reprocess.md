@@ -28,19 +28,27 @@ processing you wish.
 
 For the reader, you must specify one of the following options:
 
-- `--read-javascript` = JavaScript code for reading data.
-- `--read-javascript-file` = path to file containing JavaScript code for reading data. 
-- `--read-xquery` = XQuery code for reading data.
-- `--read-xquery-file` = path to file containing XQuery code for reading data.
-- `--read-invoke` = path of a MarkLogic server module to invoke for reading data.
+| Option | Description| 
+| --- |---|
+| `--read-javascript` | JavaScript code for reading data.|
+| `--read-javascript-file` | Path to file containing JavaScript code for reading data. | 
+| `--read-xquery` | XQuery code for reading data. |
+| `--read-xquery-file` | Path to file containing XQuery code for reading data. |
+| `--read-invoke` | Path of a MarkLogic server module to invoke for reading data. |
 
 For the writer, you must specify one of the following options:
 
-- `--write-javascript` = JavaScript code for writing data. 
-- `--write-javascript-file` = path to file containing JavaScript code for writing data.
-- `--write-xquery` = XQuery code for writing data.
-- `--write-xquery-file` = path to file containing XQuery code for writing data.
-- `--write-invoke` = path of a MarkLogic server module to invoke for writing data. 
+| Option | Description| 
+| --- |---|
+| `--write-javascript` | JavaScript code for writing data.| 
+| `--write-javascript-file` | Path to file containing JavaScript code for writing data.|
+| `--write-xquery` | XQuery code for writing data.|
+| `--write-xquery-file` | Path to file containing XQuery code for writing data.|
+| `--write-invoke` | Path of a MarkLogic server module to invoke for writing data.|
+
+If you use `--read-invoke` or `--write-invoke`, MarkLogic will determine whether the referenced module is JavaScript
+or XQuery based on the extension of the module. MarkLogic by default associates the `.sjs` extension with JavaScript
+but not the `.js` extension. For JavaScript modules, it is thus recommended to use `.sjs` as an extension. 
 
 You must also specify [connection information](common-options.md) for the MarkLogic database containing the data 
 you wish to reprocess. 
