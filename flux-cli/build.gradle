@@ -18,7 +18,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.3-SNAPSHOT"
+  implementation "com.marklogic:marklogic-spark-connector:2.3.1"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
@@ -56,14 +56,14 @@ dependencies {
   }
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
-  testImplementation "org.springframework:spring-jdbc:5.3.31"
+  testImplementation "org.springframework:spring-jdbc:5.3.39"
   testImplementation "org.postgresql:postgresql:42.6.0"
 
   // For testing custom commands with a 3rd party connector.
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
   // For configuring two-way SSL in tests.
-  testImplementation("com.marklogic:ml-app-deployer:4.7.0") {
+  testImplementation("com.marklogic:ml-app-deployer:4.8.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -71,7 +71,7 @@ dependencies {
     exclude module: "marklogic-client-api"
   }
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3-SNAPSHOT"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.1"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
