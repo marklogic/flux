@@ -130,7 +130,11 @@ application {
     '--add-opens', 'java.base/sun.util.calendar=ALL-UNNAMED',
 
     // For Spark's SerializationDebugger when using Java 17.
-    '--add-opens', 'java.base/sun.security.action=ALL-UNNAMED'
+    '--add-opens', 'java.base/sun.security.action=ALL-UNNAMED',
+
+    // Allows a reflective access by org.apache.spark.serializer.SerializationDebugger$ObjectStreamClassReflection .
+    // This warning otherwise shows on Java 11 but not Java 17.
+    "--add-opens", "java.base/java.io=ALL-UNNAMED"
   ]
 }
 

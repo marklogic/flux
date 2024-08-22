@@ -101,8 +101,9 @@ public class Main {
             if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
                 logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
             }
+            String message = removeStacktraceFromExceptionMessage(ex);
             parseResult.commandSpec().commandLine().getErr()
-                .println(String.format("%nCommand failed, cause: %s", ex.getMessage()));
+                .println(String.format("%nCommand failed, cause: %s", message));
             return CommandLine.ExitCode.SOFTWARE;
         }
         return CommandLine.ExitCode.OK;
@@ -118,5 +119,33 @@ public class Main {
         return masterUrl != null && masterUrl.trim().length() > 0 ?
             SparkUtil.buildSparkSession(masterUrl) :
             SparkUtil.buildSparkSession();
+    }
+
+    /**
+     * In some errors from our connector, such as when the custom code reader invokes invalid code,
+     * Spark will oddly put the entire stacktrace into the exception message. Showing that stacktrace isn't a
+     * good UX unless the user has asked to see the stacktrace, which we support via --stacktrace. So this
+     * does some basic checking to see if the exception message contains a stacktrace, and if so, only the
+     * first line in the exception message is returned.
+     *
+     * @param ex
+     * @return
+     */
+    private String removeStacktraceFromExceptionMessage(Exception ex) {
+        String message = ex.getMessage();
+        if (message == null) {
+            return message;
+        }
+        String[] lines = message.split("\\n");
+        // If at least the 3 lines after the exception message start with "at ", we assume that only the first
+        // line is useful and the rest is all a stacktrace.
+        if (lines.length >= 4 && isStacktraceLine(lines[1]) && isStacktraceLine(lines[2]) && isStacktraceLine(lines[3])) {
+            return lines[0];
+        }
+        return message;
+    }
+
+    private boolean isStacktraceLine(String line) {
+        return line != null && line.trim().startsWith("at ");
     }
 }
