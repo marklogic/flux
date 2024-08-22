@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.JRE;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Just verifies one of the many possible combinations for reprocessing. ReprocessOptionsTest is used to ensure that
@@ -50,14 +49,21 @@ class ReprocessTest extends AbstractTest {
     @Test
     @EnabledOnJre({JRE.JAVA_11})
     void badJavascript() {
-        assertStderrContains(() -> run(
-                "reprocess",
-                "--connection-string", makeConnectionString(),
-                "--read-javascript", "throw Error('Boom!')",
-                "--write-invoke", "/writeDocument.sjs"
-            ),
-            "Internal Server Error. Server Message: JS-JAVASCRIPT: throw Error('Boom!')"
-        );
+        String stderr = runAndReturnStderr(() -> run(
+            "reprocess",
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "throw Error('Boom!')",
+            "--write-invoke", "/writeDocument.sjs"
+        ));
+
+        assertTrue(stderr.contains("Internal Server Error. Server Message: JS-JAVASCRIPT: throw Error('Boom!')"),
+            "Unexpected stderr: " + stderr);
+
+        assertFalse(stderr.contains("at com.marklogic"),
+            "The Main program should attempt to remove the stacktrace that Spark oddly includes in the " +
+                "exception message. A user that wants to see the stacktrace can use --stacktrace to do so. " +
+                "The presence of 'at com.marklogic' indicates that a stacktrace is present. " +
+                "Actual stderr: " + stderr);
     }
 
     @Test
