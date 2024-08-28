@@ -5,7 +5,6 @@ plugins {
   id "org.sonarqube" version "4.4.1.3373"
   id 'com.github.johnrengelman.shadow' version '8.1.1'
   id 'maven-publish'
-  id 'signing'
 }
 
 configurations {
@@ -278,15 +277,6 @@ publishing {
       }
     }
   }
-}
-
-// Per https://docs.gradle.org/current/userguide/signing_plugin.html#sec:conditional_signing .
-//ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
-// Temporarily disabling signing.
-ext.isReleaseVersion = false
-signing {
-  required { isReleaseVersion }
-  sign publishing.publications.mainJava
 }
 
 // Multiple shadow plugin users have requested the ability to not have the shadow jar published by default. This
