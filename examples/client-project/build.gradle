@@ -1,3 +1,22 @@
+import com.marklogic.flux.api.Flux
+
+buildscript {
+  repositories {
+    mavenLocal()
+  }
+  dependencies {
+    classpath "com.marklogic:flux-api:1.0-SNAPSHOT"
+
+    // Demonstrates removing the Jackson libraries that otherwise cause a conflict with
+    // Spark, which requires Jackson >= 2.14.0 and < 2.15.0.
+    classpath("com.marklogic:ml-gradle:4.8.0") {
+      exclude group: "com.fasterxml.jackson.databind"
+      exclude group: "com.fasterxml.jackson.core"
+      exclude group: "com.fasterxml.jackson.dataformat"
+    }
+  }
+}
+
 plugins {
   id "java"
 }
@@ -8,11 +27,26 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:1.0.0.ea3"
+  implementation "com.marklogic:flux-api:1.0-SNAPSHOT"
 }
 
-task runApp(type: JavaExec) {
+tasks.register("runApp", JavaExec) {
   description = "Verify that the example program can be compiled and run with flux-api as a dependency."
   mainClass = "org.example.App"
   classpath = sourceSets.main.runtimeClasspath
 }
+
+tasks.register("runViaCustomTask") {
+  description = "Demonstrate how the Flux API can be used via a custom Gradle task."
+  doLast {
+    Flux.importGenericFiles()
+      .from("../../flux-cli/src/test/resources/mixed-files")
+      .connectionString("flux-test-user:password@localhost:8003")
+      .to({
+        it.permissionsString("flux-test-role,read,flux-test-role,update")
+          .collections("client-files")
+      })
+      .execute()
+  }
+}
+

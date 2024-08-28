@@ -14,44 +14,52 @@ This guide describes how to get started with Flux with some examples demonstrati
  
 ## Setup
 
-The examples in this guide, along with examples found throughout this documentation, depend on a small application in the 
-`./examples/getting-started` directory in this repository. The examples assume that the application will be deployed to 
-a MarkLogic instance and that Flux will be run from the `./examples/getting-started/flux` directory as well. However, you are 
-free to install Flux anywhere and use the examples simply as a reference for running Flux on your own data. 
-
-### Obtaining Flux
-
-You can download the latest release of the Flux application zip from [the releases page](https://github.com/marklogic/flux/releases).
-
-If you would also like to use Flux to run the examples in this guide, please follow these steps:
-
-1. Clone this repository using git. 
-2. Extract the `flux-1.0.0.ea3.zip` file into the `./examples/getting-started` directory in the cloned repository directory.
-This should result in an `./examples/getting-started/flux-1.0.0.ea3` directory that contains the Flux software.
+You can download the latest release of the Flux application zip from [the latest Flux release page](https://github.com/marklogic/flux/releases). 
+The Flux application zip is titled `flux-1.0.0.zip`. You can extract this zip to any location on your 
+filesystem that you prefer.
 
 ### Deploying the example application
 
-The following steps will deploy a small application to your existing MarkLogic cluster, allowing you to run the 
-examples in this guide:
+The examples in this guide, along with examples found throughout this documentation, depend on a small MarkLogic 
+application that can be deployed to your own instance of MarkLogic server. The application can be downloaded from 
+[the latest Flux release page](https://github.com/marklogic/flux/releases) in a zip titled 
+`flux-getting-started-1.0-SNAPSHOT.zip`. To use Flux with this example application, perform the following steps:
 
-1. Clone this repository using git if you have not already.
-2. Run `cd examples/getting-started`.
-3. Create the file `gradle-local.properties` and add `mlPassword=your admin user password` to it.
-4. Change `mlHost` and `mlRestPort` as needed based on your MarkLogic installation.
+1. Extract the `flux-getting-started-1.0-SNAPSHOT.zip` file to any location on your local filesystem.
+2. Run `cd flux-getting-started-1.0-SNAPSHOT` to change to the directory created by extracting the zip file.
+3. Create a file named `gradle-local.properties` and add `mlPassword=your MarkLogic admin user password` to it.
+4. Examine the contents of the `gradle.properties` file to ensure that the value of `mlHost` points to your MarkLogic 
+server and that the value of `mlRestPort` is a port available for a new MarkLogic app server to use.
 5. Run `./gradlew -i mlDeploy` to deploy the example application.
 
-The example application consists of a REST API app server on port 8004 in your MarkLogic installation, unless you modified the
-values of `mlHost` and `mlRestPort`. The application also includes a "flux-example-user" MarkLogic user that has the 
-necessary MarkLogic roles and privileges for running the examples in this guide. Finally, the application includes a 
+The example application consists of a REST API app server on port 8004 in your MarkLogic installation. 
+The application also includes a "flux-example-user" MarkLogic user that has the necessary MarkLogic roles and 
+privileges for running the examples in this guide. Finally, the application includes a
 [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE) that creates a view in MarkLogic for the purpose
 of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.marklogic.com/guide/app-dev/OpticAPI).
+
+It is recommended to extract the Flux application zip into the `flux-getting-started-1.0-SNAPSHOT` directory so that 
+you can easily execute the examples in this guide. After extracting the application zip, the directory should have a 
+structure similar to this (not all files may be shown):
+
+```
+./flux-getting-started-1.0-SNAPSHOT
+    build.gradle
+    ./data
+    ./flux-1.0-SNAPSHOT
+    ./gradle
+    gradle.properties
+    gradlew
+    gradlew.bat
+    ./src  
+```
 
 ## Usage
 
 You can run Flux without any options to see the list of available commands. If you are using Flux to run these examples, 
 first change your current directory to where you extract Flux:
 
-    cd flux-1.0.0.ea3
+    cd flux-1.0-SNAPSHOT
 
 And then run the Flux executable without any options:
 
@@ -178,7 +186,7 @@ bucket, ensuring that your AWS credentials give you access to writing to the buc
     --collections employee \
     --compression zip \
     --zip-file-count 1 \
-    --path s3a://bucket-name-changeme \
+    --path s3a://bucket-name-changeme/ \
     --s3-add-credentials
 ```
 

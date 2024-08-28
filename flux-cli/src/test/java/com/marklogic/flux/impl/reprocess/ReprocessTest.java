@@ -6,9 +6,10 @@ package com.marklogic.flux.impl.reprocess;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Just verifies one of the many possible combinations for reprocessing. ReprocessOptionsTest is used to ensure that
@@ -35,6 +36,34 @@ class ReprocessTest extends AbstractTest {
             JsonNode doc = readJsonDocument(uri);
             assertEquals("my value", doc.get("theValue").asText());
         }
+    }
+
+    /**
+     * When running this test with Java 17, we get this error without the appropriate "--add-opens":
+     * <p>
+     * SerializationDebugger$ (in unnamed module @0x543c6f6d) cannot access class sun.security.action.GetBooleanAction (in module java.base)
+     * <p>
+     * And the test does not finish, Spark just seems to hang. So this test only runs on Java 11. Note that the
+     * build.gradle file includes the necessary "--add-opens" to avoid this scenario.
+     */
+    @Test
+    @EnabledOnJre({JRE.JAVA_11})
+    void badJavascript() {
+        String stderr = runAndReturnStderr(() -> run(
+            "reprocess",
+            "--connection-string", makeConnectionString(),
+            "--read-javascript", "throw Error('Boom!')",
+            "--write-invoke", "/writeDocument.sjs"
+        ));
+
+        assertTrue(stderr.contains("Internal Server Error. Server Message: JS-JAVASCRIPT: throw Error('Boom!')"),
+            "Unexpected stderr: " + stderr);
+
+        assertFalse(stderr.contains("at com.marklogic"),
+            "The Main program should attempt to remove the stacktrace that Spark oddly includes in the " +
+                "exception message. A user that wants to see the stacktrace can use --stacktrace to do so. " +
+                "The presence of 'at com.marklogic' indicates that a stacktrace is present. " +
+                "Actual stderr: " + stderr);
     }
 
     @Test
