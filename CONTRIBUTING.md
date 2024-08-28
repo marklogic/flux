@@ -27,17 +27,6 @@ If you wish to login to this, do so with "postgres@pgadmin.com" and
 a password of "postgres". For logging into Postgres itself, use "postgres" as the username and password. You can then
 register a server that connects to the "postgres" server.
 
-## Publishing the 2.2-SNAPSHOT Spark connector
-
-This project will likely depend on a snapshot of our Spark connector until its 1.0 release. To set this up, complete
-the following steps:
-
-1. Clone [our Spark connector](https://github.com/marklogic/marklogic-spark-connector) if you have not already.
-2. From that repository's project directory, change to the `develop` branch.
-3. Run `./gradlew publishToMavenLocal`.
-
-You will now be able to import this repository's project into Intellij and run the tests.
-
 ## Building the distribution locally
 
 If you would like to test our the Flux distribution - as either a tar or zip - perform the following steps:
