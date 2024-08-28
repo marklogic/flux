@@ -88,6 +88,8 @@ tasks.register("copyJavadoc", Copy) {
   rename { filename -> filename.endsWith(".md") ? filename.replace(".md", ".txt") : filename }
 }
 copyJavadoc.mustRunAfter deleteJavadoc, javadoc
+
+// Must run this task with Java 17.
 tasks.register("updateJavadoc")
 updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 
