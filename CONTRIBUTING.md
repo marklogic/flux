@@ -257,7 +257,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0.0-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.0.0-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -265,7 +265,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -276,13 +276,13 @@ After spark-submit completes, you can refresh <http://localhost:8080> to see evi
 The assembly jar does not include the AWS SDK, as doing so would increase its size from about 8mb to close to 400mb.
 spark-submit allows for dependencies to be included via its `--packages` option. The following shows an example of
 previewing an import of files from an S3 bucket by including the AWS SDK as package dependencies (change the bucket name
-to something you can access :
+to something you can access):
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---packages org.apache.hadoop:hadoop-aws:3.3.6,org.apache.hadoop:hadoop-client:3.3.6 \
+--packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar \
+flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

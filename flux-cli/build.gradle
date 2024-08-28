@@ -94,7 +94,7 @@ updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 
 distributions {
   main {
-    distributionBaseName = "flux"
+    distributionBaseName = "marklogic-flux"
   }
   applicationDistribution.from("..") {
     include "LICENSE"
@@ -212,7 +212,7 @@ sonar {
 // See https://imperceptiblethoughts.com/shadow/configuration/dependencies/ .
 shadowJar {
   configurations = [project.configurations.shadowDependencies]
-  archiveBaseName = "flux"
+  archiveBaseName = "marklogic-flux"
 }
 
 // Publishing setup - see https://docs.gradle.org/current/userguide/publishing_setup.html .
