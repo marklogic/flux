@@ -268,7 +268,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/flux-1.0.0-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
