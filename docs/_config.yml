@@ -3,6 +3,7 @@ repository: marklogic/flux
 remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-remote-theme
+  - jekyll-tabs # See https://github.com/Ovski4/jekyll-tabs.
 
 heading_anchors: true
 
