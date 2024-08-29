@@ -60,6 +60,8 @@ Once you have installed your database's JDBC driver and determined your JDBC con
 `export-jdbc` to export all rows matching an Optic query to a table in the external database. The following shows 
 a notional example of doing so:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-jdbc \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -69,6 +71,19 @@ a notional example of doing so:
     --jdbc-driver "org.postgresql.Driver" \
     --table "marklogic-employee-data"
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-jdbc ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update ^
+    --query "op.fromView('example', 'employee', '')" ^
+    --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" ^
+    --jdbc-driver "org.postgresql.Driver" ^
+    --table "marklogic-employee-data"
+```
+{% endtab %}
+{% endtabs %}
 
 ## Exporting to files
 
@@ -79,12 +94,24 @@ Rows selected via an Optic query can be exported to any of the below file format
 The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
 command reuses Spark's support for writing Avro files:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-avro-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections example \
     --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-avro-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections example ^
+    --path destination
+```
+{% endtab %}
+{% endtabs %}
 
 You can include any of the 
 [Spark Avro data source options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
@@ -98,12 +125,24 @@ For configuration options listed in the above Spark Avro guide, use the `-C` opt
 The `export-delimited-files` command writes one or more delimited text (commonly CSV) files to the directory 
 specified by the `--path` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-delimited-files \
   --connection-string "flux-example-user:password@localhost:8004" \
   --query "op.fromView('example', 'employee', '')" \
   --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-delimited-files ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --query "op.fromView('example', 'employee', '')" ^
+  --path destination
+```
+{% endtab %}
+{% endtabs %}
 
 This command reuses Spark's support for writing delimited text files. You can include
 any of the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` 
@@ -120,26 +159,51 @@ every column having a type of `string`, include `-PinferSchema=false`.
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the 
 `--encoding` option - e.g. 
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-delimited-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --query "op.fromView('example', 'employee', '')" \
     --path destination \
     --encoding ISO-8859-1 \
-    etc...
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-delimited-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --query "op.fromView('example', 'employee', '')" ^
+    --path destination ^
+    --encoding ISO-8859-1 ^
+```
+{% endtab %}
+{% endtabs %}
 
 ### JSON Lines
 
 The `export-json-lines-files` command writes one or more [JSON Lines](https://jsonlines.org/) to the directory 
 specified by the `--path` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-json-lines-files \
   --connection-string "flux-example-user:password@localhost:8004" \
   --query "op.fromView('example', 'employee', '')" \
   --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-json-lines-files ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --query "op.fromView('example', 'employee', '')" ^
+  --path destination
+```
+{% endtab %}
+{% endtabs %}
+
 
 This command reuses Spark's support for writing JSON files. You can include any of the
 [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option to control
@@ -148,6 +212,8 @@ how JSON Lines files are written. These options are expressed as `-PoptionName=o
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the
 `--encoding` option - e.g.
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-json-lines-files \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -155,17 +221,41 @@ By default, each file will be written using the UTF-8 encoding. You can specify 
     --path destination \
     --encoding ISO-8859-1
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-json-lines-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --query "op.fromView('example', 'employee', '')" ^
+    --path destination ^
+    --encoding ISO-8859-1
+```
+{% endtab %}
+{% endtabs %}
 
 ### ORC
 
 The `export-orc-files` command writes one or more ORC files to the directory specified by the `--path` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-orc-files \
   --connection-string "flux-example-user:password@localhost:8004" \
   --query "op.fromView('example', 'employee', '')" \
   --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-orc-files ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --query "op.fromView('example', 'employee', '')" ^
+  --path destination
+```
+{% endtab %}
+{% endtabs %}
+
 
 This command reuses Spark's support for writing ORC files. You can include any of the
 [Spark ORC data source options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
@@ -178,12 +268,24 @@ For configuration options listed in the above Spark ORC guide, use the `-C` opti
 
 The `export-parquet-files` command writes one or more Parquet files to the directory specified by the `--path` option: 
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-parquet-files \
   --connection-string "flux-example-user:password@localhost:8004" \
   --query "op.fromView('example', 'employee', '')" \
   --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-parquet-files ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --query "op.fromView('example', 'employee', '')" ^
+  --path destination
+```
+{% endtab %}
+{% endtabs %}
 
 This command reuses Spark's support for writing Parquet files. You can include any of the
 [Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to

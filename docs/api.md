@@ -34,6 +34,11 @@ dependencies {
 }
 ```
 
+## Javadocs
+
+Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
+available public classes and methods.
+
 ## Using the Flux API
 
 The `com.marklogic.flux.api.Flux` class is the entry point to the Flux API. This class has a static method associated
@@ -134,7 +139,3 @@ buildscript {
 }
 ```
 
-## Javadocs
-
-Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
-available public classes and methods.

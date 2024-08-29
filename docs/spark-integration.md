@@ -43,15 +43,30 @@ via `spark-submit`.
 You can now run any Flux command with `spark-submit`.  
 The following shows a notional example of running the Flux `import-files` command:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
     --master spark://changeme:7077 \
     marklogic-flux-1.0.0-all.jar \
     import-files \
-    --path path/to/data
-    --connection-string user:password@host:8000
+    --path path/to/data \
+    --connection-string user:password@host:8000 \
     --preview 10
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+$SPARK_HOME\bin\spark-submit --class com.marklogic.flux.spark.Submit ^
+    --master spark://changeme:7077 ^
+    marklogic-flux-1.0.0-all.jar ^
+    import-files ^
+    --path path/to/data ^
+    --connection-string user:password@host:8000 ^
+    --preview 10
+```
+{% endtab %}
+{% endtabs %}
 
 Key points on the above example:
 

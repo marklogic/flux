@@ -44,6 +44,8 @@ to the same database that they were read from, you can omit output connection op
 The following shows an example of copying documents from a collection to a different database in the same MarkLogic 
 cluster:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux copy \
   --connection-string "flux-example-user:password@localhost:8004" \
@@ -51,6 +53,17 @@ cluster:
   --output-connection-string "flux-example-user:password@localhost:8004" \
   --output-database "target-database"
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux copy ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --collections "example" ^
+  --output-connection-string "flux-example-user:password@localhost:8004" ^
+  --output-database "target-database"
+```
+{% endtab %}
+{% endtabs %}
 
 ## Controlling what metadata is read
 

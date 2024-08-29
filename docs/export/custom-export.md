@@ -26,6 +26,8 @@ As an example, Flux does not provide an out-of-the-box command that uses the
 [Spark Text data source](https://spark.apache.org/docs/latest/sql-data-sources-text.html). You can use this data source
 via `custom-export-rows`:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux custom-export-rows \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -33,6 +35,18 @@ via `custom-export-rows`:
     --target text \
     -Ppath=export
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux custom-export-rows ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --query "op.fromView('schema', 'view')" ^
+    --target text ^
+    -Ppath=export
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Exporting rows
 

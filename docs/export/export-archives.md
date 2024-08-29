@@ -21,12 +21,25 @@ database.
 The `export-archive-files` command requires a query for selecting documents to export and a directory path for writing 
 archive files to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-archive-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections example \
     --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-archive-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections example ^
+    --path destination
+```
+{% endtab %}
+{% endtabs %}
+
 
 The following options control which documents are selected to be exported:
 
@@ -85,6 +98,8 @@ to each document before it is written to an archive. A transform is configured v
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
 You can specify an alternate encoding when exporting archives via the `--encoding` option - e.g.:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-archives \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -92,5 +107,17 @@ You can specify an alternate encoding when exporting archives via the `--encodin
     --path destination \
     --encoding ISO-8859-1
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-archives ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections example ^
+    --path destination ^
+    --encoding ISO-8859-1
+```
+{% endtab %}
+{% endtabs %}
+
 
 The encoding will be used for both document and metadata entries in each archive zip file. 

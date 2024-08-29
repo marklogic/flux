@@ -55,12 +55,24 @@ you wish to reprocess.
 
 The following shows a simple example of querying a collection for its URIs and logging each one:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux reprocess \
     --connection-string "flux-example-user:password@localhost:8004" \
     --read-javascript "cts.uris(null, null, cts.collectionQuery('example'))" \
     --write-javascript "var URI; console.log(URI)"
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux reprocess ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --read-javascript "cts.uris(null, null, cts.collectionQuery('example'))" ^
+    --write-javascript "var URI; console.log(URI)"
+```
+{% endtab %}
+{% endtabs %}
 
 Flux assumes that your writer code will expect an external variable named `URI`. To change this, use the 
 `--external-variable-name` option to specify a different name. 
@@ -100,6 +112,8 @@ with each value being of the same form.
 
 The following shows a simple example of including a variable in both the reader and writer:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux reprocess \
   --connection-string "flux-example-user:password@localhost:8004" \
@@ -108,6 +122,18 @@ The following shows a simple example of including a variable in both the reader 
   --write-javascript "var URI; var exampleVariable; console.log([URI, exampleVariable])" \
   --write-var "exampleVariable=testValue"
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux reprocess ^
+  @options.txt ^
+  --read-javascript "var collection; cts.uris(null, null, cts.collectionQuery(collection))" ^
+  --read-var "collection=example" ^
+  --write-javascript "var URI; var exampleVariable; console.log([URI, exampleVariable])" ^
+  --write-var "exampleVariable=testValue"
+```
+{% endtab %}
+{% endtabs %}
 
 ## Defining reader partitions
 
@@ -127,6 +153,8 @@ the partition. Your reader code is then free to use that value however you wish.
 Partition values can thus be anything you want. A common use case is to partition a reader by each forest in your 
 MarkLogic database. The following shows an example of partitions based on forests:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux reprocess \
   --connection-string "flux-example-user:password@localhost:8004" \
@@ -134,6 +162,18 @@ MarkLogic database. The following shows an example of partitions based on forest
   --read-javascript "cts.uris(null, null, cts.collectionQuery('example'), 0, [PARTITION])" \
   --write-javascript "var URI; console.log(URI)"
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux reprocess ^
+  --connection-string "flux-example-user:password@localhost:8004" ^
+  --read-partitions-javascript "xdmp.databaseForests(xdmp.database())" ^
+  --read-javascript "cts.uris(null, null, cts.collectionQuery('example'), 0, [PARTITION])" ^
+  --write-javascript "var URI; console.log(URI)"
+```
+{% endtab %}
+{% endtabs %}
+
 
 In the above example, the code defined by `--read-javascript` will be invoked once for each forest ID returned by the code
 defined by `--read-partitions-javascript`. The value of `PARTITION` - a forest ID - is then passed to the 
