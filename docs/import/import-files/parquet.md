@@ -20,12 +20,25 @@ The `import-parquet-files` command reads Parquet files and writes the contents o
 documents in MarkLogic. You must specify at least one `--path` option along with connection information for the 
 MarkLogic database you wish to write to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-parquet-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-parquet-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
 include the `--uri-include-file-path` option. You can also make use of the 
@@ -71,6 +84,8 @@ By default, Flux will include any fields in a Parquet file that have a null valu
 when creating JSON or XML documents. You can instead ignore fields with a null value
 via the `--ignore-null-fields` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-parquet-files \
     --path /path/to/files \
@@ -78,6 +93,18 @@ via the `--ignore-null-fields` option:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-parquet-files ^
+    --path path\to\files ^
+    --ignore-null-fields ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your
 documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,

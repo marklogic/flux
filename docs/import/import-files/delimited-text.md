@@ -19,15 +19,29 @@ Flux can import rows from delimited text files, with each row being written as a
 The `import-delimited-files` command imports delimited text files specified via one or more occurrences of the 
 `--path` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 The command uses a comma as the default delimiter. You can override this via `--delimiter`:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     --path /path/to/files \
@@ -35,6 +49,17 @@ The command uses a comma as the default delimiter. You can override this via `--
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path path\to\files ^
+    --delimiter ; ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
 include the `--uri-include-file-path` option. You can also make use of the
@@ -80,6 +105,8 @@ By default, Flux will include any fields in a delimited text file that have a nu
 a value that has whitespace) when creating JSON or XML documents. You can instead ignore fields with a null value
 via the `--ignore-null-fields` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     --path /path/to/files \
@@ -88,6 +115,18 @@ via the `--ignore-null-fields` option:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path path\to\files ^
+    --delimiter ; ^
+    --ignore-null-fields ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your
 documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,
@@ -99,6 +138,8 @@ MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/
 If your delimited text files use a different encoding, you must specify that via the `--encoding` option so that
 the content can be correctly translated to UTF-8 when written to MarkLogic - e.g.:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-text-files \
     --path source \
@@ -106,6 +147,17 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-text-files ^
+    --path source ^
+    --encoding ISO-8859-1 ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 ## Aggregating rows
 
@@ -131,10 +183,25 @@ The command defaults to setting the `header` option to `true` and the
 `inferSchema` option to `true`. You can override those two options or include additional Spark CSV options - for
 example:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     -Pheader=false \
     -PescapeQuotes=false \
     --connection-string "flux-example-user:password@localhost:8004" \
+    --path path/to/files \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    -Pheader=false ^
+    -PescapeQuotes=false ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --path path\to\files ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}

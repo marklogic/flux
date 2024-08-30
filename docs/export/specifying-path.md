@@ -18,9 +18,25 @@ In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux u
 [locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html).
 To enable this, include the `--s3-add-credentials` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
-./bin/flux export-files --path "s3a://my-bucket/some/path" --s3-add-credentials
+./bin/flux export-files \
+  --path "s3a://my-bucket/some/path" \
+  --s3-add-credentials \
+  etc...
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+  --path "s3a://my-bucket/some/path" ^
+  --s3-add-credentials \
+  etc...
+```
+{% endtab %}
+{% endtabs %}
+
 
 You can also explicitly define your AWS credentials via `--s3-access-key-id` and `--s3-secret-access-key`. To avoid
 typing these in plaintext, you may want to store these in a file and reference the file via "@my-options.txt". See

@@ -25,12 +25,25 @@ rather a file with an array of objects be written as a single document, use the 
 You must specify at least one `--path` option along with connection information for the MarkLogic database 
 you wish to write to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-json-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-json-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 The URI of each document will default to a UUID followed by `.json`. To include the file path at the start of the URI,
 include the `--uri-include-file-path` option. You can also make use of the
@@ -51,6 +64,8 @@ For example, consider a file with the following content:
 
 The file can be imported with the following notional command:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-json-files \
     --json-lines \
@@ -58,6 +73,18 @@ The file can be imported with the following notional command:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-json-files ^
+    --json-lines ^
+    --path path\to\file.txt ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 Flux will write two separate JSON documents, each with a completely different schema. 
 
@@ -77,6 +104,8 @@ MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/
 If your files use a different encoding, you must specify that via the `--encoding` option so that
 the content can be correctly translated to UTF-8 when written to MarkLogic:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-json-files \
     --path source \
@@ -84,6 +113,18 @@ the content can be correctly translated to UTF-8 when written to MarkLogic:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-json-files ^
+    --path source ^
+    --encoding ISO-8859-1 ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Reading compressed files
 
@@ -99,6 +140,8 @@ to control how JSON content is read. These options are expressed as `-PoptionNam
 
 For example, if your files use a format other than `yyyy-MM-dd` values, you can specify that format via the following:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-json-files \
     --path source \
@@ -106,3 +149,14 @@ For example, if your files use a format other than `yyyy-MM-dd` values, you can 
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-json-files ^
+    --path source ^
+    -PdateFormat=MM-dd-yyyy ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}

@@ -16,12 +16,34 @@ This guide describes options common to every command in Flux.
 
 You can view usage for all Flux commands by running Flux without any command name or options:
 
-    ./bin/flux
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux
+```
+{% endtab %}
+{% endtabs %}
 
 To see a list of options for a particular command, run the `help` command followed by the name of the command
 you are interested in:
 
-    ./bin/flux help import-jdbc
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux help import-jdbc
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux help import-jdbc
+```
+{% endtab %}
+{% endtabs %}
 
 The "help" for each command will first list the command-specific options, with each required option having an asterisk
 next to it. The command-specific options are followed by the connection options for connecting to MarkLogic, and those
@@ -35,7 +57,19 @@ such that Flux can uniquely identify the command name.
 For example, instead of entering `import-parquet-files`, you can enter `import-p` as it is the only command in
 Flux beginning with that sequence of letters:
 
-    ./bin/flux import-p --path path/to/data etc...
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-p --path path/to/data etc...
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-p --path path\to\data etc...
+```
+{% endtab %}
+{% endtabs %}
+
 
 If Flux cannot uniquely identify the command name, it will print an error and list the command names that match what
 you entered.
@@ -63,7 +97,18 @@ etc...
 
 You then reference the file via the `@` symbol followed by a filename:
 
-    ./bin/flux import-files @my-options.txt
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-files @my-options.txt
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-files @my-options.txt
+```
+{% endtab %}
+{% endtabs %}
 
 You can reference multiple files this way and also include additional options on the command line.
 
@@ -164,16 +209,31 @@ All available connection options are shown in the table below:
 The `--preview` option works on every command in Flux. For example, given a set of Parquet files in a directory, 
 you can preview an import without writing any of the data to MarkLogic:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-parquet-files \
     --path export/parquet \
+    --connection-string "flux-example-user:password@localhost:8004" \ 
     --preview 10
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-parquet-files ^
+    --path export\parquet ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --preview 10
+```
+{% endtab %}
+{% endtabs %}
 
 The number after `--preview` specifies how many records to show. You can use `--preview-drop` to specify potentially
 verbose columns to drop from the preview. And you can use `--preview-list` to see the results in a list
 instead of in a table:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -182,6 +242,18 @@ instead of in a table:
     --preview-drop job_title,department \
     --preview-list
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+./bin/flux import-parquet-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --path export\parquet ^
+    --preview 10 ^
+    --preview-drop job_title,department ^
+    --preview-list
+```
+{% endtab %}
+{% endtabs %}
 
 Note that in the case of previewing an import, Flux will show the data as it has been read, which consists of a set of
 Spark rows with columns. The data is not shown as a set of documents yet, as the transformation of rows to documents 
@@ -192,6 +264,8 @@ when exporting data with a MarkLogic Optic query, you may wish to verify that th
 expect before writing the data to a Parquet file or relational database. Use the `--preview-schema` option to request 
 that Flux log the schema and not write any data:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -199,6 +273,18 @@ that Flux log the schema and not write any data:
     --path export/parquet \
     --preview-schema
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-parquet-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --query "op.fromView('Example', 'Employees')" ^
+    --path export\parquet ^
+    --preview-schema
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Applying a limit
 
@@ -207,6 +293,8 @@ are correct. The `--limit` option will achieve this by limiting the number of ro
 
 The following shows an example of only importing the first 10 rows from a delimited file:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
@@ -216,6 +304,19 @@ The following shows an example of only importing the first 10 rows from a delimi
     --uri-template "/employee/{id}.json" \
     --limit 10
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path ..\data\employees.csv.gz ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update ^
+    --collections employee ^
+    --uri-template "/employee/{id}.json" ^
+    --limit 10
+```
+{% endtab %}
+{% endtabs %}
 
 ## Counting records to process
 
@@ -227,12 +328,24 @@ large aggregate XML or Parquet files.
 To view a count, include the `--count` option, which results in Flux reading all the data but not writing any of it
 to the destination associated with the command:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
     --path ../data/employees.csv.gz \
     --connection-string "flux-example-user:password@localhost:8004" \
     --count
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path ..\data\employees.csv.gz ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --count
+```
+{% endtab %}
+{% endtabs %}
 
 Flux will then log the count:
 

@@ -22,12 +22,25 @@ The `import-files` command imports a set of files into MarkLogic, with each file
 document. You must specify at least one `--path` option along with connection information for the MarkLogic database
 you wish to write to. For example:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Controlling document URIs
 
@@ -49,6 +62,8 @@ MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/
 If your files use a different encoding, you must specify that via the `--encoding` option so that
 the content can be correctly translated to UTF-8 when written to MarkLogic:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-files \
     --path source \ 
@@ -56,6 +71,18 @@ the content can be correctly translated to UTF-8 when written to MarkLogic:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-files ^
+    --path source ^
+    --encoding ISO-8859-1 ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Importing Gzip files
 

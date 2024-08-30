@@ -42,6 +42,8 @@ For example, consider the following notional XML file located at `/data/people.x
 The following command uses `--element` and `--namespace` to create an XML document in MarkLogic for each occurrence
 of the `person` element in the document:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
@@ -50,6 +52,19 @@ of the `person` element in the document:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-xml-files ^
+    --path data\people.xml ^
+    --element person ^
+    --namespace org:example ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Controlling document URIs
 
@@ -58,6 +73,8 @@ you can use the `--uri-element` and `--uri-namespace` options to identify an ele
 be included in the URI. Using the example XML document in the above section, the following would construct a URI 
 based on the value of each `id` element in the `org:example` namespace:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-xml-files \
     --path /data/people.xml \
@@ -68,6 +85,20 @@ based on the value of each `id` element in the `org:example` namespace:
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-xml-files ^
+    --path data\people.xml ^
+    --element person ^
+    --namespace org:example ^
+    --uri-element id ^
+    --uri-namespace org:example ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 You may still wish to use options like `--uri-prefix` and `--uri-suffix` to make the URI more self-describing. For
 example, adding the following would result in URIs of `/person/1.xml` and `/person/2.xml`:
@@ -86,6 +117,8 @@ MarkLogic stores all content
 If your aggregate XML files use a different encoding, you must specify that via the `--encoding` option so that 
 the content can be correctly translated to UTF-8 when written to MarkLogic - e.g.:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-aggregate-xml-files \
     --path source \
@@ -93,3 +126,14 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-aggregate-xml-files ^
+    --path source ^
+    --encoding ISO-8859-1 ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}

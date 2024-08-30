@@ -19,12 +19,25 @@ The `export-files` command selects documents in a MarkLogic database and writes 
 You must specify a `--path` option for where files should be written along with connection information for the
 MarkLogic database you wish to write to - for example:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections example \
     --path destination
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections example ^
+    --path destination
+```
+{% endtab %}
+{% endtabs %}
+
 
 The following options control which documents are selected to be exported:
 
@@ -76,6 +89,8 @@ command, you will get the expected results.
 MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/guide/search-dev/encodings_collations#id_87576).
 You can specify an alternate encoding when exporting documents to files via the `--encoding` option - e.g.:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux export-files \
     --connection-string "flux-example-user:password@localhost:8004" \
@@ -83,6 +98,18 @@ You can specify an alternate encoding when exporting documents to files via the 
     --path destination \
     --encoding ISO-8859-1
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections example ^
+    --path destination ^
+    --encoding ISO-8859-1
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Understanding partitions
 
@@ -94,6 +121,8 @@ of data. Generally, more partitions allow for more parallel work and improved pe
 When exporting documents to files, the number of partitions impacts how many files will be written. For example, run
 the following command below from the [Getting Started guide](getting-started.md):
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 rm export/*.zip
 ./bin/flux export-files \
@@ -103,6 +132,19 @@ rm export/*.zip
     --path destination \
     --compression zip
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+del export\*.zip
+bin\flux export-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections employee ^
+    --permissions flux-example-role,read,flux-example-role,update ^
+    --path destination ^
+    --compression zip
+```
+{% endtab %}
+{% endtabs %}
 
 The `./export` directory will have 12 zip files in it. This count is due to how Flux reads data from MarkLogic,
 which involves creating 4 partitions by default per forest in the MarkLogic database. The example application has 3
@@ -111,6 +153,8 @@ forests in its content database, and thus 12 partitions are created, resulting i
 You can use the `--partitions-per-forest` option to control how many partitions - and thus workers - read documents
 from each forest in your database:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 rm export/*.zip
 ./bin/flux export-files \
@@ -121,12 +165,29 @@ rm export/*.zip
     --compression zip \
     --partitions-per-forest 1
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+del export\*.zip
+bin\flux export-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections employee ^
+    --permissions flux-example-role,read,flux-example-role,update ^
+    --path destination ^
+    --compression zip ^
+    --partitions-per-forest 1
+```
+{% endtab %}
+{% endtabs %}
+
 
 This approach will produce 3 zip files - one per forest.
 
 You can also use the `--repartition` option, available on every command, to force the number of partitions used when
 writing data, regardless of how many were used to read the data:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 rm export/*.zip
 ./bin/flux export-files \
@@ -136,6 +197,20 @@ rm export/*.zip
     --compression zip \
     --repartition 1
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+del export\*.zip
+bin\flux export-files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --collections employee ^
+    --path destination ^
+    --compression zip ^
+    --repartition 1
+```
+{% endtab %}
+{% endtabs %}
+
 
 This approach will produce a single zip file due to the use of a single partition when writing files. 
 The `--zip-file-count` option is effectively an alias for `--repartition`. Both options produce the same outcome. 

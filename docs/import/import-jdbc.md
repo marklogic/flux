@@ -35,6 +35,8 @@ Connection details are specified via the following options:
 
 To import all rows in a table, use the `--query` option with a SQL query selecting all rows:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-jdbc \
     --query "SELECT * FROM customer" \
@@ -43,6 +45,19 @@ To import all rows in a table, use the `--query` option with a SQL query selecti
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --query "SELECT * FROM customer" ^
+    --jdbc-url "..." ^
+    --jdbc-driver "..." ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 The SQL query can contain any syntax supported by your database. 
 
@@ -65,12 +80,24 @@ By default, Flux will include any fields in a data source that have a null value
 when creating JSON or XML documents. You can instead ignore fields with a null value
 via the `--ignore-null-fields` option:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-jdbc \
     --ignore-null-fields \
     --query "..." \ 
     etc...
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --ignore-null-fields ^
+    --query "..." ^
+    etc...
+```
+{% endtab %}
+{% endtabs %}
 
 The decision on whether to include null fields will depend on your application requirements. For example, if your
 documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,

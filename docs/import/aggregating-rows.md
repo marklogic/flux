@@ -36,14 +36,29 @@ that features 15 tables with multiple relationships. One such relationship is be
 following options would be used to write customer documents with each customer document containing an array of 
 its related payments:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-jdbc \
     --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
     --group-by customer_id \
-    --aggregate "payments=payment_id,amount,payment_date"
+    --aggregate "payments=payment_id,amount,payment_date" \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" ^
+    --group-by customer_id ^
+    --aggregate "payments=payment_id,amount,payment_date" ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 The options above result in the following aggregation being performed:
 

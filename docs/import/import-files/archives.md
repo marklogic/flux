@@ -23,12 +23,24 @@ The `import-archive-files` command will import the documents and metadata files 
 `export-archive-files` command. You must specify at least one `--path` option along with connection information for the
 MarkLogic database you wish to write to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-archive-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-archive-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 ## Importing MLCP archives
 
@@ -37,12 +49,25 @@ You can also import
 that were produced via the `EXPORT` command in MLCP. The `import-mlcp-archive-files` command is used instead, and it also
 requires at least one `--path` option along with connection information for the MarkLogic database you wish to write to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-mlcp-archive-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-mlcp-archive-files ^
+    --path /path/to/files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Restricting metadata
 
@@ -70,6 +95,8 @@ MarkLogic stores all content [in the UTF-8 encoding](https://docs.marklogic.com/
 If your archive files use a different encoding, you must specify that via the `--encoding` option so that
 the content can be correctly translated to UTF-8 when written to MarkLogic - e.g.:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-archive-files \
     --path source \
@@ -77,3 +104,14 @@ the content can be correctly translated to UTF-8 when written to MarkLogic - e.g
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-archive-files ^
+    --path source ^
+    --encoding ISO-8859-1 ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}

@@ -18,9 +18,23 @@ As an example, Flux does not provide an out-of-the-box command that uses the
 [Spark Text data source](https://spark.apache.org/docs/latest/sql-data-sources-text.html). You can use this data source
 via `custom-import`:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux custom-import --source text \
     -Ppath=/path/to/text/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux custom-import --source text ^
+    -Ppath=/path/to/text/files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
+

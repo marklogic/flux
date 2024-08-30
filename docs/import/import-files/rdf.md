@@ -24,12 +24,25 @@ Each managed triples document is an XML document containing up to 100 semantic t
 To import RDF files, you must specify at least one `--path` option along with connection information for the MarkLogic 
 database you wish to write to:
 
+{% tabs log %}
+{% tab log Unix %}
 ```
 ./bin/flux import-rdf-files \
     --path /path/to/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-rdf-files ^
+    --path path\to\files ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Supported files types
 
