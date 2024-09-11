@@ -171,6 +171,62 @@ or more forests for the database you wish to access, then you can set `--connect
 will often improve performance as Flux will be able to both connect to multiple hosts, thereby utilizing the app server
 threads available on each host, and also write directly to a forest on the host that it connects to. 
 
+### Configuring one-way SSL
+
+Flux supports both one-way and two-way SSL connections to MarkLogic (the term "SSL" is used as a synonym for "TLS" in
+this context). The full list of SSL options is in the "Connection Options" table below. Please see the 
+[MarkLogic documentation](https://docs.marklogic.com/11.0/guide/security-guide/en/configuring-ssl-on-app-servers.html) 
+for full details on configuring SSL for a MarkLogic app server.
+
+For a one-way SSL connection, where Flux only needs to trust the certificate associated with your MarkLogic app server, 
+you must configure the following options:
+
+| Option | Description | 
+| --- | --- |
+| `--ssl-protocol` | Must define the desired SSL protocol; `TLSv1.2` is a typical value. |
+| `--truststore-path`| Must define the path to a Java truststore file containing the certificate associated with your MarkLogic app server. |
+| `--truststore-password` | Must specify the password for your truststore file.
+| `--ssl-hostname-verifier` | You may need to configure this option depending on the certificate authority associated with the app server certificate.  See the section on SSL errors below for more information. |
+
+If the Java virtual machine (JVM) that you use to run Flux has the certificate associated with your MarkLogic app server 
+already in the JVM's default truststore, you can omit `--truststore-path` and `--truststore-password` and instead give
+the `--ssl-protocol` option a value of `default`. 
+
+### Configuring two-way SSL
+
+Two-way SSL connection is required when the MarkLogic app server has a value of `true` for its 
+"SSL Require Client Certificate" field in the MarkLogic admin application. To configure two-way SSL with Flux, you 
+must configure the following options:
+
+| Option | Description | 
+| --- | --- |
+| `--keystore-path` | Must define the path of a Java keystore containing a client certificate trusted by your MarkLogic app server.
+| `--keystore-password` | Must specify the password for your Java keystore. |
+| `--truststore-path`| Must define the path to a Java truststore file containing the certificate associated with your MarkLogic app server. |
+| `--truststore-password` | Must specify the password for your truststore file.
+| `--ssl-hostname-verifier` | You may need to configure this option depending on the certificate authority associated with the app server certificate.  See the section on SSL errors below for more information. |
+
+When specifying a keystore via `--keystore-path`, Flux will default the value of `--ssl-protocol` to `TLSv1.2`. You only
+need to specify this option if that default protocol is not correct for your application. 
+
+Similar to one-way SSL, if your JVM truststore contains your server certificate, you can set the value of 
+`--ssl-protocol` to `default` to use your JVM truststore. 
+
+### Common SSL errors
+
+If you receive an error containing `unable to find valid certification path to requested target`, then your truststore
+is not able to trust the certificate associated with your MarkLogic app server. Verify that the truststore identified by
+`--truststore-path`, or the default JVM truststore if using `--ssl-protocol default`, contains the required app server 
+certificate. 
+
+If you receive an error message containing `Hostname (the hostname) not verified`, this is typically due to the 
+certificate authority associated with your app server certificate not being a trusted certificate authority. You can 
+consider the use of `--ssl-hostname-verifier ANY` to disable hostname verification.
+
+If you receive an error message containing `No trusted certificate found`, check to see if your MarkLogic app server
+has a value of `true` for the "SSL Client Issuer Authority Validation" field. If so, verify that the list of selected
+"SSL Client Certificate Authorities" includes a certificate authority associated with your client certificate. 
+
 ### Connection options
 
 All available connection options are shown in the table below:
