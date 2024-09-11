@@ -124,3 +124,6 @@ The following shows an example of each option:
 --transform-params-delimiter ;
 ```
 
+The above link for REST transforms includes instructions on manually installing a transform. If you are using
+[ml-gradle to deploy an application to MarkLogic](https://github.com/marklogic/ml-gradle), you can let ml-gradle 
+[automatically install your transform](https://github.com/marklogic/ml-gradle/wiki/How-modules-are-loaded).
