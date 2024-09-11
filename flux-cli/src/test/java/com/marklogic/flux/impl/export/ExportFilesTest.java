@@ -153,4 +153,23 @@ class ExportFilesTest extends AbstractTest {
             "Unexpected stderr: " + stderr
         );
     }
+
+    @Test
+    void withRedactionTransform(@TempDir Path tempDir) throws Exception {
+        run(
+            "export-files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--uris", "/jane.json",
+            "--connection-string", makeConnectionString(),
+            "--transform", "redacter",
+            "--transform-params", "rulesetName,email-rules"
+        );
+
+        assertEquals(1, tempDir.toFile().listFiles().length);
+        JsonNode doc = objectMapper.readTree(tempDir.toFile().listFiles()[0]);
+        assertEquals("Jane", doc.get("name").asText());
+        assertEquals("NAME@DOMAIN", doc.get("email").asText(),
+            "This verifies that the transform is able to use the MarkLogic redaction library, as the flux-test-role " +
+                "role is granted the redaction-user privilege.");
+    }
 }
