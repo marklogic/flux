@@ -1,0 +1,12 @@
+{
+  "rule": {
+    "description": "Hide email addresses.",
+    "path": "/email",
+    "method": {
+      "function": "redact-email"
+    },
+    "options": {
+      "pattern": "partial"
+    }
+  }
+}

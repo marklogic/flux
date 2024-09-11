@@ -64,6 +64,28 @@ to each document before it is written to a file. A transform is configured via t
 | `--transform-params` | Comma-delimited list of transform parameter names and values - e.g. param1,value1,param2,value2. |
 | `--transform-params-delimiter` | Delimiter for `--transform-params`; typically set when a value contains a comma. |
 
+The above link for REST transforms includes instructions on manually installing a transform. If you are using
+[ml-gradle to deploy an application to MarkLogic](https://github.com/marklogic/ml-gradle), you can let ml-gradle
+[automatically install your transform](https://github.com/marklogic/ml-gradle/wiki/How-modules-are-loaded).
+
+### Redacting content
+
+The [MarkLogic Redaction feature](https://docs.marklogic.com/guide/app-dev/redaction) is not yet available via
+configuration in the MarkLogic REST API. Thus, when using a tool like Flux, the best way to redact content is via
+a REST transform. An example of this, written in JavaScript, is shown below:
+
+```
+const rdt = require('/MarkLogic/redaction');
+
+function transform(context, params, content) {
+  return rdt.redact(content, "my-ruleset");
+};
+
+exports.transform = transform;
+```
+
+To use the above transform, verify that your user has been granted the MarkLogic `redaction-user` role. 
+
 ## Compressing content
 
 The `--compression` option is used to write files either to Gzip or ZIP files. 

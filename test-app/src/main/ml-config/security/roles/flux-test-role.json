@@ -1,7 +1,7 @@
 {
   "role-name": "flux-test-role",
   "role": [
-    "rest-extension-user"
+    "rest-extension-user", "redaction-user"
   ],
   "privilege": [
     {
