@@ -117,6 +117,16 @@ tasks.register("importFiles") {
 }
 ```
 
+If you are running Gradle with Java 17 or higher, you will likely need to specify one or more `--add-opens` arguments
+when running Gradle. For example, if you run Gradle with `--stacktrace` and see the text 
+"because module java.base does not export sun.nio.ch" in the exception, you can add the following to your 
+`gradle.properties` file to allow access to the `sun.nio.ch` package:
+
+    org.gradle.jvmargs=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+
+The [Gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)  provides more information
+on the `org.gradle.jvmargs` property along with other ways to customize the Gradle environment.
+
 If you are using a plugin like [ml-gradle](https://github.com/marklogic/ml-gradle) that brings in its own version of the
 [FasterXML Jackson APIs](https://github.com/FasterXML/jackson), you need to be sure that the version of Jackson is 
 between 2.14.0 and 2.15.0 as required by the Apache Spark dependency of Flux. The following shows an example of excluding
