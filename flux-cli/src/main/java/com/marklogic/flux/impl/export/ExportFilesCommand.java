@@ -30,6 +30,13 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
     @CommandLine.Mixin
     protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
 
+    @CommandLine.Option(
+        names = "--streaming",
+        description = "Causes documents to be read from MarkLogic and streamed to the file source. Intended for " +
+            "exporting large files that cannot be fully read into memory."
+    )
+    private boolean streaming;
+
     @Override
     protected void validateDuringApiUsage() {
         readParams.verifyAtLeastOneQueryOptionIsSet("export");
@@ -50,7 +57,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(readParams.makeOptions())
+            .options(buildReadOptions())
             .load();
     }
 
@@ -58,10 +65,28 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(MARKLOGIC_CONNECTOR)
-            .options(writeParams.get())
+            .options(buildWriteOptions())
             // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.
             .mode(SaveMode.Append)
             .save(writeParams.path);
+    }
+
+    protected final Map<String, String> buildReadOptions() {
+        Map<String, String> options = readParams.makeOptions();
+        if (this.streaming) {
+            options.put(Options.STREAM_FILES, "true");
+        }
+        return options;
+    }
+
+    protected final Map<String, String> buildWriteOptions() {
+        Map<String, String> options = writeParams.get();
+        if (this.streaming) {
+            options.put(Options.STREAM_FILES, "true");
+            // Need connection information so that the writer can retrieve documents from MarkLogic.
+            options.putAll(getConnectionParams().makeOptions());
+        }
+        return options;
     }
 
     public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions {
@@ -89,7 +114,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         public Map<String, String> get() {
             return OptionsUtil.makeOptions(
                 Options.WRITE_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint ? "true": null,
+                Options.WRITE_FILES_PRETTY_PRINT, prettyPrint ? "true" : null,
                 Options.WRITE_FILES_ENCODING, encoding
             );
         }
@@ -170,6 +195,12 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
     @Override
     public GenericFilesExporter to(String path) {
         writeParams.path(path);
+        return this;
+    }
+
+    @Override
+    public GenericFilesExporter streaming() {
+        this.streaming = true;
         return this;
     }
 }

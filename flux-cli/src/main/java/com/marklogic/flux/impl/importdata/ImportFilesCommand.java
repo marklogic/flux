@@ -24,6 +24,20 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     @CommandLine.Mixin
     private WriteGenericDocumentsParams writeParams = new WriteGenericDocumentsParams();
 
+    @CommandLine.Option(
+        names = "--streaming",
+        description = "Causes files to be read from their source directly to MarkLogic. Intended for importing large " +
+            "files that cannot be fully read into memory. Features that depend on " +
+            "the data in the file, such as --uri-template, will not have any effect when this option is set."
+    )
+    private boolean streaming;
+
+    @Override
+    public GenericFilesImporter streaming() {
+        this.streaming = true;
+        return this;
+    }
+
     @Override
     protected String getReadFormat() {
         return MARKLOGIC_CONNECTOR;
@@ -31,13 +45,16 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     @Override
     protected ReadFilesParams getReadParams() {
+        readParams.streaming = this.streaming;
         return readParams;
     }
 
     @Override
     protected WriteDocumentParams getWriteParams() {
+        writeParams.streaming = this.streaming;
         return writeParams;
     }
+
 
     @Override
     public GenericFilesImporter from(Consumer<ReadGenericFilesOptions> consumer) {
@@ -69,6 +86,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private int partitions;
 
+        private boolean streaming;
+
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
@@ -86,7 +105,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.READ_FILES_ENCODING, encoding
+                Options.READ_FILES_ENCODING, encoding,
+                Options.STREAM_FILES, streaming ? "true" : null
             );
         }
 
@@ -101,6 +121,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         private DocumentType documentType;
 
+        private boolean streaming;
+
         @Override
         @CommandLine.Option(
             names = "--document-type",
@@ -114,7 +136,8 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+                Options.STREAM_FILES, streaming ? "true" : null
             );
         }
     }

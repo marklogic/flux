@@ -36,7 +36,10 @@ class ImportFilesTest extends AbstractTest {
 
             // Including these for manual verification of progress logging.
             "--batch-size", "1",
-            "--log-progress", "2"
+            "--log-progress", "2",
+
+            // Including for smoke testing and manual verification of logging.
+            "--streaming"
         );
 
         verifyDocsWereWritten(uris.length, uris);
