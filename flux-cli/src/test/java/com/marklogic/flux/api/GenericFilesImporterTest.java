@@ -20,6 +20,8 @@ class GenericFilesImporterTest extends AbstractTest {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
             .from(PATH)
+            // Including streaming just for smoke testing and manual inspection of log messages.
+            .streaming()
             .to(options -> options
                 .collectionsString("api-files,second-collection")
                 .permissionsString(DEFAULT_PERMISSIONS))
