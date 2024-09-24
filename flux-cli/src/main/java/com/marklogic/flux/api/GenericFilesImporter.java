@@ -30,6 +30,9 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     GenericFilesImporter from(String... paths);
 
+    /**
+     * @since 1.0.1
+     */
     GenericFilesImporter streaming();
 
     GenericFilesImporter to(Consumer<WriteGenericDocumentsOptions> consumer);
