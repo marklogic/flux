@@ -31,6 +31,31 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
         verifyDelimitedFile(tempDir);
     }
 
+    @Test
+    void exportTwice(@TempDir Path tempDir) {
+        run(
+            "export-delimited-files",
+            "--connection-string", makeConnectionString(),
+            "--partitions", "1",
+            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--file-count", "1"
+        );
+
+        run(
+            "export-delimited-files",
+            "--connection-string", makeConnectionString(),
+            "--partitions", "1",
+            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--file-count", "1"
+        );
+
+        File[] files = tempDir.toFile().listFiles((dir, name) -> name.endsWith(".csv"));
+        assertEquals(2, files.length, "Per MLE-16859, commands that use Spark file data sources for exporting data " +
+            "should default to 'append' instead of 'overwrite' to avoid accidentally deleting data.");
+    }
+
     /**
      * Verifies that an options file can have values with whitespace in them, which picocli supports and
      * JCommander oddly does not. Users will frequently have spaces in any Optic or search queries that they put into

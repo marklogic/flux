@@ -306,6 +306,10 @@ location where data already exists. This option supports the following values:
 
 For convenience, the above values are case-sensitive so that you can ignore casing when choosing a value. 
 
+As of the 1.0.1 release of Flux, `--mode` defaults to `Append` for commands that write to a filesystem. In the 1.0.0
+release, these commands defaulted to `Overwrite`. The `export-jdbc` command defaults to `ErrorIfExists` avoid altering
+an existing table in any way.
+
 For further information on each mode, please see 
 [the Spark documentation](https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes).
 
