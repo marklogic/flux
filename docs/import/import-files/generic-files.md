@@ -84,6 +84,27 @@ bin\flux import-files ^
 {% endtabs %}
 
 
+## Importing large binary files
+
+Flux can leverage MarkLogic's [support for large binary documents](https://docs.marklogic.com/guide/app-dev/binaries#id_93203)
+by importing binary files of any size. To ensure that binary files of any size can be loaded, consider using the
+`--streaming` option introduced in Flux 1.0.1. When this option is set, Flux will stream the contents of each file from
+its source directly into MarkLogic, thereby avoiding reading the contents of a file into memory. 
+
+As streaming a file requires Flux to only send one document at a time to MarkLogic, you should not use this option when
+importing smaller files that easily fit into the memory available to Flux.
+
+When using `--streaming`, the following options will have no effect due to Flux not reading the file contents into 
+memory and always sending one file per request to MarkLogic:
+
+- `--batch-size`
+- `--encoding`
+- `--failed-documents-path`
+- `--uri-template`
+
+You typically will also not want to use the `--transform` option as applying a REST transform in MarkLogic to a very 
+large binary document may exhaust the amount of memory available to MarkLogic.
+
 ## Importing Gzip files
 
 To import Gzip files with each file being decompressed before written to MarkLogic, include the `--compression` option
