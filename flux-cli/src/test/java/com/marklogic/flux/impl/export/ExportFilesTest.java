@@ -52,6 +52,21 @@ class ExportFilesTest extends AbstractTest {
     }
 
     @Test
+    void exportViaQueryInOptionsFile(@TempDir Path tempDir) {
+        run(
+            "export-files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--connection-string", makeConnectionString(),
+            "@src/test/resources/options-files/cts-query-json.txt"
+        );
+
+        File dir = tempDir.toFile();
+        File authorsDir = new File(dir, "author");
+        assertEquals(1, authorsDir.listFiles().length, "Expecting the query to only retrieve the 'Vivienne' author.");
+    }
+
+
+    @Test
     void exportViaUris(@TempDir Path tempDir) {
         run(
             "export-files",

@@ -32,8 +32,8 @@ The following options control which documents are read from MarkLogic:
 You must specify at least one of `--collections`, `--directory`, `--query`, `--string-query`, or `--uris`. You may specify any
 combination of those options as well, with the exception that `--query` will be ignored if `--uris` is specified.
 
-For examples of what the `--query` option support, please see 
-[the MarkLogic search documentation](https://docs.marklogic.com/guide/rest-dev/search#id_49329).
+If you use `--query` to select documents, please see [the guide on exporting documents](export/export-documents.md) for
+more information and examples of the types of values you can provide to `--query`.
 
 The `copy` command then requires that you specify connection information for the output database that the documents
 will be copied into. Each of the [connection options](common-options.md) can be used for this output database, but with
