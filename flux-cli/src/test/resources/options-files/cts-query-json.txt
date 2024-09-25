@@ -1,0 +1,2 @@
+--query
+"{\"ctsquery\": {\"wordQuery\": {\"text\": \"Vivianne\"}}}"
