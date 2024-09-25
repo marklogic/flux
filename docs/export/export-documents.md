@@ -53,6 +53,75 @@ The following options control which documents are selected to be exported:
 You must specify at least one of `--collections`, `--directory`, `--query`, `--string-query`, or `--uris`. You may specify any
 combination of those options as well, with the exception that `--query` will be ignored if `--uris` is specified.
 
+## Specifying a query
+
+The `--query` accepts any one of the following inputs:
+
+1. A [structured query](https://docs.marklogic.com/guide/search-dev/structured-query#).
+2. A [CTS query](https://docs.marklogic.com/guide/rest-dev/search#id_30577).
+3. A [combined query](https://docs.marklogic.com/guide/rest-dev/search#id_69918).
+
+The type of query you select can then be expressed in either JSON or XML. The documentation links above provide 
+complete details on constructing each type of query, but for convenience, an example of each query is
+shown next. 
+
+A structured query:
+
+```
+# JSON
+{"query": {"term-query": {"text": "hello"}}}
+
+# XML
+<query xmlns='http://marklogic.com/appservices/search'><term-query><text>hello</text></term-query></query>
+```
+
+A CTS query:
+
+```
+# JSON
+{"ctsquery": {"wordQuery": {"text": "hello"}}}
+
+# XML
+<word-query xmlns='http://marklogic.com/cts'><text>hello</text></word-query>
+```
+
+A combined query, with options included:
+
+```
+# JSON
+{"search": {"options": {"constraint": {"name": "c1", "word": {"element": {"name": "text"}}}}}, "qtext": "c1:hello"}
+
+# XML
+<search xmlns='http://marklogic.com/appservices/search'>\
+<options><constraint name='c1'><word><element name='text'/></word></constraint></options>\
+<qtext>c1:hello</qtext></search>
+```
+
+### Specifying a query in an options file
+
+Serialized queries can be very lengthy, and thus it is often easier to put the `--query` option and its value in an 
+[options file](../common-options.md).
+
+For queries expressed as JSON, you will need to ensure that the double quotes in your JSON are escaped correctly. 
+For example:
+
+```
+--query
+"{\"ctsquery\": {\"wordQuery\": {\"text\": \"hello\"}}}"
+```
+
+As noted in the [options file guide](../common-options.md), you can use a newline symbol specific to the shell
+you use for running Flux to break the value into multiple lines:
+
+```
+--query
+"{\"ctsquery\": \
+{\"wordQuery\": {\"text\": \"hello\"}}}"
+```
+
+For queries expressed in XML, you may find it easier to use single quotes instead of double quotes, as single quotes 
+do not require any escaping.
+
 ## Transforming document content
 
 You can apply a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms)
