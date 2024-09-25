@@ -105,6 +105,11 @@ memory and always sending one file per request to MarkLogic:
 You typically will also not want to use the `--transform` option as applying a REST transform in MarkLogic to a very 
 large binary document may exhaust the amount of memory available to MarkLogic.
 
+In addition, when streaming documents to MarkLogic, URIs will be encoded. For example, a file named `my file.json` 
+will result in a URI of `/my%20file.json`. This is due to an 
+[issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in 
+a future server release. 
+
 ## Importing Gzip files
 
 To import Gzip files with each file being decompressed before written to MarkLogic, include the `--compression` option
