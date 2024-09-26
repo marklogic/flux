@@ -89,6 +89,11 @@ bin\flux export-jdbc ^
 
 Rows selected via an Optic query can be exported to any of the below file formats.
 
+**Exporting rows to files defaults in Flux 1.0 to overwriting data in the selected path**. 
+The "Controlling save mode" section belows describes the different options for controlling this behavior. A future 
+release of Flux will change the default from "overwrite" to "append" to avoid accidentally deleting any data in an
+existing file path.
+
 ### Avro
 
 The `export-avro-files` command writes one or more Avro files to the directory specified by the `--path` option. This
