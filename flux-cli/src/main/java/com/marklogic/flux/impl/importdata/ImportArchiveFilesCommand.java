@@ -27,13 +27,23 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     @CommandLine.Mixin
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
+    @CommandLine.Option(
+        names = "--streaming",
+        description = "Causes entries in archive files to be read from their source directly to MarkLogic. Intended for " +
+            "importing archives containing large files that cannot be fully read into memory. Features that depend on " +
+            "the data in the file, such as --uri-template, will not have any effect when this option is set."
+    )
+    private boolean streaming;
+
     @Override
     protected ReadFilesParams getReadParams() {
+        readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
     protected WriteDocumentParams getWriteParams() {
+        writeParams.setStreaming(this.streaming);
         return writeParams;
     }
 
@@ -93,6 +103,12 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     @Override
     public ArchiveFilesImporter from(String... paths) {
         readParams.paths(paths);
+        return this;
+    }
+
+    @Override
+    public ArchiveFilesImporter streaming() {
+        this.streaming = true;
         return this;
     }
 

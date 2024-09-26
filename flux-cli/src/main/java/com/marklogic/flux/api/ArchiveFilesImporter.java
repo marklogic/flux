@@ -22,5 +22,10 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
 
     ArchiveFilesImporter from(String... paths);
 
+    /**
+     * @since 1.1.0
+     */
+    ArchiveFilesImporter streaming();
+
     ArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
 }

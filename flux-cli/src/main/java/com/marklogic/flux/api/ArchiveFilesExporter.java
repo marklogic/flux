@@ -20,6 +20,11 @@ public interface ArchiveFilesExporter extends Executor<ArchiveFilesExporter> {
 
     ArchiveFilesExporter from(Consumer<ReadArchiveDocumentOptions> consumer);
 
+    /**
+     * @since 1.1.0
+     */
+    ArchiveFilesExporter streaming();
+
     ArchiveFilesExporter to(Consumer<WriteArchiveFilesOptions> consumer);
 
     ArchiveFilesExporter to(String path);

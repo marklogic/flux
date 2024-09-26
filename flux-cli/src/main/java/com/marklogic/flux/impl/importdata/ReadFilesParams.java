@@ -39,6 +39,8 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
 
+    private boolean streaming;
+
     public boolean hasAtLeastOnePath() {
         return path != null && !path.isEmpty();
     }
@@ -57,6 +59,11 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
         if (recursiveFileLookup) {
             options.put("recursiveFileLookup", "true");
         }
+
+        if (streaming) {
+            options.put(Options.STREAM_FILES, "true");
+        }
+
         return options;
     }
 
@@ -142,5 +149,9 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     public T s3Endpoint(String endpoint) {
         this.s3Params.setEndpoint(endpoint);
         return (T) this;
+    }
+
+    public void setStreaming(boolean streaming) {
+        this.streaming = streaming;
     }
 }

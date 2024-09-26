@@ -2,6 +2,7 @@
   "user-name": "flux-test-user",
   "password": "password",
   "role": [
-    "flux-test-role"
+    "flux-test-role",
+    "spark-user-role"
   ]
 }

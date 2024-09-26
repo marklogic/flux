@@ -31,7 +31,7 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
     GenericFilesImporter from(String... paths);
 
     /**
-     * @since 1.0.1
+     * @since 1.1.0
      */
     GenericFilesImporter streaming();
 
