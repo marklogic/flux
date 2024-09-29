@@ -88,7 +88,7 @@ bin\flux import-files ^
 
 Flux can leverage MarkLogic's [support for large binary documents](https://docs.marklogic.com/guide/app-dev/binaries#id_93203)
 by importing binary files of any size. To ensure that binary files of any size can be loaded, consider using the
-`--streaming` option introduced in Flux 1.0.1. When this option is set, Flux will stream the contents of each file from
+`--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream the contents of each file from
 its source directly into MarkLogic, thereby avoiding reading the contents of a file into memory. 
 
 As streaming a file requires Flux to only send one document at a time to MarkLogic, you should not use this option when

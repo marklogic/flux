@@ -33,7 +33,7 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
     GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
 
     /**
-     * @since 1.0.1
+     * @since 1.1.0
      */
     GenericFilesExporter streaming();
 

@@ -27,6 +27,13 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     @CommandLine.Mixin
     protected WriteArchiveFilesParams writeParams = new WriteArchiveFilesParams();
 
+    @CommandLine.Option(
+        names = "--streaming",
+        description = "Causes documents to be streamed from MarkLogic to archive files. Intended for " +
+            "exporting large documents that cannot be fully read into memory."
+    )
+    private boolean streaming;
+
     @Override
     protected void validateDuringApiUsage() {
         writeParams.validatePath();
@@ -47,7 +54,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
         }
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
-            .options(readParams.makeOptions())
+            .options(makeReadOptions())
             .load();
     }
 
@@ -55,10 +62,31 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(MARKLOGIC_CONNECTOR)
-            .options(writeParams.get())
-            // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.
+            .options(makeWriteOptions())
             .mode(SaveMode.Append)
             .save(writeParams.getPath());
+    }
+
+    // Extracted for unit-testing.
+    protected final Map<String, String> makeReadOptions() {
+        Map<String, String> readOptions = readParams.makeOptions();
+        if (streaming) {
+            readOptions.put(Options.STREAM_FILES, "true");
+        }
+        return readOptions;
+    }
+
+    // Extracted for unit-testing.
+    protected Map<String, String> makeWriteOptions() {
+        Map<String, String> writeOptions = writeParams.get();
+        if (streaming) {
+            writeOptions.put(Options.STREAM_FILES, "true");
+            // The writer needs to know what metadata to retrieve when streaming.
+            writeOptions.put(Options.READ_DOCUMENTS_CATEGORIES, readParams.determineCategories());
+        }
+        // Need connection params so writer can read documents and metadata from MarkLogic.
+        writeOptions.putAll(getConnectionParams().makeOptions());
+        return writeOptions;
     }
 
     public static class WriteArchiveFilesParams extends WriteFilesParams<WriteArchiveFilesOptions> implements WriteArchiveFilesOptions {
@@ -117,6 +145,12 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     @Override
     public ArchiveFilesExporter from(Consumer<ReadArchiveDocumentOptions> consumer) {
         consumer.accept(readParams);
+        return this;
+    }
+
+    @Override
+    public ArchiveFilesExporter streaming() {
+        this.streaming = true;
         return this;
     }
 

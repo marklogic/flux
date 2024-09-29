@@ -45,13 +45,13 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     @Override
     protected ReadFilesParams getReadParams() {
-        readParams.streaming = this.streaming;
+        readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
     protected WriteDocumentParams getWriteParams() {
-        writeParams.streaming = this.streaming;
+        writeParams.setStreaming(this.streaming);
         return writeParams;
     }
 
@@ -86,8 +86,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private int partitions;
 
-        private boolean streaming;
-
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
@@ -105,8 +103,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.READ_FILES_ENCODING, encoding,
-                Options.STREAM_FILES, streaming ? "true" : null
+                Options.READ_FILES_ENCODING, encoding
             );
         }
 
@@ -121,8 +118,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         private DocumentType documentType;
 
-        private boolean streaming;
-
         @Override
         @CommandLine.Option(
             names = "--document-type",
@@ -136,8 +131,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
-                Options.STREAM_FILES, streaming ? "true" : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
             );
         }
     }

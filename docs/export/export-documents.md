@@ -206,7 +206,7 @@ bin\flux export-files ^
 
 MarkLogic's [support for large binary documents](https://docs.marklogic.com/guide/app-dev/binaries#id_93203) allows 
 for storing binary files of any size. To ensure that large binary files can be exported to a file path, consider
-using the `--streaming` option introduced in Flux 1.0.1. When this option is set, Flux will stream each document
+using the `--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream each document
 from MarkLogic directly to the file path, thereby avoiding reading the contents of a file into memory.
 
 As streaming to a file requires Flux to retrieve one document at a time from MarkLogic, you should not use this option

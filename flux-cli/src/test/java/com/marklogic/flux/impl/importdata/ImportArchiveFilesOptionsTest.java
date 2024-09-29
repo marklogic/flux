@@ -24,4 +24,22 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
             Options.READ_FILES_ENCODING, "UTF-16"
         );
     }
+
+    @Test
+    void streaming() {
+        ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
+            "import-archive-files",
+            "--path", "src/test/resources/archive-files",
+            "--streaming"
+        );
+
+        assertOptions(command.getReadParams().makeOptions(),
+            Options.STREAM_FILES, "true",
+            Options.READ_FILES_TYPE, "archive"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.STREAM_FILES, "true"
+        );
+    }
 }

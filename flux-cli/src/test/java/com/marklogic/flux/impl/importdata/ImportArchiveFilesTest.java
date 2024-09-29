@@ -87,14 +87,13 @@ class ImportArchiveFilesTest extends AbstractTest {
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
             "import-archive-files",
-            "--path", "src/test/resources/archive-files",
-            "--path", "src/test/resources/mlcp-archives",
+            "--path", "src/test/resources/archive-files/invalid-archive.zip",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString()
         ));
 
         assertTrue(
-            stderr.contains("Command failed, cause: Could not find metadata entry for entry /test/1.xml.metadata in file"),
+            stderr.contains("Command failed, cause: Could not find metadata entry for entry test/1.xml in file"),
             "Unexpected stderr: " + stderr
         );
     }
