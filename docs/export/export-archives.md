@@ -121,3 +121,22 @@ bin\flux export-archives ^
 
 
 The encoding will be used for both document and metadata entries in each archive zip file. 
+
+## Exporting large binary files 
+
+Similar to [exporting large binary documents as files](export-documents.md), you can include large binary documents
+in archives by including the `--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream 
+each document from MarkLogic directly to a zip file, thereby avoiding reading the contents of a file into memory.
+
+As streaming to an archive requires Flux to retrieve one document at a time from MarkLogic, you should not use this option
+when exporting smaller documents that can easily fit into the memory available to Flux.
+
+When using `--streaming`, the following options will behave in a different fashion:
+
+- `--batch-size` will still affect how many URIs are retrieved from MarkLogic in a single request, but will not impact
+  the number of documents retrieved from MarkLogic in a single request, which will always be 1.
+- `--encoding` will be ignored as applying an encoding requires reading the document into memory.
+- `--pretty-print` will have no effect as the contents of a document will never be read into memory.
+
+You typically will not want to use the `--transform` option as applying a REST transform in MarkLogic to a
+large binary document may exhaust the amount of memory available to MarkLogic.

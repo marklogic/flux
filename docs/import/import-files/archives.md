@@ -115,3 +115,30 @@ bin\flux import-archive-files ^
 ```
 {% endtab %}
 {% endtabs %}
+
+## Importing large binary files in archives
+
+When [exporting archives](../../export/export-archives.md), you can use the `--streaming` option introduced in Flux 
+1.1.0 to ensure that large binary documents in MarkLogic can be streamed to an archive file. When importing archives
+with large binary files, you should likewise use the `--streaming` option to ensure that each large binary can be read
+into MarkLogic without exhausting the memory available to Flux or MarkLogic.
+
+As streaming each entry requires Flux to only send one document at a time to MarkLogic, you should not use this option when
+importing smaller files that easily fit into the memory available to Flux.
+
+When using `--streaming`, the following options will have no effect due to Flux not reading the file contents into
+memory and always sending one file per request to MarkLogic:
+
+- `--batch-size`
+- `--encoding`
+- `--failed-documents-path`
+- `--uri-template`
+
+You typically will also not want to use the `--transform` option as applying a REST transform in MarkLogic to a very
+large binary document may exhaust the amount of memory available to MarkLogic.
+
+In addition, when streaming documents to MarkLogic, URIs will be encoded. For example, an entry named `/my file.json`
+will result in a URI of `/my%20file.json`. This is due to an
+[issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in
+a future server release. 
+
