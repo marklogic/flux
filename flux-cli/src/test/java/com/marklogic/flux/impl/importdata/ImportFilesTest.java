@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportFilesTest extends AbstractTest {
 
-    String[] uris = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
+    private static final String[] MIXED_FILES_URIS = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
 
     @Test
     void multiplePaths() {
@@ -42,7 +42,7 @@ class ImportFilesTest extends AbstractTest {
             "--streaming"
         );
 
-        verifyDocsWereWritten(uris.length, uris);
+        verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
     }
 
     @Test
@@ -96,7 +96,7 @@ class ImportFilesTest extends AbstractTest {
             "--uri-replace", ".*/mixed-files,''"
         );
 
-        verifyDocsWereWritten(uris.length, uris);
+        verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
     }
 
     @Test
@@ -147,7 +147,7 @@ class ImportFilesTest extends AbstractTest {
             "--collections", "files"
         );
 
-        verifyDocsWereWritten(uris.length, uris);
+        verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
     }
 
     @Test

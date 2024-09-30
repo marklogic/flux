@@ -70,8 +70,8 @@ class ImportOrcFilesTest extends AbstractTest {
             JsonNode doc = readJsonDocument("/orc-test/" + i + ".json");
             assertEquals(i, doc.get("CitationID").asInt());
             ArrayNode names = (ArrayNode) doc.get("names");
-            for (int j = 0; i < names.size(); i++) {
-                JsonNode name = names.get(i);
+            for (int j = 0; j < names.size(); j++) {
+                JsonNode name = names.get(j);
                 assertTrue(name.has("ForeName"));
                 assertTrue(name.has("LastName"));
             }

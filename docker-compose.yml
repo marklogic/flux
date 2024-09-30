@@ -55,7 +55,7 @@ services:
 
   # Copied from https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/install-the-server/#example-docker-compose-configuration .
   sonarqube:
-    image: sonarqube:10.3.0-community
+    image: sonarqube:10.6.0-community
     depends_on:
       - postgres
     environment:
