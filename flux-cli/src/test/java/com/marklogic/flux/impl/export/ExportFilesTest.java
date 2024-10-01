@@ -93,10 +93,10 @@ class ExportFilesTest extends AbstractTest {
         );
 
         File dir = tempDir.toFile();
-        assertEquals(3, dir.listFiles().length, "Expecting 3 zip files - 1 for each forest in the test database, " +
+        assertEquals(3, dir.listFiles().length, "Expecting 3 ZIP files - 1 for each forest in the test database, " +
             "which is expected to have 3 forests.");
 
-        // Use our connector to read the 3 zip files, can then verify the dataset.
+        // Use our connector to read the 3 ZIP files, can then verify the dataset.
         List<Row> rows = newSparkSession().read().format("marklogic")
             .option(Options.READ_FILES_COMPRESSION, "zip")
             .load(dir.getAbsolutePath())
@@ -128,7 +128,7 @@ class ExportFilesTest extends AbstractTest {
         );
 
         File dir = tempDir.toFile();
-        assertEquals(5, dir.listFiles().length, "Should have 5 zip files instead of 3 due to the use of --zip-file-count.");
+        assertEquals(5, dir.listFiles().length, "Should have 5 ZIP files instead of 3 due to the use of --zip-file-count.");
     }
 
     @Test

@@ -26,7 +26,7 @@ application that can be deployed to your own instance of MarkLogic server. The a
 `marklogic-flux-getting-started-1.0.0.zip`. To use Flux with this example application, perform the following steps:
 
 1. Extract the `marklogic-flux-getting-started-1.0.0.zip` file to any location on your local filesystem.
-2. Run `cd marklogic-flux-getting-started-1.0.0` to change to the directory created by extracting the zip file.
+2. Run `cd marklogic-flux-getting-started-1.0.0` to change to the directory created by extracting the ZIP file.
 3. Create a file named `gradle-local.properties` and add `mlPassword=your MarkLogic admin user password` to it.
 4. Examine the contents of the `gradle.properties` file to ensure that the value of `mlHost` points to your MarkLogic 
 server and that the value of `mlRestPort` is a port available for a new MarkLogic app server to use.
@@ -192,7 +192,7 @@ thus producing hierarchical documents with nested data structures.
 Flux supports several commands for exporting data from MarkLogic, either as documents or rows, to a variety of 
 destinations. Commands that export documents support a variety of queries, while commands that export rows use the
 [MarkLogic Optic API](https://docs.marklogic.com/guide/app-dev/OpticAPI)
-to select rows. The following shows an example of exporting the 1000 employee documents to a single zip file:
+to select rows. The following shows an example of exporting the 1000 employee documents to a single ZIP file:
 
 {% tabs log %}
 {% tab log Unix %}

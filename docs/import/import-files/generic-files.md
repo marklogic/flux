@@ -110,15 +110,18 @@ will result in a URI of `/my%20file.json`. This is due to an
 [issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in 
 a future server release. 
 
-## Importing Gzip files
+## Importing gzip files
 
-To import Gzip files with each file being decompressed before written to MarkLogic, include the `--compression` option
-with a value of `GZIP`. You can also import Gzip files as-is - i.e. without decompressing them - by not including the
-`--compression` option.
- 
+To import gzip files with each file being decompressed before written to MarkLogic, include the `--compression` option
+with a value of `GZIP`. You can also import gzip files as-is - i.e. without decompressing them - by not including the
+`--compression` option. The `--streaming` option introduced in Flux 1.1.0 can also be used for very large gzip files
+that may not fit into the memory available to Flux or to MarkLogic.
+
 ## Importing ZIP files
 
 To import each entry in a ZIP file as a separate document, include the `--compression` option with a value of `ZIP`.
 Each document will have an initial URI based on both the absolute path of the ZIP file and the name of the ZIP entry. 
 You can also use the `--document-type` option as described above to force a document type for any entry that has a file
-extension not recognized by MarkLogic.
+extension not recognized by MarkLogic. The `--streaming` option introduced in Flux 1.1.0 can also be used for ZIP files
+containing very large binary files that may not fit into the memory available to Flux or to MarkLogic.
+

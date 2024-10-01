@@ -45,7 +45,7 @@ reads from its associated data source. This option is supported for the followin
 - `import-aggregate-json-files`
 - `import-avro-files`
 - `import-delimited-files`
-- `import-files`, but only for JSON files and JSON entries in zip files.
+- `import-files`, but only for JSON files and JSON entries in ZIP files.
 - `import-jdbc`
 - `import-orc-files`
 - `import-parquet-files`

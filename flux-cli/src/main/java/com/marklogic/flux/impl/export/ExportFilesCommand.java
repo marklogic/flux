@@ -97,8 +97,8 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
 
-        @CommandLine.Option(names = "--compression", description = "Set to 'ZIP' to write one zip file per partition, " +
-            "or to 'GZIP' to GZIP each document file. " + OptionsUtil.VALID_VALUES_DESCRIPTION)
+        @CommandLine.Option(names = "--compression", description = "Set to 'ZIP' to write one ZIP file per partition, " +
+            "or to 'GZIP' to gzip each document file. " + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private CompressionType compressionType;
 
         @CommandLine.Option(names = "--pretty-print", description = "Pretty-print the contents of JSON and XML files.")

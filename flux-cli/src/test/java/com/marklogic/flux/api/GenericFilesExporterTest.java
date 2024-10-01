@@ -29,7 +29,7 @@ class GenericFilesExporterTest extends AbstractTest {
             .execute();
 
         File dir = tempDir.toFile();
-        assertEquals(1, dir.listFiles().length, "Expecting 1 zip file due to the use of zipFileCount(1).");
+        assertEquals(1, dir.listFiles().length, "Expecting 1 ZIP file due to the use of zipFileCount(1).");
     }
 
     @Test
