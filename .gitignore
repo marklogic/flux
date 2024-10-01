@@ -12,3 +12,4 @@ flux/conf
 flux/export
 export
 flux-version.properties
+docker/sonarqube
