@@ -183,12 +183,12 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     }
 
     /**
-     * This documents that if a user has a zip file, and we would normally use a Spark data source to read the type files
-     * inside the zip, we unfortunately cannot do that as Spark doesn't have any support for zip files. Databricks
+     * This documents that if a user has a ZIP file, and we would normally use a Spark data source to read the type files
+     * inside the ZIP, we unfortunately cannot do that as Spark doesn't have any support for ZIP files. Databricks
      * documentation - https://docs.databricks.com/en/files/unzip-files.html - confirms this, noting that if a user has
-     * a zip file, they should first expand it.
+     * a ZIP file, they should first expand it.
      * <p>
-     * So for zip files, the best we can do is use our own reader, which is limited to reading each file as a "file row"
+     * So for ZIP files, the best we can do is use our own reader, which is limited to reading each file as a "file row"
      * and then writing it as a document to MarkLogic. Which means that a user cannot use a feature like
      * "--uri-template", as that depends on having values in columns that can be referenced by the template. We will
      * hopefully be enhancing this in a future story - specifically, by enhancing the URI template feature to work on

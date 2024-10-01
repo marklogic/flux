@@ -86,6 +86,6 @@ For some use cases involving exporting triples with their graphs to files contai
 reference the graph that each triple belongs to in MarkLogic. You can use `--graph-override` to specify an alternative
 graph value that will then be associated with every triple that Flux writes to a file. 
 
-## GZIP compression
+## gzip compression
 
-To compress each file written by Flux using GZIP, simply include `--gzip` as an option.
+To compress each file written by Flux using gzip, simply include `--gzip` as an option.

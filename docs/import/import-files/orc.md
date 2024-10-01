@@ -117,7 +117,7 @@ The `import-orc-files` command supports aggregating related rows together to pro
 
 ## Reading compressed files
 
-Flux will automatically read files compressed with GZIP when they have a filename ending in `.gz`; you do not need to
+Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
 specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
 explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically.
 
