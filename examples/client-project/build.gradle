@@ -6,7 +6,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.0.0"
+    classpath "com.marklogic:flux-api:1.1.0"
 
     // Demonstrates removing the Jackson libraries that otherwise cause a conflict with
     // Spark, which requires Jackson >= 2.14.0 and < 2.15.0.
@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:1.0.0"
+  implementation "com.marklogic:flux-api:1.1.0"
 }
 
 tasks.register("runApp", JavaExec) {
