@@ -241,9 +241,9 @@ class ImportDelimitedFilesTest extends AbstractTest {
         ));
 
         assertCollectionSize("delimited-test", 0);
-        assertTrue(stderr.contains("Command failed, cause: [MALFORMED_RECORD_IN_PARSING]"), "The command should " +
+        assertTrue(stderr.contains("Command failed, cause: [MALFORMED_RECORD_IN_PARSING"), "The command should " +
             "have failed due to --abort-on-read-failure being included. This should result in the 'mode' option being " +
-            "set to FAILFAST.");
+            "set to FAILFAST. Actual stderr: " + stderr);
     }
 
     @Test
