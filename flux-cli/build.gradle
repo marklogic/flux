@@ -2,7 +2,7 @@ plugins {
   id 'net.saliman.properties' version '1.5.2'
   id "application"
   id "jacoco"
-  id "org.sonarqube" version "4.4.1.3373"
+  id "org.sonarqube" version "5.1.0.4882"
   id 'com.github.johnrengelman.shadow' version '8.1.1'
   id 'maven-publish'
 }
@@ -13,11 +13,11 @@ configurations {
 }
 
 dependencies {
-  implementation("org.apache.spark:spark-sql_2.12:3.4.3") {
+  implementation("org.apache.spark:spark-sql_2.12:3.5.3") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.3.1"
+  implementation "com.marklogic:marklogic-spark-connector:2.4.0"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
@@ -44,7 +44,7 @@ dependencies {
   implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.12:3.4.3"
+  implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
   testImplementation("com.marklogic:marklogic-junit5:1.4.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
@@ -62,7 +62,7 @@ dependencies {
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
   // For configuring two-way SSL in tests.
-  testImplementation("com.marklogic:ml-app-deployer:4.8.0") {
+  testImplementation("com.marklogic:ml-app-deployer:5.0.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -70,7 +70,12 @@ dependencies {
     exclude module: "marklogic-client-api"
   }
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.3.1"
+  // Using Apache HttpClient for connecting to the MarkLogic Manage API.
+  testImplementation 'org.apache.httpcomponents:httpclient:4.5.14'
+  // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
+  testImplementation 'commons-codec:commons-codec:1.17.1'
+
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.4.0"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 

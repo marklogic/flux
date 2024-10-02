@@ -1,10 +1,11 @@
 To contribute to this project, complete these steps to setup a MarkLogic instance via Docker with a test 
 application installed:
 
-1. Clone this repository if you have not already.
-2. From the root directory of the project, run `docker-compose up -d --build`.
-3. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
-4. Run `./gradlew -i mlDeploy` to deploy this project's test application (note that Java 11 or Java 17 is required).
+1. Ensure you have Java 11 or higher installed; you will need Java 17 if you wish to use the Sonarqube support described below.
+2. Clone this repository if you have not already.
+3. From the root directory of the project, run `docker-compose up -d --build`.
+4. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
+5. Run `./gradlew -i mlDeploy` to deploy this project's test application.
 
 Some of the tests depend on the Postgres instance deployed via Docker. Follow these steps to load a sample dataset
 into it:
@@ -57,10 +58,7 @@ publishing a local snapshot of our Spark connector. Then just run:
 
     ./gradlew clean test
 
-You can run the tests using either Java 11 or Java 17. 
-
-In Intellij, the tests will run with Java 11. In order to run the tests in Intellij using Java 17, 
-perform the following steps:
+If you are running the tests in Intellij with Java 17, you will need to perform the following steps:
 
 1. Go to Run -> Edit Configurations in the Intellij toolbar.
 2. Click on "Edit configuration templates".
@@ -81,7 +79,7 @@ delete that configuration first via the "Run -> Edit Configurations" panel.
 ## Generating code quality reports with SonarQube
 
 In order to use SonarQube, you must have used Docker to run this project's `docker-compose.yml` file, and you must
-have the services in that file running.
+have the services in that file running. You must also use Java 17 to run the `sonar` Gradle task. 
 
 To configure the SonarQube service, perform the following steps:
 
@@ -97,8 +95,8 @@ To configure the SonarQube service, perform the following steps:
 10. Add `systemProp.sonar.token=your token pasted here` to `gradle-local.properties` in the root of your project, creating
     that file if it does not exist yet.
 
-To run SonarQube, run the following Gradle tasks, which will run all the tests with code coverage and then generate
-a quality report with SonarQube:
+To run SonarQube, run the following Gradle tasks with Java 17 or higher, which will run all the tests with code 
+coverage and then generate a quality report with SonarQube:
 
     ./gradlew test sonar
 
@@ -116,7 +114,8 @@ before, then SonarQube will show "New Code" by default. That's handy, as you can
 you've introduced on the feature branch you're working on. You can then click on "Overall Code" to see all issues.
 
 Note that if you only need results on code smells and vulnerabilities, you can repeatedly run `./gradlew sonar`
-without having to re-run the tests.
+without having to re-run the tests. If you get an error from Sonar about Java sources, you just need to compile the 
+Java code, so run `./gradlew compileTestJava sonar`. 
 
 ## Testing the documentation locally
 
@@ -229,7 +228,7 @@ Set `SPARK_HOME` to the location of Spark - e.g. `/Users/myname/.sdkman/candidat
 
 Next, start a Spark master node:
 
-    cd $SPARK_HOME/bin
+    cd $SPARK_HOME/sbin
     start-master.sh
 
 You will need the address at which the Spark master node can be reached. To find it, open the log file that Spark
@@ -257,7 +256,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.0.0-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.1.0-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -265,7 +264,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.1.0-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -282,7 +281,7 @@ to something you can access):
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
+flux-cli/build/libs/marklogic-flux-1.1.0-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

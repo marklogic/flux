@@ -58,4 +58,25 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
         Map<String, String> options = command.writeParams.get();
         assertEquals("ISO-8859-1", options.get(Options.WRITE_FILES_ENCODING));
     }
+
+    @Test
+    void streaming() {
+        ExportFilesCommand command = (ExportFilesCommand) getCommand(
+            "export-files",
+            "--connection-string", "test:test@host:8000",
+            "--collections", "anything",
+            "--path", "anywhere",
+            "--streaming"
+        );
+
+        Map<String, String> readOptions = command.buildReadOptions();
+        assertEquals("true", readOptions.get(Options.STREAM_FILES));
+        assertEquals("anything", readOptions.get(Options.READ_DOCUMENTS_COLLECTIONS));
+
+        Map<String, String> writeOptions = command.buildWriteOptions();
+        assertEquals("true", writeOptions.get(Options.STREAM_FILES));
+        assertEquals("test:test@host:8000", writeOptions.get(Options.CLIENT_URI),
+            "The connection options must be present in the write options so that the writer can connect " +
+                "to MarkLogic and read documents.");
+    }
 }

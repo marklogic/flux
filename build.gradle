@@ -29,7 +29,7 @@ task gettingStartedZip(type: Zip) {
   description = "Creates a zip of the getting-started project that is intended to be included as a downloadable file " +
     "on the GitHub release page."
   from "examples/getting-started"
-  exclude "build", ".gradle", "gradle-*.properties", "flux", ".gitignore"
+  exclude "build", ".gradle", "gradle-*.properties", "flux", ".gitignore", "marklogic-flux"
   into "marklogic-flux-getting-started-${version}"
   archiveFileName = "marklogic-flux-getting-started-${version}.zip"
   destinationDirectory = file("build")

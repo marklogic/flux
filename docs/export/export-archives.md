@@ -57,21 +57,21 @@ combination of those options as well, with the exception that `--query` will be 
 
 You must then use the `--path` option to specify a directory to write archive files to.
 
-### Windows-specific issues with zip files
+### Windows-specific issues with ZIP files
 
-In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a zip file
+In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a ZIP file
 with those URIs - which are used as the zip entry names - will produce confusing behavior on Windows. If you open the
-zip file via Windows Explorer, Windows will erroneously think the zip file is empty. If you open the zip file using
+ZIP file via Windows Explorer, Windows will erroneously think the file is empty. If you open the file using
 7-Zip, you will see a top-level entry named `_` if one or more of your URIs begin with a forward slash. These are
 effectively issues that only occur when viewing the file within Windows and do not reflect the actual contents of the
-zip file. The contents of the file are correct and if you were to import them with Flux via the `import-archive-files`
+ZIP file. The contents of the file are correct and if you were to import them with Flux via the `import-archive-files`
 command, you will get the expected results.
 
 
 ## Controlling document metadata
 
 Each exported document will have all of its associated metadata - collections, permissions, quality, properties, and 
-metadata values - included in an XML document in the archive zip file. You can control which types of metadata are
+metadata values - included in an XML document in the archive ZIP file. You can control which types of metadata are
 included with the `--categories` option. This option accepts a comma-delimited sequence of the following metadata types:
 
 - `collections`
@@ -120,4 +120,23 @@ bin\flux export-archives ^
 {% endtabs %}
 
 
-The encoding will be used for both document and metadata entries in each archive zip file. 
+The encoding will be used for both document and metadata entries in each archive ZIP file. 
+
+## Exporting large binary files 
+
+Similar to [exporting large binary documents as files](export-documents.md), you can include large binary documents
+in archives by including the `--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream 
+each document from MarkLogic directly to a ZIP file, thereby avoiding reading the contents of a file into memory.
+
+As streaming to an archive requires Flux to retrieve one document at a time from MarkLogic, you should not use this option
+when exporting smaller documents that can easily fit into the memory available to Flux.
+
+When using `--streaming`, the following options will behave in a different fashion:
+
+- `--batch-size` will still affect how many URIs are retrieved from MarkLogic in a single request, but will not impact
+  the number of documents retrieved from MarkLogic in a single request, which will always be 1.
+- `--encoding` will be ignored as applying an encoding requires reading the document into memory.
+- `--pretty-print` will have no effect as the contents of a document will never be read into memory.
+
+You typically will not want to use the `--transform` option as applying a REST transform in MarkLogic to a
+large binary document may exhaust the amount of memory available to MarkLogic.

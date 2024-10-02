@@ -34,7 +34,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-prefix", "/prefix",
             "--uri-replace", ".*value,''",
             "--uri-suffix", ".suffix",
-            "--uri-template", "/test/{value}.json"
+            "--uri-template", "/test/{value}.json",
+            "--streaming"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -46,7 +47,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
 
         assertOptions(command.getReadParams().makeOptions(),
             Options.READ_NUM_PARTITIONS, "6",
-            Options.READ_FILES_ENCODING, "UTF-16"
+            Options.READ_FILES_ENCODING, "UTF-16",
+            Options.STREAM_FILES, "true"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
@@ -64,7 +66,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_PREFIX, "/prefix",
             Options.WRITE_URI_REPLACE, ".*value,''",
             Options.WRITE_URI_SUFFIX, ".suffix",
-            Options.WRITE_URI_TEMPLATE, "/test/{value}.json"
+            Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
+            Options.STREAM_FILES, "true"
         );
     }
 }

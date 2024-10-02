@@ -17,7 +17,7 @@ public abstract class WriteStructuredFilesParams<T extends WriteFilesOptions> ex
         description = "Specifies how data is written if the path already exists. " +
             "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
-    private SaveMode saveMode = SaveMode.OVERWRITE;
+    private SaveMode saveMode = SaveMode.APPEND;
 
     protected WriteStructuredFilesParams() {
         // For Avro/Parquet/etc files, writing many rows to a single file is acceptable and expected.

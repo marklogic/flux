@@ -120,6 +120,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriTemplate;
 
+    private boolean streaming;
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
@@ -137,7 +139,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_PREFIX, uriPrefix,
             Options.WRITE_URI_REPLACE, uriReplace,
             Options.WRITE_URI_SUFFIX, uriSuffix,
-            Options.WRITE_URI_TEMPLATE, uriTemplate
+            Options.WRITE_URI_TEMPLATE, uriTemplate,
+            Options.STREAM_FILES, streaming ? "true" : null
         );
     }
 
@@ -246,5 +249,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     public T uriTemplate(String uriTemplate) {
         this.uriTemplate = uriTemplate;
         return (T) this;
+    }
+
+    public void setStreaming(boolean streaming) {
+        this.streaming = streaming;
     }
 }

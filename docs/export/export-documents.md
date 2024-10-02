@@ -157,22 +157,22 @@ To use the above transform, verify that your user has been granted the MarkLogic
 
 ## Compressing content
 
-The `--compression` option is used to write files either to Gzip or ZIP files. 
+The `--compression` option is used to write files either to gzip or ZIP files. 
 
-To Gzip each file, include `--compression GZIP`. 
+To gzip each file, include `--compression GZIP`. 
 
-To write multiple files to one or more ZIP files, include `--compression ZIP`. A zip file will be created for each 
+To write multiple files to one or more ZIP files, include `--compression ZIP`. A ZIP file will be created for each 
 partition that was created when reading data via Optic. You can include `--zip-file-count 1` to force all documents to be
 written to a single ZIP file. See the below section on "Understanding partitions" for more information. 
 
-### Windows-specific issues with zip files
+### Windows-specific issues with ZIP files
 
-In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a zip file
+In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a ZIP file
 with those URIs - which are used as the zip entry names - will produce confusing behavior on Windows. If you open the
-zip file via Windows Explorer, Windows will erroneously think the zip file is empty. If you open the zip file using
+ZIP file via Windows Explorer, Windows will erroneously think the file is empty. If you open the file using
 7-Zip, you will see a top-level entry named `_` if one or more of your URIs begin with a forward slash. These are
 effectively issues that only occur when viewing the file within Windows and do not reflect the actual contents of the
-zip file. The contents of the file are correct and if you were to import them with Flux via the `import-files` 
+ZIP file. The contents of the file are correct and if you were to import them with Flux via the `import-files` 
 command, you will get the expected results.
 
 ## Specifying an encoding
@@ -201,6 +201,27 @@ bin\flux export-files ^
 {% endtab %}
 {% endtabs %}
 
+
+## Exporting large binary documents
+
+MarkLogic's [support for large binary documents](https://docs.marklogic.com/guide/app-dev/binaries#id_93203) allows 
+for storing binary files of any size. To ensure that large binary documents can be exported to a file path, consider
+using the `--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream each document
+from MarkLogic directly to the file path, thereby avoiding reading the contents of a file into memory. This option 
+can be used when exporting documents to gzip or ZIP files as well via the `--compression zip` option. 
+
+As streaming to a file requires Flux to retrieve one document at a time from MarkLogic, you should not use this option
+when exporting smaller documents that can easily fit into the memory available to Flux. 
+
+When using `--streaming`, the following options will behave in a different fashion:
+
+- `--batch-size` will still affect how many URIs are retrieved from MarkLogic in a single request, but will not impact
+the number of documents retrieved from MarkLogic in a single request, which will always be 1.
+- `--encoding` will be ignored as applying an encoding requires reading the document into memory.
+- `--pretty-print` will have no effect as the contents of a document will never be read into memory.
+
+You typically will not want to use the `--transform` option as applying a REST transform in MarkLogic to a 
+large binary document may exhaust the amount of memory available to MarkLogic.
 
 ## Understanding partitions
 
@@ -237,9 +258,9 @@ bin\flux export-files ^
 {% endtab %}
 {% endtabs %}
 
-The `./export` directory will have 12 zip files in it. This count is due to how Flux reads data from MarkLogic,
+The `./export` directory will have 12 ZIP files in it. This count is due to how Flux reads data from MarkLogic,
 which involves creating 4 partitions by default per forest in the MarkLogic database. The example application has 3
-forests in its content database, and thus 12 partitions are created, resulting in 12 separate zip files.
+forests in its content database, and thus 12 partitions are created, resulting in 12 separate ZIP files.
 
 You can use the `--partitions-per-forest` option to control how many partitions - and thus workers - read documents
 from each forest in your database:
@@ -272,7 +293,7 @@ bin\flux export-files ^
 {% endtabs %}
 
 
-This approach will produce 3 zip files - one per forest.
+This approach will produce 3 ZIP files - one per forest.
 
 You can also use the `--repartition` option, available on every command, to force the number of partitions used when
 writing data, regardless of how many were used to read the data:
@@ -303,7 +324,7 @@ bin\flux export-files ^
 {% endtabs %}
 
 
-This approach will produce a single zip file due to the use of a single partition when writing files. 
+This approach will produce a single ZIP file due to the use of a single partition when writing files. 
 The `--zip-file-count` option is effectively an alias for `--repartition`. Both options produce the same outcome. 
 `--zip-file-count` is included as a more intuitive option for the common case of configuring how many files should
 be written. 

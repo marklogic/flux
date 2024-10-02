@@ -1,5 +1,3 @@
-version: '3.8'
-
 name: flux
 
 services:
@@ -17,7 +15,7 @@ services:
       - 8007:8007
 
   marklogic:
-    image: "marklogicdb/marklogic-db:11.2.0-centos-1.1.2"
+    image: "progressofficial/marklogic-db:latest"
     platform: linux/amd64
     environment:
       - MARKLOGIC_INIT=true
@@ -55,7 +53,7 @@ services:
 
   # Copied from https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/install-the-server/#example-docker-compose-configuration .
   sonarqube:
-    image: sonarqube:10.3.0-community
+    image: sonarqube:10.6.0-community
     depends_on:
       - postgres
     environment:

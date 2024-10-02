@@ -107,7 +107,7 @@ example, adding the following would result in URIs of `/person/1.xml` and `/pers
 
 ## Compressed XML files
 
-Flux supports Gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
+Flux supports gzip and ZIP aggregate XML files. Simply include the `--compression` option with a value of `GZIP` or 
 `ZIP`.
 
 ## Specifying an encoding

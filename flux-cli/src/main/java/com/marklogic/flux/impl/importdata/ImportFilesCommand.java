@@ -24,6 +24,20 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     @CommandLine.Mixin
     private WriteGenericDocumentsParams writeParams = new WriteGenericDocumentsParams();
 
+    @CommandLine.Option(
+        names = "--streaming",
+        description = "Causes files to be read from their source directly to MarkLogic. Intended for importing large " +
+            "files that cannot be fully read into memory. Features that depend on " +
+            "the data in the file, such as --uri-template, will not have any effect when this option is set."
+    )
+    private boolean streaming;
+
+    @Override
+    public GenericFilesImporter streaming() {
+        this.streaming = true;
+        return this;
+    }
+
     @Override
     protected String getReadFormat() {
         return MARKLOGIC_CONNECTOR;
@@ -31,13 +45,16 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     @Override
     protected ReadFilesParams getReadParams() {
+        readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
     protected WriteDocumentParams getWriteParams() {
+        writeParams.setStreaming(this.streaming);
         return writeParams;
     }
+
 
     @Override
     public GenericFilesImporter from(Consumer<ReadGenericFilesOptions> consumer) {

@@ -78,4 +78,4 @@ are free to specify as many collections as you want in addition to the graph you
 
 ## Compressed files
 
-Flux supports Gzip and ZIP RDF files. Simply include the `--compression` option with a value of `GZIP` or `ZIP`. 
+Flux supports gzip and ZIP RDF files. Simply include the `--compression` option with a value of `GZIP` or `ZIP`. 
