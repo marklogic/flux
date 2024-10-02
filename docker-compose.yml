@@ -15,7 +15,7 @@ services:
       - 8007:8007
 
   marklogic:
-    image: "progressofficial/marklogic-db:latest"
+    image: "progressofficial/marklogic-db:11.3.0-ubi"
     platform: linux/amd64
     environment:
       - MARKLOGIC_INIT=true
