@@ -228,7 +228,7 @@ Set `SPARK_HOME` to the location of Spark - e.g. `/Users/myname/.sdkman/candidat
 
 Next, start a Spark master node:
 
-    cd $SPARK_HOME/bin
+    cd $SPARK_HOME/sbin
     start-master.sh
 
 You will need the address at which the Spark master node can be reached. To find it, open the log file that Spark
@@ -264,7 +264,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.1.0-SNAPSHOT-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -281,7 +281,7 @@ to something you can access):
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/marklogic-flux-1.0.0-all.jar \
+flux-cli/build/libs/marklogic-flux-1.1.0-SNAPSHOT-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

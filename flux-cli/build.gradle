@@ -13,7 +13,7 @@ configurations {
 }
 
 dependencies {
-  implementation("org.apache.spark:spark-sql_2.12:3.4.3") {
+  implementation("org.apache.spark:spark-sql_2.12:3.5.3") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
@@ -44,7 +44,7 @@ dependencies {
   implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.12:3.4.3"
+  implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
   testImplementation("com.marklogic:marklogic-junit5:1.4.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
