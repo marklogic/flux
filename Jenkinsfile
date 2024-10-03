@@ -3,6 +3,7 @@ def runtests(){
           cd $WORKSPACE/flux;
           sudo /usr/local/sbin/mladmin stop;
           sudo /usr/local/sbin/mladmin remove;
+          mkdir -p $WORKSPACE/flux/docker/sonarqube;
           docker-compose up -d --build;
           sleep 30s;
         '''
@@ -38,6 +39,7 @@ def postCleanup(){
     cd $WORKSPACE/flux;
     sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
     docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
+    docker exec -i --privileged --user root flux-sonarqube-1 /bin/sh -c "chmod -R 777 /opt/sonarqube" || true;
     docker-compose rm -fsv || true;
     echo "y" | docker volume prune --filter all=1 || true;
   '''
