@@ -30,7 +30,8 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
             "--partitions-per-forest", "2",
             "--path", "anywhere",
             "--format", "trig",
-            "--graph-override", "use-this-graph"
+            "--graph-override", "use-this-graph",
+            "--no-snapshot"
         );
 
         Map<String, String> options = command.readParams.get();
@@ -44,6 +45,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("my-base-iri", options.get(Options.READ_TRIPLES_BASE_IRI));
         assertEquals("50", options.get(Options.READ_BATCH_SIZE));
         assertEquals("2", options.get(Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST));
+        assertEquals("false", options.get(Options.READ_SNAPSHOT));
 
         options = command.writeParams.get();
         assertEquals("trig", options.get(Options.WRITE_RDF_FILES_FORMAT));

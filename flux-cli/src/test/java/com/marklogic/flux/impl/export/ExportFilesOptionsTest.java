@@ -66,11 +66,13 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", "test:test@host:8000",
             "--collections", "anything",
             "--path", "anywhere",
-            "--streaming"
+            "--streaming",
+            "--no-snapshot"
         );
 
         Map<String, String> readOptions = command.buildReadOptions();
         assertEquals("true", readOptions.get(Options.STREAM_FILES));
+        assertEquals("false", readOptions.get(Options.READ_SNAPSHOT));
         assertEquals("anything", readOptions.get(Options.READ_DOCUMENTS_COLLECTIONS));
 
         Map<String, String> writeOptions = command.buildWriteOptions();
