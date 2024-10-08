@@ -82,9 +82,9 @@ included with the `--categories` option. This option accepts a comma-delimited s
 
 If the option is not included, all metadata will be included. 
 
-## Enabling point-in-time queries
+## Exporting consistent results
 
-Flux depends on MarkLogic's support for
+By default, Flux uses MarkLogic's support for
 [point-in-time queries](https://docs.marklogic.com/11.0/guide/app-dev/point_in_time#id_47946) when querying for
 documents, thus ensuring a [consistent snapshot of data](https://docs.marklogic.com/guide/java/data-movement#id_18227).
 Point-in-time queries depend on the same MarkLogic system timestamp being used for each query. Because system timestamps
@@ -102,8 +102,16 @@ by configuring the `merge timestamp` setting. The recommended practice is to
 that exceeds the expected duration of the export operation. For example, a value of `-864,000,000,000` for the merge
 timestamp would give the export operation 24 hours to complete.
 
-Flux will soon include an option to not use a snapshot for queries for when the risk of inconsistent results is deemed
-to be acceptable.
+Alternatively, you can disable the use of point-in-time queries by including the following option:
+
+```
+--no-snapshot
+```
+
+The above option will not use a snapshot for queries but instead will query for data at multiple points in time. As
+noted above in the guide for [consistent snapshots](https://docs.marklogic.com/guide/java/data-movement#id_18227), you
+may get unpredictable results if your query matches on data that changes during the export operation. If your data is
+not changing, this approach is recommended as it avoids the need to configure merge timestamp.
 
 ## Transforming document content
 
