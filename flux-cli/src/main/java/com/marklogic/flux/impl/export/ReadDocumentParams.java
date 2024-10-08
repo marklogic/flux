@@ -65,6 +65,12 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     )
     private int progressInterval = 10000;
 
+    @CommandLine.Option(
+        names = "--no-snapshot",
+        description = "Read data from MarkLogic at multiple points in time instead of using a consistent snapshot."
+    )
+    private boolean noSnapshot;
+
     public void verifyAtLeastOneQueryOptionIsSet(String verbForErrorMessage) {
         if (makeQueryOptions().isEmpty()) {
             throw new FluxException(String.format("Must specify at least one of the following for the documents to %s: " +
@@ -80,7 +86,8 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
             Options.READ_DOCUMENTS_TRANSFORM_PARAMS_DELIMITER, transformParamsDelimiter,
             Options.READ_BATCH_SIZE, OptionsUtil.intOption(batchSize),
             Options.READ_DOCUMENTS_PARTITIONS_PER_FOREST, OptionsUtil.intOption(partitionsPerForest),
-            Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval)
+            Options.READ_LOG_PROGRESS, OptionsUtil.intOption(progressInterval),
+            Options.READ_SNAPSHOT, noSnapshot ? "false" : null
         );
     }
 

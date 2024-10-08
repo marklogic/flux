@@ -279,7 +279,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     }
 
     @CommandLine.Mixin
-    private CopyReadDocumentsParams readParams = new CopyReadDocumentsParams();
+    protected final CopyReadDocumentsParams readParams = new CopyReadDocumentsParams();
 
     @CommandLine.Mixin
     protected final CopyWriteDocumentsParams writeParams = new CopyWriteDocumentsParams();

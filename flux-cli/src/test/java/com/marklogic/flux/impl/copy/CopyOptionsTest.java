@@ -30,6 +30,21 @@ class CopyOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
+    void noSnapshot() {
+        CopyCommand command = (CopyCommand) getCommand("copy",
+            "--connection-string", "test:test@test:8000",
+            "--output-connection-string", "user:password@host:8000",
+            "--collections", "anything",
+            "--no-snapshot"
+        );
+
+        assertOptions(
+            command.readParams.makeOptions(),
+            Options.READ_SNAPSHOT, "false"
+        );
+    }
+
+    @Test
     void useRegularConnectionParamsIfNoOutputConnectionParams() {
         CopyCommand command = (CopyCommand) getCommand("copy",
             "--connection-string", "test:test@test:8000",
