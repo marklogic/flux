@@ -122,6 +122,29 @@ you use for running Flux to break the value into multiple lines:
 For queries expressed in XML, you may find it easier to use single quotes instead of double quotes, as single quotes 
 do not require any escaping.
 
+## Enabling point-in-time queries
+
+Flux depends on MarkLogic's support for 
+[point-in-time queries](https://docs.marklogic.com/11.0/guide/app-dev/point_in_time#id_47946) when querying for 
+documents, thus ensuring a [consistent snapshot of data](https://docs.marklogic.com/guide/java/data-movement#id_18227).
+Point-in-time queries depend on the same MarkLogic system timestamp being used for each query. Because system timestamps
+can be deleted when MarkLogic [merges data](https://docs.marklogic.com/11.0/guide/admin-guide/en/understanding-and-controlling-database-merges.html), 
+you may encounter the following error that causes an export command to fail:
+
+```
+Server Message: XDMP-OLDSTAMP: Timestamp too old for forest
+```
+
+To resolve this issue, you must 
+[enable point-in-time queries](https://docs.marklogic.com/11.0/guide/app-dev/point_in_time#id_32468) for your database
+by configuring the `merge timestamp` setting. The recommended practice is to 
+[use a negative value](https://docs.marklogic.com/11.0/guide/admin-guide/en/understanding-and-controlling-database-merges/setting-a-negative-merge-timestamp-to-preserve-fragments-for-a-rolling-window-of-time.html)
+that exceeds the expected duration of the export operation. For example, a value of `-864,000,000,000` for the merge
+timestamp would give the export operation 24 hours to complete. 
+
+Flux will soon include an option to not use a snapshot for queries for when the risk of inconsistent results is deemed
+to be acceptable.
+
 ## Transforming document content
 
 You can apply a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms)
