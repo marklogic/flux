@@ -90,11 +90,11 @@ graph value that will then be associated with every triple that Flux writes to a
 
 To compress each file written by Flux using gzip, simply include `--gzip` as an option.
 
-## Enabling point-in-time queries
+## Exporting consistent results
 
-Flux depends on MarkLogic's support for
+By default, Flux uses MarkLogic's support for
 [point-in-time queries](https://docs.marklogic.com/11.0/guide/app-dev/point_in_time#id_47946) when querying for
-documents containing RDF data, thus ensuring a [consistent snapshot of data](https://docs.marklogic.com/guide/java/data-movement#id_18227).
+documents, thus ensuring a [consistent snapshot of data](https://docs.marklogic.com/guide/java/data-movement#id_18227).
 Point-in-time queries depend on the same MarkLogic system timestamp being used for each query. Because system timestamps
 can be deleted when MarkLogic [merges data](https://docs.marklogic.com/11.0/guide/admin-guide/en/understanding-and-controlling-database-merges.html),
 you may encounter the following error that causes an export command to fail:
@@ -108,7 +108,15 @@ To resolve this issue, you must
 by configuring the `merge timestamp` setting. The recommended practice is to
 [use a negative value](https://docs.marklogic.com/11.0/guide/admin-guide/en/understanding-and-controlling-database-merges/setting-a-negative-merge-timestamp-to-preserve-fragments-for-a-rolling-window-of-time.html)
 that exceeds the expected duration of the export operation. For example, a value of `-864,000,000,000` for the merge
-timestamp would give the export operation 24 hours to complete. 
+timestamp would give the export operation 24 hours to complete.
 
-Flux will soon include an option to not use a snapshot for queries for when the risk of inconsistent results is deemed
-to be acceptable.
+Alternatively, you can disable the use of point-in-time queries by including the following option:
+
+```
+--no-snapshot
+```
+
+The above option will not use a snapshot for queries but instead will query for data at multiple points in time. As
+noted above in the guide for [consistent snapshots](https://docs.marklogic.com/guide/java/data-movement#id_18227), you
+may get unpredictable results if your query matches on data that changes during the export operation. If your data is
+not changing, this approach is recommended as it avoids the need to configure merge timestamp.
