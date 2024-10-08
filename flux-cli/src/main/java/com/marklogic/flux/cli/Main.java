@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import java.io.PrintWriter;
+
 @CommandLine.Command(
     name = "./bin/flux",
 
@@ -98,12 +100,7 @@ public class Main {
             }
             command.execute(session);
         } catch (Exception ex) {
-            if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
-                logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
-            }
-            String message = removeStacktraceFromExceptionMessage(ex);
-            parseResult.commandSpec().commandLine().getErr()
-                .println(String.format("%nCommand failed, cause: %s", message));
+            printException(parseResult, ex);
             return CommandLine.ExitCode.SOFTWARE;
         }
         return CommandLine.ExitCode.OK;
@@ -119,6 +116,18 @@ public class Main {
         return masterUrl != null && masterUrl.trim().length() > 0 ?
             SparkUtil.buildSparkSession(masterUrl) :
             SparkUtil.buildSparkSession();
+    }
+
+    private void printException(CommandLine.ParseResult parseResult, Exception ex) {
+        if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
+            logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
+        }
+        String message = removeStacktraceFromExceptionMessage(ex);
+        PrintWriter stderr = parseResult.commandSpec().commandLine().getErr();
+        stderr.println(String.format("%nCommand failed, cause: %s", message));
+        if (message != null && message.contains("XDMP-OLDSTAMP")) {
+            printMessageForTimestampError(stderr);
+        }
     }
 
     /**
@@ -147,5 +156,16 @@ public class Main {
 
     private boolean isStacktraceLine(String line) {
         return line != null && line.trim().startsWith("at ");
+    }
+
+    /**
+     * A user can encounter an OLDSTAMP error when exporting data with a consistent snapshot, but it can be difficult
+     * to know how to resolve the error. Thus, additional information is printed to help the user with resolving this
+     * error.
+     */
+    private void printMessageForTimestampError(PrintWriter stderr) {
+        stderr.println(String.format("To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option " +
+            "or consult the Flux documentation at https://marklogic.github.io/flux/ for " +
+            "information on configuring your database to support point-in-time queries."));
     }
 }

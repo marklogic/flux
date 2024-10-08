@@ -187,4 +187,22 @@ class ExportFilesTest extends AbstractTest {
             "This verifies that the transform is able to use the MarkLogic redaction library, as the flux-test-role " +
                 "role is granted the redaction-user privilege.");
     }
+
+    /**
+     * Verifies that an error containing "XDMP-OLDSTAMP" (which is very difficult to cause to happen in a test, so a
+     * REST transform is used as a way to simulate such an error) results in additional information being printed so
+     * that the user can resolve the error more easily.
+     */
+    @Test
+    void withTransformThatThrowsTimestampError() {
+        assertStderrContains(() -> run(
+                "export-files",
+                "--path", ".",
+                "--uris", "/jane.json",
+                "--connection-string", makeConnectionString(),
+                "--transform", "throwsTimestampError"
+            ),
+            "To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option"
+        );
+    }
 }
