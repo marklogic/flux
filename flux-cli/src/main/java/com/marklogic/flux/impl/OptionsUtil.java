@@ -35,6 +35,10 @@ public abstract class OptionsUtil {
         return value > 0 ? Integer.toString(value) : null;
     }
 
+    public static String integerOption(Integer value) {
+        return value != null && value > 0 ? value.toString() : null;
+    }
+
     public static Map<String, String> addOptions(Map<String, String> options, String... keysAndValues) {
         options.putAll(makeOptions(keysAndValues));
         return options;
