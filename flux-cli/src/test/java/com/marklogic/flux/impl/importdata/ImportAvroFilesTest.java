@@ -138,7 +138,7 @@ class ImportAvroFilesTest extends AbstractTest {
         String stderr = runAndReturnStderr(() -> run(
             "import-avro-files",
             "--path", "src/test/resources/avro/colors.avro",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-data"
@@ -153,7 +153,7 @@ class ImportAvroFilesTest extends AbstractTest {
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
             "import-avro-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS

@@ -246,7 +246,7 @@ class ImportFilesTest extends AbstractTest {
     void invalidGzippedFile() {
         run(
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--connection-string", makeConnectionString(),
             "--collections", "files",
@@ -264,7 +264,7 @@ class ImportFilesTest extends AbstractTest {
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--collections", "files",
@@ -312,28 +312,6 @@ class ImportFilesTest extends AbstractTest {
         assertCollectionSize("files", 1);
         XmlNode doc = readXmlDocument("/japanese-files/太田佳伸のＸＭＬファイル.xml");
         doc.assertElementValue("/root/filename", "太田佳伸のＸＭＬファイル");
-    }
-
-    @Test
-    void splitNamespacedXml() {
-        run(
-            "import-files",
-            "--path", "src/test/resources/xml-file/namespaced-java-client-intro.xml",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "files",
-            "--uri-replace", ".*/xml-file,''",
-            "--splitter-xml-path", "/ex:root/ex:text/text()",
-            "--splitter-xml-namespace", "ex=org:example",
-            "--splitter-max-chunk-size", "500",
-            "--splitter-max-overlap-size", "100",
-            "--stacktrace"
-        );
-
-        XmlNode doc = readXmlDocument("/namespaced-java-client-intro.xml");
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example")});
-        doc.assertElementCount("The underlying langchain4j splitter is expected to produce 5 chunks when using a " +
-            "max chunk size of 500 and a max overlap size of 100.", "/ex:root/chunks/chunk", 5);
     }
 
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {

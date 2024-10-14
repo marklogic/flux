@@ -20,7 +20,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     void objectFilesAndArrayOfObjectsFile() {
         run(
             "import-aggregate-json-files",
-            "--path", "src/test/resources/json-files",
+            "--path", "src/test/resources/json-files/aggregates",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "json-objects",
@@ -51,7 +51,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     void uriIncludeFilePath() {
         run(
             "import-aggregate-json-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "array-objects",
@@ -60,7 +60,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         );
 
         getUrisInCollection("array-objects", 2).forEach(uri -> {
-            assertTrue(uri.startsWith("/json-files/array-of-objects.json/"), "Actual URI: " + uri);
+            assertTrue(uri.startsWith("/json-files/aggregates/array-of-objects.json/"), "Actual URI: " + uri);
             assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
         });
     }
@@ -69,7 +69,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     void arrayOfObjects() {
         run(
             "import-aggregate-json-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "array-objects",
@@ -87,7 +87,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     void arrayOfObjectsAsXml() {
         run(
             "import-aggregate-json-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "array-objects",
@@ -198,7 +198,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     void zipOfJsonObjectFiles() {
         run(
             "import-files",
-            "--path", "src/test/resources/json-files/object-files/objects.zip",
+            "--path", "src/test/resources/json-files/aggregates/object-files/objects.zip",
             "--compression", "zip",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
