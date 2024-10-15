@@ -50,6 +50,57 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
     @CommandLine.Option(names = "--splitter-text")
     private boolean text;
 
+    @CommandLine.Option(
+        names = "--splitter-output-max-chunks",
+        description = "Maximum number of chunks to write to a chunk document. If not specified or set to zero, " +
+            "chunks will be written to the source document."
+    )
+    private int maxChunks;
+
+    @CommandLine.Option(
+        names = "--splitter-output-document-type",
+        description = "Type of chunk documents to write."
+    )
+    private ChunkDocumentType documentType;
+
+    @CommandLine.Option(
+        names = "--splitter-output-collections",
+        description = "Comma-delimited sequence of collection names to add to each chunk document - e.g. collection1,collection2."
+    )
+    private String collections;
+
+    @CommandLine.Option(
+        names = "--splitter-output-permissions",
+        description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each chunk document - e.g. role1,read,role2,update,role3,execute."
+    )
+    private String permissions;
+
+    @CommandLine.Option(
+        names = "--splitter-output-root-name",
+        description = "Name of a root field to add to each JSON chunks document, or name of the root element for each XML chunks document."
+    )
+    private String rootName;
+
+    @CommandLine.Option(
+        names = "--splitter-output-uri-prefix",
+        description = "String to prepend to each chunks document URI. If set, a UUID will be generated and appended " +
+            "to this prefix."
+    )
+    private String uriPrefix;
+
+    @CommandLine.Option(
+        names = "--splitter-output-uri-suffix",
+        description = "String to append to each chunks document URI. If set, a UUID will be generated and prepended " +
+            "to this suffix."
+    )
+    private String uriSuffix;
+
+    @CommandLine.Option(
+        names = "--splitter-output-xml-namespace",
+        description = "Namespace for the root element of chunk XML documents."
+    )
+    private String xmlNamespace;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_SPLITTER_XML_PATH, xmlPath,
@@ -57,7 +108,15 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
             Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE, OptionsUtil.integerOption(maxOverlapSize),
             Options.WRITE_SPLITTER_TEXT, text ? "true" : null,
             Options.WRITE_SPLITTER_REGEX, regex,
-            Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter
+            Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter,
+            Options.WRITE_SPLITTER_OUTPUT_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
+            Options.WRITE_SPLITTER_OUTPUT_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+            Options.WRITE_SPLITTER_OUTPUT_COLLECTIONS, collections,
+            Options.WRITE_SPLITTER_OUTPUT_PERMISSIONS, permissions,
+            Options.WRITE_SPLITTER_OUTPUT_ROOT_NAME, rootName,
+            Options.WRITE_SPLITTER_OUTPUT_URI_PREFIX, uriPrefix,
+            Options.WRITE_SPLITTER_OUTPUT_URI_SUFFIX, uriSuffix,
+            Options.WRITE_SPLITTER_OUTPUT_XML_NAMESPACE, xmlNamespace
         );
 
         if (!jsonPointer.isEmpty()) {
@@ -77,5 +136,10 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
             throw new FluxException("The value must match the pattern prefix=namespaceURI");
         }
         return Namespace.getNamespace(tokens[0], tokens[1]);
+    }
+
+    public enum ChunkDocumentType {
+        JSON,
+        XML
     }
 }
