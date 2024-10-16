@@ -79,6 +79,27 @@ class ImportAndSplitFilesTest extends AbstractTest {
     }
 
     @Test
+    void emptyJsonPointer() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "files",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", ""
+        );
+
+        JsonNode doc = readJsonDocument("/java-client-intro.json");
+        ArrayNode chunks = (ArrayNode) doc.get("chunks");
+
+        String firstChunk = chunks.get(0).get("text").asText();
+        assertTrue(firstChunk.startsWith("{\"url\":\"https://docs"), "The JSON Pointer expression '\"\"' is valid " +
+            "and refers to the entire document, which is then expected to be serialized into a string. So the first " +
+            "chunk should start with the serialization of the document. Actual chunk: " + firstChunk);
+    }
+
+    @Test
     void splitWithRegexAndDelimiter() {
         run(
             "import-files",

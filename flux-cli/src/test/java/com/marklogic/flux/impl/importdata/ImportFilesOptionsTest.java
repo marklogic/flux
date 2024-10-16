@@ -114,4 +114,19 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_SPLITTER_OUTPUT_XML_NAMESPACE, "org:example"
         );
     }
+
+    @Test
+    void emptyJsonPointerPath() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            // This works on the command line too - i.e. a user can punch in "" and the value will be picked up correctly.
+            "--splitter-json-pointer", ""
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_SPLITTER_JSON_POINTERS, ""
+        );
+    }
 }
