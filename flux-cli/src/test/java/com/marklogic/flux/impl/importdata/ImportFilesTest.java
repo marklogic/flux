@@ -5,7 +5,6 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
-import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
