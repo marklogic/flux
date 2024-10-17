@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.AggregateJsonFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.spark.Options;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -18,8 +19,8 @@ import java.util.function.Consumer;
     name = "import-aggregate-json-files",
     description = "Read either JSON Lines files or files containing arrays of JSON objects from " +
         "local, HDFS, and S3 locations using Spark's support " +
-    "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
-    "as a JSON document to MarkLogic."
+        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
+        "as a JSON document to MarkLogic."
 )
 public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<AggregateJsonFilesImporter> implements AggregateJsonFilesImporter {
 
@@ -31,7 +32,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected String getReadFormat() {
-        return "json";
+        return readParams.jsonLinesRaw ? MARKLOGIC_CONNECTOR : "json";
     }
 
     @Override
@@ -48,9 +49,17 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
         @CommandLine.Option(
             names = "--json-lines",
-            description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ ."
+            description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ , " +
+                "using the Spark JSON data source defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html."
         )
         private boolean jsonLines;
+
+        @CommandLine.Option(
+            names = "--json-lines-raw",
+            description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ , " +
+                "and that each line should be read as is without any schema enforced across the lines."
+        )
+        private boolean jsonLinesRaw;
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
@@ -71,9 +80,11 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @Override
         public Map<String, String> makeOptions() {
             Map<String, String> options = super.makeOptions();
-            // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
-            // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
-            if (!jsonLines) {
+            if (jsonLinesRaw) {
+                options.put(Options.READ_FILES_TYPE, "json_lines");
+            } else if (!jsonLines) {
+                // Spark JSON defaults to JSON Lines format. This commands assumes the opposite, so it defaults to including
+                // multiLine=true (i.e. not JSON Lines) unless the user has included the option requesting JSON Lines support.
                 options.put("multiLine", "true");
             }
             if (encoding != null) {
@@ -86,6 +97,12 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @Override
         public ReadJsonFilesOptions jsonLines(boolean value) {
             this.jsonLines = value;
+            return this;
+        }
+
+        @Override
+        public ReadJsonFilesOptions jsonLinesRaw(boolean value) {
+            this.jsonLinesRaw = value;
             return this;
         }
 
@@ -110,7 +127,8 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (readParams.uriIncludeFilePath) {
+        // If jsonLinesRaw, the MarkLogic connector is used, in which case the Spark file path column will not be present.
+        if (readParams.uriIncludeFilePath && !readParams.jsonLinesRaw) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
         return dataset;

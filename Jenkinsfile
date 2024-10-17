@@ -23,6 +23,11 @@ def runtests(){
     export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
     export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
     export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+    cd $WORKSPACE
+    git clone https://github.com/marklogic/marklogic-spark-connector.git
+    cd marklogic-spark-connector
+    git checkout release/2.4.2
+    ./gradlew publishToMavenLocal
     cd $WORKSPACE/flux;
     ./gradlew -i  mlDeploy;
     wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;

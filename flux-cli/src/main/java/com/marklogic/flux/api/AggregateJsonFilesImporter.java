@@ -20,6 +20,8 @@ public interface AggregateJsonFilesImporter extends Executor<AggregateJsonFilesI
          */
         ReadJsonFilesOptions jsonLines(boolean value);
 
+        ReadJsonFilesOptions jsonLinesRaw(boolean value);
+
         ReadJsonFilesOptions encoding(String encoding);
 
         ReadJsonFilesOptions uriIncludeFilePath(boolean value);
