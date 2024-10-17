@@ -106,6 +106,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         )
         private int progressInterval = 10000;
 
+        @CommandLine.Option(
+            names = "--no-snapshot",
+            description = "Read data from MarkLogic at multiple points in time instead of using a consistent snapshot."
+        )
+        private boolean noSnapshot;
+
         public Map<String, String> getQueryOptions() {
             return OptionsUtil.makeOptions(
                 Options.READ_TRIPLES_GRAPHS, graphs,
@@ -113,7 +119,8 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
                 Options.READ_TRIPLES_QUERY, query,
                 Options.READ_TRIPLES_STRING_QUERY, stringQuery,
                 Options.READ_TRIPLES_URIS, uris,
-                Options.READ_TRIPLES_DIRECTORY, directory
+                Options.READ_TRIPLES_DIRECTORY, directory,
+                Options.READ_SNAPSHOT, noSnapshot ? "false" : null
             );
         }
 
@@ -191,6 +198,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         @Override
         public ReadTriplesDocumentsOptions logProgress(int interval) {
             this.progressInterval = interval;
+            return this;
+        }
+
+        @Override
+        public ReadTriplesDocumentsOptions noSnapshot() {
+            this.noSnapshot = true;
             return this;
         }
     }

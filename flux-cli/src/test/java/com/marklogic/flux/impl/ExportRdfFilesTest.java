@@ -60,11 +60,11 @@ class ExportRdfFilesTest extends AbstractTest {
     }
 
     @Test
-    void missingQueryInput(@TempDir Path tempDir) {
+    void missingQueryInput() {
         String stderr = runAndReturnStderr(() -> run(
             "export-rdf-files",
             "--connection-string", makeConnectionString(),
-            "--path", tempDir.toFile().getAbsolutePath()
+            "--path", "path-doesnt-matter-for-this-test"
         ));
 
         assertTrue(stderr.contains("Must specify at least one of the following options: " +

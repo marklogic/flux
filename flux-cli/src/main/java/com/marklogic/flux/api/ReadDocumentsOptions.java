@@ -28,4 +28,11 @@ public interface ReadDocumentsOptions<T extends ReadDocumentsOptions> {
     T batchSize(int batchSize);
 
     T partitionsPerForest(int partitionsPerForest);
+
+    /**
+     * Read documents at multiple points in time, as opposed to using a consistent snapshot.
+     *
+     * @since 1.1.2
+     */
+    T noSnapshot();
 }

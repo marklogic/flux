@@ -21,7 +21,7 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(options -> options
                 .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
-                .jsonLines(true)
+                .jsonLines()
                 .additionalOptions(Map.of("lineSep", ":\n")))
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
@@ -46,5 +46,21 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void jsonLinesRaw() {
+        Flux.importAggregateJsonFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/delimited-files/different-objects.txt")
+                .jsonLinesRaw()
+            )
+            .to(options -> options
+                .collections("json-lines")
+                .permissionsString(DEFAULT_PERMISSIONS)
+            ).execute();
+
+        assertCollectionSize("json-lines", 2);
     }
 }
