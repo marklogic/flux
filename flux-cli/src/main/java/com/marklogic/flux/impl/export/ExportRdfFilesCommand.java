@@ -200,6 +200,12 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
             this.progressInterval = interval;
             return this;
         }
+
+        @Override
+        public ReadTriplesDocumentsOptions noSnapshot() {
+            this.noSnapshot = true;
+            return this;
+        }
     }
 
     public static class WriteRdfFilesParams extends WriteFilesParams<WriteRdfFilesOptions> implements WriteRdfFilesOptions {
