@@ -270,6 +270,26 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
             "included as well; actual stderr: " + stderr);
     }
 
+    @Test
+    void ignoreNullFields() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/json-files/aggregates",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "json-objects",
+            "--uri-template", "/json-object/{number}.json",
+            "--filter", "*.json",
+            "--ignore-null-fields"
+        );
+
+        JsonNode doc = readJsonDocument("/json-object/1.json");
+        assertEquals(1, doc.get("number").asInt());
+        assertEquals("world", doc.get("hello").asText());
+        assertFalse(doc.has("description"), "The description column, which has a null value for this row, " +
+            "should not exist due to the use of --ignore-null-fields.");
+    }
+
     private void verifyDoc(String uri, String firstName, String lastName) {
         JsonNode doc = readJsonDocument(uri);
         assertEquals(firstName, doc.get("firstName").asText());
