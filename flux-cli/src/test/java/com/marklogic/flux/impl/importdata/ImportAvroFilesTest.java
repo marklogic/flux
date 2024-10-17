@@ -75,6 +75,22 @@ class ImportAvroFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-avro-files",
+            "--path", "src/test/resources/avro/*",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--json-root-name", "myAvroData",
+            "--uri-template", "/avro/{/myAvroData/color}.json",
+            "--splitter-json-pointer", "/myAvroData/color"
+        );
+
+        JsonNode doc = readJsonDocument("/avro/blue.json");
+        assertEquals("blue", doc.get("chunks").get(0).get("text").asText());
+    }
+
+    @Test
     void aggregate() {
         run(
             "import-avro-files",

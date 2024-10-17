@@ -48,6 +48,23 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "json-objects",
+            "--uri-template", "/json-object/{number}.json",
+            "--splitter-json-pointer", "/description",
+            "--splitter-max-chunk-size", "30"
+        );
+
+        JsonNode doc = readJsonDocument("/json-object/2.json");
+        assertEquals(2, doc.get("chunks").size());
+    }
+
+    @Test
     void uriIncludeFilePath() {
         run(
             "import-aggregate-json-files",
