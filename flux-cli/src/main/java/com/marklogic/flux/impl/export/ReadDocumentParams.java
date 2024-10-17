@@ -172,4 +172,10 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
         this.partitionsPerForest = partitionsPerForest;
         return (T) this;
     }
+
+    @Override
+    public T noSnapshot() {
+        this.noSnapshot = true;
+        return (T) this;
+    }
 }

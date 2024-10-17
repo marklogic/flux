@@ -91,6 +91,25 @@ Flux will write two separate JSON documents, each with a completely different sc
 The JSON Lines format is often useful for exporting data from MarkLogic as well. Please see 
 [this guide](../../export/export-rows.md) for more information on exporting data to JSON Lines files. 
 
+### Importing JSON Lines files as is
+
+When importing JSON Lines files, Flux uses the 
+[Spark JSON data source](https://spark.apache.org/docs/latest/sql-data-sources-json.html) to read each line and conform
+the JSON objects to a common schema across the entire set of lines. As noted in the Advanced Options section below, 
+Spark JSON provides a number of configuration options for controlling how the lines are read. These features can result
+in changes to the JSON objects, such as the keys being reordered and fields being added to match the common schema. 
+
+For some use cases, you may wish to read each line "as is" without any modification to it. To do so, use the 
+`--json-lines-raw` option instead of `--json-lines`. With the `--json-lines-raw` option, Flux will read each line as
+a JSON document and will not attempt to enforce any commonality across the lines. This option also has the following
+effects on the `import-aggregate-json-files` command:
+
+1. You cannot use any `-P` options as described in the "Advanced Options" section below.
+2. The `--uri-include-file-path` option has no effect as each JSON document will default to a URI including the file path.
+3. The following options also have no effect as each JSON document is intentionally left as is: `--json-root-name`, `--xml-root-name`, 
+`--xml-namespace`, and `--ignore-null-fields`.
+4. You can still read a gzipped file if its filename ends in `.gz`.
+
 ## Specifying a JSON root name
 
 It is often useful to have a single "root" field in a JSON document so that it is more self-describing. It
@@ -163,7 +182,8 @@ bin\flux import-aggregate-json-files ^
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
 specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
-explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically.
+explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically. Note
+that the use of `-Pcompression=` is only supported if the `--json-lines-raw` option is not used. 
 
 ## Advanced options
 

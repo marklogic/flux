@@ -33,6 +33,13 @@ public interface RdfFilesExporter extends Executor<RdfFilesExporter> {
         ReadTriplesDocumentsOptions partitionsPerForest(int partitionsPerForest);
 
         ReadTriplesDocumentsOptions logProgress(int interval);
+
+        /**
+         * Read documents at multiple points in time, as opposed to using a consistent snapshot.
+         *
+         * @since 1.1.2
+         */
+        ReadTriplesDocumentsOptions noSnapshot();
     }
 
     interface WriteRdfFilesOptions extends WriteFilesOptions<WriteRdfFilesOptions> {

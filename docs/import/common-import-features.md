@@ -78,6 +78,8 @@ The following techniques can assist you with writing a URI template:
 fields that can be referenced in your template.
 2. Run the import command with `--preview 1` to see a tabular representation of a single record read from the command's 
 data source. This also helps you understand the fields that can be referenced in your template.
+3. Consider using an [options file](../common-options.md), as the inclusion of sequences such as `"{/` can be 
+mis-interpreted by some shell environments. 
 
 ## Configuring document metadata
 
