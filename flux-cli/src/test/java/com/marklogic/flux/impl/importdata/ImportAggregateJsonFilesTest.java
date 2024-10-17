@@ -8,6 +8,8 @@ import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImportAggregateJsonFilesTest extends AbstractTest {
@@ -251,6 +253,59 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         assertTrue(stderr.contains("Command failed, cause: Invalid UTF-8 start"), "The command should have failed " +
             "due to the invalid single-xml.zip file being included along with --abort-on-read-failure being " +
             "included as well; actual stderr: " + stderr);
+    }
+
+    /**
+     * Verifies that the MarkLogic connector is used instead of Spark JSON, as the latter enforces a schema across all
+     * rows and thus can reorder keys and add fields when not desired. The MarkLogic connector reads each line as-is.
+     */
+    @Test
+    void readJsonLinesRaw() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/delimited-files/different-objects.txt",
+            "--json-lines-raw",
+            // This is included only to ensure it does not cause an error. It does not have any impact as it only
+            // matters when the Spark JSON data source is used.
+            "--uri-include-file-path",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "json-lines",
+            "--uri-template", "/a/{id}.json"
+        );
+
+        assertCollectionSize("json-lines", 2);
+
+        JsonNode doc = readJsonDocument("/a/1.json");
+        assertEquals(1, doc.get("id").asInt());
+        assertEquals(2, doc.size(), "The doc should not have the 'color' field from the second line.");
+        Iterator<String> names = doc.fieldNames();
+        assertEquals("id", names.next(), "The JSON object should not be modified in any way when " +
+            "--json-lines-raw is used, so the 'id' key should still be first.");
+        assertEquals("hello", names.next());
+
+        doc = readJsonDocument("/a/2.json");
+        assertEquals(2, doc.get("id").asInt());
+        assertEquals(2, doc.size(), "The doc should not have the 'hello' field from the first line.");
+        names = doc.fieldNames();
+        assertEquals("id", names.next());
+        assertEquals("color", names.next());
+    }
+
+    @Test
+    void readJsonLinesRawGzipped() {
+        run(
+            "import-aggregate-json-files",
+            "--path", "src/test/resources/delimited-files/json-lines.gz",
+            "--json-lines-raw",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "json-lines",
+            "--uri-template", "/a/{id}.json"
+        );
+
+        assertCollectionSize("To be as similar to Spark JSON as possible, the MarkLogic connector will assume that a " +
+            ".gz or .gzip file is gzipped, and thus the user does not need a --compression option.", "json-lines", 2);
     }
 
     private void verifyDoc(String uri, String firstName, String lastName) {
