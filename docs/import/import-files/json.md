@@ -106,7 +106,9 @@ effects on the `import-aggregate-json-files` command:
 
 1. You cannot use any `-P` options as described in the "Advanced Options" section below.
 2. The `--uri-include-file-path` option has no effect as each JSON document will default to a URI including the file path.
-3. You can still read a gzipped file if its filename ends in `.gz`.
+3. The following options also have no effect as each JSON document is intentionally left as is: `--json-root-name`, `--xml-root-name`, 
+`--xml-namespace`, and `--ignore-null-fields`.
+4. You can still read a gzipped file if its filename ends in `.gz`.
 
 ## Specifying a JSON root name
 
