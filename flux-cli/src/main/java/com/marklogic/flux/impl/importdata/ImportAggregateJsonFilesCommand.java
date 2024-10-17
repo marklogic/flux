@@ -101,8 +101,14 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         }
 
         @Override
-        public ReadJsonFilesOptions jsonLinesRaw(boolean value) {
-            this.jsonLinesRaw = value;
+        public ReadJsonFilesOptions jsonLines() {
+            this.jsonLines = true;
+            return this;
+        }
+
+        @Override
+        public ReadJsonFilesOptions jsonLinesRaw() {
+            this.jsonLinesRaw = true;
             return this;
         }
 

@@ -24,7 +24,7 @@ class JsonLinesFilesExporterTest extends AbstractTest {
         Flux.importAggregateJsonFiles()
             .from(options -> options
                 .paths(tempDir.toFile().getAbsolutePath())
-                .jsonLines(true))
+                .jsonLines())
             .connectionString(makeConnectionString())
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)
