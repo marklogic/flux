@@ -4,9 +4,9 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.junit5.XmlNode;
-import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
@@ -66,6 +66,24 @@ class ImportArchiveFilesTest extends AbstractTest {
             assertEquals(0, metadata.getProperties().size());
             assertEquals(0, metadata.getQuality());
         }
+    }
+
+    @Test
+    void splitterSmokeTest() {
+        run(
+            "import-archive-files",
+            "--path", "src/test/resources/archive-files",
+            "--uri-replace", ".*archive.zip,''",
+            "--connection-string", makeConnectionString(),
+            "--splitter-xml-path", "/hello/text()"
+        );
+
+        XmlNode doc = readXmlDocument("/test/1.xml");
+        doc.assertElementValue("This may not be desirable - when there's a single root element " +
+                "with a text node, the chunks gets added to the root element. It's valid to do this, but it may " +
+                "also be a little surprising. Though, it's likely rare to have an XML document with a single root " +
+                "element and text node.",
+            "/hello/chunks/chunk/text", "world");
     }
 
     @Test

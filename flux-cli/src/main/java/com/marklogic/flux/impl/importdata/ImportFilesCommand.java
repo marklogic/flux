@@ -118,6 +118,9 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         private DocumentType documentType;
 
+        @CommandLine.Mixin
+        private SplitterParams splitterParams = new SplitterParams();
+
         @Override
         @CommandLine.Option(
             names = "--document-type",
@@ -130,9 +133,11 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @Override
         public Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(super.makeOptions(),
+            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
             );
+            options.putAll(splitterParams.makeOptions());
+            return options;
         }
     }
 }

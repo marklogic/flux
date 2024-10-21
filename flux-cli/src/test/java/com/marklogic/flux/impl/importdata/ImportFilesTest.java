@@ -245,7 +245,7 @@ class ImportFilesTest extends AbstractTest {
     void invalidGzippedFile() {
         run(
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--connection-string", makeConnectionString(),
             "--collections", "files",
@@ -263,7 +263,7 @@ class ImportFilesTest extends AbstractTest {
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--collections", "files",

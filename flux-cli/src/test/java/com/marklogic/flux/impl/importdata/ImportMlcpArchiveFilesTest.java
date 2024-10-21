@@ -4,9 +4,9 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.junit5.XmlNode;
-import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
@@ -65,6 +65,19 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             assertEquals(0, metadata.getProperties().size());
             assertEquals(0, metadata.getQuality());
         }
+    }
+
+    @Test
+    void splitterSmokeTest() {
+        run(
+            "import-mlcp-archive-files",
+            "--path", "src/test/resources/mlcp-archives",
+            "--connection-string", makeConnectionString(),
+            "--splitter-xml-path", "/hello/text()"
+        );
+
+        XmlNode doc = readXmlDocument("/test/1.xml");
+        doc.assertElementValue("/hello/chunks/chunk/text", "world");
     }
 
     @Test

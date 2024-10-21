@@ -10,6 +10,7 @@ import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
+import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
@@ -154,8 +155,11 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         )
         private String uriTemplate;
 
+        @CommandLine.Mixin
+        private SplitterParams splitterParams = new SplitterParams();
+
         protected Map<String, String> makeOptions() {
-            return OptionsUtil.makeOptions(
+            return OptionsUtil.addOptions(splitterParams.makeOptions(),
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true": null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),

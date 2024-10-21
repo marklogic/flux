@@ -39,6 +39,21 @@ class ImportParquetFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/parquet/{model}.json",
+            "--splitter-json-pointer", "/model"
+        );
+
+        JsonNode doc = readJsonDocument("/parquet/Valiant.json");
+        assertEquals("Valiant", doc.get("chunks").get(0).get("text").asText());
+    }
+
+    @Test
     void uriIncludeFilePath() {
         run(
             "import-parquet-files",
