@@ -12,6 +12,17 @@ configurations {
   shadowDependencies
 }
 
+configurations.all {
+  // By default, Spark 3.5.3 does not include the log4j 1.x dependency via its zookeeper dependency. But somehow, by
+  // adding hadoop-client 3.3.4 to the mix, the log4j 1.x dependency comes via the zookeeper 3.6.3 dependency. Per
+  // the release notes at https://zookeeper.apache.org/doc/r3.6.4/releasenotes.html, using zookeeper 3.6.4 - which
+  // removes log4j 1.x, thus avoiding the major CVE associated with log4j 1.x - appears safe, which is confirmed by
+  // tests as well.
+  resolutionStrategy {
+    force "org.apache.zookeeper:zookeeper:3.6.4"
+  }
+}
+
 dependencies {
   implementation("org.apache.spark:spark-sql_2.12:3.5.3") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
