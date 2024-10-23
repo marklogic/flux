@@ -49,6 +49,22 @@ The URI of each document will default to a UUID followed by `.json`. To include 
 include the `--uri-include-file-path` option. You can also make use of the
 [common import features](../common-import-features.md) for controlling document URIs.
 
+Note that Flux's support for an array of objects requires the root of the JSON to be an array. For example, consider
+a file containing the following JSON:
+
+```
+{
+  "items": [
+    {"id": 1},
+    {"id": 2}
+  ]
+}
+```
+
+Flux can only import the above JSON as an object which becomes a single document. If you wish to instead import each 
+object in the `items` array as a separate JSON document, consider pre-processing the file by removing the outer 
+object so that the file only contains an array. 
+
 ## Importing JSON Lines files
 
 If your files conform to the [JSON Lines format](https://jsonlines.org/), 
