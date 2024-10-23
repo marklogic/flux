@@ -1,2 +1,2 @@
-include "flux-cli", "test-app"
+include "flux-embedder-azure", "flux-embedder-minilm", "flux-cli", "test-app"
 rootProject.name = "flux"

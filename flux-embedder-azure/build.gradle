@@ -1,0 +1,12 @@
+plugins {
+  id 'com.gradleup.shadow' version '8.3.3'
+}
+
+dependencies {
+  implementation "dev.langchain4j:langchain4j-azure-open-ai:0.35.0"
+}
+
+shadowJar {
+  // Avoids conflict with Spark's version of netty.
+  relocate "io.netty", "com.marklogic.flux.io.netty"
+}

@@ -9,6 +9,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -121,6 +122,22 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @CommandLine.Mixin
         private SplitterParams splitterParams = new SplitterParams();
 
+        /**
+         * So this could accept "azure" and "default" as abbreviations for model functions we maintain ourselves,
+         * but as separate uber jars to add to Flux. Or a user could provide a FQN class name for their own.
+         */
+        @CommandLine.Option(names = "--embedder")
+        private String embedder;
+
+        @CommandLine.Option(names = "--embedder-batch-size")
+        private int embedderBatchSize;
+
+        @CommandLine.Option(
+            names = {"-E"},
+            description = "Specify zero to many options to pass to the embedding model produced by the '--embedder' option - e.g. -Eapi-key=abc123 ."
+        )
+        private Map<String, String> embedderOptions = new HashMap<>();
+
         @Override
         @CommandLine.Option(
             names = "--document-type",
@@ -136,7 +153,24 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
             );
+
             options.putAll(splitterParams.makeOptions());
+
+            if (embedder != null) {
+                if ("azure".equals(embedder)) {
+                    options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "org.example.AzureEmbeddingModelFunction");
+                } else if ("minilm".equals(embedder)) {
+                    options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "org.example.MinilmEmbeddingModelFunction");
+                } else {
+                    options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, embedder);
+                }
+                if (embedderBatchSize > 0) {
+                    options.put(Options.WRITE_EMBEDDER_BATCH_SIZE, String.valueOf(embedderBatchSize));
+                }
+                embedderOptions.entrySet().forEach(entry ->
+                    options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + entry.getKey(), entry.getValue()));
+            }
+
             return options;
         }
     }

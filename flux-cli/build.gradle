@@ -10,6 +10,9 @@ plugins {
 configurations {
   // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
   shadowDependencies
+
+  // Artifacts to be added to Flux's application zip
+  applicationArtifacts
 }
 
 configurations.all {
@@ -24,6 +27,9 @@ configurations.all {
 }
 
 dependencies {
+  applicationArtifacts project(path: ":flux-embedder-azure", configuration: "shadow")
+  applicationArtifacts project(path: ":flux-embedder-minilm", configuration: "shadow")
+
   implementation("org.apache.spark:spark-sql_2.12:3.5.3") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
@@ -86,6 +92,9 @@ dependencies {
   // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
   testImplementation 'commons-codec:commons-codec:1.17.1'
 
+  // Supports testing the embedder feature.
+  testImplementation(project(":flux-embedder-minilm"))
+
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.4.0"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
@@ -111,22 +120,28 @@ updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 distributions {
   main {
     distributionBaseName = "marklogic-flux"
-  }
-  applicationDistribution.from("..") {
-    include "LICENSE"
-    include "NOTICE.txt"
-    into "."
-  }
-  applicationDistribution.from("hadoop") {
-    include "hadoop.dll"
-    include "winutils.exe"
-    include "msvcr100.dll"
-    include "msvcr120.dll"
-    into "bin"
-  }
-  applicationDistribution.from("hadoop") {
-    include "libhadoop.so"
-    into "lib/native"
+    contents {
+      // This seems to work reliably - i.e. it forces the dependencies of the configuration to
+      // be resolved, which in this case means building the shadow jar.
+      from(configurations.applicationArtifacts) {
+        into "ext"
+      }
+      from("..") {
+        include "LICENSE"
+        include "NOTICE.txt"
+      }
+      from("hadoop") {
+        include "hadoop.dll"
+        include "winutils.exe"
+        include "msvcr100.dll"
+        include "msvcr120.dll"
+        into "bin"
+      }
+      from("hadoop") {
+        include "libhadoop.so"
+        into "lib/native"
+      }
+    }
   }
 }
 
