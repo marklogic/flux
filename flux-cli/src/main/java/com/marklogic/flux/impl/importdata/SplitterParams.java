@@ -10,11 +10,12 @@ import org.jdom2.Namespace;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
+public class SplitterParams {
 
     @CommandLine.Option(names = "--splitter-json-pointer")
     private List<String> jsonPointer = new ArrayList<>();
@@ -24,7 +25,7 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
 
     @CommandLine.Option(
         names = "--splitter-xml-namespace",
-        converter = SplitterParams.class
+        converter = XmlNamespaceConverter.class
     )
     private List<Namespace> xmlNamespaces = new ArrayList<>();
 
@@ -47,8 +48,24 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
     )
     private String joinDelimiter;
 
-    @CommandLine.Option(names = "--splitter-text")
+    @CommandLine.Option(
+        names = "--splitter-text",
+        description = "Specifies that each document is a text document and thus all of the text in the document should be split."
+    )
     private boolean text;
+
+    @CommandLine.Option(
+        names = "--splitter-custom-class",
+        description = "Class name of a custom langchain4j DocumentSplitter implementation to use for splitting text."
+    )
+    private String customClass;
+
+    @CommandLine.Option(
+        names = "--splitter-custom-option",
+        description = "Key/value pairs, delimited by an equals sign, that are passed to the constructor of the " +
+            "class specified by --splitter-custom-class."
+    )
+    private Map<String, String> customClassOptions = new HashMap<>();
 
     @CommandLine.Option(
         names = "--splitter-output-max-chunks",
@@ -109,6 +126,7 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
             Options.WRITE_SPLITTER_TEXT, text ? "true" : null,
             Options.WRITE_SPLITTER_REGEX, regex,
             Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter,
+            Options.WRITE_SPLITTER_CUSTOM_CLASS, customClass,
             Options.WRITE_SPLITTER_OUTPUT_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
             Options.WRITE_SPLITTER_OUTPUT_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
             Options.WRITE_SPLITTER_OUTPUT_COLLECTIONS, collections,
@@ -126,20 +144,26 @@ public class SplitterParams implements CommandLine.ITypeConverter<Namespace> {
         xmlNamespaces.forEach(namespace ->
             options.put(Options.WRITE_SPLITTER_XML_NAMESPACE_PREFIX + namespace.getPrefix(), namespace.getURI()));
 
-        return options;
-    }
+        customClassOptions.forEach((key, value) ->
+            options.put(Options.WRITE_SPLITTER_CUSTOM_CLASS_OPTION_PREFIX + key, value)
+        );
 
-    @Override
-    public Namespace convert(String value) {
-        String[] tokens = value.split("=");
-        if (tokens.length % 2 != 0) {
-            throw new FluxException("The value must match the pattern prefix=namespaceURI");
-        }
-        return Namespace.getNamespace(tokens[0], tokens[1]);
+        return options;
     }
 
     public enum ChunkDocumentType {
         JSON,
         XML
+    }
+
+    public static class XmlNamespaceConverter implements CommandLine.ITypeConverter<Namespace> {
+        @Override
+        public Namespace convert(String value) {
+            String[] tokens = value.split("=");
+            if (tokens.length % 2 != 0) {
+                throw new FluxException("The value must match the pattern prefix=namespaceURI");
+            }
+            return Namespace.getNamespace(tokens[0], tokens[1]);
+        }
     }
 }
