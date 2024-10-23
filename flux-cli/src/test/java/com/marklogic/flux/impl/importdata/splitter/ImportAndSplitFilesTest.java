@@ -1,7 +1,7 @@
 /*
  * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
-package com.marklogic.flux.impl.importdata;
+package com.marklogic.flux.impl.importdata.splitter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -120,5 +120,53 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "This of course isn't a realistic regex, but it verifies that the 'w' produces two chunks " +
                 "that are then joined together with the given delimiter, as the resulting chunk length " +
                 "is less than the max chunk size.");
+    }
+
+    @Test
+    void customSplitter() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
+            "--splitter-custom-option", "textToReturn=just testing"
+        );
+
+        ArrayNode chunks = (ArrayNode) readJsonDocument("/java-client-intro.json").get("chunks");
+        assertEquals(1, chunks.size());
+        assertEquals("just testing", chunks.get(0).get("text").asText(), "Verifying that the custom " +
+            "splitter is used; it should return the text specified by the 'textToReturn' custom class option.");
+    }
+
+    @Test
+    void invalidCustomSplitterClassName() {
+        assertStderrContains(() -> run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--splitter-json-pointer", "/text",
+            "--splitter-custom-class", "doesnt.exist.ClassName"
+        ), "Command failed, cause: Cannot find custom splitter with class name: doesnt.exist.ClassName");
+    }
+
+    @Test
+    void invalidCustomSplitterOption() {
+        assertStderrContains(() -> run(
+                "import-files",
+                "--path", "src/test/resources/json-files/java-client-intro.json",
+                "--connection-string", makeConnectionString(),
+                "--permissions", DEFAULT_PERMISSIONS,
+                "--splitter-json-pointer", "/text",
+                "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
+                "--splitter-custom-option", "missing an equals"
+            ),
+            // This is the default picocli error message for an invalid map option. It's a little technical, but seems
+            // reasonable enough for a user to be able to fix their mistake.
+            "Value for option '--splitter-custom-option' (<String=String>) should be in KEY=VALUE format but was missing an equals"
+        );
     }
 }

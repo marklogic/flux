@@ -95,6 +95,9 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         }
 
         @Override
+        // Sonar complains about this method existing, but it has to exist since it's implementing a required
+        // method in the interface.
+        @SuppressWarnings("java:S5738")
         public ReadJsonFilesOptions jsonLines(boolean value) {
             this.jsonLines = value;
             return this;

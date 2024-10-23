@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Note that some tests will print a "An illegal reflective access operation has occurred" warning that occurs
- * when running on Spark on Java 9 or higher. Our ETL tool prevents this, so you can ignore it when analyzing the
+ * when running on Spark on Java 9 or higher. The Flux CLI prevents this, so you can ignore it when analyzing the
  * logging in these tests.
  */
 class HandleErrorTest extends AbstractTest {
@@ -43,7 +43,7 @@ class HandleErrorTest extends AbstractTest {
     void badDynamicOption() {
         assertStderrContains(
             () -> run("import-files", "-CnoValue"),
-            "Value for option option '-C' (<String=String>) should be in KEY=VALUE format but was noValue"
+            "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue"
         );
     }
 
