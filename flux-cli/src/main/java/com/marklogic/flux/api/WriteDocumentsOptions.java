@@ -3,6 +3,8 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.function.Consumer;
+
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T abortOnWriteFailure(boolean value);
@@ -18,6 +20,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T logProgress(int interval);
 
     T permissionsString(String rolesAndCapabilities);
+
+    /**
+     * @since 1.2.0
+     */
+    T splitter(Consumer<SplitterOptions> consumer);
 
     T temporalCollection(String temporalCollection);
 

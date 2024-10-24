@@ -14,11 +14,14 @@ public interface DocumentCopier extends Executor<DocumentCopier> {
         CopyReadDocumentsOptions categories(String... categories);
     }
 
+    interface CopyWriteDocumentsOptions extends WriteDocumentsOptions<CopyWriteDocumentsOptions> {
+    }
+
     DocumentCopier from(Consumer<CopyReadDocumentsOptions> consumer);
 
     DocumentCopier outputConnection(Consumer<ConnectionOptions> consumer);
 
     DocumentCopier outputConnectionString(String connectionString);
 
-    DocumentCopier to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    DocumentCopier to(Consumer<CopyWriteDocumentsOptions> consumer);
 }

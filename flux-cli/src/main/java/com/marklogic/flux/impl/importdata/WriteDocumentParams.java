@@ -3,12 +3,14 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -194,6 +196,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T permissionsString(String rolesAndCapabilities) {
         this.permissions = rolesAndCapabilities;
+        return (T) this;
+    }
+
+    @Override
+    public T splitter(Consumer<SplitterOptions> consumer) {
+        consumer.accept(splitterParams);
         return (T) this;
     }
 

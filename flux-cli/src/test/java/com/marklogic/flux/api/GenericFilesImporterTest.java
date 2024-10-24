@@ -3,10 +3,15 @@
  */
 package com.marklogic.flux.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import com.marklogic.spark.ConnectorException;
+import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,5 +108,72 @@ class GenericFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(() -> importer.execute());
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void splitXml() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/xml-file/namespaced-java-client-intro.xml")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("files")
+                .uriReplace(".*/xml-file,''")
+                .splitter(splitterOptions -> splitterOptions
+                    .xmlPath("/ex:root/ex:text/text()")
+                    .xmlNamespaces("ex", "org:example")
+                    .maxChunkSize(500)
+                    .maxOverlapSize(0)
+                    .outputCollections("xml-chunks")
+                    .outputDocumentType(SplitterOptions.ChunkDocumentType.XML)
+                    .outputMaxChunks(2)
+                    .outputPermissionsString("flux-test-role,read,flux-test-role,update,qconsole-user,read")
+                    .outputRootName("my-chunk")
+                    .outputUriPrefix("/chunk/")
+                    .outputUriSuffix("/chunk.xml")
+                    .outputXmlNamespace("org:example:chunk")
+                )
+            ).execute();
+
+        String uri = getUrisInCollection("xml-chunks", 2).get(0);
+        assertTrue(uri.startsWith("/chunk/"));
+        assertTrue(uri.endsWith("/chunk.xml"));
+
+        XmlNode doc = readXmlDocument(uri);
+        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example:chunk")});
+        doc.assertElementCount("/ex:my-chunk/ex:chunks/ex:chunk", 2);
+    }
+
+    @Test
+    void splitJson() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/json-files/java-client-intro.json")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .uriTemplate("/split-test.json")
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text"))
+            ).execute();
+
+        JsonNode doc = readJsonDocument("/split-test.json");
+        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
+    }
+
+    @Test
+    void splitWithCustomClass() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/json-files/java-client-intro.json")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .uriTemplate("/split-test.json")
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text")
+                    .documentSplitterClassName("com.marklogic.flux.impl.importdata.splitter.CustomSplitter")
+                    .documentSplitterClassOptions(Map.of("textToReturn", "just testing")))
+            ).execute();
+
+        ArrayNode chunks = (ArrayNode) readJsonDocument("/split-test.json").get("chunks");
+        assertEquals(1, chunks.size());
+        assertEquals("just testing", chunks.get(0).get("text").asText());
     }
 }
