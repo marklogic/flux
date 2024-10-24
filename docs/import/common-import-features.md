@@ -107,6 +107,12 @@ The following shows an example of each option:
 --temporal-collection my-temporal-data
 ```
 
+## Splitting content
+
+Flux supports splitting the text in a document into chunks, which can be very useful for supporting 
+[retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) use cases with
+MarkLogic. Please see [the guide on splitting](splitting.md) for more information.
+
 ## Transforming content
 
 For each import command, you can apply a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms)

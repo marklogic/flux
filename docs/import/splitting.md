@@ -6,9 +6,9 @@ nav_order: 6
 ---
 
 Flux supports splitting the text in documents into chunks of configurable size, either written to the source document
-or to separate documents containing one or more chunks. Flux can split text during any import operation and also 
+or to separate "sidecar" documents containing one or more chunks. Flux can split text during any import operation and also 
 when [copying documents](../copy.md). Splitting text is often a critical part of creating a data pipeline in support
-of [retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation).
+of [retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) use cases with MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -24,8 +24,8 @@ using all the text in a document. Note that Flux does not support splitting text
 
 ### Using JSON Pointer expressions
 
-If your source documents are JSON, you can specify one or more [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) 
-expressions via the `--splitter-json-pointer` option. 
+For JSON source documents, you can specify [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) 
+expressions via the `--splitter-json-pointer` option.
 
 As an example, consider a JSON document containing at least the following content:
 
@@ -48,9 +48,8 @@ You can also select the text in both fields via:
 
 ### Using an XPath expression
 
-If your source documents are XML, you can specify an [XPath expression](https://en.wikipedia.org/wiki/XPath) for 
-selecting the text via the `--splitter-xml-xpath` option. As a single XPath expression can be used to select text
-in multiple locations, this option only accepts a single value. 
+For XML source documents, you can specify an [XPath expression](https://en.wikipedia.org/wiki/XPath) via the `--splitter-xml-xpath` option. 
+As a single XPath expression can be used to select text in multiple locations, this option only accepts a single value. 
 
 As an example, consider an XML document with at least the following content:
 
@@ -182,7 +181,203 @@ Finally, to use your custom splitter, use the following command line options:
 1. `--splitter-custom-class` must specify the full class name of your splitter implementation - e.g. `org.example.MySplitter`.
 2. Use `--splitter-custom-option key=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
 
-
 ## Configuring how chunks are stored
 
-TBD in next PR. 
+Flux supports two approaches for storing chunks that have been split from the selected text in a source document:
+
+1. Chunks are added to the source document.
+2. Chunks are added to one or more "sidecar" documents that each contain one or more chunks and have a reference to the source document. 
+
+### Storing chunks in the source document
+
+For JSON and XML source documents, Flux defaults to storing chunks in the source document itself. For Text source
+documents, Flux only supports writing sidecar documents, which are described in the next section of this guide. 
+
+#### JSON source documents
+
+Given a JSON source document, Flux will add the following:
+
+1. A top-level `chunks` array is added.
+2. Each chunk is added to that array as an object with a single `text` field. 
+
+If a top-level field named `chunks` already exists, Flux will instead use the name `marklogic-chunks`.
+
+For example, given the source document:
+
+```
+{
+  "content": "A large amount of text."
+}
+```
+
+Flux will modify the source document in the following manner (the manner in which the text is split is not important in 
+this example):
+
+```
+{
+  "content": "A large amount of text.",
+  "chunks": [
+    {"text": "A large amount"},
+    {"text": "of text."}
+  ]
+}
+```
+
+#### XML source documents
+
+Given an XML source document, Flux will add the following:
+
+1. A child element under the root element named "chunks" with no namespace. 
+2. Each chunk is added as a child element of the "chunks" element named "chunk" with a single "text" child element.
+
+If child element of the root element already exists with the name `chunks`, Flux will instead use the 
+name `marklogic-chunks`.
+
+For example, given the source document:
+
+```
+<root>
+  <content>A large amount of text.</content>
+</root>
+```
+
+Flux will modify the source document in the following manner (the manner in which the text is split is not important in
+this example):
+
+```
+<root>
+  <content>A large amount of text.</content>
+  <chunks>
+    <chunk><text>A large amount</text></chunk>
+    <chunk><text>of text.</text></chunk>
+  </chunks>
+</root>
+```
+
+### Storing chunks in sidecar documents
+
+You can configure Flux to store chunks in one or more "sidecar" documents (i.e. a separate document that has a reference
+to the source document) via the following option:
+
+    --splitter-sidecar-max-chunks (positive number)
+
+That option both enables the use of sidecar documents and defines the maximum number of chunks to write to a single 
+sidecar document. For example, given a source document that produces 10 chunks, a value of 3 for the above option 
+would result in 4 sidecar documents. The first 3 sidecar documents would each have 3 chunks, and the 4th sidecar 
+document would have 1 chunk. You can also ensure that only one sidecar document is written by giving the option a 
+number higher than the maximum number of chunks in any of your documents. 
+
+#### Controlling the document type 
+
+Flux will create sidecar documents of the same document type as the source document. You can instead force a document
+type via the following option, which accepts either `JSON` or `XML` as a value:
+
+    --splitter-sidecar-document-type JSON
+    --splitter-sidecar-document-type XML
+
+#### Controlling JSON document content
+
+By default, Flux will create each JSON sidecar document using the following structure:
+
+```
+{
+  "source-uri": "The URI of the source document",
+  "chunks": [
+    {"text": "first chunk"},
+    {"text": "second chunk"},
+    etc...
+  ]
+}
+```
+
+You can include a root field in the document via:
+
+    --splitter-sidecar-root-name nameOfRootField
+
+A root field is often useful for making each document more self-descriptive. For example, if your chunks are split from
+a document representing a chapter in a book, you could use `--splitter-sidecar-root-name chapter-chunks` to produce the
+following document:
+
+```
+{
+  "chapter-chunks": {
+    "source-uri": "The URI of the source document",
+    "chunks": [
+      {"text": "first chunk"},
+      {"text": "second chunk"},
+      etc...
+    ]
+  }
+}
+```
+
+For further customization, consider using a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms) 
+via the `--transform` option for your import command or `--output-transform` option for the `copy` command.
+
+#### Controlling XML document content
+
+By default, Flux will create each XML sidecar document using the following structure:
+
+```
+<root>
+  <source-uri>The URI of the source document</source-uri>
+  <chunks>
+    <chunk><text>The first chunk</text></chunk>
+    <chunk><text>The second chunk</text></chunk>
+    etc...
+  </chunk>
+</root>
+```
+
+You can override the name of the root element - `root` - via:
+
+    --splitter-sidecar-root-name nameOfRootElement
+
+You can also specify a namespace for the root element which will apply to the entire document via:
+
+    --splitter-sidecar-xml-namespace org:example
+
+For example, using the above two options will produce the following sidecar document:
+
+```
+<nameOfRootElement xmlns="org:example">
+  <source-uri>The URI of the source document</source-uri>
+  <chunks>
+    <chunk><text>The first chunk</text></chunk>
+    <chunk><text>The second chunk</text></chunk>
+    etc...
+  </chunk>
+</nameOfRootElement>
+```
+
+For further customization, consider using a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms)
+via the `--transform` option for your import command or `--output-transform` option for the `copy` command.
+
+#### Controlling document URIs
+
+Each sidecar document will have a URI with the following pattern:
+
+    (source document URI)-chunks-(counter).(json|xml)
+
+The `(counter)` defaults to 1 and is incremented for each sidecar document. 
+
+You can instead generate a URI consisting of a prefix, a UUID, and a suffix via the following options:
+
+    --splitter-sidecar-uri-prefix "/chunk/"
+    --splitter-sidecar-uri-suffix ".json"
+
+The above options will result in documents having URIs of `/chunk/(UUID).json`.
+
+#### Controlling document metadata
+
+Each sidecar document defaults to the same permissions as its source document and no collections assigned to it. 
+You can assign different permissions via the following, where each "role" is the name of a MarkLogic and each 
+"capability" is one of "read", "update", "insert", or "execute":
+
+    --splitter-sidecar-permissions role,capability,role,capability,etc.
+
+You can assign collections to each sidecar document via the following, which accepts a comma-delimited sequence of 
+collection names:
+
+    --splitter-sidecar-collections collection1,collection2,etc
+

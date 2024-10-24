@@ -81,3 +81,11 @@ The `copy` command supports many of the same options as the [import commands](im
 writing documents. Similar to the output connection options, each option for controlling how documents are written
 is prefixed with `output`. For example, to specify collections for the documents, `--output-collections` is used instead
 of `--collections`.
+
+## Splitting text in documents
+
+While writing documents during the `copy` operation, Flux supports splitting the text in a document into chunks. This
+can be very useful for supporting
+[retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) use cases with
+MarkLogic, particularly when you have already imported the data that you now wish to split. 
+Please see [the guide on splitting](import/splitting.md) for more information.
