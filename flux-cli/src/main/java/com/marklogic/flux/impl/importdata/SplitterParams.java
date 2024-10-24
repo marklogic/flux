@@ -67,52 +67,52 @@ public class SplitterParams implements SplitterOptions {
     private Map<String, String> customClassOptions = new HashMap<>();
 
     @CommandLine.Option(
-        names = "--splitter-output-max-chunks",
+        names = "--splitter-sidecar-max-chunks",
         description = "Maximum number of chunks to write to a chunk document. If not specified or set to zero, " +
             "chunks will be written to the source document."
     )
     private int maxChunks;
 
     @CommandLine.Option(
-        names = "--splitter-output-document-type",
+        names = "--splitter-sidecar-document-type",
         description = "Type of chunk documents to write."
     )
     private ChunkDocumentType documentType;
 
     @CommandLine.Option(
-        names = "--splitter-output-collections",
+        names = "--splitter-sidecar-collections",
         description = "Comma-delimited sequence of collection names to add to each chunk document - e.g. collection1,collection2."
     )
     private String collections;
 
     @CommandLine.Option(
-        names = "--splitter-output-permissions",
+        names = "--splitter-sidecar-permissions",
         description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each chunk document - e.g. role1,read,role2,update,role3,execute."
     )
     private String permissions;
 
     @CommandLine.Option(
-        names = "--splitter-output-root-name",
+        names = "--splitter-sidecar-root-name",
         description = "Name of a root field to add to each JSON chunks document, or name of the root element for each XML chunks document."
     )
     private String rootName;
 
     @CommandLine.Option(
-        names = "--splitter-output-uri-prefix",
+        names = "--splitter-sidecar-uri-prefix",
         description = "String to prepend to each chunks document URI. If set, a UUID will be generated and appended " +
             "to this prefix."
     )
     private String uriPrefix;
 
     @CommandLine.Option(
-        names = "--splitter-output-uri-suffix",
+        names = "--splitter-sidecar-uri-suffix",
         description = "String to append to each chunks document URI. If set, a UUID will be generated and prepended " +
             "to this suffix."
     )
     private String uriSuffix;
 
     @CommandLine.Option(
-        names = "--splitter-output-xml-namespace",
+        names = "--splitter-sidecar-xml-namespace",
         description = "Namespace for the root element of chunk XML documents."
     )
     private String xmlNamespace;

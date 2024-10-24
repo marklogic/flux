@@ -85,14 +85,14 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--splitter-regex", "word",
             "--splitter-join-delimiter", "aaa",
             "--splitter-text",
-            "--splitter-output-max-chunks", "10",
-            "--splitter-output-document-type", "xml",
-            "--splitter-output-collections", "c1,c2",
-            "--splitter-output-permissions", "role1,read,role2,update",
-            "--splitter-output-root-name", "root1",
-            "--splitter-output-uri-prefix", "/prefix",
-            "--splitter-output-uri-suffix", ".json",
-            "--splitter-output-xml-namespace", "org:example"
+            "--splitter-sidecar-max-chunks", "10",
+            "--splitter-sidecar-document-type", "xml",
+            "--splitter-sidecar-collections", "c1,c2",
+            "--splitter-sidecar-permissions", "role1,read,role2,update",
+            "--splitter-sidecar-root-name", "root1",
+            "--splitter-sidecar-uri-prefix", "/prefix",
+            "--splitter-sidecar-uri-suffix", ".json",
+            "--splitter-sidecar-xml-namespace", "org:example"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
