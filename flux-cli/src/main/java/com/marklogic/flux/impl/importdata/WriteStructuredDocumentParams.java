@@ -39,16 +39,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private boolean ignoreNullFields;
 
-    @CommandLine.Mixin
-    private SplitterParams splitterParams = new SplitterParams();
-
     @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = super.makeOptions();
         if (ignoreNullFields) {
             options.put(Options.WRITE_JSON_SERIALIZATION_OPTION_PREFIX + "ignoreNullFields", "true");
         }
-        options.putAll(splitterParams.makeOptions());
         return OptionsUtil.addOptions(options,
             Options.WRITE_JSON_ROOT_NAME, jsonRootName,
             Options.WRITE_XML_ROOT_NAME, xmlRootName,
