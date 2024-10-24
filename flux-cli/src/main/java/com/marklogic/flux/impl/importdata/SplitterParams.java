@@ -19,7 +19,7 @@ public class SplitterParams implements SplitterOptions {
     @CommandLine.Option(names = "--splitter-json-pointer")
     private List<String> jsonPointer = new ArrayList<>();
 
-    @CommandLine.Option(names = "--splitter-xml-path")
+    @CommandLine.Option(names = "--splitter-xml-xpath")
     private String xmlPath;
 
     @CommandLine.Option(

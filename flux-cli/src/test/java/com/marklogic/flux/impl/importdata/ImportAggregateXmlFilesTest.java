@@ -105,7 +105,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/xml-file,''",
-            "--splitter-xml-path", "/person/company/text()"
+            "--splitter-xml-xpath", "/person/company/text()"
         );
 
         XmlNode doc = readXmlDocument("/people.xml-1.xml");

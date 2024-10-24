@@ -157,7 +157,7 @@ class ImportRdfFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "my-triples",
-            "--splitter-xml-path", "/text"
+            "--splitter-xml-xpath", "/text"
         );
 
         assertCollectionSize(
