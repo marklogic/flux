@@ -142,4 +142,27 @@ class ImportRdfFilesTest extends AbstractTest {
             "Unexpected stderr: " + stderr);
         assertCollectionSize("my-triples", 0);
     }
+
+    /**
+     * The splitter capability is not expected to be useful on managed triples documents. But allowing for splitter
+     * options to be set greatly simplifies both the set of import commands and the import API interfaces - i.e. putting
+     * SplitterParams in WriteDocumentParams is much easier to maintain. It's also a little simpler to say that
+     * splitting is supported on all import commands instead of all import commands except RDF.
+     */
+    @Test
+    void splitterSmokeTest() {
+        run(
+            "import-rdf-files",
+            "--path", "src/test/resources/rdf/englishlocale.ttl",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "my-triples",
+            "--splitter-xml-path", "/text"
+        );
+
+        assertCollectionSize(
+            "The default MarkLogic graph collection should contain a sem:graph document and a single managed " +
+                "triples document containing the imported triples.", DEFAULT_MARKLOGIC_GRAPH, 2
+        );
+    }
 }

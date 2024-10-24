@@ -120,10 +120,13 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriTemplate;
 
+    @CommandLine.Mixin
+    private SplitterParams splitterParams = new SplitterParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
-        return OptionsUtil.makeOptions(
+        Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
@@ -142,6 +145,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_TEMPLATE, uriTemplate,
             Options.STREAM_FILES, streaming ? "true" : null
         );
+
+        options.putAll(splitterParams.makeOptions());
+        return options;
     }
 
     @Override
