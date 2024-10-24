@@ -24,7 +24,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/xml-file,''",
-            "--splitter-xml-path", "/ex:root/ex:text/text()",
+            "--splitter-xml-xpath", "/ex:root/ex:text/text()",
             "--splitter-xml-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "500",
             "--splitter-max-overlap-size", "100",
@@ -48,7 +48,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "import-files",
             "--path", "src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
-            "--splitter-xml-path", "/ex:root/ex:text/text()",
+            "--splitter-xml-xpath", "/ex:root/ex:text/text()",
             "--splitter-xml-namespace", "org:example"
         ), "Invalid value for option '--splitter-xml-namespace' (<xmlNamespaces>): cannot convert 'org:example' to Namespace " +
             "(com.marklogic.flux.api.FluxException: The value must match the pattern prefix=namespaceURI)");

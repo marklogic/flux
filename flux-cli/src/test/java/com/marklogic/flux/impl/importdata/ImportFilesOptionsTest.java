@@ -78,7 +78,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", "user:password@host:8001",
             "--path", "anywhere",
             "--splitter-json-pointer", "/path1\n/path2",
-            "--splitter-xml-path", "/some/path",
+            "--splitter-xml-xpath", "/some/path",
             "--splitter-xml-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "100",
             "--splitter-max-overlap-size", "50",
