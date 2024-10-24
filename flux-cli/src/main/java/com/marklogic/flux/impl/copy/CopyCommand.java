@@ -5,7 +5,7 @@ package com.marklogic.flux.impl.copy;
 
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.DocumentCopier;
-import com.marklogic.flux.api.WriteDocumentsOptions;
+import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -52,7 +52,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
     }
 
-    public static class CopyWriteDocumentsParams implements WriteDocumentsOptions<CopyWriteDocumentsParams> {
+    public static class CopyWriteDocumentsParams implements CopyWriteDocumentsOptions {
 
         @CommandLine.Option(
             names = "--output-abort-on-write-failure",
@@ -222,6 +222,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
 
         @Override
+        public CopyWriteDocumentsParams splitter(Consumer<SplitterOptions> consumer) {
+            consumer.accept(splitterParams);
+            return this;
+        }
+
+        @Override
         public CopyWriteDocumentsParams temporalCollection(String temporalCollection) {
             this.temporalCollection = temporalCollection;
             return this;
@@ -342,7 +348,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     }
 
     @Override
-    public DocumentCopier to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    public DocumentCopier to(Consumer<CopyWriteDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

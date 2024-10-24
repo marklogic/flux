@@ -4,18 +4,17 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import org.jdom2.Namespace;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class SplitterParams {
+public class SplitterParams implements SplitterOptions {
 
     @CommandLine.Option(names = "--splitter-json-pointer")
     private List<String> jsonPointer = new ArrayList<>();
@@ -151,11 +150,6 @@ public class SplitterParams {
         return options;
     }
 
-    public enum ChunkDocumentType {
-        JSON,
-        XML
-    }
-
     public static class XmlNamespaceConverter implements CommandLine.ITypeConverter<Namespace> {
         @Override
         public Namespace convert(String value) {
@@ -165,5 +159,119 @@ public class SplitterParams {
             }
             return Namespace.getNamespace(tokens[0], tokens[1]);
         }
+    }
+
+    @Override
+    public SplitterOptions jsonPointers(String... jsonPointers) {
+        this.jsonPointer = Arrays.asList(jsonPointers);
+        return this;
+    }
+
+    @Override
+    public SplitterOptions xmlPath(String xmlPath) {
+        this.xmlPath = xmlPath;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions xmlNamespaces(String... prefixesAndUris) {
+        this.xmlNamespaces = new ArrayList<>();
+        if (prefixesAndUris.length % 2 != 0) {
+            throw new FluxException("Must specify an equal number of namespace prefixes and URIs.");
+        }
+        for (int i = 0; i <= prefixesAndUris.length - 1; i += 2) {
+            this.xmlNamespaces.add(Namespace.getNamespace(prefixesAndUris[i], prefixesAndUris[i + 1]));
+        }
+        return this;
+    }
+
+    @Override
+    public SplitterOptions maxChunkSize(int maxChunkSize) {
+        this.maxChunkSize = maxChunkSize;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions maxOverlapSize(int maxOverlapSize) {
+        this.maxOverlapSize = maxOverlapSize;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions regex(String regex) {
+        this.regex = regex;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions joinDelimiter(String joinDelimiter) {
+        this.joinDelimiter = joinDelimiter;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions text() {
+        this.text = true;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions documentSplitterClassName(String documentSplitterClassName) {
+        this.customClass = documentSplitterClassName;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions documentSplitterClassOptions(Map<String, String> options) {
+        this.customClassOptions = options;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputMaxChunks(int maxChunks) {
+        this.maxChunks = maxChunks;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputDocumentType(ChunkDocumentType documentType) {
+        this.documentType = documentType;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputCollections(String... collections) {
+        this.collections = Stream.of(collections).collect(Collectors.joining(","));
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputPermissionsString(String rolesAndCapabilities) {
+        this.permissions = rolesAndCapabilities;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputRootName(String rootName) {
+        this.rootName = rootName;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputUriPrefix(String uriPrefix) {
+        this.uriPrefix = uriPrefix;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputUriSuffix(String uriSuffix) {
+        this.uriSuffix = uriSuffix;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputXmlNamespace(String xmlNamespace) {
+        this.xmlNamespace = xmlNamespace;
+        return this;
     }
 }
