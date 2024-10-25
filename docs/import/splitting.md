@@ -77,15 +77,15 @@ output as the text to be split:
     --splitter-xml-xpath "/root"
 
 When constructing an XPath expression for the value of `--splitter-xml-xpath`, you may need to specify one or more 
-XML namespace prefixes and URIs. You can do so via the `--splitter-xml-namespace` option, where the value is of the 
+XML namespace prefixes and URIs. You can do so via the `--splitter-xml-xpath-namespace` option, where the value is of the 
 pattern:
 
-    --splitter-xml-namespace prefix=URI
+    --splitter-xml-xpath-namespace prefix=URI
 
 For example, for an XPath expression of "/ex:root/ex:text", where the "ex" prefix is associated with the namespace 
 "org:example", you would need to include the following option:
 
-    --splitter-xml-namespace ex=org:example
+    --splitter-xml-xpath-namespace ex=org:example
 
 ### Using all the text in a document
 
