@@ -79,7 +79,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--path", "anywhere",
             "--splitter-json-pointer", "/path1\n/path2",
             "--splitter-xml-xpath", "/some/path",
-            "--splitter-xml-namespace", "ex=org:example",
+            "--splitter-xml-xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "100",
             "--splitter-max-overlap-size", "50",
             "--splitter-regex", "word",

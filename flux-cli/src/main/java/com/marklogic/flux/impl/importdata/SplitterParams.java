@@ -16,22 +16,36 @@ import java.util.stream.Stream;
 
 public class SplitterParams implements SplitterOptions {
 
-    @CommandLine.Option(names = "--splitter-json-pointer")
+    @CommandLine.Option(
+        names = "--splitter-json-pointer",
+        description = "One or more JSON Pointer expressions that specify the text to be split in each document."
+    )
     private List<String> jsonPointer = new ArrayList<>();
 
-    @CommandLine.Option(names = "--splitter-xml-xpath")
+    @CommandLine.Option(
+        names = "--splitter-xml-xpath",
+        description = "An XPath expression that specifies the text to be split in each document."
+    )
     private String xmlPath;
 
     @CommandLine.Option(
-        names = "--splitter-xml-namespace",
+        names = "--splitter-xml-xpath-namespace",
+        description = "One or more pairs of prefixes and XML namespace URIs expressed as prefix=URI; " +
+            "e.g. --splitter-xml-xpath-namespace ex=org:example .",
         converter = XmlNamespaceConverter.class
     )
     private List<Namespace> xmlNamespaces = new ArrayList<>();
 
-    @CommandLine.Option(names = "--splitter-max-chunk-size")
+    @CommandLine.Option(
+        names = "--splitter-max-chunk-size",
+        description = "The maximum size in characters of each chunk that is split from the selected text."
+    )
     private Integer maxChunkSize;
 
-    @CommandLine.Option(names = "--splitter-max-overlap-size")
+    @CommandLine.Option(
+        names = "--splitter-max-overlap-size",
+        description = "The maximum overlap size in characters between two consecutive chunks."
+    )
     private Integer maxOverlapSize;
 
     @CommandLine.Option(
@@ -62,20 +76,20 @@ public class SplitterParams implements SplitterOptions {
     @CommandLine.Option(
         names = "--splitter-custom-option",
         description = "Key/value pairs, delimited by an equals sign, that are passed to the constructor of the " +
-            "class specified by --splitter-custom-class."
+            "class specified by --splitter-custom-class - e.g. --splitter-custom-option key=value."
     )
     private Map<String, String> customClassOptions = new HashMap<>();
 
     @CommandLine.Option(
         names = "--splitter-sidecar-max-chunks",
-        description = "Maximum number of chunks to write to a chunk document. If not specified or set to zero, " +
+        description = "Maximum number of chunks to write to a sidecar document. If not specified or set to zero, " +
             "chunks will be written to the source document."
     )
     private int maxChunks;
 
     @CommandLine.Option(
         names = "--splitter-sidecar-document-type",
-        description = "Type of chunk documents to write."
+        description = "Type of sidecar documents to write. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     private ChunkDocumentType documentType;
 
@@ -93,20 +107,20 @@ public class SplitterParams implements SplitterOptions {
 
     @CommandLine.Option(
         names = "--splitter-sidecar-root-name",
-        description = "Name of a root field to add to each JSON chunks document, or name of the root element for each XML chunks document."
+        description = "Name of a root field to add to each JSON sidecar document, or name of the root element for each XML sidecar document."
     )
     private String rootName;
 
     @CommandLine.Option(
         names = "--splitter-sidecar-uri-prefix",
-        description = "String to prepend to each chunks document URI. If set, a UUID will be generated and appended " +
+        description = "String to prepend to each sidecar document URI. If set, a UUID will be generated and appended " +
             "to this prefix."
     )
     private String uriPrefix;
 
     @CommandLine.Option(
         names = "--splitter-sidecar-uri-suffix",
-        description = "String to append to each chunks document URI. If set, a UUID will be generated and prepended " +
+        description = "String to append to each sidecar document URI. If set, a UUID will be generated and prepended " +
             "to this suffix."
     )
     private String uriSuffix;
