@@ -73,7 +73,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--connection-string", makeConnectionString(),
-            "--splitter-xml-xpath", "/hello/text()"
+            "--splitter-xpath", "/hello/text()"
         );
 
         XmlNode doc = readXmlDocument("/test/1.xml");

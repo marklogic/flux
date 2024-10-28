@@ -75,7 +75,7 @@ class ImportArchiveFilesTest extends AbstractTest {
             "--path", "src/test/resources/archive-files",
             "--uri-replace", ".*archive.zip,''",
             "--connection-string", makeConnectionString(),
-            "--splitter-xml-xpath", "/hello/text()"
+            "--splitter-xpath", "/hello/text()"
         );
 
         XmlNode doc = readXmlDocument("/test/1.xml");

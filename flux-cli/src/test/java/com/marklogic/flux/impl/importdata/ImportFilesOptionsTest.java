@@ -78,7 +78,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", "user:password@host:8001",
             "--path", "anywhere",
             "--splitter-json-pointer", "/path1\n/path2",
-            "--splitter-xml-xpath", "/some/path",
+            "--splitter-xpath", "/some/path",
             "-Xex=org:example",
             "--splitter-max-chunk-size", "100",
             "--splitter-max-overlap-size", "50",
@@ -97,7 +97,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
 
         assertOptions(command.getWriteParams().makeOptions(),
             Options.WRITE_SPLITTER_JSON_POINTERS, "/path1\n/path2",
-            Options.WRITE_SPLITTER_XML_PATH, "/some/path",
+            Options.WRITE_SPLITTER_XPATH, "/some/path",
             Options.XPATH_NAMESPACE_PREFIX + "ex", "org:example",
             Options.WRITE_SPLITTER_MAX_CHUNK_SIZE, "100",
             Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE, "50",
