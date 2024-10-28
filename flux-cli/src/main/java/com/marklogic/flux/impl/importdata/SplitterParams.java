@@ -140,14 +140,14 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_REGEX, regex,
             Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter,
             Options.WRITE_SPLITTER_CUSTOM_CLASS, customClass,
-            Options.WRITE_SPLITTER_OUTPUT_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
-            Options.WRITE_SPLITTER_OUTPUT_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
-            Options.WRITE_SPLITTER_OUTPUT_COLLECTIONS, collections,
-            Options.WRITE_SPLITTER_OUTPUT_PERMISSIONS, permissions,
-            Options.WRITE_SPLITTER_OUTPUT_ROOT_NAME, rootName,
-            Options.WRITE_SPLITTER_OUTPUT_URI_PREFIX, uriPrefix,
-            Options.WRITE_SPLITTER_OUTPUT_URI_SUFFIX, uriSuffix,
-            Options.WRITE_SPLITTER_OUTPUT_XML_NAMESPACE, xmlNamespace
+            Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
+            Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+            Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, collections,
+            Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, permissions,
+            Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, rootName,
+            Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, uriPrefix,
+            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix,
+            Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, xmlNamespace
         );
 
         if (!jsonPointer.isEmpty()) {

@@ -104,14 +104,14 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_SPLITTER_REGEX, "word",
             Options.WRITE_SPLITTER_JOIN_DELIMITER, "aaa",
             Options.WRITE_SPLITTER_TEXT, "true",
-            Options.WRITE_SPLITTER_OUTPUT_MAX_CHUNKS, "10",
-            Options.WRITE_SPLITTER_OUTPUT_DOCUMENT_TYPE, "XML",
-            Options.WRITE_SPLITTER_OUTPUT_COLLECTIONS, "c1,c2",
-            Options.WRITE_SPLITTER_OUTPUT_PERMISSIONS, "role1,read,role2,update",
-            Options.WRITE_SPLITTER_OUTPUT_ROOT_NAME, "root1",
-            Options.WRITE_SPLITTER_OUTPUT_URI_PREFIX, "/prefix",
-            Options.WRITE_SPLITTER_OUTPUT_URI_SUFFIX, ".json",
-            Options.WRITE_SPLITTER_OUTPUT_XML_NAMESPACE, "org:example"
+            Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, "10",
+            Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, "XML",
+            Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, "c1,c2",
+            Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, "role1,read,role2,update",
+            Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, "root1",
+            Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, "/prefix",
+            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, ".json",
+            Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, "org:example"
         );
     }
 
