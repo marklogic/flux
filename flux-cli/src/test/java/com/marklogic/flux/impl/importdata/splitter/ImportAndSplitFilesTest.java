@@ -24,7 +24,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/xml-file,''",
-            "--splitter-xml-xpath", "/ex:root/ex:text/text()",
+            "--splitter-xpath", "/ex:root/ex:text/text()",
             "-Xex=org:example",
             "--splitter-max-chunk-size", "500",
             "--splitter-max-overlap-size", "100",
@@ -48,7 +48,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "import-files",
             "--path", "src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
-            "--splitter-xml-xpath", "/ex:root/ex:text/text()",
+            "--splitter-xpath", "/ex:root/ex:text/text()",
             "-Xorg:example"
         ), "Value for option '-X' (<String=String>) should be in KEY=VALUE format but was org:example");
     }

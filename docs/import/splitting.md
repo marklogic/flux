@@ -48,7 +48,7 @@ You can also select the text in both fields via:
 
 ### Using an XPath expression
 
-For XML source documents, you can specify an [XPath expression](https://en.wikipedia.org/wiki/XPath) via the `--splitter-xml-xpath` option. 
+For XML source documents, you can specify an [XPath expression](https://en.wikipedia.org/wiki/XPath) via the `--splitter-xpath` option. 
 As a single XPath expression can be used to select text in multiple locations, this option only accepts a single value. 
 
 As an example, consider an XML document with at least the following content:
@@ -64,19 +64,19 @@ As an example, consider an XML document with at least the following content:
 
 You can select the text in the `description` element via:
 
-    --splitter-xml-xpath "/root/content/description/text()"
+    --splitter-xpath "/root/content/description/text()"
 
 You can select the text in both the `summary` and `description` elements via:
 
-    --splitter-xml-xpath "/root/node()[self::summary or self::description[ancestor::content]]/text()"
+    --splitter-xpath "/root/node()[self::summary or self::description[ancestor::content]]/text()"
 
 Note the use of `/text()` to select the text node of an element. If you omit this, the element will be selected 
 and serialized to a string. For example, the following will serialize the entire document to a string and use that
 output as the text to be split:
 
-    --splitter-xml-xpath "/root"
+    --splitter-xpath "/root"
 
-When constructing an XPath expression for the value of `--splitter-xml-xpath`, you may need to specify one or more 
+When constructing an XPath expression for the value of `--splitter-xpath`, you may need to specify one or more 
 XML namespace prefixes and URIs. You can do so via the `-X` option, where the value is of the 
 pattern:
 

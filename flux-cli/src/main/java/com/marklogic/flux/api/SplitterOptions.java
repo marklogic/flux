@@ -12,7 +12,7 @@ public interface SplitterOptions {
 
     SplitterOptions jsonPointers(String... jsonPointers);
 
-    SplitterOptions xmlPath(String xmlPath);
+    SplitterOptions xpath(String xpath);
 
     SplitterOptions xmlNamespaces(String... prefixesAndUris);
 

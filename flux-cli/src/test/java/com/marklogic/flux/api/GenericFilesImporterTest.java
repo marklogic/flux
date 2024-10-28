@@ -120,7 +120,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .collections("files")
                 .uriReplace(".*/xml-file,''")
                 .splitter(splitterOptions -> splitterOptions
-                    .xmlPath("/ex:root/ex:text/text()")
+                    .xpath("/ex:root/ex:text/text()")
                     .xmlNamespaces("ex", "org:example")
                     .maxChunkSize(500)
                     .maxOverlapSize(0)

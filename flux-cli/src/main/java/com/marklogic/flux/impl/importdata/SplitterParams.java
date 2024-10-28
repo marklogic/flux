@@ -22,14 +22,15 @@ public class SplitterParams implements SplitterOptions {
     private List<String> jsonPointer = new ArrayList<>();
 
     @CommandLine.Option(
-        names = "--splitter-xml-xpath",
-        description = "An XPath expression that specifies the text to be split in each document."
+        names = "--splitter-xpath",
+        description = "An XPath expression that specifies the text to be split in each XML document."
     )
-    private String xmlPath;
+    private String xpath;
 
     @CommandLine.Option(
         names = {"-X"},
-        description = "Specify an XML namespace prefix and URI delimited by an '=' symbol; e.g. -Xex=org:example ."
+        description = "Specify one or more XML namespace prefix and URI pairs to be used with options that " +
+            "require XPath expressions; e.g. -Xex=org:example ."
     )
     private Map<String, String> xmlNamespaces = new HashMap<>();
 
@@ -130,7 +131,7 @@ public class SplitterParams implements SplitterOptions {
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = OptionsUtil.makeOptions(
-            Options.WRITE_SPLITTER_XML_PATH, xmlPath,
+            Options.WRITE_SPLITTER_XPATH, xpath,
             Options.WRITE_SPLITTER_MAX_CHUNK_SIZE, OptionsUtil.integerOption(maxChunkSize),
             Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE, OptionsUtil.integerOption(maxOverlapSize),
             Options.WRITE_SPLITTER_TEXT, text ? "true" : null,
@@ -168,8 +169,8 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions xmlPath(String xmlPath) {
-        this.xmlPath = xmlPath;
+    public SplitterOptions xpath(String xpath) {
+        this.xpath = xpath;
         return this;
     }
 
