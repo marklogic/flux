@@ -7,7 +7,6 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
-import org.jdom2.Namespace;
 import picocli.CommandLine;
 
 import java.util.*;
@@ -29,12 +28,10 @@ public class SplitterParams implements SplitterOptions {
     private String xmlPath;
 
     @CommandLine.Option(
-        names = "--splitter-xml-xpath-namespace",
-        description = "One or more pairs of prefixes and XML namespace URIs expressed as prefix=URI; " +
-            "e.g. --splitter-xml-xpath-namespace ex=org:example .",
-        converter = XmlNamespaceConverter.class
+        names = {"-X"},
+        description = "Specify an XML namespace prefix and URI delimited by an '=' symbol; e.g. -Xex=org:example ."
     )
-    private List<Namespace> xmlNamespaces = new ArrayList<>();
+    private Map<String, String> xmlNamespaces = new HashMap<>();
 
     @CommandLine.Option(
         names = "--splitter-max-chunk-size",
@@ -154,25 +151,14 @@ public class SplitterParams implements SplitterOptions {
             options.put(Options.WRITE_SPLITTER_JSON_POINTERS, jsonPointer.stream().collect(Collectors.joining("\n")));
         }
 
-        xmlNamespaces.forEach(namespace ->
-            options.put(Options.WRITE_SPLITTER_XML_NAMESPACE_PREFIX + namespace.getPrefix(), namespace.getURI()));
+        xmlNamespaces.entrySet().stream().forEach(entry ->
+            options.put(Options.XPATH_NAMESPACE_PREFIX + entry.getKey(), entry.getValue()));
 
         customClassOptions.forEach((key, value) ->
             options.put(Options.WRITE_SPLITTER_CUSTOM_CLASS_OPTION_PREFIX + key, value)
         );
 
         return options;
-    }
-
-    public static class XmlNamespaceConverter implements CommandLine.ITypeConverter<Namespace> {
-        @Override
-        public Namespace convert(String value) {
-            String[] tokens = value.split("=");
-            if (tokens.length % 2 != 0) {
-                throw new FluxException("The value must match the pattern prefix=namespaceURI");
-            }
-            return Namespace.getNamespace(tokens[0], tokens[1]);
-        }
     }
 
     @Override
@@ -189,12 +175,12 @@ public class SplitterParams implements SplitterOptions {
 
     @Override
     public SplitterOptions xmlNamespaces(String... prefixesAndUris) {
-        this.xmlNamespaces = new ArrayList<>();
+        this.xmlNamespaces = new HashMap<>();
         if (prefixesAndUris.length % 2 != 0) {
             throw new FluxException("Must specify an equal number of namespace prefixes and URIs.");
         }
         for (int i = 0; i <= prefixesAndUris.length - 1; i += 2) {
-            this.xmlNamespaces.add(Namespace.getNamespace(prefixesAndUris[i], prefixesAndUris[i + 1]));
+            this.xmlNamespaces.put(prefixesAndUris[i], prefixesAndUris[i + 1]);
         }
         return this;
     }
