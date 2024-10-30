@@ -3,7 +3,7 @@ plugins {
   id "application"
   id "jacoco"
   id "org.sonarqube" version "5.1.0.4882"
-  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id 'com.gradleup.shadow' version '8.3.3'
   id 'maven-publish'
 }
 
@@ -57,7 +57,7 @@ dependencies {
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
-  testImplementation("com.marklogic:marklogic-junit5:1.4.0") {
+  testImplementation("com.marklogic:marklogic-junit5:1.5.0") {
     // Excluding Jackson so that we use whatever Jackson version is required by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -67,7 +67,7 @@ dependencies {
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:5.3.39"
-  testImplementation "org.postgresql:postgresql:42.6.0"
+  testImplementation "org.postgresql:postgresql:42.7.4"
 
   // For testing custom commands with a 3rd party connector.
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
@@ -86,7 +86,10 @@ dependencies {
   // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
   testImplementation 'commons-codec:commons-codec:1.17.1'
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.4.0"
+  // Supports testing the embedder feature.
+  testImplementation(project(":flux-embedding-model-minilm"))
+
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
@@ -111,22 +114,23 @@ updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 distributions {
   main {
     distributionBaseName = "marklogic-flux"
-  }
-  applicationDistribution.from("..") {
-    include "LICENSE"
-    include "NOTICE.txt"
-    into "."
-  }
-  applicationDistribution.from("hadoop") {
-    include "hadoop.dll"
-    include "winutils.exe"
-    include "msvcr100.dll"
-    include "msvcr120.dll"
-    into "bin"
-  }
-  applicationDistribution.from("hadoop") {
-    include "libhadoop.so"
-    into "lib/native"
+    contents {
+      from("..") {
+        include "LICENSE"
+        include "NOTICE.txt"
+      }
+      from("hadoop") {
+        include "hadoop.dll"
+        include "winutils.exe"
+        include "msvcr100.dll"
+        include "msvcr120.dll"
+        into "bin"
+      }
+      from("hadoop") {
+        include "libhadoop.so"
+        into "lib/native"
+      }
+    }
   }
 }
 

@@ -26,6 +26,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
      */
     T splitter(Consumer<SplitterOptions> consumer);
 
+    /**
+     * @since 1.2.0
+     */
+    T embedder(Consumer<EmbedderOptions> consumer);
+
     T temporalCollection(String temporalCollection);
 
     T threadCount(int threadCount);

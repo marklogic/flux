@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.EmbedderOptions;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -125,6 +126,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @CommandLine.Mixin
     private SplitterParams splitterParams = new SplitterParams();
 
+    @CommandLine.Mixin
+    private EmbedderParams embedderParams = new EmbedderParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
@@ -149,6 +153,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         );
 
         options.putAll(splitterParams.makeOptions());
+        options.putAll(embedderParams.makeOptions());
         return options;
     }
 
@@ -202,6 +207,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T splitter(Consumer<SplitterOptions> consumer) {
         consumer.accept(splitterParams);
+        return (T) this;
+    }
+
+    @Override
+    public T embedder(Consumer<EmbedderOptions> consumer) {
+        consumer.accept(embedderParams);
         return (T) this;
     }
 

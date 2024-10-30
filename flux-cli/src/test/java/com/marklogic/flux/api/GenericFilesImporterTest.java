@@ -5,6 +5,7 @@ package com.marklogic.flux.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import com.marklogic.spark.ConnectorException;
@@ -175,5 +176,27 @@ class GenericFilesImporterTest extends AbstractTest {
         ArrayNode chunks = (ArrayNode) readJsonDocument("/split-test.json").get("chunks");
         assertEquals(1, chunks.size());
         assertEquals("just testing", chunks.get(0).get("text").asText());
+    }
+
+    @Test
+    void splitAndEmbed() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/json-files/java-client-intro.json")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .uriTemplate("/split-test.json")
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
+                .embedder(embedderOptions -> embedderOptions.embedder("minilm"))
+            ).execute();
+
+        JsonNode doc = readJsonDocument("/split-test.json");
+        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
+
+        doc.get("chunks").forEach(chunk -> {
+            assertTrue(chunk.has("text"));
+            assertTrue(chunk.has("embedding"));
+            assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
+        });
     }
 }
