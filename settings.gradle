@@ -1,2 +1,2 @@
-include "flux-cli", "test-app"
+include "flux-embedding-model-minilm", "flux-cli", "test-app"
 rootProject.name = "flux"
