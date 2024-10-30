@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ImportFilesWithEmbedderTest extends AbstractTest {
 
     @Test
-    void test() {
+    void minilm() {
         run(
             "import-files",
             "--path", "src/test/resources/json-files/java-client-intro.json",
@@ -43,5 +43,42 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
                 assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
             });
         });
+    }
+
+    /**
+     * This is expected to fail, as we're not going to depend on a valid Azure API key. But can at least make sure
+     * that our Azure function is getting called and throwing an expected error.
+     */
+    @Test
+    void azure() {
+        assertStderrContains(() -> run(
+                "import-files",
+                "--path", "src/test/resources/json-files/java-client-intro.json",
+                "--connection-string", makeConnectionString(),
+                "--permissions", DEFAULT_PERMISSIONS,
+                "--uri-replace", ".*/json-files,''",
+                "--splitter-json-pointer", "/text",
+                "--embedder", "azure",
+                "-Eapi-key=doesnt-matter",
+                "-Eendpoint=https://gpt-testing-custom-data1.openai.azure.com"
+            ),
+            "Access denied due to invalid subscription key"
+        );
+    }
+
+    @Test
+    void invalidClass() {
+        assertStderrContains(() -> run(
+                "import-files",
+                "--path", "src/test/resources/json-files/java-client-intro.json",
+                "--connection-string", makeConnectionString(),
+                "--permissions", DEFAULT_PERMISSIONS,
+                "--uri-replace", ".*/json-files,''",
+                "--splitter-json-pointer", "/text",
+                "--embedder", "not.valid.class"
+            ),
+            "Unable to instantiate class for creating an embedding model; class name: not.valid.class; " +
+                "cause: Could not load class not.valid.class"
+        );
     }
 }

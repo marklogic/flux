@@ -76,6 +76,10 @@ When you run one or more tests, the above configuration template settings will b
 pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to 
 delete that configuration first via the "Run -> Edit Configurations" panel.
 
+If you are running tests in Intellij via Intellij and not via the Gradle wrapper, you will also need to run 
+`./gradlew shadowJar` first to ensure a couple shadow jars are created that are required by some of the `flux-cli` 
+tests. You do not need to do this if you have Intellij configured to use Gradle to run tests in Intellij.
+
 ## Generating code quality reports with SonarQube
 
 In order to use SonarQube, you must have used Docker to run this project's `docker-compose.yml` file, and you must
