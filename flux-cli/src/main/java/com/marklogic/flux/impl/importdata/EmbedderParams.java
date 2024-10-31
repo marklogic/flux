@@ -18,16 +18,19 @@ public class EmbedderParams implements EmbedderOptions {
     )
     private String embedder;
 
+    @CommandLine.Option(
+        names = {"-E"},
+        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
+    )
+    private Map<String, String> embedderOptions = new HashMap<>();
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (embedder != null) {
-            if ("minilm".equals(embedder)) {
-                options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME,
-                    "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction");
-            } else {
-                options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, embedder);
-            }
+            options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, determineClassName(embedder));
         }
+        embedderOptions.entrySet().forEach(entry ->
+            options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + entry.getKey(), entry.getValue()));
         return options;
     }
 
@@ -35,5 +38,15 @@ public class EmbedderParams implements EmbedderOptions {
     public EmbedderOptions embedder(String name) {
         this.embedder = name;
         return this;
+    }
+
+    private String determineClassName(String embedderValue) {
+        if ("minilm".equalsIgnoreCase(embedderValue)) {
+            return "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction";
+        }
+        if ("azure".equalsIgnoreCase(embedderValue)) {
+            return "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction";
+        }
+        return embedderValue;
     }
 }

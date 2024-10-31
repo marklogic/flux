@@ -28,6 +28,7 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
+
   implementation "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
 
@@ -86,8 +87,11 @@ dependencies {
   // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
   testImplementation 'commons-codec:commons-codec:1.17.1'
 
-  // Supports testing the embedder feature.
-  testImplementation(project(":flux-embedding-model-minilm"))
+  // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
+  // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
+  // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
+  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
 
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"
