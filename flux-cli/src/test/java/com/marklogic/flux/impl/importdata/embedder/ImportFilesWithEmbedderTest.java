@@ -45,6 +45,24 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
         });
     }
 
+    @Test
+    void chunksAtTopLevel() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/top-chunks-test.json",
+            "--embedder", "minilm",
+            "--embedder-chunks-json-pointer", "",
+            "--stacktrace"
+        );
+
+        JsonNode doc = readJsonDocument("/top-chunks-test.json");
+        assertTrue(doc.has("embedding"), "Using '' should result in the whole document being treated as a chunk.");
+        assertEquals(JsonNodeType.ARRAY, doc.get("embedding").getNodeType());
+    }
+
     /**
      * This is expected to fail, as we're not going to depend on a valid Azure API key. But can at least make sure
      * that our Azure function is getting called and throwing an expected error.

@@ -51,10 +51,15 @@ public class EmbedderParams implements EmbedderOptions {
         if (embedder != null) {
             OptionsUtil.addOptions(options,
                 Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, determineClassName(embedder),
-                Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, chunksJsonPointer,
                 Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, textJsonPointer,
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName
             );
+
+            // "" is a valid value, so we don't use the OptionsUtil class which ignores "".
+            if (chunksJsonPointer != null) {
+                options.put(Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, chunksJsonPointer);
+            }
+            
             embedderOptions.entrySet().forEach(entry ->
                 options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + entry.getKey(), entry.getValue()));
         }
