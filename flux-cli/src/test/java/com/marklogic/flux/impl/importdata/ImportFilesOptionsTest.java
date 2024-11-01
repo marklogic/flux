@@ -116,6 +116,28 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
+    void embedderOptions() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--embedder", "azure",
+            "-Ekey=value",
+            "--embedder-chunks-json-pointer", "/some/chunks",
+            "--embedder-text-json-pointer", "/my-text",
+            "--embedder-embedding-name", "stuff"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction",
+            Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, "/some/chunks",
+            Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/my-text",
+            Options.WRITE_EMBEDDER_EMBEDDING_NAME, "stuff",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value"
+        );
+    }
+
+    @Test
     void emptyJsonPointerPath() {
         ImportFilesCommand command = (ImportFilesCommand) getCommand(
             "import-files",
