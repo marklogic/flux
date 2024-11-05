@@ -34,11 +34,31 @@ public class EmbedderParams implements EmbedderOptions {
     private String textJsonPointer;
 
     @CommandLine.Option(
+        names = "--embedder-chunks-xpath",
+        description = "An XPath expression that identifies the location of chunks in each document. If not " +
+            "specified, defaults to '/node()/chunks'."
+    )
+    private String chunksXpath;
+
+    @CommandLine.Option(
+        names = "--embedder-text-xpath",
+        description = "An XPath expression that identifies the location of the text in each chunk that is used " +
+            "to generate an embedding. If not specified, defaults to 'text'."
+    )
+    private String textXpath;
+
+    @CommandLine.Option(
         names = "--embedder-embedding-name",
         description = "The name of the JSON array or XML element to add to a chunk that contains the generated " +
             "embedding. If not specified, defaults to 'embedding'."
     )
     private String embeddingName;
+
+    @CommandLine.Option(
+        names = "--embedder-embedding-namespace",
+        description = "Optional namespace to assign to the embedding element added to XML chunks."
+    )
+    private String embeddingNamespace;
 
     @CommandLine.Option(
         names = {"-E"},
@@ -52,14 +72,17 @@ public class EmbedderParams implements EmbedderOptions {
             OptionsUtil.addOptions(options,
                 Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, determineClassName(embedder),
                 Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, textJsonPointer,
-                Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName
+                Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
+                Options.WRITE_EMBEDDER_CHUNKS_XPATH, chunksXpath,
+                Options.WRITE_EMBEDDER_TEXT_XPATH, textXpath,
+                Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, embeddingNamespace
             );
 
             // "" is a valid value, so we don't use the OptionsUtil class which ignores "".
             if (chunksJsonPointer != null) {
                 options.put(Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, chunksJsonPointer);
             }
-            
+
             embedderOptions.entrySet().forEach(entry ->
                 options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + entry.getKey(), entry.getValue()));
         }
@@ -69,6 +92,48 @@ public class EmbedderParams implements EmbedderOptions {
     @Override
     public EmbedderOptions embedder(String name) {
         this.embedder = name;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions chunksJsonPointer(String jsonPointer) {
+        this.chunksJsonPointer = jsonPointer;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions textJsonPointer(String jsonPointer) {
+        this.textJsonPointer = jsonPointer;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions chunksXPath(String xpath) {
+        this.chunksXpath = xpath;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions textXPath(String xpath) {
+        this.textXpath = xpath;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions embeddingName(String embeddingName) {
+        this.embeddingName = embeddingName;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions embeddingNamespace(String embeddingNamespace) {
+        this.embeddingNamespace = embeddingNamespace;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions embedderOptions(Map<String, String> options) {
+        this.embedderOptions = options;
         return this;
     }
 
