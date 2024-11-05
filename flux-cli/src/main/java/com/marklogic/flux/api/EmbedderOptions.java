@@ -3,6 +3,8 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
+
 /**
  * @since 1.2.0
  */
@@ -15,4 +17,18 @@ public interface EmbedderOptions {
      * @return
      */
     EmbedderOptions embedder(String name);
+
+    EmbedderOptions chunksJsonPointer(String jsonPointer);
+
+    EmbedderOptions textJsonPointer(String jsonPointer);
+
+    EmbedderOptions chunksXPath(String xpath);
+
+    EmbedderOptions textXPath(String xpath);
+
+    EmbedderOptions embeddingName(String embeddingName);
+
+    EmbedderOptions embeddingNamespace(String embeddingNamespace);
+
+    EmbedderOptions embedderOptions(Map<String, String> options);
 }

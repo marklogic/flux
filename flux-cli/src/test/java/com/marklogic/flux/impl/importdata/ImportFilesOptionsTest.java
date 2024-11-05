@@ -123,17 +123,25 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--path", "anywhere",
             "--embedder", "azure",
             "-Ekey=value",
+            "-EotherKey=otherValue",
             "--embedder-chunks-json-pointer", "/some/chunks",
             "--embedder-text-json-pointer", "/my-text",
-            "--embedder-embedding-name", "stuff"
+            "--embedder-chunks-xpath", "/xml/chunks",
+            "--embedder-text-xpath", "/xml/text",
+            "--embedder-embedding-name", "stuff",
+            "--embedder-embedding-namespace", "org:example"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction",
             Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, "/some/chunks",
             Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/my-text",
+            Options.WRITE_EMBEDDER_CHUNKS_XPATH, "/xml/chunks",
+            Options.WRITE_EMBEDDER_TEXT_XPATH, "/xml/text",
             Options.WRITE_EMBEDDER_EMBEDDING_NAME, "stuff",
-            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value"
+            Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, "org:example",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "otherKey", "otherValue"
         );
     }
 
