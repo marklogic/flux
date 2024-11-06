@@ -129,7 +129,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--embedder-chunks-xpath", "/xml/chunks",
             "--embedder-text-xpath", "/xml/text",
             "--embedder-embedding-name", "stuff",
-            "--embedder-embedding-namespace", "org:example"
+            "--embedder-embedding-namespace", "org:example",
+            "--embedder-batch-size", "14"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
@@ -141,7 +142,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_EMBEDDER_EMBEDDING_NAME, "stuff",
             Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, "org:example",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value",
-            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "otherKey", "otherValue"
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "otherKey", "otherValue",
+            Options.WRITE_EMBEDDER_BATCH_SIZE, "14"
         );
     }
 

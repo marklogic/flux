@@ -26,6 +26,7 @@ class EmbedderOptionsTest extends AbstractOptionsTest {
                     .embedderOptions(Map.of("myKey", "myValue"))
                     .embeddingName("my-embedding")
                     .embeddingNamespace("org:example")
+                    .batchSize(5)
                     .textJsonPointer("/json/text")
                     .textXPath("/xml/text");
                 reference.set(embedderOptions);
@@ -40,7 +41,8 @@ class EmbedderOptionsTest extends AbstractOptionsTest {
             Options.WRITE_EMBEDDER_EMBEDDING_NAME, "my-embedding",
             Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, "org:example",
             Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/json/text",
-            Options.WRITE_EMBEDDER_TEXT_XPATH, "/xml/text"
+            Options.WRITE_EMBEDDER_TEXT_XPATH, "/xml/text",
+            Options.WRITE_EMBEDDER_BATCH_SIZE, "5"
         );
     }
 }
