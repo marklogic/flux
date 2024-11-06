@@ -1,2 +1,2 @@
-include "flux-embedding-model-minilm", "flux-embedding-model-azure-open-ai", "flux-cli", "test-app"
+include "flux-embedding-model-minilm", "flux-embedding-model-azure-open-ai", "flux-cli", "test-app", "flux-custom-splitter-example"
 rootProject.name = "flux"
