@@ -131,12 +131,14 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
-            "--splitter-custom-option", "textToReturn=just testing"
+            // This also shows how a map param can have an equals symbol in the value; picocli only looks for the first
+            // equals symbol to use as a key/value separator.
+            "-StextToReturn=just=testing"
         );
 
         ArrayNode chunks = (ArrayNode) readJsonDocument("/java-client-intro.json").get("chunks");
         assertEquals(1, chunks.size());
-        assertEquals("just testing", chunks.get(0).get("text").asText(), "Verifying that the custom " +
+        assertEquals("just=testing", chunks.get(0).get("text").asText(), "Verifying that the custom " +
             "splitter is used; it should return the text specified by the 'textToReturn' custom class option.");
     }
 
@@ -161,11 +163,11 @@ class ImportAndSplitFilesTest extends AbstractTest {
                 "--permissions", DEFAULT_PERMISSIONS,
                 "--splitter-json-pointer", "/text",
                 "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
-                "--splitter-custom-option", "missing an equals"
+                "-Smissing an equals"
             ),
             // This is the default picocli error message for an invalid map option. It's a little technical, but seems
             // reasonable enough for a user to be able to fix their mistake.
-            "Value for option '--splitter-custom-option' (<String=String>) should be in KEY=VALUE format but was missing an equals"
+            "Value for option '-S' (<String=String>) should be in KEY=VALUE format but was missing an equals"
         );
     }
 }

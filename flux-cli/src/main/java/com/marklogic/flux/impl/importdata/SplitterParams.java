@@ -72,9 +72,9 @@ public class SplitterParams implements SplitterOptions {
     private String customClass;
 
     @CommandLine.Option(
-        names = "--splitter-custom-option",
+        names = "-S",
         description = "Key/value pairs, delimited by an equals sign, that are passed to the constructor of the " +
-            "class specified by --splitter-custom-class - e.g. --splitter-custom-option key=value."
+            "class specified by --splitter-custom-class - e.g. -Skey=value."
     )
     private Map<String, String> customClassOptions = new HashMap<>();
 
