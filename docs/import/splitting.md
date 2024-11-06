@@ -179,7 +179,7 @@ to the Flux classpath.
 Finally, to use your custom splitter, use the following command line options:
 
 1. `--splitter-custom-class` must specify the full class name of your splitter implementation - e.g. `org.example.MySplitter`.
-2. Use `--splitter-custom-option key=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
+2. Use `-Skey=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
 
 ## Configuring how chunks are stored
 
