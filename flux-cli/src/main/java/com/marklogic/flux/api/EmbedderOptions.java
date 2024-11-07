@@ -30,5 +30,7 @@ public interface EmbedderOptions {
 
     EmbedderOptions embeddingNamespace(String embeddingNamespace);
 
+    EmbedderOptions batchSize(int batchSize);
+
     EmbedderOptions embedderOptions(Map<String, String> options);
 }

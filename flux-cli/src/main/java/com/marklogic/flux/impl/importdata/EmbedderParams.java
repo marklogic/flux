@@ -61,6 +61,12 @@ public class EmbedderParams implements EmbedderOptions {
     private String embeddingNamespace;
 
     @CommandLine.Option(
+        names = "--embedder-batch-size",
+        description = "Number of chunks to send in a single call to the embedding model."
+    )
+    private Integer batchSize;
+
+    @CommandLine.Option(
         names = {"-E"},
         description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
     )
@@ -75,7 +81,8 @@ public class EmbedderParams implements EmbedderOptions {
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
                 Options.WRITE_EMBEDDER_CHUNKS_XPATH, chunksXpath,
                 Options.WRITE_EMBEDDER_TEXT_XPATH, textXpath,
-                Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, embeddingNamespace
+                Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, embeddingNamespace,
+                Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
             );
 
             // "" is a valid value, so we don't use the OptionsUtil class which ignores "".
@@ -128,6 +135,12 @@ public class EmbedderParams implements EmbedderOptions {
     @Override
     public EmbedderOptions embeddingNamespace(String embeddingNamespace) {
         this.embeddingNamespace = embeddingNamespace;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions batchSize(int batchSize) {
+        this.batchSize = batchSize;
         return this;
     }
 
