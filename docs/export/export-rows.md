@@ -65,7 +65,6 @@ a notional example of doing so:
 ```
 ./bin/flux export-jdbc \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --permissions flux-example-role,read,flux-example-role,update \
     --query "op.fromView('example', 'employee', '')" \
     --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
@@ -76,7 +75,6 @@ a notional example of doing so:
 ```
 bin\flux export-jdbc ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --permissions flux-example-role,read,flux-example-role,update ^
     --query "op.fromView('example', 'employee', '')" ^
     --jdbc-url "jdbc:postgresql://localhost/example?user=postgres&password=postgres" ^
     --jdbc-driver "org.postgresql.Driver" ^
@@ -312,7 +310,7 @@ location where data already exists. This option supports the following values:
 For convenience, the above values are case-sensitive so that you can ignore casing when choosing a value. 
 
 As of the 1.1.0 release of Flux, `--mode` defaults to `Append` for commands that write to a filesystem. In the 1.0.0
-release, these commands defaulted to `Overwrite`. The `export-jdbc` command defaults to `ErrorIfExists` avoid altering
+release, these commands defaulted to `Overwrite`. The `export-jdbc` command defaults to `ErrorIfExists` to avoid altering
 an existing table in any way.
 
 For further information on each mode, please see 
