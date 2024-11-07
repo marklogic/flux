@@ -4,7 +4,7 @@ title: Reprocessing Data
 nav_order: 5
 ---
 
-Flux supports reprocessing data already in MarkLogic by using custom code to query for data and custom code to process
+Flux supports reprocessing data in MarkLogic by using custom code to query for data and custom code to process
 retrieved data. Reprocessing data typically involves writing data back to MarkLogic, but you are free to execute any
 custom code you wish both when querying and processing data. 
 
@@ -26,7 +26,40 @@ A common use case for reprocessing is for the reader to return document URIs, an
 on each document URI. However, your reader is free to return any items, and your writer is free to perform any 
 processing you wish. 
 
-For the reader, you must specify one of the following options:
+Your reader code must return a sequence, whether implemented [in JavaScript](https://docs.marklogic.com/js/Sequence)
+or [in XQuery](https://docs.marklogic.com/guide/xquery/langoverview#id_88685). The following show simple examples
+of both:
+
+```
+// Return a sequence of URIs in JavaScript.
+cts.uris("", null, cts.collectionQuery('example'))
+```
+
+```
+(: Return a sequence of URIs in XQuery. :)
+cts:uris((), (), cts:collection-query('example'))
+```
+
+Your writer code will then be invoked once for each item returned by the reader (see below for instructions on sending
+a batch of items to the writer). The writer code will be sent a variable named `URI`, though the items do not need to 
+be URIs. The following show simple examples of JavaScript and XQuery writers (document metadata such as collections 
+and permissions are omitted for the sake of brevity):
+
+```
+// A simple JavaScript writer.
+declareUpdate();
+var URI;
+xdmp.documentInsert(URI, {"example": "document"});
+```
+
+```
+(: A simple XQuery writer :)
+xquery version "1.0-ml";
+declare variable $URI external;
+xdmp:document-insert($URI, <example>document</example>)
+```
+
+To configure the reader, you must specify one of the following options:
 
 | Option | Description| 
 | --- |---|
@@ -36,7 +69,7 @@ For the reader, you must specify one of the following options:
 | `--read-xquery-file` | Path to file containing XQuery code for reading data. |
 | `--read-invoke` | Path of a MarkLogic server module to invoke for reading data. |
 
-For the writer, you must specify one of the following options:
+To configure the writer, you must specify one of the following options:
 
 | Option | Description| 
 | --- |---|
