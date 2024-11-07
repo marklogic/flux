@@ -167,7 +167,7 @@ class ImportParquetFilesTest extends AbstractTest {
         );
 
         assertTrue(
-            stderr.contains("Command failed, cause: [CANNOT_READ_FILE_FOOTER]"),
+            stderr.contains("Error: [CANNOT_READ_FILE_FOOTER]"),
             "Sometimes Spark will throw a SparkException that wraps a SparkException, and it's the wrapped exception " +
                 "that has the useful message in it. This test verifies that we use the message from the wrapped " +
                 "SparkException, which is far more helpful for this particular failure. Unexpected stderr: " + stderr

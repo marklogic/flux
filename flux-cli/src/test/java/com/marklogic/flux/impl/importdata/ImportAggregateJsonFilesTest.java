@@ -267,7 +267,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         ));
 
         assertCollectionSize("delimited-json-test", 0);
-        assertTrue(stderr.contains("Command failed, cause: Invalid UTF-8 start"), "The command should have failed " +
+        assertTrue(stderr.contains("Error: Invalid UTF-8 start"), "The command should have failed " +
             "due to the invalid single-xml.zip file being included along with --abort-on-read-failure being " +
             "included as well; actual stderr: " + stderr);
     }

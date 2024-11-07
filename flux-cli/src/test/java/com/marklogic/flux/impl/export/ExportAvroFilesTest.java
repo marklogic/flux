@@ -58,7 +58,7 @@ class ExportAvroFilesTest extends AbstractTest {
             "-PavroSchema=intentionally-invalid"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
+        assertTrue(stderr.contains("Error: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
             "This test is verifying that -P params are passed to the Avro data source. Since an invalid " +
                 "Avro schema is being set, this test expects an error. Unexpected stderr: " + stderr);
     }

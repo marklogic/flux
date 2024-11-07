@@ -211,7 +211,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--collections", "agg-xml"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read XML from file"),
+        assertTrue(stderr.contains("Error: Unable to read XML from file"),
             "With --abort-on-read-failure included, the command should fail if it cannot read a file; stderr: " + stderr);
         assertCollectionSize("agg-xml", 0);
     }

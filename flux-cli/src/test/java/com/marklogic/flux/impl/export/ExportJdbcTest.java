@@ -90,8 +90,23 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", "not.valid.driver.name",
             "--table", EXPORTED_TABLE_NAME
-        ), "Command failed, cause: Unable to load class: not.valid.driver.name; " +
+        ), "Error: Unable to load class: not.valid.driver.name; " +
             "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
+    }
+
+    @Test
+    void databaseSpecificErrorMessage() {
+        // JDBC drivers may provide cryptic error messages. For any SQLException-based exception coming from a JDBC
+        // driver, we want to make it clear that the error is specific to the user's external database and point them
+        // in the right direction of trying to understand the error message.
+        assertStderrContains(() -> run(
+            "export-jdbc",
+            "--connection-string", makeConnectionString(),
+            "--query", READ_AUTHORS_OPTIC_QUERY,
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--table", "hyphens-are-not-allowed-by-postgres"
+        ), "The error is from the database you are connecting to via the configured JDBC driver.");
     }
 
     private void exportFifteenAuthors() {

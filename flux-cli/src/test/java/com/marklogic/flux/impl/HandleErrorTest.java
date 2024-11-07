@@ -71,7 +71,7 @@ class HandleErrorTest extends AbstractTest {
                 "--path", "/not/valid",
                 "--connection-string", makeConnectionString()
             ),
-            "Command failed, cause: AnalysisException: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
+            "Error: AnalysisException: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
         );
     }
 
@@ -89,7 +89,7 @@ class HandleErrorTest extends AbstractTest {
                 // via a logger.
                 "--stacktrace"
             ),
-            "Command failed, cause: Local message: failed to apply resource at documents"
+            "Command failed, error: Local message: failed to apply resource at documents"
         );
     }
 
@@ -105,7 +105,7 @@ class HandleErrorTest extends AbstractTest {
                 "--stacktrace",
                 "--abort-on-write-failure"
             ),
-            "Command failed, cause: Local message: failed to apply resource at documents"
+            "Command failed, error: Local message: failed to apply resource at documents"
         );
     }
 

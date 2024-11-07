@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -119,12 +120,25 @@ public class Main {
     }
 
     private void printException(CommandLine.ParseResult parseResult, Exception ex) {
-        if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
+        final boolean includeStacktrace = parseResult.subcommand().hasMatchedOption("--stacktrace");
+        if (includeStacktrace) {
             logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
         }
+
         String message = removeStacktraceFromExceptionMessage(ex);
         PrintWriter stderr = parseResult.commandSpec().commandLine().getErr();
-        stderr.println(String.format("%nCommand failed, cause: %s", message));
+
+        if (includeStacktrace) {
+            stderr.println(String.format("%nCommand failed, error: %s", message));
+        } else {
+            stderr.println(String.format("%nCommand failed; consider running the command with the --stacktrace option to see more error information."));
+            if (ex.getCause() instanceof SQLException) {
+                stderr.println("The error is from the database you are connecting to via the configured JDBC driver.");
+                stderr.println("You may find it helpful to consult your database documentation for the error message.");
+            }
+            stderr.println(String.format("Error: %s", message));
+        }
+
         if (message != null && message.contains("XDMP-OLDSTAMP")) {
             printMessageForTimestampError(stderr);
         }

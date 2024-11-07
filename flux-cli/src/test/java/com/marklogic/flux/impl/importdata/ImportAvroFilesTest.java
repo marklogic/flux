@@ -176,7 +176,7 @@ class ImportAvroFilesTest extends AbstractTest {
         ));
 
         System.out.println(stderr);
-        assertTrue(stderr.contains("Command failed, cause: Not an Avro data file"), "Actual stderr: " + stderr);
+        assertTrue(stderr.contains("Error: Not an Avro data file"), "Actual stderr: " + stderr);
     }
 
     private void verifyColorDoc(String uri, String expectedNumber, String expectedColor, boolean expectedFlag) {

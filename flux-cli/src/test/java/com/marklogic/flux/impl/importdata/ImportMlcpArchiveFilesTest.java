@@ -103,7 +103,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString()
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read metadata for entry: goodbye.json"),
+        assertTrue(stderr.contains("Error: Unable to read metadata for entry: goodbye.json"),
             "Unexpected stderr: " + stderr);
     }
 

@@ -138,7 +138,7 @@ class ImportRdfFilesTest extends AbstractTest {
             "--collections", "my-triples"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"),
+        assertTrue(stderr.contains("Error: Unable to read file at"),
             "Unexpected stderr: " + stderr);
         assertCollectionSize("my-triples", 0);
     }
