@@ -271,7 +271,7 @@ class ImportFilesTest extends AbstractTest {
             "--compression", "gzip"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abort-read-on-failure, " +
+        assertTrue(stderr.contains("Error: Unable to read file at"), "With --abort-read-on-failure, " +
             "the command should fail when it encounters an invalid gzipped file.");
         assertCollectionSize("files", 0);
     }

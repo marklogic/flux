@@ -116,7 +116,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbc-driver", "not.valid.driver.value",
             "--connection-string", makeConnectionString(),
             "--query", "select * from customer"
-        ), "Command failed, cause: Unable to load class: not.valid.driver.value; " +
+        ), "Error: Unable to load class: not.valid.driver.value; " +
             "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
     }
 

@@ -111,7 +111,7 @@ class ImportArchiveFilesTest extends AbstractTest {
         ));
 
         assertTrue(
-            stderr.contains("Command failed, cause: Could not find metadata entry for entry test/1.xml in file"),
+            stderr.contains("Error: Could not find metadata entry for entry test/1.xml in file"),
             "Unexpected stderr: " + stderr
         );
     }

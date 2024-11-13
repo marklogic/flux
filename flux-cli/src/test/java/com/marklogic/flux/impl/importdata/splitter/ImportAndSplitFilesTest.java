@@ -151,7 +151,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "doesnt.exist.ClassName"
-        ), "Command failed, cause: Cannot find custom splitter with class name: doesnt.exist.ClassName");
+        ), "Error: Cannot find custom splitter with class name: doesnt.exist.ClassName");
     }
 
     @Test
