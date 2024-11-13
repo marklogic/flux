@@ -151,12 +151,16 @@ public class EmbedderParams implements EmbedderOptions {
     }
 
     private String determineClassName(String embedderValue) {
-        if ("minilm".equalsIgnoreCase(embedderValue)) {
-            return "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction";
+        embedderValue = embedderValue.toLowerCase();
+        switch (embedderValue) {
+            case "minilm":
+                return "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction";
+            case "azure":
+                return "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction";
+            case "ollama":
+                return "com.marklogic.flux.langchain4j.embedding.OllamaEmbeddingModelFunction";
+            default:
+                return embedderValue;
         }
-        if ("azure".equalsIgnoreCase(embedderValue)) {
-            return "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction";
-        }
-        return embedderValue;
     }
 }

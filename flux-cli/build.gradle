@@ -59,9 +59,6 @@ dependencies {
   implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
   testImplementation("com.marklogic:marklogic-junit5:1.5.0") {
-    // Excluding Jackson so that we use whatever Jackson version is required by Spark.
-    exclude group: "com.fasterxml.jackson.core"
-    exclude group: "com.fasterxml.jackson.dataformat"
     // Use the Java Client in the connector jar.
     exclude module: "marklogic-client-api"
   }
@@ -75,9 +72,6 @@ dependencies {
 
   // For configuring two-way SSL in tests.
   testImplementation("com.marklogic:ml-app-deployer:5.0.0") {
-    // Excluding Jackson so that we use whatever Jackson version is required by Spark.
-    exclude group: "com.fasterxml.jackson.core"
-    exclude group: "com.fasterxml.jackson.dataformat"
     // Use the Java Client in the connector jar.
     exclude module: "marklogic-client-api"
   }
@@ -92,6 +86,7 @@ dependencies {
   // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
   testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
   testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
 
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"

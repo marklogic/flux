@@ -3,9 +3,14 @@ application installed:
 
 1. Ensure you have Java 11 or higher installed; you will need Java 17 if you wish to use the Sonarqube support described below.
 2. Clone this repository if you have not already.
-3. From the root directory of the project, run `docker-compose up -d --build`.
+3. From the root directory of the project, run `docker compose up -d --build`.
 4. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
 5. Run `./gradlew -i mlDeploy` to deploy this project's test application.
+
+Next, run the following to pull a small model for the test instance of Ollama to use; this will be used by one or more
+embedder tests:
+
+    docker exec -it flux-ollama-1 ollama pull all-minilm
 
 Some of the tests depend on the Postgres instance deployed via Docker. Follow these steps to load a sample dataset
 into it:
