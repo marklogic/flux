@@ -5,14 +5,14 @@ import com.marklogic.flux.api.Flux;
 public class App {
 
     public static void main(String[] args) {
-        // Currently depends on flux test-app.
+        // Depends on the example application created in the Getting Started guide.
         Flux.importGenericFiles()
-            .connectionString("flux-test-user:password@localhost:8003")
+            .connectionString("flux-example-user:password@localhost:8004")
             .from(options -> options
                 .paths("../../flux-cli/src/test/resources/mixed-files"))
             .to(options -> options
                 .collections("client-files")
-                .permissionsString("flux-test-role,read,flux-test-role,update"))
+                .permissionsString("flux-example-role,read,flux-example-role,update"))
             .execute();
     }
 }
