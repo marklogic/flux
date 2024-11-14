@@ -142,3 +142,14 @@ will result in a URI of `/my%20file.json`. This is due to an
 [issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in
 a future server release. 
 
+## Common errors
+
+If you use Flux 1.0.x to import an archive created by Flux 1.1.x or higher, you may receive an error containing the
+following message:
+
+```
+com.marklogic.spark: Could not find metadata entry for entry
+```
+
+To solve this, you should use Flux 1.1.0 or higher to import the archive. Flux 1.1.0 and higher can also import 
+archives created by Flux 1.0.x. 

@@ -132,7 +132,7 @@ You can specify an alternate encoding when exporting archives via the `--encodin
 {% tabs log %}
 {% tab log Unix %}
 ```
-./bin/flux export-archives \
+./bin/flux export-archive-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections example \
     --path destination \
@@ -141,7 +141,7 @@ You can specify an alternate encoding when exporting archives via the `--encodin
 {% endtab %}
 {% tab log Windows %}
 ```
-bin\flux export-archives ^
+bin\flux export-archive-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --collections example ^
     --path destination ^

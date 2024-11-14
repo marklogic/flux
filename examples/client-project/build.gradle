@@ -32,19 +32,22 @@ dependencies {
 }
 
 tasks.register("runApp", JavaExec) {
-  description = "Verify that the example program can be compiled and run with flux-api as a dependency."
+  description = "Verify that the example program can be compiled and run with flux-api as a dependency. " +
+    "Requires using Java 11."
   mainClass = "org.example.App"
   classpath = sourceSets.main.runtimeClasspath
 }
 
 tasks.register("runViaCustomTask") {
-  description = "Demonstrate how the Flux API can be used via a custom Gradle task."
+  description = "Demonstrate how the Flux API can be used via a custom Gradle task. " +
+    "Depends on the example application used in the Getting Started guide. " +
+    "Requires using Java 11. "
   doLast {
     Flux.importGenericFiles()
       .from("../../flux-cli/src/test/resources/mixed-files")
-      .connectionString("flux-test-user:password@localhost:8003")
+      .connectionString("flux-example-user:password@localhost:8004")
       .to({
-        it.permissionsString("flux-test-role,read,flux-test-role,update")
+        it.permissionsString("flux-example-role,read,flux-example-role,update")
           .collections("client-files")
       })
       .execute()
