@@ -20,7 +20,7 @@ of [retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrie
 
 In order to split text into chunks, you must first configure Flux to select the text in a document that you wish to 
 split. Flux supports three approaches - using one or more JSON Pointer expressions, using an XPath expression, and 
-using all the text in a document. Note that Flux does not support splitting text in binary documents. 
+using all the text in a document. Flux does not yet support splitting text in binary documents. 
 
 ### Using JSON Pointer expressions
 
@@ -132,6 +132,9 @@ can both be used with the regex splitter as well.
 The default and regex approaches described above are intended for quickly getting a splitting solution in place. There
 are many other splitting strategies available, including those supported by LLMs. Flux will likely support additional
 strategies out-of-the-box in the future. In the meantime, you can implement your own splitter via the steps below.
+
+For a working example of a custom splitter, please see [this example project](https://github.com/marklogic/flux/tree/develop/flux-custom-splitter-example)
+in the Flux GitHub repository.
 
 To use a custom splitter, you will need to create an implementation of the 
 [langchain4j DocumentSplitter interface](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/DocumentSplitter.html).
