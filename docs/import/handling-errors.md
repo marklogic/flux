@@ -2,7 +2,7 @@
 layout: default
 title: Handling errors
 parent: Importing Data
-nav_order: 7
+nav_order: 9
 ---
 
 ## Table of contents

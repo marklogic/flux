@@ -20,6 +20,12 @@ public class EmbedderParams implements EmbedderOptions {
     private String embedder;
 
     @CommandLine.Option(
+        names = {"-E"},
+        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
+    )
+    private Map<String, String> embeddingModelOptions = new HashMap<>();
+
+    @CommandLine.Option(
         names = "--embedder-chunks-json-pointer",
         description = "A JSON Pointer expression that identifies the location of chunks in each document. If not " +
             "specified, defaults to '/chunks'."
@@ -66,12 +72,6 @@ public class EmbedderParams implements EmbedderOptions {
     )
     private Integer batchSize;
 
-    @CommandLine.Option(
-        names = {"-E"},
-        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
-    )
-    private Map<String, String> embedderOptions = new HashMap<>();
-
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (embedder != null) {
@@ -90,7 +90,7 @@ public class EmbedderParams implements EmbedderOptions {
                 options.put(Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, chunksJsonPointer);
             }
 
-            embedderOptions.entrySet().forEach(entry ->
+            embeddingModelOptions.entrySet().forEach(entry ->
                 options.put(Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + entry.getKey(), entry.getValue()));
         }
         return options;
@@ -146,7 +146,7 @@ public class EmbedderParams implements EmbedderOptions {
 
     @Override
     public EmbedderOptions embedderOptions(Map<String, String> options) {
-        this.embedderOptions = options;
+        this.embeddingModelOptions = options;
         return this;
     }
 
