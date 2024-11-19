@@ -165,7 +165,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         protected Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(splitterParams.makeOptions(),
-                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true": null,
+                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
                 Options.WRITE_COLLECTIONS, collections,
@@ -321,12 +321,6 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }
-        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
-    }
-
-    @Override
-    protected void validateDuringApiUsage() {
-        readParams.verifyAtLeastOneQueryOptionIsSet("copy");
     }
 
     @Override

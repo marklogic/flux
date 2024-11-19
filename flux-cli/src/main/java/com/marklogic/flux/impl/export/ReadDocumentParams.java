@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.ReadDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -17,11 +16,6 @@ import java.util.stream.Stream;
  * For commands that export documents and must therefore read "document rows" first.
  */
 public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadDocumentsOptions<T> {
-
-    @SuppressWarnings("java:S2386") // Sonar mistakenly thinks this can be protected.
-    public static final String[] REQUIRED_QUERY_OPTIONS = new String[]{
-        "--collections", "--directory", "--query", "--string-query", "--uris"
-    };
 
     @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
         "see %nhttps://docs.marklogic.com/guide/search-dev/string-query for more information.")
@@ -71,13 +65,6 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     )
     private boolean noSnapshot;
 
-    public void verifyAtLeastOneQueryOptionIsSet(String verbForErrorMessage) {
-        if (makeQueryOptions().isEmpty()) {
-            throw new FluxException(String.format("Must specify at least one of the following for the documents to %s: " +
-                "collections; a directory; a string query; a structured, serialized, or combined query; or URIs.", verbForErrorMessage));
-        }
-    }
-
     public Map<String, String> makeOptions() {
         return OptionsUtil.addOptions(makeQueryOptions(),
             Options.READ_DOCUMENTS_OPTIONS, options,
@@ -92,13 +79,19 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     }
 
     private Map<String, String> makeQueryOptions() {
-        return OptionsUtil.makeOptions(
+        Map<String, String> options = OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
             Options.READ_DOCUMENTS_URIS, uris,
             Options.READ_DOCUMENTS_QUERY, query,
             Options.READ_DOCUMENTS_COLLECTIONS, collections,
             Options.READ_DOCUMENTS_DIRECTORY, directory
         );
+
+        if (options.isEmpty()) {
+            String trueQuery = "{\"query\": {\"queries\": [{\"true-query\": null}]}}";
+            options.put(Options.READ_DOCUMENTS_QUERY, trueQuery);
+        }
+        return options;
     }
 
     @Override
