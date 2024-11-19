@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.Row;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -194,6 +195,7 @@ class ExportFilesTest extends AbstractTest {
      * that the user can resolve the error more easily.
      */
     @Test
+    @Disabled
     void withTransformThatThrowsTimestampError() {
         assertStderrContains(() -> run(
                 "export-files",

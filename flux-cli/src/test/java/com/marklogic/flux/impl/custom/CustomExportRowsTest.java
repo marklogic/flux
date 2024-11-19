@@ -21,7 +21,7 @@ class CustomExportRowsTest extends AbstractTest {
         run(
             "custom-export-rows",
             "--connection-string", makeConnectionString(),
-            "--query", READ_AUTHORS_OPTIC_QUERY,
+            "--query", READ_AUTHORS_OPTIC_QUERY + ".select(['CitationID', 'LastName'])",
             "--target", "xml",
             "--repartition", "1",
             "-Ppath=" + tempDir.toFile().getAbsolutePath(),

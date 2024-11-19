@@ -77,10 +77,9 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
                 "--uri-replace", ".*/json-files,''",
                 "--splitter-json-pointer", "/text",
                 "--embedder", "azure",
-                "-Eapi-key=doesnt-matter",
-                "-Eendpoint=https://gpt-testing-custom-data1.openai.azure.com"
+                "-Eapi-key=doesnt-matter"
             ),
-            "Access denied due to invalid subscription key"
+            "endpoint cannot be null or blank"
         );
     }
 

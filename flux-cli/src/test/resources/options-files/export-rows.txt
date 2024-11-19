@@ -1,6 +1,7 @@
 --query
 "op.fromView('Medical', 'Authors', '')\
-   .orderBy(op.asc(op.col('LastName')))"
+   .orderBy(op.asc(op.col('LastName')))\
+   .select(['CitationID', 'LastName', 'ForeName'])"
 --file-count
 1
 --partitions
