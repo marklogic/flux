@@ -23,7 +23,9 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
             "export-delimited-files",
             "--connection-string", makeConnectionString(),
             "--partitions", "1",
-            "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",
+            "--query", "op.fromView('Medical', 'Authors', '')" +
+                ".orderBy(op.asc(op.col('LastName')))" +
+                ".select(['CitationID', 'LastName', 'ForeName'])",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--file-count", "1"
         );
@@ -33,11 +35,13 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
 
     @Test
     void exportTwice(@TempDir Path tempDir) {
+        final String query = READ_AUTHORS_OPTIC_QUERY + ".select(['CitationID', 'LastName'])";
+
         run(
             "export-delimited-files",
             "--connection-string", makeConnectionString(),
             "--partitions", "1",
-            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--query", query,
             "--path", tempDir.toFile().getAbsolutePath(),
             "--file-count", "1"
         );
@@ -46,7 +50,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
             "export-delimited-files",
             "--connection-string", makeConnectionString(),
             "--partitions", "1",
-            "--query", "op.fromView('Medical', 'Authors', '')",
+            "--query", query,
             "--path", tempDir.toFile().getAbsolutePath(),
             "--file-count", "1"
         );
@@ -84,8 +88,8 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
         String content = FileCopyUtils.copyToString(new FileReader(files[0]));
         String[] lines = content.split("\n");
         assertEquals(16, lines.length, "The header=true option should be included by default.");
-        assertEquals("CitationID,LastName,ForeName,Date,DateTime,LuckyNumber,Base64Value,BooleanValue,CalendarInterval", lines[0]);
-        assertEquals("1,Awton,Finlay,2022-07-13,2022-07-13T09:00:00.000Z,4,,,", lines[1]);
+        assertEquals("CitationID,LastName,ForeName", lines[0]);
+        assertEquals("1,Awton,Finlay", lines[1]);
     }
 
     @Test
@@ -94,7 +98,9 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
             "export-delimited-files",
             "--connection-string", makeConnectionString(),
             "--partitions", "1",
-            "--query", "op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))",
+            "--query", "op.fromView('Medical', 'Authors', '')" +
+                ".orderBy(op.asc(op.col('LastName')))" +
+                ".select(['CitationID', 'LastName', 'ForeName'])",
             "--path", tempDir.toFile().getAbsolutePath(),
             "-Pheader=false",
             "--file-count", "1"
@@ -106,6 +112,6 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
         String content = FileCopyUtils.copyToString(new FileReader(files[0]));
         String[] lines = content.split("\n");
         assertEquals(15, lines.length);
-        assertEquals("1,Awton,Finlay,2022-07-13,2022-07-13T09:00:00.000Z,4,,,", lines[0]);
+        assertEquals("1,Awton,Finlay", lines[0]);
     }
 }

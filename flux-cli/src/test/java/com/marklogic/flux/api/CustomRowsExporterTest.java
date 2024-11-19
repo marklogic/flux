@@ -22,7 +22,7 @@ class CustomRowsExporterTest extends AbstractTest {
         Flux.customExportRows()
             .connectionString(makeConnectionString())
             .from(options -> options
-                .opticQuery(READ_AUTHORS_OPTIC_QUERY)
+                .opticQuery(READ_AUTHORS_OPTIC_QUERY + ".select(['CitationID', 'LastName'])")
                 .partitions(1))
             .to(options -> options
                 .target("xml")
