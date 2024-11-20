@@ -8,8 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.Row;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -193,9 +194,14 @@ class ExportFilesTest extends AbstractTest {
      * Verifies that an error containing "XDMP-OLDSTAMP" (which is very difficult to cause to happen in a test, so a
      * REST transform is used as a way to simulate such an error) results in additional information being printed so
      * that the user can resolve the error more easily.
+     * <p>
+     * This test is hanging indefinitely when run on a Mac. Passes fine when run on Jenkins. I modified the connector
+     * to throw all kinds of other exceptions, and the test would fail and not hang. I ensured the connector is closed
+     * correctly. Something very odd happens - only on a Mac, it appears - when a FailedRequestException is thrown
+     * by documentManager.search in the connector. So disabling this until it can be further debugged.
      */
     @Test
-    @Disabled
+    @DisabledOnOs(OS.MAC)
     void withTransformThatThrowsTimestampError() {
         assertStderrContains(() -> run(
                 "export-files",
