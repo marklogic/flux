@@ -51,9 +51,11 @@ options for selecting the documents that contain the triples you wish to export:
 | `--string-query` | A string query utilizing MarkLogic's search grammar. |
 | `--uris` | Newline-delimited sequence of document URIs to retrieve.  |
 
-You must specify at least one of `--collections`, `--directory`, `--graphs`, `--query`, `--string-query`, or `--uris`. 
-You may specify any combination of those options as well, with the exception that `--query` will be ignored 
-if `--uris` is specified.
+You may specify any combination of these options, with the exception that `--query` will be ignored if `--uris` is specified.
+
+Prior to Flux 1.2.0, Flux required at least one of `--collections`, `--directory`, `--graphs`, `--query`,
+`--string-query`, or `--uris` to be specified. Starting in Flux 1.2.0, if you do not specify any of those options, then
+Flux will select all documents that the configured MarkLogic user is able to read.  
 
 For each document matching the query specified by your options above, Flux will retrieve the triples from the document 
 and write them to a file. You must specify a `--path` option for where files should be written. See 

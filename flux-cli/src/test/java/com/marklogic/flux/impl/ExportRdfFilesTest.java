@@ -58,17 +58,4 @@ class ExportRdfFilesTest extends AbstractTest {
             "/sem:triples/sem:triple", 32
         );
     }
-
-    @Test
-    void missingQueryInput() {
-        String stderr = runAndReturnStderr(() -> run(
-            "export-rdf-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "path-doesnt-matter-for-this-test"
-        ));
-
-        assertTrue(stderr.contains("Must specify at least one of the following options: " +
-                "[--collections, --directory, --graphs, --query, --string-query, --uris]."),
-            "Unexpected stderr: " + stderr);
-    }
 }

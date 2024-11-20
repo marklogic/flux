@@ -38,13 +38,6 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
     }
 
     @Override
-    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
-        super.validateCommandLineOptions(parseResult);
-        OptionsUtil.verifyHasAtLeastOneOption(parseResult,
-            "--collections", "--directory", "--graphs", "--query", "--string-query", "--uris");
-    }
-
-    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         final int fileCount = writeParams.getFileCount();
         if (fileCount > 0) {
