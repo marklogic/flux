@@ -174,6 +174,27 @@ accepts a JSON Pointer expression:
 
     --embedder-text-json-pointer "/text-to-use"
 
+For example, consider a JSON document with chunks in the following structure:
+
+```
+{
+  "metadata": {
+    "custom-chunks": [
+      {"text-to-embed": "Hello world"},
+      {"text-to-embed": "More text"}
+    ]
+  }
+}
+```
+
+The following options would be used to configure Flux - note that `--embedder-text-json-pointer` must start with `/`
+to be a valid JSON Pointer expression (unless the expression is `""`):
+
+```
+--embedder-chunks-json-pointer "/metadata/custom-chunks"
+--embedder-text-json-pointer "/text-to-embed"
+```
+
 For a JSON document containing text in a single top-level key named `description`, you would use the following options:
 
     --embedder-chunks-json-pointer ""
@@ -191,7 +212,9 @@ You can configure a different XPath expression for selecting chunks in an XML do
 
     --embedder-chunks-xpath "/path/to/chunks"
 
-You can configure a different XPath expression for the text to use for the embedding with the following option:
+You can configure a different XPath expression for the text to use for the embedding with the following option. Note
+that this expression is relative to each element selected by `--embedder-chunks-xpath` and thus does not start with a 
+`/`:
 
     --embedder-text-xpath "path/to/text"
 
