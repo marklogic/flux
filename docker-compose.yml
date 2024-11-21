@@ -67,6 +67,13 @@ services:
     ports:
       - "9000:9000"
 
+  # Using Ollama for testing an embedding model.
+  # See https://github.com/ollama/ollama for more information.
+  ollama:
+    image: "ollama/ollama"
+    ports:
+      - 8008:11434
+
 volumes:
   sonarqube_data:
   sonarqube_extensions:

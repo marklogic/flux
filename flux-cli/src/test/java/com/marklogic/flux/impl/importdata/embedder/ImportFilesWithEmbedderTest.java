@@ -30,19 +30,26 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "--embedder", "minilm"
         );
 
-        Stream.of("/java-client-intro.json-chunks-1.json", "/java-client-intro.json-chunks-2.json").forEach(uri -> {
-            JsonNode doc = readJsonDocument(uri);
-            assertEquals("/java-client-intro.json", doc.get("source-uri").asText());
-            assertTrue(doc.has("chunks"));
-            ArrayNode chunks = (ArrayNode) doc.get("chunks");
-            assertEquals(2, chunks.size());
+        verifyChunksHaveEmbeddings();
+    }
 
-            chunks.forEach(chunk -> {
-                assertTrue(chunk.has("text"));
-                assertTrue(chunk.has("embedding"));
-                assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
-            });
-        });
+    @Test
+    void ollama() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--embedder", "ollama",
+            "-Ebase-url=http://localhost:8008",
+            "-Emodel-name=all-minilm"
+        );
+
+        verifyChunksHaveEmbeddings();
     }
 
     @Test
@@ -97,5 +104,21 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "Unable to instantiate class for creating an embedding model; class name: not.valid.class; " +
                 "cause: Could not load class not.valid.class"
         );
+    }
+
+    private void verifyChunksHaveEmbeddings() {
+        Stream.of("/java-client-intro.json-chunks-1.json", "/java-client-intro.json-chunks-2.json").forEach(uri -> {
+            JsonNode doc = readJsonDocument(uri);
+            assertEquals("/java-client-intro.json", doc.get("source-uri").asText());
+            assertTrue(doc.has("chunks"));
+            ArrayNode chunks = (ArrayNode) doc.get("chunks");
+            assertEquals(2, chunks.size());
+
+            chunks.forEach(chunk -> {
+                assertTrue(chunk.has("text"));
+                assertTrue(chunk.has("embedding"));
+                assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
+            });
+        });
     }
 }
