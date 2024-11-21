@@ -47,6 +47,7 @@ As of the 1.2.0 release, Flux recognizes the following abbreviations as a matter
 
 - `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-(version).jar` file.
 - `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-(version).jar` file.
+- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-(version).jar` file. 
 
 The JAR files associated with each of the above abbreviations can be downloaded from the 
 [Flux releases site](https://github.com/marklogic/flux/releases) and added to the `./ext` directory in a Flux 
@@ -66,22 +67,26 @@ and `value` is the value of the option:
 
 You can use the `-E` option as many times as needed to configure the embedding model. 
 
+For the options below that enable logging of requests and responses, you will need to edit the `conf/log4j2.properties`
+file in your Flux installation and change the `logger.langchain4j.level` logger to have a value of `DEBUG`.
+
 ### Azure OpenAI options
 
 The `flux-embedding-model-azure-open-ai-(version).jar` file uses 
-[LangChain4's support for Azure OpenAI](https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai) and
+[LangChain4's support](https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai) for 
+[Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) and
 supports the following options:
 
 | Option | Description | 
 | --- | --- |
-| api-key | Used to authenticate with Azure OpenAI. |
-| non-azure-api-key | Used to authenticate with the OpenAI service instead of Azure OpenAI. If set, the endpoint is automatically set to `https://api.openai.com/v1`. |
+| api-key | Required, unless using `non-azure-api-key`; used to authenticate with Azure OpenAI. |
 | deployment-name | Required; the name of the Azure OpenAI deployment to use for embeddings. |
-| endpoint | The Azure OpenAI endpoint in the format: `https://{resource}.openai.azure.com/`. |
+| endpoint | Required, unless using `non-azure-api-key`; the Azure OpenAI endpoint in the format: `https://{resource}.openai.azure.com/`. |
 | dimensions | The number of dimensions in a generated embedding. |
-| max-retries | The number of retries to attempt when generating an embedding fails. |
-| log-requests-and-responses | If set to `true`, enables logging of requests and responses. |
 | duration | Maximum duration, in seconds, of a request before timing out. |
+| log-requests-and-responses | If set to `true`, enables logging of requests and responses. |
+| max-retries | The number of retries to attempt when generating an embedding fails. |
+| non-azure-api-key | Used to authenticate with the OpenAI service instead of Azure OpenAI. If set, the endpoint is automatically set to `https://api.openai.com/v1`. |
 
 The following shows an example of configuring the Azure OpenAI embedding model with what are likely the most common
 options to be used (the deployment names and endpoints are notional):
@@ -110,6 +115,42 @@ options to be used (the deployment names and endpoints are notional):
 The name "minilm" refers to LangChain4j's support for a [local embedding model](https://docs.langchain4j.dev/integrations/embedding-models/in-process)
 with no external dependencies. This embedding model is primarily intended for prototyping and does not support 
 any configuration options. 
+
+### Ollama options
+
+The `flux-embedding-model-ollama-(version).jar` file uses 
+[langchain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
+[Ollama](https://ollama.com/) and supports the following options:
+
+| Option | Description | 
+| --- | --- |
+| base-url | Required; the Ollama base URL. Ollama defaults to `http://localhost:11434` when installed. |
+| model-name | Required; the name of the [Ollama model](https://registry.ollama.com/search). |
+| duration | Maximum duration, in seconds, of a request before timing out. |
+| log-requests | If set to `true`, enables logging of requests. |
+| log-responses | If set to `true`, enables logging of responses. |
+| max-retries | The number of retries to attempt when generating an embedding fails. |
+
+The following shows an example of configuring the Ollama embedding model with its required options, both of which
+have notional values:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+--embedder ollama \
+-Ebase-url=http://localhost:11434 \
+-Emodel-name=llama3.2
+```
+{% endtab %}
+{% tab log Windows %}
+```
+--embedder ollama ^
+-Ebase-url=http://localhost:11434 ^
+-Emodel-name=llama3.2
+```
+{% endtab %}
+{% endtabs %}
+
 
 ## Selecting chunks
 

@@ -44,6 +44,22 @@ If you would like to test our the Flux distribution - as either a tar or zip - p
 
 You can now run `./bin/flux` to test out various commands. 
 
+If you're testing with the project at `./examples/getting-started`, you can run the following to install Flux in that 
+directory, thus allowing you to test out the examples in that project:
+
+    ./gradlew buildToolForGettingStarted
+
+If you wish to build the Flux zip with all the embedding model integration JARs included, you must first run the 
+`copyEmbeddingModelJarsIntoDistribution` task. That name is intentionally verbose, but it's a lot to type, so take
+advantage of Gradle's ability to extrapolate task names:
+
+    ./gradlew copyemb distZip
+
+You can also do the following include the integration JARs in the Flux installation in the `examples/getting-started` 
+project (again taking advantage of Gradle's ability to extrapolate task names):
+
+    ./gradlew copyemb buildtoolfor
+
 ## Configuring the version
 
 You can specify a version for Flux when building Flux via any of the following:

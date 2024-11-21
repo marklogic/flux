@@ -8,7 +8,14 @@ dependencies {
 
 shadowJar {
   // Avoids conflict with Spark's OkHttp.
-  relocate "okhttp3", "flux.okhttp3"
-  relocate "okio", "flux.okio"
+  relocate "okhttp3", "com.marklogic.flux.okhttp3"
+  relocate "okio", "com.marklogic.flux.okio"
+
+  // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
+  dependencies {
+    exclude {
+      it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
+    }
+  }
 }
 
