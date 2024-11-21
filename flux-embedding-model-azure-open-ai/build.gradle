@@ -9,4 +9,11 @@ dependencies {
 shadowJar {
   // Avoids conflict with Spark's version of netty.
   relocate "io.netty", "com.marklogic.flux.io.netty"
+
+  // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
+  dependencies {
+    exclude {
+      it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
+    }
+  }
 }

@@ -110,6 +110,9 @@ copyJavadoc.mustRunAfter deleteJavadoc, javadoc
 tasks.register("updateJavadoc")
 updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 
+// Configures the Gradle distribution plugin.
+// See https://docs.gradle.org/current/userguide/distribution_plugin.html for more information.
+// The distribution forms the contents of the application zip.
 distributions {
   main {
     distributionBaseName = "marklogic-flux"
@@ -133,6 +136,24 @@ distributions {
   }
 }
 
+tasks.register("copyEmbeddingModelJarsIntoDistribution", Copy) {
+  description = "Intended for internal usage when building the Flux zip with all the embedding model integrations included."
+  dependsOn ":flux-embedding-model-azure-open-ai:shadowJar"
+  dependsOn ":flux-embedding-model-minilm:shadowJar"
+  dependsOn ":flux-embedding-model-ollama:shadowJar"
+  from("../flux-embedding-model-azure-open-ai/build/libs")
+  from("../flux-embedding-model-minilm/build/libs")
+  from("../flux-embedding-model-ollama/build/libs")
+  into "src/dist/ext"
+}
+
+// Gradle complains without these ensuring the order of the tasks.
+distZip.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+distTar.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+installDist.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+
+// Configures the Gradle application plugin.
+// See https://docs.gradle.org/current/userguide/application_plugin.html for more information.
 application {
   mainClass = "com.marklogic.flux.cli.Main"
   applicationDefaultJvmArgs = [

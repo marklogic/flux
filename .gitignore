@@ -9,6 +9,7 @@ flux/lib
 flux/ext
 flux/bin
 flux/conf
+flux-cli/src/dist/ext/*.jar
 flux/export
 export
 flux-version.properties
