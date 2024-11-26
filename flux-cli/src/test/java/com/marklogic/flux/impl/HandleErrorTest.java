@@ -89,7 +89,7 @@ class HandleErrorTest extends AbstractTest {
                 // via a logger.
                 "--stacktrace"
             ),
-            "Command failed, error: Local message: failed to apply resource at documents"
+            "Role does not exist: sec:role-name = invalid-role"
         );
     }
 
@@ -105,7 +105,7 @@ class HandleErrorTest extends AbstractTest {
                 "--stacktrace",
                 "--abort-on-write-failure"
             ),
-            "Command failed, error: Local message: failed to apply resource at documents"
+            "Role does not exist: sec:role-name = invalid-role"
         );
     }
 

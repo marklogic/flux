@@ -91,6 +91,7 @@ If you are running the tests in Intellij with Java 17, you will need to perform 
 --add-opens java.base/sun.util.calendar=ALL-UNNAMED 
 --add-opens java.base/java.io=ALL-UNNAMED 
 --add-opens java.base/sun.nio.cs=ALL-UNNAMED
+--add-opens java.base/sun.security.action=ALL-UNNAMED
 ```
 
 When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to 
