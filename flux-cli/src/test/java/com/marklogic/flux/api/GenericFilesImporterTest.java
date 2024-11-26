@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
-import com.marklogic.spark.ConnectorException;
 import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 
@@ -98,7 +97,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .abortOnWriteFailure(true)
                 .permissionsString("not-a-real-role,update"));
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> command.execute());
+        FluxException ex = assertThrows(FluxException.class, () -> command.execute());
         assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
 
