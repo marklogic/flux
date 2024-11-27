@@ -323,3 +323,16 @@ a single call to MarkLogic and how many requests are made in parallel to MarkLog
 without setting these options to see if the performance is acceptable. When you are ready to attempt to optimize the
 performance of your export command, please see the
 [this guide on Optic query performance](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#tuning-performance).
+
+If your Optic query performs one or more joins, and/or is intended more to produce a report, consider using the 
+following options:
+
+```
+--partitions 1
+--batch-size 0
+```
+
+The above options will result in the query being executed in a single call to MarkLogic. This is typically appropriate
+for queries with joins and aggregations, as trying to partition that query may result in either duplicate rows or 
+incorrect results. You will need to verify though that the total number of rows returned by your query can be retrieved
+in a single request to MarkLogic without the request timing out. 
