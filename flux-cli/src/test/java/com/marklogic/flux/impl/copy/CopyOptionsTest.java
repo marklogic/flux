@@ -75,7 +75,9 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-prefix", "/prefix/",
             "--output-uri-replace", ".*data,''",
             "--output-uri-suffix", ".xml",
-            "--output-uri-template", "/{example}.xml"
+            "--output-uri-template", "/{example}.xml",
+            "--splitter-text",
+            "--embedder", "doesnt-matter"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -92,7 +94,9 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_PREFIX, "/prefix/",
             Options.WRITE_URI_REPLACE, ".*data,''",
             Options.WRITE_URI_SUFFIX, ".xml",
-            Options.WRITE_URI_TEMPLATE, "/{example}.xml"
+            Options.WRITE_URI_TEMPLATE, "/{example}.xml",
+            Options.WRITE_SPLITTER_TEXT, "true",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter"
         );
     }
 

@@ -164,7 +164,9 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private EmbedderParams embedderParams = new EmbedderParams();
 
         protected Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(splitterParams.makeOptions(),
+            Map<String, String> options = splitterParams.makeOptions();
+            options.putAll(embedderParams.makeOptions());
+            return OptionsUtil.addOptions(options,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
