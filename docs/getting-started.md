@@ -306,7 +306,7 @@ mkdir export/parquet
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --path export/parquet \
-    --query "op.fromView('Example', 'Employees', '')" 
+    --query "op.fromView('example', 'employees', '')" 
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -315,7 +315,7 @@ mkdir export\parquet
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --path export/parquet ^
-    --query "op.fromView('Example', 'Employees', '')" 
+    --query "op.fromView('example', 'employees', '')" 
 ```
 {% endtab %}
 {% endtabs %}
@@ -330,7 +330,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 ```
 ./bin/flux export-jdbc \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees', '')" \
+    --query "op.fromView('example', 'employees', '')" \
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
     --table employees \
@@ -341,7 +341,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 ```
 bin\flux export-jdbc ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees', '')" ^
+    --query "op.fromView('example', 'employees', '')" ^
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" ^
     --jdbc-driver "org.postgresql.Driver" ^
     --table employees ^
@@ -362,7 +362,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees')" \
+    --query "op.fromView('example', 'employees')" \
     --path export/parquet \
     --preview 10
 ```
@@ -371,7 +371,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 ```
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees')" ^
+    --query "op.fromView('example', 'employees')" ^
     --path export/parquet ^
     --preview 10
 ```

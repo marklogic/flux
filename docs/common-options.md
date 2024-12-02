@@ -123,7 +123,7 @@ to the next line:
 
 ```
 --query
-"op.fromView('Example', 'Employees', '')\
+"op.fromView('example', 'employees', '')\
    .limit(10)"
 ```
 
@@ -325,7 +325,7 @@ that Flux log the schema and not write any data:
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees')" \
+    --query "op.fromView('example', 'employees')" \
     --path export/parquet \
     --preview-schema
 ```
@@ -334,7 +334,7 @@ that Flux log the schema and not write any data:
 ```
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees')" ^
+    --query "op.fromView('example', 'employees')" ^
     --path export\parquet ^
     --preview-schema
 ```
