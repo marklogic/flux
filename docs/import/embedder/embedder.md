@@ -2,6 +2,7 @@
 layout: default
 title: Adding embeddings
 parent: Importing Data
+has_children: true
 nav_order: 7
 ---
 
@@ -30,10 +31,10 @@ LangChain4j provides [over a dozen implementations](https://docs.langchain4j.dev
 embedding model API. However, Flux does not ship with any of these implementations, as each embedding model 
 implementation can include dozens of dependencies that can potentially conflict with each other. Consequently, a 
 required step for using Flux's embedder feature is to include a JAR file in Flux's `./ext` directory that contains the 
-LangChain4j embedding model implementation for your desired embedding model, along with its dependencies. Each 
+LangChain4j integration for your desired embedding model, along with its dependencies. Each 
 [Flux release](https://github.com/marklogic/flux/releases), beginning with the 1.2.0 release, includes separate JAR 
-files that can be downloaded and included in Flux for this purpose. This guide also covers how to construct your 
-own JAR file for any LangChain4j-supported embedding model.
+files that can be downloaded and included in Flux for this purpose. You can also 
+[create your own integration](custom-integration.md) for any LangChain4j-supported embedding model.
 
 ## Specifying an embedder
 
@@ -45,17 +46,17 @@ refers to the Flux support for generating and adding embeddings. The value of th
 
 As of the 1.2.0 release, Flux recognizes the following abbreviations as a matter of convenience to avoid typing the full class name:
 
-- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-(version).jar` file.
-- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-(version).jar` file.
-- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-(version).jar` file. 
+- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-1.2.0.jar` file.
+- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-1.2.0.jar` file.
+- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-1.2.0.jar` file. 
 
 The JAR files associated with each of the above abbreviations can be downloaded from the 
 [Flux releases site](https://github.com/marklogic/flux/releases) and added to the `./ext` directory in a Flux 
 installation. Adding the JAR file to the `./ext` directory is required in order for the desired embedding model to work
 properly. Failure to do so will result in Flux throwing a `ClassNotFoundException`. 
 
-Please see the bottom section in this guide for instructions on building your own JAR file containing support for any 
-[LangChain4j embedding model](https://docs.langchain4j.dev/category/embedding-models).
+Please see the guide on [creating your own integration](custom-integration.md) to utilize any embedding model supported
+by LangChain4j.
 
 ## Configuring embedding model options
 
@@ -72,7 +73,7 @@ file in your Flux installation and change the `logger.langchain4j.level` logger 
 
 ### Azure OpenAI options
 
-The `flux-embedding-model-azure-open-ai-(version).jar` file uses 
+The `flux-embedding-model-azure-open-ai-1.2.0.jar` file uses 
 [LangChain4's support](https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai) for 
 [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) and
 supports the following options:
@@ -113,12 +114,12 @@ options to be used (the deployment names and endpoints are notional):
 ### minilm options
 
 The name "minilm" refers to LangChain4j's support for a [local embedding model](https://docs.langchain4j.dev/integrations/embedding-models/in-process)
-with no external dependencies. This embedding model is primarily intended for prototyping and does not support 
-any configuration options. 
+with no external dependencies. This embedding model is useful for testing vector queries with MarkLogic as it does not
+require any setup or configuration.
 
 ### Ollama options
 
-The `flux-embedding-model-ollama-(version).jar` file uses 
+The `flux-embedding-model-ollama-1.2.0.jar` file uses 
 [langchain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
 [Ollama](https://ollama.com/) and supports the following options:
 
@@ -344,88 +345,3 @@ You can configure Flux to include logging specific to the generation of embeddin
 
 1. Open the `./conf/log4j2.properties` file in an editor. 
 2. Adjust the `logger.marklogiclangchain.level` entry to have a value of `INFO` or `DEBUG`.
-
-
-## Building your own embedding model JAR
-
-As described in the "Overview" section above, each Flux release includes separate JAR files that provide integration 
-with specific embedding models. 
-
-If Flux does not yet provide a JAR file for your desired 
-[LangChain4j-supported embedding model](https://docs.langchain4j.dev/category/embedding-models), you can build your own
-JAR using the steps below. 
-
-Before beginning, you may wish to inspect the project that Flux uses to build a 
-[JAR file for Azure OpenAI](https://github.com/marklogic/flux/tree/develop/flux-embedding-model-azure-open-ai). This project
-should serve as a useful reference for building your own integration. 
-
-You must have Java 11 or higher installed on your workstation along with [Gradle](https://gradle.org/) 8.x or
-higher. The examples below assume that the `gradle` command is available on your path. 
-
-Begin by creating a new directory for your project. Add a `build.gradle` file to the directory with the following 
-configuration in it:
-
-```
-plugins {
-  id 'com.gradleup.shadow' version '8.3.3'
-}
-
-dependencies {
-  // Change this to match the embedding model you wish to use. 
-  // For example, if you wish to use Hugging Face, you would change it to:
-  // implementation "dev:langchain4j:langchain4j-hugging-face:0.35.0".  
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0"
-}
-```
-
-Your project will use the [Gradle Shadow plugin](https://gradleup.com/shadow/) to create a single JAR file containing
-your code, the LangChain4j dependency, and the dependencies specific to your embedding model. 
-
-Next, create the directory structure `src/main/java`. Then create a directory structure for the Java package name you 
-wish to use. For this example, `org.example` will be used as the package name, so the directory structure 
-`src/main/java/org/example` will be created. 
-
-Next, create a Java source file in the directory above. You can give it any name you wish. `MyEmbeddingModel` will be 
-used in this example. Then copy the below contents into the file, changing the package and class name as needed:
-
-```
-package org.example;
-
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import java.util.Map;
-import java.util.function.Function;
-
-public class MyEmbeddingModel implements Function<Map<String, String>, EmbeddingModel> {
-
-    @Override
-    public EmbeddingModel apply(Map<String, String> options) {
-        // Will implement this method next.
-    }
-}
-```
-
-The class must return an instance of the LangChain4j `EmbeddingModel` interface. The `apply` method will receive
-a map of options. The map of options is populated via the `-E` option described in the 
-"Configuring embedding model options" section above. The `-E` option therefore allows a user to pass any necessary options
-to your class. 
-
-You are then free to implement the `apply` method any way you see fit. The 
-[Flux class for Azure OpenAI](https://github.com/marklogic/flux/blob/develop/flux-embedding-model-azure-open-ai/src/main/java/com/marklogic/flux/langchain4j/embedding/AzureOpenAiEmbeddingModelFunction.java)
-can give you an idea of how to use LangChain4j and its support for your embedding model to return an instance of the
-LangChain4j `EmbeddingModel` interface. 
-
-Once you have implemented and tested your `apply` method, you can run the following Gradle command to build a single JAR file:
-
-    ./gradle shadowJar
-
-This will produce a single "shadow" JAR file in the `./build/libs` directory in your project. You can then copy that
-JAR file to the `./ext` directory in your Flux installation. 
-
-Assuming an implementation class name of `org.example.MyEmbeddingModel`, you can now utilize your class via the following
-option:
-
-    --embedder "org.example.MyEmbeddingModel"
-
-If your implementation class accepts options, you can pass them via the `-E` option - for example:
-
-    --embedder "org.example.MyEmbeddingModel" -Eoption1=value1 -Eoption2=value2
