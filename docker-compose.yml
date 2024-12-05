@@ -15,7 +15,7 @@ services:
       - 8007:8007
 
   marklogic:
-    image: "progressofficial/marklogic-db:11.3.0-ubi"
+    image: "ml-docker-db-dev-tierpoint.bed-artifactory.bedford.progress.com/marklogic/marklogic-server-ubi:latest-12"
     platform: linux/amd64
     environment:
       - MARKLOGIC_INIT=true
