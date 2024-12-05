@@ -63,8 +63,26 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
             "--connection-string", "localhost:8003"
         ));
 
-        assertTrue(output.contains(
-            "Invalid value for option '--connection-string': Invalid value for connection string; must be username:password@host:port/optionalDatabaseName"),
-            "Unexpected output: " + output);
+        assertTrue(
+            output.contains(
+                "Invalid value for option '--connection-string': Invalid value for connection string; must be username:password@host:port/optionalDatabaseName"
+            ),
+            "Unexpected output: " + output
+        );
+    }
+
+    @Test
+    void cloudAuthDoesntRequirePort() {
+        // The expected error message verifies that the user does not need to provide a port when auth-type=cloud.
+        // Otherwise, the validation for a missing port would trigger and no connection attempt would be made.
+        assertStderrContains(
+            () -> run("import-files",
+                "--path", "src/test/resources/mixed-files",
+                "--host", getDatabaseClient().getHost(),
+                "--auth-type", "cloud",
+                "--cloud-api-key", "doesnt-matter-for-this-test"
+            ),
+            "Unable to call token endpoint at https://localhost/token"
+        );
     }
 }
