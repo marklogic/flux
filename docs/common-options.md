@@ -171,6 +171,36 @@ or more forests for the database you wish to access, then you can set `--connect
 will often improve performance as Flux will be able to both connect to multiple hosts, thereby utilizing the app server
 threads available on each host, and also write directly to a forest on the host that it connects to. 
 
+### Connecting to Progress Data Cloud
+
+To connect to Progress Data Cloud (PDC), you must set at least the following options:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+--host your-pdc-host-name \
+--port 443 \
+--auth-type cloud \
+--cloud-api-key your-key-goes-here
+```
+{% endtab %}
+{% tab log Windows %}
+```
+--host your-pdc-host-name ^
+--port 443 ^
+--auth-type cloud ^
+--cloud-api-key your-key-goes-here
+```
+{% endtab %}
+{% endtabs %}
+
+You will most likely need to configure the `--base-path` option with the name of a path that proxies to a REST API
+app server in your PDC instance - e.g. `--base-path /ml/dev/ml/app-services`. 
+Please check your PDC portal page for more information. 
+
+By default, Flux will use your JVM's default keystore and truststore for establishing an SSL connection to PDC. See 
+the following sections for options on how to configure the SSL connection.
+
 ### Configuring one-way SSL
 
 Flux supports both one-way and two-way SSL connections to MarkLogic (the term "SSL" is used as a synonym for "TLS" in
