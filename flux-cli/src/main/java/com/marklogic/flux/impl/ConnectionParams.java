@@ -172,6 +172,16 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @Override
     @CommandLine.Option(
+        names = "--oauth-token",
+        description = "Token to be used with 'OAUTH' authentication."
+    )
+    public ConnectionOptions oauthToken(String oauthToken) {
+        this.oauthToken = oauthToken;
+        return this;
+    }
+
+    @Override
+    @CommandLine.Option(
         names = "--ssl-protocol",
         description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
             "or truststore is configured, defaults to 'TLSv1.2'."
