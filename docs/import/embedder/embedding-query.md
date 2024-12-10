@@ -67,7 +67,7 @@ in the below command to point to the location of the `data/marklogic-security-do
 {% endtab %}
 {% tab log Windows %}
 ```
-./bin/flux import-files ^
+bin\flux import-files ^
     --path ..\data\marklogic-security-docs.zip ^
     --compression zip ^
     --connection-string "flux-example-user:password@localhost:8004" ^
@@ -147,20 +147,19 @@ a response similar to the following, effectively summarizing the text found in t
 knowledge of MarkLogic:
 
 ```
-To remove a protected path in MarkLogic, it is a two-step process. First, you need to unprotect the path, which 
-removes the permissions and disables the protection. Then, you can remove the path. After unprotecting the path, 
-you can click the delete button on the Protected Path Configuration page to remove the path. It is important to 
-note that adding, unprotecting, or changing permissions for protected paths will trigger reindexing of the 
-relevant databases, and having too many unprotected paths for your database can affect performance.
+To remove a protected path in MarkLogic, it is a two-step process. First, you need to 
+unprotect the path, which removes the permissions and disables the protection. Then, you 
+can remove the path. After unprotecting the path, you can click the delete button on the 
+Protected Path Configuration page to remove the path.
 ```
 
 Without RAG, LLM responses may include incorrect information; for example:
 
 ```
-To remove a protected path in MarkLogic, you can use the `xdmp:document-remove-permissions` function.
-This function takes the URI of the document as its first argument and the path expression as its second argument.
-Once executed, the protected path will be removed from the document and will no longer be subject to any 
-permissions or security settings.
+To remove a protected path in MarkLogic, you can use the `xdmp:document-remove-permissions` 
+function. This function takes the URI of the document as its first argument and the path 
+expression as its second argument. Once executed, the protected path will be removed from 
+the document and will no longer be subject to any permissions or security settings.
 ```
 
 LLM responses can vary widely, but a RAG approached that utilizes MarkLogic's indexes and vector query support

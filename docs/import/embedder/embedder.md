@@ -306,7 +306,7 @@ connection string are notional):
 {% endtab %}
 {% tab log Windows %}
 ```
-./bin/flux import-files ^
+bin\flux import-files ^
     --path path\to\file.zip ^
     --compression zip ^
     --connection-string "flux-example-user:password@localhost:8004" ^
