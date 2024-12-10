@@ -331,7 +331,7 @@ instead of in a table:
 {% endtab %}
 {% tab log Windows %}
 ```
-./bin/flux import-parquet-files ^
+bin\flux import-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --path export\parquet ^
     --preview 10 ^
