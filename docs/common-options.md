@@ -263,12 +263,12 @@ All available connection options are shown in the table below:
 
 | Option | Description | 
 | --- | --- |
-| `--auth-type` | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
+| `--auth-type` | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `CERTIFICATE`, `KERBEROS`, `OAUTH`, and `SAML`.|
 | `--base-path` | Path to prepend to each call to a MarkLogic [REST API app server](https://docs.marklogic.com/guide/rest-dev). |
 | `--certificate-file` | File path for a keystore to be used for `CERTIFICATE` authentication. |
 | `--certificate-password` | Password for the keystore referenced by `--certificate-file`. |
 | `--connection-string` |  Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using `DIGEST` or `BASIC` authentication. |
-| `--cloud-api-key` | API key for authenticating with a MarkLogic Cloud cluster when authentication type is `CLOUD`. |
+| `--cloud-api-key` | API key for authenticating with a Progress Data Cloud cluster when authentication type is `CLOUD`. |
 | `--connection-type` |  Set to `DIRECT` if connections can be made directly to each host in the MarkLogic cluster. Defaults to `GATEWAY`. Possible values are `DIRECT` and `GATEWAY`. |
 | `--database` | Name of a database to connect if it differs from the one associated with the app server identified by `--port`. |
 | `--disable-gzipped-responses` | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
@@ -278,6 +278,7 @@ All available connection options are shown in the table below:
 | `--keystore-password` | Password for the keystore identified by `--keystore-path`. |
 | `--keystore-path` | File path for a keystore for two-way SSL connections. |
 | `--keystore-type` | Type of the keystore identified by `--keystore-path`; defaults to `JKS`. |
+| `--oauth-token` | Token to be used with `OAUTH` authentication. |
 | `--password` | Password when using `DIGEST` or `BASIC` authentication. |
 | `--port` | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
 | `--saml-token` | Token to be used with `SAML` authentication. |
