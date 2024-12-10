@@ -25,10 +25,18 @@ The following commands support executing an Optic query and exporting the matchi
 - `export-orc-files`
 - `export-parquet-files`
 
-An Optic query is specified via the `--query` option. The query must be defined using the 
-[Optic DSL](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_46710) and must begin with the `op.fromView` data accessor. The 
+An Optic query is specified via the `--query` option. 
+
+Starting with Flux 1.2.0, the Optic query can use any
+[data access function](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_66011) with a caveat - only Optic
+queries that use `op.fromView` can be partitioned into multiple calls to MarkLogic. If you use a data access function
+other than `op.fromView`, you should ensure that your query can return its results in a single call to MarkLogic. 
+
+If you are using Flux 1.1.x or earlier, your Optic query must use the `op.fromView` data access function. 
+
+Please see the  
 [MarkLogic Spark connector documentation](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#optic-query-requirements)
-provides additional guidance on how to write an Optic query. 
+for additional guidance on how to write an Optic query. 
 
 You must also specify connection information for the MarkLogic database you wish to query. Please see the 
 [guide on common options](../common-options.md) for instructions on doing so.
@@ -317,6 +325,10 @@ For further information on each mode, please see
 [the Spark documentation](https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes).
 
 ## Tuning query performance
+
+This section only applies for Optic queries that begin with `op.fromView` as the data access function. For other Optic
+queries, Flux will execute the query in a single call to MarkLogic. The performance of such a query will be determined
+by the query, your MarkLogic index settings, and your MarkLogic environment. 
 
 The `--batch-size` and `--partitions` options are used to tune performance by controlling how many rows are retrieved in
 a single call to MarkLogic and how many requests are made in parallel to MarkLogic. It is recommended to first test your command
