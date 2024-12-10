@@ -49,6 +49,7 @@ public abstract class ConnectionInputs {
     protected String cloudApiKey;
     protected String kerberosPrincipal;
     protected String samlToken;
+    protected String oauthToken;
     protected String sslProtocol;
     protected SslHostnameVerifier sslHostnameVerifier;
     protected String keyStorePath;
@@ -97,6 +98,7 @@ public abstract class ConnectionInputs {
             "spark.marklogic.client.cloud.apiKey", cloudApiKey,
             "spark.marklogic.client.kerberos.principal", kerberosPrincipal,
             "spark.marklogic.client.saml.token", samlToken,
+            "spark.marklogic.client.oauth.token", oauthToken,
             "spark.marklogic.client.sslProtocol", sslProtocol,
             "spark.marklogic.client.sslHostnameVerifier", sslHostnameVerifier != null ? sslHostnameVerifier.name() : null,
             "spark.marklogic.client.ssl.keystore.path", keyStorePath,
