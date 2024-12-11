@@ -144,9 +144,13 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, permissions,
             Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, rootName,
             Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, uriPrefix,
-            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix,
-            Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, xmlNamespace
+            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix
         );
+
+        // Empty string is a valid value.
+        if (xmlNamespace != null) {
+            options.put(Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, xmlNamespace);
+        }
 
         if (!jsonPointer.isEmpty()) {
             options.put(Options.WRITE_SPLITTER_JSON_POINTERS, jsonPointer.stream().collect(Collectors.joining("\n")));

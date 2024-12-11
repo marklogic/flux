@@ -81,9 +81,13 @@ public class EmbedderParams implements EmbedderOptions {
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
                 Options.WRITE_EMBEDDER_CHUNKS_XPATH, chunksXpath,
                 Options.WRITE_EMBEDDER_TEXT_XPATH, textXpath,
-                Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, embeddingNamespace,
                 Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
             );
+
+            // Empty string is a valid value.
+            if (embeddingNamespace != null) {
+                options.put(Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, embeddingNamespace);
+            }
 
             // "" is a valid value, so we don't use the OptionsUtil class which ignores "".
             if (chunksJsonPointer != null) {

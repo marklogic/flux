@@ -24,10 +24,10 @@ using all the text in a document. Flux does not yet support splitting text in bi
 
 ### Using JSON Pointer expressions
 
-For JSON source documents, you can specify [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) 
+For JSON documents, you can select text to split by specifying one or more [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) 
 expressions via the `--splitter-json-pointer` option.
 
-As an example, consider a JSON document containing at least the following content:
+As an example, consider a JSON document containing the following content:
 
 ```
 {
@@ -48,10 +48,10 @@ You can also select the text in both fields via:
 
 ### Using an XPath expression
 
-For XML source documents, you can specify an [XPath expression](https://en.wikipedia.org/wiki/XPath) via the `--splitter-xpath` option. 
+For XML documents, you can select text to split by specifying an [XPath expression](https://en.wikipedia.org/wiki/XPath) via the `--splitter-xpath` option. 
 As a single XPath expression can be used to select text in multiple locations, this option only accepts a single value. 
 
-As an example, consider an XML document with at least the following content:
+As an example, consider an XML document with the following content:
 
 ```
 <root>
@@ -70,7 +70,7 @@ You can select the text in both the `summary` and `description` elements via:
 
     --splitter-xpath "/root/node()[self::summary or self::description[ancestor::content]]/text()"
 
-Note the use of `/text()` to select the text node of an element. If you omit this, the element will be selected 
+Note the use of `/text()` to select the text node of an element. If `/text()` is omitted, the element will be selected 
 and serialized to a string. For example, the following will serialize the entire document to a string and use that
 output as the text to be split:
 
@@ -83,28 +83,27 @@ pattern:
     -Xprefix=URI
 
 For example, for an XPath expression of "/ex:root/ex:text", where the "ex" prefix is associated with the namespace 
-"org:example", you would need to include the following option:
+"org:example", you would include the following option:
 
     -Xex=org:example
 
 ### Using all the text in a document
 
-For Text documents - i.e. documents that are not JSON or XML and contain unstructured or semi-structured text - use
-the following option to specify that all the text in a document should be split:
+To select all the text in a document, use the following option:
 
     --splitter-text
 
-You can use this option as well on JSON and XML documents, in which case the JSON or XML document will be treated as 
-a string, including all braces and tags. 
+You can use this option on JSON and XML documents in addition to text documents, in which case the JSON or XML document 
+will be treated as a string, including all braces and tags. 
 
 ## Configuring how text is split
 
-Flux uses the popular [langchain4j framework](https://docs.langchain4j.dev/intro/) to support splitting the text in 
-documents. Via langchain4j, Flux supports 3 options for splitting text:
+Flux uses the [LangChain4j framework](https://docs.langchain4j.dev/intro/) to support splitting the text in 
+documents. Via LangChain4j, Flux supports 3 options for splitting text:
 
 1. A default approach that splits on paragraphs, sentences, lines, and words.
 2. A regex-based approach that splits text based on a regex pattern.
-3. A custom splitter, written by a user that implements a langchain4j API. 
+3. A custom splitter, written by a user that implements a LangChain4j API. 
 
 ### Default splitter
 
@@ -115,7 +114,7 @@ splitter approaches. This splitter provides two options to control its output:
 2. `--splitter-max-overlap-size` controls the maximum overlap in characters between two consecutive chunks, with a default value of 0. 
 
 When splitting text in documents to support a RAG use case, the max chunk size is often critical in ensuring that your 
-RAG solution does not send too much text in one request to your LLM. 
+RAG solution does not send too much text in one request to your Large Language Model (LLM). 
 
 ### Regex splitter
 
@@ -125,11 +124,11 @@ chunk without exceeding the value specified via `--splitter-max-chunk-size`, whi
 are joined together by a single space; this can be overridden via the `--splitter-join-delimiter` option. 
 
 The `--splitter-max-chunk-size` and `--splitter-max-overlap-size` options, as described above for the default splitter, 
-can both be used with the regex splitter as well. 
+can both be used with the regex splitter. 
 
 ### Custom splitter
 
-The default and regex approaches described above are intended for quickly getting a splitting solution in place. There
+The default and regex approaches described above are intended for quickly implementing a splitting solution. There
 are many other splitting strategies available, including those supported by LLMs. Flux will likely support additional
 strategies out-of-the-box in the future. In the meantime, you can implement your own splitter via the steps below.
 
@@ -137,18 +136,18 @@ For a working example of a custom splitter, please see [this example project](ht
 in the Flux GitHub repository.
 
 To use a custom splitter, you will need to create an implementation of the 
-[langchain4j DocumentSplitter interface](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/DocumentSplitter.html).
+[LangChain4j DocumentSplitter interface](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/DocumentSplitter.html).
 You are free to do that in any manner you wish, though you will likely want to use either [Maven](https://maven.apache.org/) 
 or [Gradle](https://gradle.org/) as your build tool. 
 
-As Flux currently depends on langchain4j 0.35.0, you should use the same version of langchain4j when implementing your
-custom splitter.
+As Flux currently depends on LangChain4j 0.35.0, you should use the same version of LangChain4j when implementing your
+custom splitter. Note that LangChain4j 0.36.0 and higher require the use of Java 17. 
 
-As your custom splitter may need one or more configuration options, your implementation of `DocumentSplitter` must have
+As your custom splitter may need one or more configuration options, your implementation of a LangChain4j `DocumentSplitter` must have
 a public constructor that accepts a `java.util.Map<String, String> options` argument. You will be able to provide 
 options to your splitter via a Flux command line option described below. 
 
-The outline of your splitter should thus look similar to this:
+The outline of your splitter should look similar to this:
 
 ```
 import dev.langchain4j.data.document.Document;
@@ -200,10 +199,10 @@ documents, Flux only supports writing sidecar documents, which are described in 
 
 Given a JSON source document, Flux will add the following:
 
-1. A top-level `chunks` array is added.
+1. A top-level `chunks` array.
 2. Each chunk is added to that array as an object with a single `text` field. 
 
-If a top-level field named `chunks` already exists, Flux will instead use the name `marklogic-chunks`.
+If a top-level field named `chunks` already exists, Flux will instead use the name `splitter-chunks`.
 
 For example, given the source document:
 
@@ -230,11 +229,11 @@ this example):
 
 Given an XML source document, Flux will add the following:
 
-1. A child element under the root element named "chunks" with no namespace. 
+1. A child element under the root element named "chunks" with a namespace of `http://marklogic.com/appservices/model`. 
 2. Each chunk is added as a child element of the "chunks" element named "chunk" with a single "text" child element.
 
 If child element of the root element already exists with the name `chunks`, Flux will instead use the 
-name `marklogic-chunks`.
+name `splitter-chunks`.
 
 For example, given the source document:
 
@@ -250,7 +249,7 @@ this example):
 ```
 <root>
   <content>A large amount of text.</content>
-  <chunks>
+  <chunks xmlns='http://marklogic.com/appservices/model'>
     <chunk><text>A large amount</text></chunk>
     <chunk><text>of text.</text></chunk>
   </chunks>
@@ -264,7 +263,7 @@ to the source document) via the following option:
 
     --splitter-sidecar-max-chunks (positive number)
 
-That option both enables the use of sidecar documents and defines the maximum number of chunks to write to a single 
+The option both enables the use of sidecar documents and defines the maximum number of chunks to write to a single 
 sidecar document. For example, given a source document that produces 10 chunks, a value of 3 for the above option 
 would result in 4 sidecar documents. The first 3 sidecar documents would each have 3 chunks, and the 4th sidecar 
 document would have 1 chunk. You can also ensure that only one sidecar document is written by giving the option a 

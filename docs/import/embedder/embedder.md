@@ -8,8 +8,8 @@ nav_order: 7
 
 Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding is 
 associated with a "chunk" of text that is usually, but not necessarily, produced via Flux's 
-[support for splitting text](splitting.md). Flux can add embeddings during 
-any import operation and also when [copying documents](../copy.md). Adding embeddings to documents is a critical 
+[support for splitting text](../splitting.md). Flux can add embeddings during 
+any import operation and also when [copying documents](../../copy.md). Adding embeddings to documents is a critical 
 part of creating a data pipeline in support of 
 [retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), 
 use cases that utilize MarkLogic's support for 
@@ -120,7 +120,7 @@ require any setup or configuration.
 ### Ollama options
 
 The `flux-embedding-model-ollama-1.2.0.jar` file uses 
-[langchain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
+[LangChain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
 [Ollama](https://ollama.com/) and supports the following options:
 
 | Option | Description | 
@@ -164,7 +164,7 @@ to generate any embeddings for it.
 By default, Flux uses a [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) expression of `/chunks` to find chunks
 in a document. Flux expects that expression to point to either an array of objects or a single object. Each object is 
 expected to have a key named `text` that contains the text to be used to generate an embedding for the chunk. These 
-expectations align with the default behavior of Flux's [splitting feature](splitting.md).
+expectations align with the default behavior of Flux's [splitting feature](../splitting.md).
 
 You can configure a different JSON Pointer expression for selecting chunks in a JSON document via the following option:
 
@@ -207,7 +207,7 @@ By default, Flux uses an [XPath expression](https://www.w3schools.com/xml/xpath_
 find chunks in an XML document. The element at that path is expected to contain a child element per chunk. Each child
 element - which can have any name and be in any namespace - is expected to contain its text to use for an embedding 
 at a location defined by `node()[local-name(.) = 'text']`. These expectations align with the default behavior of 
-Flux's [splitting feature](splitting.md).
+Flux's [splitting feature](../splitting.md).
 
 You can configure a different XPath expression for selecting chunks in an XML document via the following option:
 
@@ -226,15 +226,14 @@ For example, to use an option of `--embedder-chunks-xpath /ex1:parent/ex2:chunks
 options to define the `ex1` and `ex2` namespace prefixes (the namespace URIs are notional and included only for sake
 of example):
 
-    -Xex1=org:example
-    -Xex2=org:example2
+    -Xex1=org:example -Xex2=org:example2
 
 ## Configuring an embedding location
 
 After generating an embedding for a chunk, Flux expects to store the embedding in a location relative to the chunk. The
 following sections describe the default behavior for JSON and XML documents and how to customize the behavior. You can
 also use a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/transforms) to further control how
-embeddings are stored in your documents. See the [guide on common import options](common-import-features.md) for more
+embeddings are stored in your documents. See the [guide on common import options](../common-import-features.md) for more
 information on transforms. 
 
 ### JSON documents
@@ -329,7 +328,7 @@ By default, Flux will send one request per chunk to the selected embedding model
 generating embeddings for multiple chunks of text in a single request, you can use the `--embedder-batch-size` option
 to configure how many chunks will be included in a request. 
 
-You can typically achieve much better performance when increasing the embedder batch size. However, you may more easily
+You can typically achieve much better performance when increasing the embedder batch size. However, you may more frequently
 run into rate limits imposed by your embedding model. For example, your embedding model may limit the number of tokens
 it will process per minute. Increasing the embedder batch size may lead to this limit being hit more frequently. 
 
