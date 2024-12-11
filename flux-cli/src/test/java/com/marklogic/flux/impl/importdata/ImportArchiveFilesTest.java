@@ -83,7 +83,7 @@ class ImportArchiveFilesTest extends AbstractTest {
                 "with a text node, the chunks gets added to the root element. It's valid to do this, but it may " +
                 "also be a little surprising. Though, it's likely rare to have an XML document with a single root " +
                 "element and text node.",
-            "/hello/chunks/chunk/text", "world");
+            "/hello/model:chunks/model:chunk/model:text", "world");
     }
 
     @Test

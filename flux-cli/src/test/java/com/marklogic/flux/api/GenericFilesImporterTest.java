@@ -140,8 +140,8 @@ class GenericFilesImporterTest extends AbstractTest {
         assertTrue(uri.endsWith("/chunk.xml"));
 
         XmlNode doc = readXmlDocument(uri);
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example:chunk")});
-        doc.assertElementCount("/ex:my-chunk/ex:chunks/ex:chunk", 2);
+        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ch", "org:example:chunk")});
+        doc.assertElementCount("/ch:my-chunk/ch:chunks/ch:chunk", 2);
     }
 
     @Test

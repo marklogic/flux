@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
-import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,9 +31,8 @@ class ImportAndSplitFilesTest extends AbstractTest {
         );
 
         XmlNode doc = readXmlDocument("/namespaced-java-client-intro.xml");
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example")});
         doc.assertElementCount("The underlying langchain4j splitter is expected to produce 5 chunks when using a " +
-            "max chunk size of 500 and a max overlap size of 100.", "/ex:root/chunks/chunk", 5);
+            "max chunk size of 500 and a max overlap size of 100.", "/ex:root/model:chunks/model:chunk", 5);
     }
 
     /**

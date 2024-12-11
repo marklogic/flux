@@ -109,7 +109,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         );
 
         XmlNode doc = readXmlDocument("/people.xml-1.xml");
-        doc.assertElementValue("/person/chunks/chunk/text", "company-1");
+        doc.assertElementValue("/person/model:chunks/model:chunk/model:text", "company-1");
     }
 
     @Test

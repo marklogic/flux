@@ -77,7 +77,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
         );
 
         XmlNode doc = readXmlDocument("/test/1.xml");
-        doc.assertElementValue("/hello/chunks/chunk/text", "world");
+        doc.assertElementValue("/hello/model:chunks/model:chunk/model:text", "world");
     }
 
     @Test

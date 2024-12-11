@@ -8,6 +8,7 @@ import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.cli.Main;
 import com.marklogic.junit5.AbstractMarkLogicTest;
+import com.marklogic.junit5.XmlNode;
 import com.marklogic.mgmt.ManageClient;
 import com.marklogic.mgmt.ManageConfig;
 import com.marklogic.rest.util.MgmtResponseErrorHandler;
@@ -16,6 +17,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.spark.sql.SparkSession;
+import org.jdom2.Namespace;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -183,5 +185,14 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         ManageClient manageClient = new ManageClient(restTemplate);
         manageClient.setManageConfig(config);
         return manageClient;
+    }
+
+    @Override
+    protected XmlNode readXmlDocument(String uri) {
+        // Registering commonly-used namespaces in tests.
+        return super.readXmlDocument(uri,
+            Namespace.getNamespace("model", "http://marklogic.com/appservices/model"),
+            Namespace.getNamespace("ex", "org:example")
+        );
     }
 }
