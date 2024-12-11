@@ -82,10 +82,12 @@ writing documents. Similar to the output connection options, each option for con
 is prefixed with `output`. For example, to specify collections for the documents, `--output-collections` is used instead
 of `--collections`.
 
-## Splitting text in documents
+## Building a RAG data pipeline
 
-While writing documents during the `copy` operation, Flux supports splitting the text in a document into chunks. This
-can be very useful for supporting
-[retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) use cases with
-MarkLogic, particularly when you have already imported the data that you now wish to split. 
-Please see [the guide on splitting](import/splitting.md) for more information.
+[Retrieval-augmented generation](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), or RAG, with MarkLogic depends on preparing data so that the most relevant
+chunks of text for a user's question can be sent to a Large Language Model, or LLM. Starting with release 1.2.0, Flux
+supports the construction of a data pipeline by splitting the text in a document into chunks and adding a vector
+embedding to each chunk while copying data. Please see [the guide on splitting text](import/splitting.md) and
+[the guide on adding embeddings](import/embedder/embedder.md) for more information. All options pertaining to splitting
+text and adding embeddings are available in the `copy` operation.
+

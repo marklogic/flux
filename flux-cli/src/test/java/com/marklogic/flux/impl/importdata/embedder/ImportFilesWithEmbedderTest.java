@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -27,10 +28,33 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
             "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-permissions", "flux-test-role,read,flux-test-role,update",
+            "--splitter-sidecar-collections", "sidecar-chunks",
             "--embedder", "minilm"
         );
 
+        assertCollectionSize("sidecar-chunks", 2);
         verifyChunksHaveEmbeddings();
+    }
+
+    @Test
+    void minilmNoNamespace() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-document-type", "xml",
+            "--splitter-sidecar-xml-namespace", "",
+            "--embedder", "minilm"
+        );
+
+        XmlNode doc = readXmlDocument("/java-client-intro.json-chunks-1.xml");
+        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/embedding");
     }
 
     @Test
