@@ -32,10 +32,13 @@ dependencies {
 }
 
 tasks.register("runApp", JavaExec) {
-  description = "Verify that the example program can be compiled and run with flux-api as a dependency. " +
-    "Requires using Java 11."
+  description = "Verify that the example program can be compiled and run with flux-api as a dependency. "
   mainClass = "org.example.App"
   classpath = sourceSets.main.runtimeClasspath
+  jvmArgs = [
+    // Required when running on Java 17.
+    '--add-exports=java.base/sun.nio.ch=ALL-UNNAMED'
+  ]
 }
 
 tasks.register("runViaCustomTask") {
