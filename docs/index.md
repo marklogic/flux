@@ -22,6 +22,8 @@ Flux has the following system requirements:
 * MarkLogic 10.0-9 or higher.
 * A [MarkLogic REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. 
 
+Java 21 should work but has not been thoroughly tested yet. Java 23 will not yet work. 
+
 Earlier versions of MarkLogic 9 and 10 will support any features not involving Optic queries.
 Additionally, the latest version of MarkLogic 11 is recommended if possible.
 
