@@ -118,7 +118,7 @@ To configure the SonarQube service, perform the following steps:
 7. Click on "Use the global setting" and then "Create project".
 8. On the "Analysis Method" page, click on "Locally".
 9. In the "Provide a token" panel, click on "Generate". Copy the token.
-10. Add `systemProp.sonar.token=your token pasted here` to `gradle-local.properties` in the root of your project, creating
+10. Add `systemProp.sonar.login=your token pasted here` to `gradle-local.properties` in the root of your project, creating
     that file if it does not exist yet.
 
 To run SonarQube, run the following Gradle tasks with Java 17 or higher, which will run all the tests with code 
@@ -126,10 +126,10 @@ coverage and then generate a quality report with SonarQube:
 
     ./gradlew test sonar
 
-If you do not add `systemProp.sonar.token` to your `gradle-local.properties` file, you can specify the token via the
+If you do not add `systemProp.sonar.login` to your `gradle-local.properties` file, you can specify the token via the
 following:
 
-    ./gradlew test sonar -Dsonar.token=paste your token here
+    ./gradlew test sonar -Dsonar.login=paste your token here
 
 When that completes, you will see a line like this near the end of the logging:
 
