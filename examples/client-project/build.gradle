@@ -7,14 +7,6 @@ buildscript {
   }
   dependencies {
     classpath "com.marklogic:flux-api:1.1.3"
-
-    // Demonstrates removing the Jackson libraries that otherwise cause a conflict with
-    // Spark, which requires Jackson >= 2.14.0 and < 2.15.0.
-    classpath("com.marklogic:ml-gradle:4.8.0") {
-      exclude group: "com.fasterxml.jackson.databind"
-      exclude group: "com.fasterxml.jackson.core"
-      exclude group: "com.fasterxml.jackson.dataformat"
-    }
   }
 }
 
