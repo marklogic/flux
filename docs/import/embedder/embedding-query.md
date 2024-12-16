@@ -60,7 +60,7 @@ in the below command to point to the location of the `data/marklogic-security-do
     --uri-replace ".*zip,''" \
     --splitter-xpath "//xhtml:p" \
     -Xxhtml=http://www.w3.org/1999/xhtml \
-    --splitter-max-chunks 1 \
+    --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections "chunks,docs-chunks" \
     --embedder minilm
 ```
@@ -76,7 +76,7 @@ bin\flux import-files ^
     --uri-replace ".*zip,''" ^
     --splitter-xpath "//xhtml:p" ^
     -Xxhtml=http://www.w3.org/1999/xhtml ^
-    --splitter-max-chunks 1 ^
+    --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections "chunks" ^
     --embedder minilm
 ```
