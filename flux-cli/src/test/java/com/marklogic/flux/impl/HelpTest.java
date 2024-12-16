@@ -5,11 +5,17 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HelpTest extends AbstractTest {
+
+    @Test
+    void returnCode() {
+        assertEquals(CommandLine.ExitCode.USAGE, run());
+        assertEquals(CommandLine.ExitCode.USAGE, run("help", "import-files"));
+    }
 
     @Test
     void summaryUsage() {

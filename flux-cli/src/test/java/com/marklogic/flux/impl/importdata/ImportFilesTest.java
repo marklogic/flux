@@ -8,6 +8,7 @@ import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void multiplePaths() {
         run(
+            CommandLine.ExitCode.OK,
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*txt*",
             "--path", "src/test/resources/mixed-files/hello.json",
@@ -244,6 +246,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void invalidGzippedFile() {
         run(
+            CommandLine.ExitCode.OK,
             "import-files",
             "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
@@ -262,6 +265,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
+            CommandLine.ExitCode.SOFTWARE,
             "import-files",
             "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
