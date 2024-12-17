@@ -197,7 +197,6 @@ to select rows. The following shows an example of exporting the 1000 employee do
 {% tabs log %}
 {% tab log Unix %}
 ```
-mkdir export
 ./bin/flux export-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
@@ -208,7 +207,6 @@ mkdir export
 {% endtab %}
 {% tab log Windows %}
 ```
-mkdir export
 bin\flux export-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --collections employee ^
@@ -302,7 +300,6 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 {% tabs log %}
 {% tab log Unix %}
 ```
-mkdir export/parquet
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --path export/parquet \
@@ -311,10 +308,9 @@ mkdir export/parquet
 {% endtab %}
 {% tab log Windows %}
 ```
-mkdir export\parquet
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --path export/parquet ^
+    --path export\parquet ^
     --query "op.fromView('example', 'employees', '')" 
 ```
 {% endtab %}
@@ -372,7 +368,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --query "op.fromView('example', 'employees')" ^
-    --path export/parquet ^
+    --path export\parquet ^
     --preview 10
 ```
 {% endtab %}
