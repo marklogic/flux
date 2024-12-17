@@ -63,7 +63,13 @@ public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
+    // Intended to be invoked solely by the application script. Tests should invoke "run" instead to avoid the
+    // System.exit call.
     public static void main(String[] args) {
+        System.exit(run(args));
+    }
+
+    public static int run(String[] args) {
         if (args.length == 0 || args[0].trim().equals("")) {
             args = new String[]{"help"};
         } else if (args[0].equals("help") && args.length == 1) {
@@ -75,8 +81,9 @@ public class Main {
                 .setUsageHelpWidth(120)
                 .setAbbreviatedSubcommandsAllowed(true)
                 .execute(args);
+            return CommandLine.ExitCode.USAGE;
         } else {
-            new Main().newCommandLine().execute(args);
+            return new Main().newCommandLine().execute(args);
         }
     }
 

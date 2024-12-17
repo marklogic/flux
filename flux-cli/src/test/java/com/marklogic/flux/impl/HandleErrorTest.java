@@ -5,6 +5,7 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -18,7 +19,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidCommand() {
         assertStderrContains(
-            () -> run("not_a_real_command", "--connection-string", makeConnectionString()),
+            () -> run(CommandLine.ExitCode.USAGE, "not_a_real_command", "--connection-string", makeConnectionString()),
             "Unmatched arguments from index 0: 'not_a_real_command'"
         );
     }
@@ -26,7 +27,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParam() {
         assertStderrContains(
-            () -> run("import-files", "--not-a-real-param", "--path", "anywhere"),
+            () -> run(CommandLine.ExitCode.USAGE, "import-files", "--not-a-real-param", "--path", "anywhere"),
             "Unknown option: '--not-a-real-param'"
         );
     }
@@ -34,7 +35,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidParamWithSingleQuotesInIt() {
         assertStderrContains(
-            () -> run("import-files", "-not-a-'real'-param", "--path", "anywhere"),
+            () -> run(CommandLine.ExitCode.USAGE, "import-files", "-not-a-'real'-param", "--path", "anywhere"),
             "Unknown option: '-not-a-'real'-param'"
         );
     }
@@ -42,7 +43,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void badDynamicOption() {
         assertStderrContains(
-            () -> run("import-files", "-CnoValue"),
+            () -> run(CommandLine.ExitCode.USAGE, "import-files", "-CnoValue"),
             "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue"
         );
     }
@@ -50,7 +51,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void missingRequiredParam() {
         assertStderrContains(
-            () -> run("import-files", "--connection-string", makeConnectionString()),
+            () -> run(CommandLine.ExitCode.USAGE, "import-files", "--connection-string", makeConnectionString()),
             "Missing required option: '--path <path>'"
         );
 
@@ -67,6 +68,7 @@ class HandleErrorTest extends AbstractTest {
     void sparkFailure() {
         assertStderrContains(
             () -> run(
+                CommandLine.ExitCode.SOFTWARE,
                 "import-files",
                 "--path", "/not/valid",
                 "--connection-string", makeConnectionString()
@@ -79,6 +81,7 @@ class HandleErrorTest extends AbstractTest {
     void abortOnWriteFailure() {
         assertStderrContains(
             () -> run(
+                CommandLine.ExitCode.SOFTWARE,
                 "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
@@ -97,6 +100,7 @@ class HandleErrorTest extends AbstractTest {
     void abortOnWriteFailureAndShowStacktrace() {
         assertStderrContains(
             () -> run(
+                CommandLine.ExitCode.SOFTWARE,
                 "import-files",
                 "--path", "src/test/resources/mixed-files/hello*",
                 "--repartition", "2",
@@ -112,6 +116,7 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void dontAbortOnWriteFailure() {
         String stderr = runAndReturnStderr(() -> run(
+            CommandLine.ExitCode.OK,
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.

@@ -28,8 +28,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 public abstract class AbstractTest extends AbstractMarkLogicTest {
@@ -93,8 +92,14 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
         return String.format("%s:%s@%s:%d", DEFAULT_USER, DEFAULT_PASSWORD, databaseClient.getHost(), databaseClient.getPort());
     }
 
-    protected final void run(String... args) {
-        Main.main(args);
+    protected final int run(int expectedReturnCode, String... args) {
+        int code = run(args);
+        assertEquals(expectedReturnCode, code);
+        return code;
+    }
+
+    protected final int run(String... args) {
+        return Main.run(args);
     }
 
     /**
