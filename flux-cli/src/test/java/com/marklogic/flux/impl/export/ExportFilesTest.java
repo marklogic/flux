@@ -13,14 +13,15 @@ import com.marklogic.spark.Options;
 import org.apache.spark.sql.Row;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExportFilesTest extends AbstractTest {
 
@@ -52,6 +53,24 @@ class ExportFilesTest extends AbstractTest {
             assertTrue(doc.has("CitationID"));
             assertTrue(doc.has("LastName"));
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"doesntexist", "has space", "has+plus"})
+    void pathDoesntExist(String directoryName, @TempDir Path tempDir) {
+        File dir = new File(tempDir.toFile(), directoryName);
+        assertFalse(dir.exists());
+
+        run(
+            "export-files",
+            "--path", dir.getAbsolutePath(),
+            "--connection-string", makeConnectionString(),
+            "--uris", "/citations.xml"
+        );
+
+        assertTrue(dir.exists(), "Directory was not created: " + dir.getAbsolutePath());
+        assertEquals(1, dir.listFiles().length);
+        assertTrue(new File(dir, "citations.xml").exists());
     }
 
     @Test
