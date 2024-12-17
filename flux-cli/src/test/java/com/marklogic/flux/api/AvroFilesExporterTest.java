@@ -4,8 +4,10 @@
 package com.marklogic.flux.api;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.junit5.TestDataReloader;
 import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(TestDataReloader.class)
 class AvroFilesExporterTest extends AbstractTest {
 
     @Test

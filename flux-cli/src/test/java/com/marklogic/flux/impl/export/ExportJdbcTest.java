@@ -5,10 +5,13 @@ package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.AbstractExportJdbcTest;
 import com.marklogic.flux.impl.PostgresUtil;
+import com.marklogic.flux.junit5.TestDataReloader;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(TestDataReloader.class)
 class ExportJdbcTest extends AbstractExportJdbcTest {
 
     @Test
