@@ -29,6 +29,18 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
 
     private SparkSession sparkSession;
 
+    public String determineSparkMasterUrl() {
+        if (commonParams != null) {
+            if (commonParams.getSparkMasterUrl() != null) {
+                return commonParams.getSparkMasterUrl();
+            }
+            if (commonParams.getRepartition() > 0) {
+                return String.format("local[%d]", commonParams.getRepartition());
+            }
+        }
+        return "local[*]";
+    }
+
     @Override
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         new ConnectionParamsValidator(false).validate(connectionParams);
@@ -194,6 +206,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public T limit(int limit) {
         commonParams.setLimit(limit);
+        return (T) this;
+    }
+
+    @Override
+    public T repartition(int partitionCount) {
+        commonParams.setRepartition(partitionCount);
         return (T) this;
     }
 }
