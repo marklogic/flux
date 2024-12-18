@@ -8,8 +8,12 @@ import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SparkUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
     private SparkUtil() {
         // Required by Sonar.
@@ -20,6 +24,9 @@ public class SparkUtil {
     }
 
     public static SparkSession buildSparkSession(String masterUrl) {
+        if (logger.isInfoEnabled()) {
+            logger.info("Spark URL: {}", masterUrl);
+        }
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
 

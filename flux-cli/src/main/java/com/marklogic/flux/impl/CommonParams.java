@@ -39,7 +39,7 @@ public class CommonParams {
         names = "--spark-master-url",
         description = "Specify the Spark master URL for configuring the local Spark cluster created by Flux."
     )
-    private String sparkMasterUrl = "local[*]";
+    private String sparkMasterUrl;
 
     @CommandLine.Option(
         names = "-C",
@@ -79,5 +79,9 @@ public class CommonParams {
 
     public Preview getPreview() {
         return preview;
+    }
+
+    public int getRepartition() {
+        return repartition;
     }
 }

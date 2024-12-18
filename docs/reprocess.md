@@ -222,38 +222,27 @@ as items are processed, you can also set `--log-read-progress` to configure Flux
 ## Improving performance
 
 The default behavior of Flux of sending each item in an individual call to your writer code is not typically going to 
-perform well. The two techniques above that are good candidates for improving performance are:
+perform well. The two primary techniques for improving performance are:
 
-1. Configuring `--batch-size` and altering your writer code to accept multiple items in a single call. 
-2. Defining reader partitions, which allows for more items to be processed in parallel. 
+1. Configuring `--batch-size` and altering your writer code to accept multiple items in a single call, as described in the "Processing multiple items at once" section above.
+2. Configuring `--thread-count` to specify the number of threads for processing items.
 
-The `reprocess` command in Flux does not have a "thread count" option. Instead, partitions are used to parallelize
-work, which allows you to consume more of the resources available to your MarkLogic cluster. 
+The `--thread-count` option is actually an alias for the `--repartition` option. It is included in the `reprocess` command
+as it is a familiar option name for other tools for reprocessing data in MarkLogic. Both options have the same effect, 
+which is to configure the number of threads or partitions used by Flux for processing items. 
 
-Creating partitions based on database forests and then adjusting your query to constrain to a specific forest is 
-typically a good practice for achieving better performance. The section on creating partitions above uses the 
-following, which is a simple way to both create and use forest-based partitions:
+You may also be able to improve reader performance by partitioning your query by database forests. The section on 
+creating partitions above uses the following, which is a simple way to both create and use forest-based partitions:
 
 ```
 --read-partitions-javascript "xdmp.databaseForests(xdmp.database())"
 --read-javascript "cts.uris(null, null, cts.collectionQuery('example'), 0, [PARTITION])"
 ```
 
-With the above approach, Flux will create one partition per forest. You should ensure that the number of partitions is
-similar to the number of MarkLogic app server threads available. 
+With the above approach, Flux will create one partition per forest. Note that the `--thread-count` and `--repartition`
+options will then adjust the number of partitions used for processing items.
 
 For example, consider a 3 host cluster with a load balancer in front of each, where each app server has the default of 
 32 threads available. Also assume that the database has 4 forests on each host. With the above approach, Flux will 
-create 12 partitions, one per forest. Each partition uses a single thread to make calls to MarkLogic. Thus, while your
-cluster has 96 app server threads available, only 12 will be used. 
-
-For the above scenario, you can also use the `--repartition` option mentioned in the [Common Options guide](common-options.md). This
-allows you to force a number of partitions to be created after all the data has been and before any has been written. 
-You could thus include `--repartition 96` as an option to use all 96 of the available app server threads.
-
-The downside to using `--repartition` is that Flux must read all the data first before it can making any calls to 
-MarkLogic to reprocess it. However, in many reprocessing use cases, data can be read very quickly from MarkLogic but 
-processing all of it can be much slower. In such a scenario, the need to read all the data is easily offset by the 
-significant gains in having dozens or more partitions each processing items - in batches - in parallel calls 
-to MarkLogic. 
-
+create 12 partitions - one per forest - for reading data. You could then use e.g. `--thread-count 96` to configure Flux
+to use 96 threads to process all the items read via the initial set of 12 partitions.
