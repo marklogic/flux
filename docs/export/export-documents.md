@@ -330,8 +330,21 @@ bin\flux export-files ^
 
 This approach will produce 3 ZIP files - one per forest.
 
+To ensure that each partition reader can work in parallel with the others, you should consider setting the 
+`--spark-master-url` option to a value of `local[N]`, where `N` is the total number of partition readers. For example,
+if your database has 4 forests and you want 4 partitions per forest, you would use the following options:
+
+```
+--partitions-per-forest 4
+--spark-master-url local[16]
+```
+
+A future release of Flux may automatically set the `--spark-master-url` option based on the database configuration. 
+
 You can also use the `--repartition` option, available on every command, to force the number of partitions used when
-writing data, regardless of how many were used to read the data:
+writing data, regardless of how many were used to read the data. As of Flux 1.2.0, if you do use `--repartition`, 
+Flux will automatically set the `--spark-master-url` option based on the value you provide for `--repartition`. 
+For example:
 
 {% tabs log %}
 {% tab log Unix %}

@@ -8,25 +8,18 @@ import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class SparkUtil {
+public interface SparkUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
-
-    private SparkUtil() {
-        // Required by Sonar.
+    static String makeSparkMasterUrl(int workerThreads) {
+        return String.format("local[%d]", workerThreads);
     }
 
-    public static SparkSession buildSparkSession() {
+    static SparkSession buildSparkSession() {
         return buildSparkSession("local[*]");
     }
 
-    public static SparkSession buildSparkSession(String masterUrl) {
-        if (logger.isInfoEnabled()) {
-            logger.info("Spark URL: {}", masterUrl);
-        }
+    static SparkSession buildSparkSession(String masterUrl) {
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
 
@@ -53,7 +46,7 @@ public class SparkUtil {
      * @param saveMode
      * @return
      */
-    public static org.apache.spark.sql.SaveMode toSparkSaveMode(SaveMode saveMode) {
+    static org.apache.spark.sql.SaveMode toSparkSaveMode(SaveMode saveMode) {
         if (SaveMode.APPEND.equals(saveMode)) {
             return org.apache.spark.sql.SaveMode.Append;
         } else if (SaveMode.ERRORIFEXISTS.equals(saveMode)) {
@@ -66,7 +59,7 @@ public class SparkUtil {
         return null;
     }
 
-    public static Dataset<Row> addFilePathColumn(Dataset<Row> dataset) {
+    static Dataset<Row> addFilePathColumn(Dataset<Row> dataset) {
         // The MarkLogic Spark connector has special processing for this column. If it's found by the writer, the
         // value of this column will be used to construct an initial URI for the associated document. The column
         // will then have its value set to null so that the value is not included in the JSON or XML

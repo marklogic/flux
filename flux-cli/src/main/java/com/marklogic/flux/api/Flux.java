@@ -14,57 +14,57 @@ import com.marklogic.flux.impl.reprocess.ReprocessCommand;
 /**
  * Entry point for executing Flux commands via the API.
  */
-public abstract class Flux {
+public interface Flux {
 
-    public static DocumentCopier copyDocuments() {
+    static DocumentCopier copyDocuments() {
         return new CopyCommand();
     }
 
-    public static CustomImporter customImport() {
+    static CustomImporter customImport() {
         return new CustomImportCommand();
     }
 
-    public static CustomDocumentsExporter customExportDocuments() {
+    static CustomDocumentsExporter customExportDocuments() {
         return new CustomExportDocumentsCommand();
     }
 
-    public static CustomRowsExporter customExportRows() {
+    static CustomRowsExporter customExportRows() {
         return new CustomExportRowsCommand();
     }
 
-    public static ArchiveFilesExporter exportArchiveFiles() {
+    static ArchiveFilesExporter exportArchiveFiles() {
         return new ExportArchiveFilesCommand();
     }
 
-    public static AvroFilesExporter exportAvroFiles() {
+    static AvroFilesExporter exportAvroFiles() {
         return new ExportAvroFilesCommand();
     }
 
-    public static DelimitedFilesExporter exportDelimitedFiles() {
+    static DelimitedFilesExporter exportDelimitedFiles() {
         return new ExportDelimitedFilesCommand();
     }
 
-    public static GenericFilesExporter exportGenericFiles() {
+    static GenericFilesExporter exportGenericFiles() {
         return new ExportFilesCommand();
     }
 
-    public static JdbcExporter exportJdbc() {
+    static JdbcExporter exportJdbc() {
         return new ExportJdbcCommand();
     }
 
-    public static JsonLinesFilesExporter exportJsonLinesFiles() {
+    static JsonLinesFilesExporter exportJsonLinesFiles() {
         return new ExportJsonLinesFilesCommand();
     }
 
-    public static OrcFilesExporter exportOrcFiles() {
+    static OrcFilesExporter exportOrcFiles() {
         return new ExportOrcFilesCommand();
     }
 
-    public static ParquetFilesExporter exportParquetFiles() {
+    static ParquetFilesExporter exportParquetFiles() {
         return new ExportParquetFilesCommand();
     }
 
-    public static RdfFilesExporter exportRdfFiles() {
+    static RdfFilesExporter exportRdfFiles() {
         return new ExportRdfFilesCommand();
     }
 
@@ -72,7 +72,7 @@ public abstract class Flux {
      * @return an object that can import aggregate JSON files, where the files to import either contains an array of
      * JSON objects or conforms to the JSON Lines format.
      */
-    public static AggregateJsonFilesImporter importAggregateJsonFiles() {
+    static AggregateJsonFilesImporter importAggregateJsonFiles() {
         return new ImportAggregateJsonFilesCommand();
     }
 
@@ -80,22 +80,22 @@ public abstract class Flux {
      * @return an object that can import aggregate XML files, where each instance of a particular child element is
      * written to MarkLogic as a separate document.
      */
-    public static AggregateXmlFilesImporter importAggregateXmlFiles() {
+    static AggregateXmlFilesImporter importAggregateXmlFiles() {
         return new ImportAggregateXmlFilesCommand();
     }
 
     /**
      * @return an object that can import archive files - i.e. ZIP files that contain documents and metadata.
      */
-    public static ArchiveFilesImporter importArchiveFiles() {
+    static ArchiveFilesImporter importArchiveFiles() {
         return new ImportArchiveFilesCommand();
     }
 
-    public static AvroFilesImporter importAvroFiles() {
+    static AvroFilesImporter importAvroFiles() {
         return new ImportAvroFilesCommand();
     }
 
-    public static DelimitedFilesImporter importDelimitedFiles() {
+    static DelimitedFilesImporter importDelimitedFiles() {
         return new ImportDelimitedFilesCommand();
     }
 
@@ -103,37 +103,34 @@ public abstract class Flux {
      * @return an object that can import any type of file as-is, with the document type being determined by
      * the file extension.
      */
-    public static GenericFilesImporter importGenericFiles() {
+    static GenericFilesImporter importGenericFiles() {
         return new ImportFilesCommand();
     }
 
-    public static JdbcImporter importJdbc() {
+    static JdbcImporter importJdbc() {
         return new ImportJdbcCommand();
     }
 
     /**
      * @return an object that can import archive files created by MLCP.
      */
-    public static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
+    static MlcpArchiveFilesImporter importMlcpArchiveFiles() {
         return new ImportMlcpArchiveFilesCommand();
     }
 
-    public static OrcFilesImporter importOrcFiles() {
+    static OrcFilesImporter importOrcFiles() {
         return new ImportOrcFilesCommand();
     }
 
-    public static ParquetFilesImporter importParquetFiles() {
+    static ParquetFilesImporter importParquetFiles() {
         return new ImportParquetFilesCommand();
     }
 
-    public static RdfFilesImporter importRdfFiles() {
+    static RdfFilesImporter importRdfFiles() {
         return new ImportRdfFilesCommand();
     }
 
-    public static Reprocessor reprocess() {
+    static Reprocessor reprocess() {
         return new ReprocessCommand();
-    }
-
-    private Flux() {
     }
 }
