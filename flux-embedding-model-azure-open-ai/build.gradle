@@ -1,0 +1,22 @@
+plugins {
+  id 'com.gradleup.shadow' version '8.3.3'
+}
+
+dependencies {
+  implementation "dev.langchain4j:langchain4j-azure-open-ai:0.35.0"
+
+  testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
+  testImplementation "ch.qos.logback:logback-classic:1.3.14"
+}
+
+shadowJar {
+  // Avoids conflict with Spark's version of netty.
+  relocate "io.netty", "com.marklogic.flux.io.netty"
+
+  // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
+  dependencies {
+    exclude {
+      it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
+    }
+  }
+}

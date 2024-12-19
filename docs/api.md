@@ -22,7 +22,7 @@ To add Flux as a dependency to your application, add the following to your Maven
 <dependency>
   <groupId>com.marklogic</groupId>
   <artifactId>flux-api</artifactId>
-  <version>1.1.3</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:1.1.3"
+  implementation "com.marklogic:flux-api:1.2.0"
 }
 ```
 
@@ -97,7 +97,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.1.3"
+    classpath "com.marklogic:flux-api:1.2.0"
   }
 }
 ```
@@ -127,25 +127,7 @@ when running Gradle. For example, if you run Gradle with `--stacktrace` and see 
 The [Gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)  provides more information
 on the `org.gradle.jvmargs` property along with other ways to customize the Gradle environment.
 
-If you are using a plugin like [ml-gradle](https://github.com/marklogic/ml-gradle) that brings in its own version of the
-[FasterXML Jackson APIs](https://github.com/FasterXML/jackson), you need to be sure that the version of Jackson is 
-between 2.14.0 and 2.15.0 as required by the Apache Spark dependency of Flux. The following shows an example of excluding
-these dependencies from ml-gradle in a `build.gradle` file so that ml-gradle will use the Jackson APIs brought in via 
-Flux:
-
-```
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath "com.marklogic:flux-api:1.1.3"
-    classpath("com.marklogic:ml-gradle:4.8.0") {
-      exclude group: "com.fasterxml.jackson.databind"
-      exclude group: "com.fasterxml.jackson.core"
-      exclude group: "com.fasterxml.jackson.dataformat"
-    }
-  }
-}
-```
-
+Please note that you cannot yet use the Flux API in your Gradle buildscript when you are also using the
+MarkLogic [ml-gradle plugin](https://github.com/marklogic/ml-gradle). This is due to a classpath conflict, where the
+MarkLogic Spark connector used by Flux must alter an underlying library so as not to conflict with Spark itself - but
+that altered library then conflicts with ml-gradle. We will have a resolution for this soon.

@@ -2,8 +2,8 @@ plugins {
   id 'net.saliman.properties' version '1.5.2'
   id "application"
   id "jacoco"
-  id "org.sonarqube" version "5.1.0.4882"
-  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id "org.sonarqube" version "6.0.1.5171"
+  id 'com.gradleup.shadow' version '8.3.3'
   id 'maven-publish'
 }
 
@@ -28,7 +28,8 @@ dependencies {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
-  implementation "com.marklogic:marklogic-spark-connector:2.4.2"
+
+  implementation "com.marklogic:marklogic-spark-connector:2.5.0"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
@@ -57,26 +58,20 @@ dependencies {
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
-  testImplementation("com.marklogic:marklogic-junit5:1.4.0") {
-    // Excluding Jackson so that we use whatever Jackson version is required by Spark.
-    exclude group: "com.fasterxml.jackson.core"
-    exclude group: "com.fasterxml.jackson.dataformat"
+  testImplementation("com.marklogic:marklogic-junit5:1.5.0") {
     // Use the Java Client in the connector jar.
     exclude module: "marklogic-client-api"
   }
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:5.3.39"
-  testImplementation "org.postgresql:postgresql:42.6.0"
+  testImplementation "org.postgresql:postgresql:42.7.4"
 
   // For testing custom commands with a 3rd party connector.
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 
   // For configuring two-way SSL in tests.
   testImplementation("com.marklogic:ml-app-deployer:5.0.0") {
-    // Excluding Jackson so that we use whatever Jackson version is required by Spark.
-    exclude group: "com.fasterxml.jackson.core"
-    exclude group: "com.fasterxml.jackson.dataformat"
     // Use the Java Client in the connector jar.
     exclude module: "marklogic-client-api"
   }
@@ -86,7 +81,14 @@ dependencies {
   // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
   testImplementation 'commons-codec:commons-codec:1.17.1'
 
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.4.0"
+  // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
+  // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
+  // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
+  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
@@ -108,28 +110,50 @@ copyJavadoc.mustRunAfter deleteJavadoc, javadoc
 tasks.register("updateJavadoc")
 updateJavadoc.dependsOn deleteJavadoc, javadoc, copyJavadoc
 
+// Configures the Gradle distribution plugin.
+// See https://docs.gradle.org/current/userguide/distribution_plugin.html for more information.
+// The distribution forms the contents of the application zip.
 distributions {
   main {
     distributionBaseName = "marklogic-flux"
-  }
-  applicationDistribution.from("..") {
-    include "LICENSE"
-    include "NOTICE.txt"
-    into "."
-  }
-  applicationDistribution.from("hadoop") {
-    include "hadoop.dll"
-    include "winutils.exe"
-    include "msvcr100.dll"
-    include "msvcr120.dll"
-    into "bin"
-  }
-  applicationDistribution.from("hadoop") {
-    include "libhadoop.so"
-    into "lib/native"
+    contents {
+      from("..") {
+        include "LICENSE"
+        include "NOTICE.txt"
+      }
+      from("hadoop") {
+        include "hadoop.dll"
+        include "winutils.exe"
+        include "msvcr100.dll"
+        include "msvcr120.dll"
+        into "bin"
+      }
+      from("hadoop") {
+        include "libhadoop.so"
+        into "lib/native"
+      }
+    }
   }
 }
 
+tasks.register("copyEmbeddingModelJarsIntoDistribution", Copy) {
+  description = "Intended for internal usage when building the Flux zip with all the embedding model integrations included."
+  dependsOn ":flux-embedding-model-azure-open-ai:shadowJar"
+  dependsOn ":flux-embedding-model-minilm:shadowJar"
+  dependsOn ":flux-embedding-model-ollama:shadowJar"
+  from("../flux-embedding-model-azure-open-ai/build/libs")
+  from("../flux-embedding-model-minilm/build/libs")
+  from("../flux-embedding-model-ollama/build/libs")
+  into "src/dist/ext"
+}
+
+// Gradle complains without these ensuring the order of the tasks.
+distZip.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+distTar.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+installDist.mustRunAfter copyEmbeddingModelJarsIntoDistribution
+
+// Configures the Gradle application plugin.
+// See https://docs.gradle.org/current/userguide/application_plugin.html for more information.
 application {
   mainClass = "com.marklogic.flux.cli.Main"
   applicationDefaultJvmArgs = [

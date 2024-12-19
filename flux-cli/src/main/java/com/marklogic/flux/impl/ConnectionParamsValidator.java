@@ -23,7 +23,7 @@ public class ConnectionParamsValidator {
             throw new FluxException(String.format("Must specify a MarkLogic host via %s or %s.",
                 paramNames.host, paramNames.connectionString));
         }
-        if (connectionInputs.port <= 0) {
+        if (connectionInputs.port <= 0 && !AuthenticationType.CLOUD.equals(connectionInputs.authType)) {
             throw new FluxException(String.format("Must specify a MarkLogic app server port via %s or %s.",
                 paramNames.port, paramNames.connectionString));
         }

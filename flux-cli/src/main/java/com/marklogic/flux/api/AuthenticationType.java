@@ -9,5 +9,9 @@ public enum AuthenticationType {
     CLOUD,
     KERBEROS,
     CERTIFICATE,
+    /**
+     * @since 1.2.0
+     */
+    OAUTH,
     SAML
 }

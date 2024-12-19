@@ -37,13 +37,6 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
     @Override
     protected void validateDuringApiUsage() {
         writeParams.validatePath();
-        readParams.verifyAtLeastOneQueryOptionIsSet("export");
-    }
-
-    @Override
-    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
-        super.validateCommandLineOptions(parseResult);
-        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
     }
 
     @Override

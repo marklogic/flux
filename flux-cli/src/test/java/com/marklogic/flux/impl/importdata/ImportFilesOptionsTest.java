@@ -70,4 +70,95 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.STREAM_FILES, "true"
         );
     }
+
+    @Test
+    void splitterOptions() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--splitter-json-pointer", "/path1\n/path2",
+            "--splitter-xpath", "/some/path",
+            "-Xex=org:example",
+            "--splitter-max-chunk-size", "100",
+            "--splitter-max-overlap-size", "50",
+            "--splitter-regex", "word",
+            "--splitter-join-delimiter", "aaa",
+            "--splitter-text",
+            "--splitter-sidecar-max-chunks", "10",
+            "--splitter-sidecar-document-type", "xml",
+            "--splitter-sidecar-collections", "c1,c2",
+            "--splitter-sidecar-permissions", "role1,read,role2,update",
+            "--splitter-sidecar-root-name", "root1",
+            "--splitter-sidecar-uri-prefix", "/prefix",
+            "--splitter-sidecar-uri-suffix", ".json",
+            "--splitter-sidecar-xml-namespace", "org:example"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_SPLITTER_JSON_POINTERS, "/path1\n/path2",
+            Options.WRITE_SPLITTER_XPATH, "/some/path",
+            Options.XPATH_NAMESPACE_PREFIX + "ex", "org:example",
+            Options.WRITE_SPLITTER_MAX_CHUNK_SIZE, "100",
+            Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE, "50",
+            Options.WRITE_SPLITTER_REGEX, "word",
+            Options.WRITE_SPLITTER_JOIN_DELIMITER, "aaa",
+            Options.WRITE_SPLITTER_TEXT, "true",
+            Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, "10",
+            Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, "XML",
+            Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, "c1,c2",
+            Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, "role1,read,role2,update",
+            Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, "root1",
+            Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, "/prefix",
+            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, ".json",
+            Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, "org:example"
+        );
+    }
+
+    @Test
+    void embedderOptions() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--embedder", "azure",
+            "-Ekey=value",
+            "-EotherKey=otherValue",
+            "--embedder-chunks-json-pointer", "/some/chunks",
+            "--embedder-text-json-pointer", "/my-text",
+            "--embedder-chunks-xpath", "/xml/chunks",
+            "--embedder-text-xpath", "/xml/text",
+            "--embedder-embedding-name", "stuff",
+            "--embedder-embedding-namespace", "org:example",
+            "--embedder-batch-size", "14"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction",
+            Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, "/some/chunks",
+            Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/my-text",
+            Options.WRITE_EMBEDDER_CHUNKS_XPATH, "/xml/chunks",
+            Options.WRITE_EMBEDDER_TEXT_XPATH, "/xml/text",
+            Options.WRITE_EMBEDDER_EMBEDDING_NAME, "stuff",
+            Options.WRITE_EMBEDDER_EMBEDDING_NAMESPACE, "org:example",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "otherKey", "otherValue",
+            Options.WRITE_EMBEDDER_BATCH_SIZE, "14"
+        );
+    }
+
+    @Test
+    void emptyJsonPointerPath() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            // This works on the command line too - i.e. a user can punch in "" and the value will be picked up correctly.
+            "--splitter-json-pointer", ""
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_SPLITTER_JSON_POINTERS, ""
+        );
+    }
 }

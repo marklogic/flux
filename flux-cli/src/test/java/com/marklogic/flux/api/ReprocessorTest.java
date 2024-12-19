@@ -20,6 +20,10 @@ class ReprocessorTest extends AbstractTest {
             .from(options -> options
                 .javascript("var collection; cts.uris(null, null, cts.collectionQuery(collection))")
                 .vars(Map.of("collection", "author")))
+
+            // Has no functional impact, just ensuring it doesn't cause a break.
+            .repartition(32)
+            
             .to(options -> options
                 .invoke("/writeDocument.sjs")
                 .vars(Map.of("theValue", "my value")))

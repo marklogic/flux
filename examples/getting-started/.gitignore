@@ -5,3 +5,4 @@ export
 nt
 flux
 marklogic-flux
+src/main/ml-schemas/tde/chunks.json

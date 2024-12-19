@@ -16,6 +16,15 @@ subprojects {
     }
   }
 
+  configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+      if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+        details.useVersion '2.15.2'
+        details.because 'Need to match the version used by Spark.'
+      }
+    }
+  }
+
   test {
     useJUnitPlatform()
     testLogging {

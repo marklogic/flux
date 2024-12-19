@@ -17,8 +17,8 @@ class ErrorMessagesTest {
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");
-        assertEquals(16, bundle.keySet().size(),
-            "Expecting 16 keys as of the upcoming 2.3.0 release. Bump this up as more keys are added. Each key should " +
+        assertEquals(22, bundle.keySet().size(),
+            "Expecting 22 keys as of the upcoming 1.2.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
         assertEquals("--connection-string", bundle.getString(Options.CLIENT_URI));
@@ -37,5 +37,11 @@ class ErrorMessagesTest {
         assertEquals("--uri-template", bundle.getString(Options.WRITE_URI_TEMPLATE));
         assertEquals("--xml-root-name", bundle.getString(Options.WRITE_XML_ROOT_NAME));
         assertEquals("Must define an Optic query", bundle.getString("spark.marklogic.read.noOpticQuery"));
+        assertEquals("--splitter-max-chunk-size", bundle.getString(Options.WRITE_SPLITTER_MAX_CHUNK_SIZE));
+        assertEquals("--splitter-max-overlap-size", bundle.getString(Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE));
+        assertEquals("--splitter-sidecar-max-chunks", bundle.getString(Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS));
+        assertEquals("--embedder-chunks-json-pointer", bundle.getString(Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER));
+        assertEquals("--embedder-chunks-xpath", bundle.getString(Options.WRITE_EMBEDDER_CHUNKS_XPATH));
+        assertEquals("--embedder-batch-size", bundle.getString(Options.WRITE_EMBEDDER_BATCH_SIZE));
     }
 }

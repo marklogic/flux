@@ -5,11 +5,14 @@ package com.marklogic.flux.impl.copy;
 
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.DocumentCopier;
-import com.marklogic.flux.api.WriteDocumentsOptions;
+import com.marklogic.flux.api.EmbedderOptions;
+import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
+import com.marklogic.flux.impl.importdata.EmbedderParams;
+import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
@@ -51,7 +54,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
     }
 
-    public static class CopyWriteDocumentsParams implements WriteDocumentsOptions<CopyWriteDocumentsParams> {
+    public static class CopyWriteDocumentsParams implements CopyWriteDocumentsOptions {
 
         @CommandLine.Option(
             names = "--output-abort-on-write-failure",
@@ -154,9 +157,17 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         )
         private String uriTemplate;
 
+        @CommandLine.Mixin
+        private SplitterParams splitterParams = new SplitterParams();
+
+        @CommandLine.Mixin
+        private EmbedderParams embedderParams = new EmbedderParams();
+
         protected Map<String, String> makeOptions() {
-            return OptionsUtil.makeOptions(
-                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true": null,
+            Map<String, String> options = splitterParams.makeOptions();
+            options.putAll(embedderParams.makeOptions());
+            return OptionsUtil.addOptions(options,
+                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
                 Options.WRITE_COLLECTIONS, collections,
@@ -214,6 +225,18 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams permissionsString(String rolesAndCapabilities) {
             this.permissions = rolesAndCapabilities;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsParams splitter(Consumer<SplitterOptions> consumer) {
+            consumer.accept(splitterParams);
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions embedder(Consumer<EmbedderOptions> consumer) {
+            consumer.accept(embedderParams);
             return this;
         }
 
@@ -300,12 +323,6 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }
-        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
-    }
-
-    @Override
-    protected void validateDuringApiUsage() {
-        readParams.verifyAtLeastOneQueryOptionIsSet("copy");
     }
 
     @Override
@@ -338,7 +355,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     }
 
     @Override
-    public DocumentCopier to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    public DocumentCopier to(Consumer<CopyWriteDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

@@ -2,6 +2,7 @@
   "user-name": "flux-example-user",
   "password": "password",
   "role": [
-    "flux-example-role"
+    "flux-example-role",
+    "qconsole-user"
   ]
 }

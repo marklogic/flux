@@ -7,6 +7,7 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.Reprocessor;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
+import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
@@ -48,12 +49,23 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
     }
 
     @Override
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        // Must implement this so that the repartition will occur when using the API.
+        return writeParams.threadCount > 0 ? dataset.repartition(writeParams.threadCount) : dataset;
+    }
+
+    @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
             .options(writeParams.get())
             .mode(SaveMode.Append)
             .save();
+    }
+
+    @Override
+    protected String getCustomSparkMasterUrl() {
+        return writeParams.threadCount > 0 ? SparkUtil.makeSparkMasterUrl(writeParams.threadCount) : null;
     }
 
     @Override
@@ -372,6 +384,13 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         )
         private int progressInterval = 10000;
 
+        @CommandLine.Option(
+            names = "--thread-count",
+            description = "The number of threads for processing items. This is an alias for '--reprocess' as it " +
+                "defines the number of Spark partitions used for processing items."
+        )
+        private int threadCount = 16;
+
         public void validateWriter() {
             Map<String, String> options = get();
             if (Stream.of(Options.WRITE_INVOKE, Options.WRITE_JAVASCRIPT, Options.WRITE_JAVASCRIPT_FILE,
@@ -473,6 +492,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         @Override
         public WriteOptions logProgress(int interval) {
             this.progressInterval = interval;
+            return this;
+        }
+
+        @Override
+        public WriteOptions threadCount(int threadCount) {
+            this.threadCount = threadCount;
             return this;
         }
     }

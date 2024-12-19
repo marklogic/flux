@@ -6,6 +6,7 @@ def runtests(){
           mkdir -p $WORKSPACE/flux/docker/sonarqube;
           docker-compose up -d --build;
           sleep 30s;
+          curl "http://localhost:8008/api/pull" -d '{"model":"all-minilm"}'
         '''
   script{
     timeout(time: 60, unit: 'SECONDS') {

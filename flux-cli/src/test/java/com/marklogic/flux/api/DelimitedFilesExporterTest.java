@@ -23,7 +23,9 @@ class DelimitedFilesExporterTest extends AbstractTest {
         Flux.exportDelimitedFiles()
             .connectionString(makeConnectionString())
             .from(options -> options
-                .opticQuery("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
+                .opticQuery("op.fromView('Medical', 'Authors', '')" +
+                    ".orderBy(op.asc(op.col('LastName')))" +
+                    ".select(['CitationID', 'LastName', 'ForeName'])")
                 .partitions(1))
             .to(options -> options
                 .path(tempDir.toFile().getAbsolutePath())
@@ -37,14 +39,16 @@ class DelimitedFilesExporterTest extends AbstractTest {
         String content = FileCopyUtils.copyToString(new FileReader(files[0]));
         String[] lines = content.split("\n");
         assertEquals(15, lines.length);
-        assertEquals("1,Awton,Finlay,2022-07-13,2022-07-13T09:00:00.000Z,4,,,", lines[0]);
+        assertEquals("1,Awton,Finlay", lines[0]);
     }
 
     @Test
     void pathOnly(@TempDir Path tempDir) {
         Flux.exportDelimitedFiles()
             .connectionString(makeConnectionString())
-            .from("op.fromView('Medical', 'Authors', '').orderBy(op.asc(op.col('LastName')))")
+            .from("op.fromView('Medical', 'Authors', '')" +
+                ".orderBy(op.asc(op.col('LastName')))" +
+                ".select(['LastName'])")
             .limit(1)
             .to(tempDir.toFile().getAbsolutePath())
             .execute();

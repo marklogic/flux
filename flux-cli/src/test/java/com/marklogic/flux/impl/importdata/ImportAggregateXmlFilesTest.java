@@ -97,6 +97,22 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-aggregate-xml-files",
+            "--path", "src/test/resources/xml-file/people.xml",
+            "--element", "person",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/xml-file,''",
+            "--splitter-xpath", "/person/company/text()"
+        );
+
+        XmlNode doc = readXmlDocument("/people.xml-1.xml");
+        doc.assertElementValue("/person/model:chunks/model:chunk/model:text", "company-1");
+    }
+
+    @Test
     void importZippedXml() {
         run(
             "import-aggregate-xml-files",
@@ -195,7 +211,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--collections", "agg-xml"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read XML from file"),
+        assertTrue(stderr.contains("Error: Unable to read XML from file"),
             "With --abort-on-read-failure included, the command should fail if it cannot read a file; stderr: " + stderr);
         assertCollectionSize("agg-xml", 0);
     }

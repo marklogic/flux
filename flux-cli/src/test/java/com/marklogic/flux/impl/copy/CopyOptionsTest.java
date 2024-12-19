@@ -75,7 +75,9 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-prefix", "/prefix/",
             "--output-uri-replace", ".*data,''",
             "--output-uri-suffix", ".xml",
-            "--output-uri-template", "/{example}.xml"
+            "--output-uri-template", "/{example}.xml",
+            "--splitter-text",
+            "--embedder", "doesnt-matter"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -92,7 +94,9 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_PREFIX, "/prefix/",
             Options.WRITE_URI_REPLACE, ".*data,''",
             Options.WRITE_URI_SUFFIX, ".xml",
-            Options.WRITE_URI_TEMPLATE, "/{example}.xml"
+            Options.WRITE_URI_TEMPLATE, "/{example}.xml",
+            Options.WRITE_SPLITTER_TEXT, "true",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter"
         );
     }
 
@@ -115,6 +119,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-certificate-password", "pwd123",
             "--output-cloud-api-key", "key123",
             "--output-kerberos-principal", "prince123",
+            "--output-oauth-token", "my-oauth-token",
             "--output-saml-token", "my-token",
             "--output-ssl-protocol", "TLSv1.3",
             "--output-ssl-hostname-verifier", "STRICT",
@@ -142,6 +147,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "spark.marklogic.client.certificate.password", "pwd123",
             "spark.marklogic.client.cloud.apiKey", "key123",
             "spark.marklogic.client.kerberos.principal", "prince123",
+            "spark.marklogic.client.oauth.token", "my-oauth-token",
             "spark.marklogic.client.saml.token", "my-token",
             "spark.marklogic.client.sslProtocol", "TLSv1.3",
             "spark.marklogic.client.sslHostnameVerifier", "STRICT",

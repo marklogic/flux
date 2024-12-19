@@ -3,9 +3,9 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
+import com.marklogic.junit5.XmlNode;
 import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 
@@ -52,8 +52,7 @@ class ImportRowsAsXmlTest extends AbstractTest {
 
         assertCollectionSize("jdbc-customer", 10);
         XmlNode doc = readXmlDocument("/customer/1.xml");
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("oe", "org:example")});
-        doc.assertElementValue("/oe:CUSTOMER/oe:store_id", "1");
+        doc.assertElementValue("/ex:CUSTOMER/ex:store_id", "1");
     }
 
     @Test

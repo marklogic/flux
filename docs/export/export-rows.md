@@ -25,10 +25,18 @@ The following commands support executing an Optic query and exporting the matchi
 - `export-orc-files`
 - `export-parquet-files`
 
-An Optic query is specified via the `--query` option. The query must be defined using the 
-[Optic DSL](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_46710) and must begin with the `op.fromView` data accessor. The 
+An Optic query is specified via the `--query` option. 
+
+Starting with Flux 1.2.0, the Optic query can use any
+[data access function](https://docs.marklogic.com/guide/app-dev/OpticAPI#id_66011) with a caveat - only Optic
+queries that use `op.fromView` can be partitioned into multiple calls to MarkLogic. If you use a data access function
+other than `op.fromView`, you should ensure that your query can return its results in a single call to MarkLogic. 
+
+If you are using Flux 1.1.x or earlier, your Optic query must use the `op.fromView` data access function. 
+
+Please see the  
 [MarkLogic Spark connector documentation](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#optic-query-requirements)
-provides additional guidance on how to write an Optic query. 
+for additional guidance on how to write an Optic query. 
 
 You must also specify connection information for the MarkLogic database you wish to query. Please see the 
 [guide on common options](../common-options.md) for instructions on doing so.
@@ -318,8 +326,37 @@ For further information on each mode, please see
 
 ## Tuning query performance
 
+This section only applies for Optic queries that begin with `op.fromView` as the data access function. For other Optic
+queries, Flux will execute the query in a single call to MarkLogic. The performance of such a query will be determined
+by the query, your MarkLogic index settings, and your MarkLogic environment. 
+
 The `--batch-size` and `--partitions` options are used to tune performance by controlling how many rows are retrieved in
 a single call to MarkLogic and how many requests are made in parallel to MarkLogic. It is recommended to first test your command
 without setting these options to see if the performance is acceptable. When you are ready to attempt to optimize the
 performance of your export command, please see the
 [this guide on Optic query performance](https://marklogic.github.io/marklogic-spark-connector/reading-data/optic.html#tuning-performance).
+
+If your Optic query performs one or more joins, and/or is intended more to produce a report, consider using the 
+following options:
+
+```
+--partitions 1
+--batch-size 0
+```
+
+The above options will result in the query being executed in a single call to MarkLogic. This is typically appropriate
+for queries with joins and aggregations, as trying to partition that query may result in either duplicate rows or 
+incorrect results. You will need to verify though that the total number of rows returned by your query can be retrieved
+in a single request to MarkLogic without the request timing out. 
+
+### Partitions and Spark worker threads
+
+As of Flux 1.2.0, when you set the number of partitions via `--partitions`, Flux will default the value of the 
+`--spark-master-url` option to `local[N]`, where `N` is the number of partitions. This option controls the number of 
+worker threads available to Spark. This default value ensures that each partition that reads rows from MarkLogic has 
+a worker thread available for it. 
+
+Depending on the target for writing rows, you may wish to use the `--repartition` option as well. This will adjust the
+number of partitions after all the rows have been read from MarkLogic. This approach can be useful for a scenario where
+Flux can quickly read a large number of rows from MarkLogic, but writing them to the target of the export command is 
+much slower.

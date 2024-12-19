@@ -9,7 +9,6 @@ flux/lib
 flux/ext
 flux/bin
 flux/conf
-flux/export
-export
+flux-cli/src/dist/ext/*.jar
 flux-version.properties
 docker/sonarqube

@@ -3,12 +3,15 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.EmbedderOptions;
+import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -120,10 +123,16 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriTemplate;
 
+    @CommandLine.Mixin
+    private SplitterParams splitterParams = new SplitterParams();
+
+    @CommandLine.Mixin
+    private EmbedderParams embedderParams = new EmbedderParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
-        return OptionsUtil.makeOptions(
+        Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
@@ -142,6 +151,10 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_TEMPLATE, uriTemplate,
             Options.STREAM_FILES, streaming ? "true" : null
         );
+
+        options.putAll(splitterParams.makeOptions());
+        options.putAll(embedderParams.makeOptions());
+        return options;
     }
 
     @Override
@@ -188,6 +201,18 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T permissionsString(String rolesAndCapabilities) {
         this.permissions = rolesAndCapabilities;
+        return (T) this;
+    }
+
+    @Override
+    public T splitter(Consumer<SplitterOptions> consumer) {
+        consumer.accept(splitterParams);
+        return (T) this;
+    }
+
+    @Override
+    public T embedder(Consumer<EmbedderOptions> consumer) {
+        consumer.accept(embedderParams);
         return (T) this;
     }
 

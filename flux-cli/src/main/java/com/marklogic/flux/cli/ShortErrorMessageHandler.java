@@ -22,7 +22,9 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
             err.println(cmd.getColorScheme().stackTraceText(ex));
         }
 
-        err.println(cmd.getColorScheme().errorText(ex.getMessage())); // bold red
+        final String exceptionMessage = getErrorMessageToPrint(ex);
+        err.println(cmd.getColorScheme().errorText(exceptionMessage)); // bold red
+
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
         err.print(cmd.getHelp().fullSynopsis());
 
@@ -31,5 +33,16 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         return cmd.getExitCodeExceptionMapper() != null
             ? cmd.getExitCodeExceptionMapper().getExitCode(ex)
             : spec.exitCodeOnInvalidInput();
+    }
+
+    private String getErrorMessageToPrint(Exception ex) {
+        String message = ex.getMessage();
+        // picocli appears to have a bug where the message will start with "Value for option option" when the user
+        // provides an invalid input for a map option.
+        final String buggyPicocliMessage = "Value for option option ";
+        if (message != null && message.startsWith(buggyPicocliMessage)) {
+            message = "Value for option " + message.substring(buggyPicocliMessage.length());
+        }
+        return message;
     }
 }

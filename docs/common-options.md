@@ -123,7 +123,7 @@ to the next line:
 
 ```
 --query
-"op.fromView('Example', 'Employees', '')\
+"op.fromView('example', 'employees', '')\
    .limit(10)"
 ```
 
@@ -263,12 +263,12 @@ All available connection options are shown in the table below:
 
 | Option | Description | 
 | --- | --- |
-| `--auth-type` | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `KERBEROS`, `CERTIFICATE`, and `SAML`.|
+| `--auth-type` | Type of authentication to use. Possible values are `BASIC`, `DIGEST`, `CLOUD`, `CERTIFICATE`, `KERBEROS`, `OAUTH`, and `SAML`.|
 | `--base-path` | Path to prepend to each call to a MarkLogic [REST API app server](https://docs.marklogic.com/guide/rest-dev). |
 | `--certificate-file` | File path for a keystore to be used for `CERTIFICATE` authentication. |
 | `--certificate-password` | Password for the keystore referenced by `--certificate-file`. |
 | `--connection-string` |  Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using `DIGEST` or `BASIC` authentication. |
-| `--cloud-api-key` | API key for authenticating with a MarkLogic Cloud cluster when authentication type is `CLOUD`. |
+| `--cloud-api-key` | API key for authenticating with a Progress Data Cloud cluster when authentication type is `CLOUD`. |
 | `--connection-type` |  Set to `DIRECT` if connections can be made directly to each host in the MarkLogic cluster. Defaults to `GATEWAY`. Possible values are `DIRECT` and `GATEWAY`. |
 | `--database` | Name of a database to connect if it differs from the one associated with the app server identified by `--port`. |
 | `--disable-gzipped-responses` | If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small.
@@ -278,6 +278,7 @@ All available connection options are shown in the table below:
 | `--keystore-password` | Password for the keystore identified by `--keystore-path`. |
 | `--keystore-path` | File path for a keystore for two-way SSL connections. |
 | `--keystore-type` | Type of the keystore identified by `--keystore-path`; defaults to `JKS`. |
+| `--oauth-token` | Token to be used with `OAUTH` authentication. |
 | `--password` | Password when using `DIGEST` or `BASIC` authentication. |
 | `--port` | Port of the [REST API app server](https://docs.marklogic.com/guide/rest-dev) to connect to. |
 | `--saml-token` | Token to be used with `SAML` authentication. |
@@ -331,7 +332,7 @@ instead of in a table:
 {% endtab %}
 {% tab log Windows %}
 ```
-./bin/flux import-parquet-files ^
+bin\flux import-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --path export\parquet ^
     --preview 10 ^
@@ -355,7 +356,7 @@ that Flux log the schema and not write any data:
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees')" \
+    --query "op.fromView('example', 'employees')" \
     --path export/parquet \
     --preview-schema
 ```
@@ -364,7 +365,7 @@ that Flux log the schema and not write any data:
 ```
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees')" ^
+    --query "op.fromView('example', 'employees')" ^
     --path export\parquet ^
     --preview-schema
 ```
@@ -488,27 +489,46 @@ time you run Flux:
 Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 
 configuring the underlying Spark runtime environment used by Flux. 
 
-### Configuring the number of partitions 
+### Configuring Spark worker threads
 
-Flux uses Spark partitions to allow for data to be read and written in parallel. Each partition can be thought of as 
-a separate worker, operating in parallel with each other worker. 
-
-A number of partitions will be determined by the command that you run before it reads data. The nature of the data 
-source directly impacts the number of partitions that will be created. 
-
-If you find that an insufficient number of partitions are created - i.e. the writer phase of your Flux command is not
-sending as much data to MarkLogic as it could - consider using the `--repartition` option to force a number of 
-partitions to be created after the data has been read. The downside to using `--repartition` is that all the data must
-be read first. Generally, this option will help when data can be read quickly and the performance of writing can be 
-improved by using more partitions than were created when reading data.
-
-### Configuring a Spark URL
-
-By default, Flux creates a Spark session with a master URL of `local[*]`. You can change this via the 
-`--spark-master-url` option; please see 
+By default, Flux creates a Spark runtime with a master URL of `local[*]`, which runs Spark with as many worker 
+threads as logical cores on the machine running Flux. The number of worker threads affects how many partitions can be
+processed in parallel. You can change this setting via the`--spark-master-url` option; please see 
 [the Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls) for examples
 of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
 [Spark Integration guide](spark-integration.md) for details on integrating Flux with `spark-submit`.
+
+For import commands, you typically will not need to adjust this as a partition writer in an import command supports its
+own pool of threads via the [MarkLogic data movement library](https://docs.marklogic.com/guide/java/data-movement). However,
+depending on the data source, additional worker threads may help with reading data in parallel. 
+
+For the [`reprocess` command](reprocess.md), setting the number of worker threads is critical to achieving optimal 
+performance. As of Flux 1.2.0, the `--thread-count` option will adjust the Spark master URL based on the number of 
+threads you specify. Prior to Flux 1.2.0, you can use `--repartition` to achieve the same effect. 
+
+For exporting data, please see the [exporting guide](export/export.md) for information on how to adjust the worker 
+threads depending on whether you are reading documents or rows from MarkLogic.
+
+### Configuring the number of Spark partitions
+
+Flux uses Spark partitions to allow for data to be read and written in parallel. Each partition can be thought of as
+a separate worker, operating in parallel with each other worker.
+
+A number of partitions will be determined by the command that you run before it reads data. The nature of the data
+source directly impacts the number of partitions that will be created.
+
+For some commands, you may find improved performance by changing the number of partitions used to write data to the
+target associated with the command. For example, an `export-jdbc` command may only need a small number of partitions to 
+read data from MarkLogic, but performance will be improved by using a far higher number of partitions to write data to
+the JDBC destination. You can use the `--repartition` option to force the number of partitions to use for writing data. 
+The downside to this option is that it forces Flux to read all the data from the data source before writing any to the
+target. Generally, this option will help when data can be read quickly and the performance of writing can be
+improved by using more partitions than were created when reading data - this is almost always the case for the 
+`reprocess` command.
+
+As of Flux 1.2.0, setting `--repartition` will default the value of the `--spark-master-url` option to be `local[N]`, 
+where `N` is the value of `--repartition`. This ensure that each partition writer has a Spark worker thread available
+to it. You can still override `--spark-master-url` if you wish.
 
 ### Configuring the Spark runtime
 

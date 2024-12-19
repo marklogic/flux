@@ -4,9 +4,9 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.junit5.XmlNode;
-import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
@@ -68,6 +68,19 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-mlcp-archive-files",
+            "--path", "src/test/resources/mlcp-archives",
+            "--connection-string", makeConnectionString(),
+            "--splitter-xpath", "/hello/text()"
+        );
+
+        XmlNode doc = readXmlDocument("/test/1.xml");
+        doc.assertElementValue("/hello/model:chunks/model:chunk/model:text", "world");
+    }
+
+    @Test
     void invalidFileDontAbort() {
         run(
             "import-mlcp-archive-files",
@@ -90,7 +103,7 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString()
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read metadata for entry: goodbye.json"),
+        assertTrue(stderr.contains("Error: Unable to read metadata for entry: goodbye.json"),
             "Unexpected stderr: " + stderr);
     }
 
