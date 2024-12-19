@@ -227,9 +227,12 @@ perform well. The two primary techniques for improving performance are:
 1. Configuring `--batch-size` and altering your writer code to accept multiple items in a single call, as described in the "Processing multiple items at once" section above.
 2. Configuring `--thread-count` to specify the number of threads for processing items.
 
-The `--thread-count` option is actually an alias for the `--repartition` option. It is included in the `reprocess` command
+The `--thread-count` option is an alias for the `--repartition` option. It is included in the `reprocess` command
 as it is a familiar option name for other tools for reprocessing data in MarkLogic. Both options have the same effect, 
-which is to configure the number of threads or partitions used by Flux for processing items. 
+which is to configure the number of partitions used by Flux for processing items. In addition, as of Flux 1.2.0, 
+setting either option will adjust the default value of the `--spark-master-url` option to be `local[N]`, where `N` is
+the number of Spark worker threads. This ensures that each partition processing items will have a Spark worker thread
+available to it. 
 
 You may also be able to improve reader performance by partitioning your query by database forests. The section on 
 creating partitions above uses the following, which is a simple way to both create and use forest-based partitions:

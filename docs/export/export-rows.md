@@ -348,3 +348,15 @@ The above options will result in the query being executed in a single call to Ma
 for queries with joins and aggregations, as trying to partition that query may result in either duplicate rows or 
 incorrect results. You will need to verify though that the total number of rows returned by your query can be retrieved
 in a single request to MarkLogic without the request timing out. 
+
+### Partitions and Spark worker threads
+
+As of Flux 1.2.0, when you set the number of partitions via `--partitions`, Flux will default the value of the 
+`--spark-master-url` option to `local[N]`, where `N` is the number of partitions. This option controls the number of 
+worker threads available to Spark. This default value ensures that each partition that reads rows from MarkLogic has 
+a worker thread available for it. 
+
+Depending on the target for writing rows, you may wish to use the `--repartition` option as well. This will adjust the
+number of partitions after all the rows have been read from MarkLogic. This approach can be useful for a scenario where
+Flux can quickly read a large number of rows from MarkLogic, but writing them to the target of the export command is 
+much slower.

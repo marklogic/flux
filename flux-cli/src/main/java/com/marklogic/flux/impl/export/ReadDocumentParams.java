@@ -79,7 +79,7 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     }
 
     private Map<String, String> makeQueryOptions() {
-        Map<String, String> options = OptionsUtil.makeOptions(
+        Map<String, String> queryOptions = OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
             Options.READ_DOCUMENTS_URIS, uris,
             Options.READ_DOCUMENTS_QUERY, query,
@@ -87,11 +87,11 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
             Options.READ_DOCUMENTS_DIRECTORY, directory
         );
 
-        if (options.isEmpty()) {
+        if (queryOptions.isEmpty()) {
             String trueQuery = "{\"query\": {\"queries\": [{\"true-query\": null}]}}";
-            options.put(Options.READ_DOCUMENTS_QUERY, trueQuery);
+            queryOptions.put(Options.READ_DOCUMENTS_QUERY, trueQuery);
         }
-        return options;
+        return queryOptions;
     }
 
     @Override
