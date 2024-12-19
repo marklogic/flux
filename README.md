@@ -6,6 +6,7 @@ With Flux, you can automate common data movement use cases including:
 
 - Importing rows from an RDBMS.
 - Importing JSON, XML, CSV, Parquet and other file types from a local filesystem or S3.
+- Implementing a data pipeline for a [RAG solution with MarkLogic](https://www.progress.com/marklogic/solutions/generative-ai).
 - Copying data from one MarkLogic database to another database.
 - Reprocessing data in MarkLogic via custom code.
 - Exporting data to an RDBMS, a local filesystem, or S3.
