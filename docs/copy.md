@@ -84,7 +84,7 @@ of `--collections`.
 
 ## Building a RAG data pipeline
 
-[Retrieval-augmented generation](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), or RAG, with MarkLogic depends on preparing data so that the most relevant
+[Retrieval-augmented generation](https://www.progress.com/marklogic/solutions/generative-ai), or RAG, with MarkLogic depends on preparing data so that the most relevant
 chunks of text for a user's question can be sent to a Large Language Model, or LLM. Starting with release 1.2.0, Flux
 supports the construction of a data pipeline by splitting the text in a document into chunks and adding a vector
 embedding to each chunk while copying data. Please see [the guide on splitting text](import/splitting.md) and

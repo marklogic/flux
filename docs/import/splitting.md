@@ -8,7 +8,7 @@ nav_order: 6
 Flux supports splitting the text in documents into chunks of configurable size, either written to the source document
 or to separate "sidecar" documents containing one or more chunks. Flux can split text during any import operation and also 
 when [copying documents](../copy.md). Splitting text is often a critical part of creating a data pipeline in support
-of [retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), use cases with MarkLogic.
+of [retrieval-augmented generation, or RAG](https://www.progress.com/marklogic/solutions/generative-ai), use cases with MarkLogic.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -321,7 +321,7 @@ via the `--transform` option for your import command or `--output-transform` opt
 By default, Flux will create each XML sidecar document using the following structure:
 
 ```
-<root>
+<root xmlns="http://marklogic.com/appservices/model">
   <source-uri>The URI of the source document</source-uri>
   <chunks>
     <chunk><text>The first chunk</text></chunk>
