@@ -35,6 +35,13 @@ public interface ConnectionOptions {
 
     ConnectionOptions samlToken(String samlToken);
 
+    /**
+     * @param oauthToken
+     * @return
+     * @since 1.2.0
+     */
+    ConnectionOptions oauthToken(String oauthToken);
+
     ConnectionOptions sslProtocol(String sslProtocol);
 
     ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier);

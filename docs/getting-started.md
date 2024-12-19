@@ -15,7 +15,7 @@ This guide describes how to get started with Flux with some examples demonstrati
 ## Setup
 
 You can download the latest release of the Flux application zip from [the latest Flux release page](https://github.com/marklogic/flux/releases). 
-The Flux application zip is titled `marklogic-flux-1.1.3.zip`. You can extract this zip to any location on your 
+The Flux application zip is titled `marklogic-flux-1.2.0.zip`. You can extract this zip to any location on your 
 filesystem that you prefer.
 
 ### Deploying the example application
@@ -23,10 +23,10 @@ filesystem that you prefer.
 The examples in this guide, along with examples found throughout this documentation, depend on a small MarkLogic 
 application that can be deployed to your own instance of MarkLogic server. The application can be downloaded from 
 [the latest Flux release page](https://github.com/marklogic/flux/releases) in a zip titled 
-`marklogic-flux-getting-started-1.1.3.zip`. To use Flux with this example application, perform the following steps:
+`marklogic-flux-getting-started-1.2.0.zip`. To use Flux with this example application, perform the following steps:
 
-1. Extract the `marklogic-flux-getting-started-1.1.3.zip` file to any location on your local filesystem.
-2. Run `cd marklogic-flux-getting-started-1.1.3` to change to the directory created by extracting the ZIP file.
+1. Extract the `marklogic-flux-getting-started-1.2.0.zip` file to any location on your local filesystem.
+2. Run `cd marklogic-flux-getting-started-1.2.0` to change to the directory created by extracting the ZIP file.
 3. Create a file named `gradle-local.properties` and add `mlPassword=your MarkLogic admin user password` to it.
 4. Examine the contents of the `gradle.properties` file to ensure that the value of `mlHost` points to your MarkLogic 
 server and that the value of `mlRestPort` is a port available for a new MarkLogic app server to use.
@@ -38,15 +38,15 @@ privileges for running the examples in this guide. Finally, the application incl
 [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE) that creates a view in MarkLogic for the purpose
 of demonstrating commands that utilize a [MarkLogic Optic query](https://docs.marklogic.com/guide/app-dev/OpticAPI).
 
-It is recommended to extract the Flux application zip into the `marklogic-flux-getting-started-1.1.3` directory so that 
+It is recommended to extract the Flux application zip into the `marklogic-flux-getting-started-1.2.0` directory so that 
 you can easily execute the examples in this guide. After extracting the application zip, the directory should have a 
 structure similar to this (not all files may be shown):
 
 ```
-./marklogic-flux-getting-started-1.1.3
+./marklogic-flux-getting-started-1.2.0
     build.gradle
     ./data
-    ./marklogic-flux-1.1.3
+    ./marklogic-flux-1.2.0
     ./gradle
     gradle.properties
     gradlew
@@ -59,7 +59,7 @@ structure similar to this (not all files may be shown):
 You can run Flux without any options to see the list of available commands. If you are using Flux to run these examples, 
 first change your current directory to where you extract Flux:
 
-    cd marklogic-flux-1.1.3
+    cd marklogic-flux-1.2.0
 
 And then run the Flux executable without any options:
 
@@ -197,7 +197,6 @@ to select rows. The following shows an example of exporting the 1000 employee do
 {% tabs log %}
 {% tab log Unix %}
 ```
-mkdir export
 ./bin/flux export-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --collections employee \
@@ -208,7 +207,6 @@ mkdir export
 {% endtab %}
 {% tab log Windows %}
 ```
-mkdir export
 bin\flux export-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --collections employee ^
@@ -302,20 +300,18 @@ destinations, such as Parquet files or an RDBMS. The following demonstrates writ
 {% tabs log %}
 {% tab log Unix %}
 ```
-mkdir export/parquet
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --path export/parquet \
-    --query "op.fromView('Example', 'Employees', '')" 
+    --query "op.fromView('example', 'employees', '')" 
 ```
 {% endtab %}
 {% tab log Windows %}
 ```
-mkdir export\parquet
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --path export/parquet ^
-    --query "op.fromView('Example', 'Employees', '')" 
+    --path export\parquet ^
+    --query "op.fromView('example', 'employees', '')" 
 ```
 {% endtab %}
 {% endtabs %}
@@ -330,7 +326,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 ```
 ./bin/flux export-jdbc \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees', '')" \
+    --query "op.fromView('example', 'employees', '')" \
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" \
     --jdbc-driver "org.postgresql.Driver" \
     --table employees \
@@ -341,7 +337,7 @@ Change the details in it to match your database and JDBC driver, ensuring that t
 ```
 bin\flux export-jdbc ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees', '')" ^
+    --query "op.fromView('example', 'employees', '')" ^
     --jdbc-url "jdbc:postgresql://localhost/postgres?user=postgres&password=postgres" ^
     --jdbc-driver "org.postgresql.Driver" ^
     --table employees ^
@@ -362,7 +358,7 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 ```
 ./bin/flux export-parquet-files \
     --connection-string "flux-example-user:password@localhost:8004" \
-    --query "op.fromView('Example', 'Employees')" \
+    --query "op.fromView('example', 'employees')" \
     --path export/parquet \
     --preview 10
 ```
@@ -371,8 +367,8 @@ command can preview 10 rows read from MarkLogic without writing any data to file
 ```
 bin\flux export-parquet-files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
-    --query "op.fromView('Example', 'Employees')" ^
-    --path export/parquet ^
+    --query "op.fromView('example', 'employees')" ^
+    --path export\parquet ^
     --preview 10
 ```
 {% endtab %}

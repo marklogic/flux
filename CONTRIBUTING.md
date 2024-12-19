@@ -3,9 +3,14 @@ application installed:
 
 1. Ensure you have Java 11 or higher installed; you will need Java 17 if you wish to use the Sonarqube support described below.
 2. Clone this repository if you have not already.
-3. From the root directory of the project, run `docker-compose up -d --build`.
+3. From the root directory of the project, run `docker compose up -d --build`.
 4. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
 5. Run `./gradlew -i mlDeploy` to deploy this project's test application.
+
+Next, run the following to pull a small model for the test instance of Ollama to use; this will be used by one or more
+embedder tests:
+
+    docker exec -it flux-ollama-1 ollama pull all-minilm
 
 Some of the tests depend on the Postgres instance deployed via Docker. Follow these steps to load a sample dataset
 into it:
@@ -39,6 +44,22 @@ If you would like to test our the Flux distribution - as either a tar or zip - p
 
 You can now run `./bin/flux` to test out various commands. 
 
+If you're testing with the project at `./examples/getting-started`, you can run the following to install Flux in that 
+directory, thus allowing you to test out the examples in that project:
+
+    ./gradlew buildToolForGettingStarted
+
+If you wish to build the Flux zip with all the embedding model integration JARs included, you must first run the 
+`copyEmbeddingModelJarsIntoDistribution` task. That name is intentionally verbose, but it's a lot to type, so take
+advantage of Gradle's ability to extrapolate task names:
+
+    ./gradlew copyemb distZip
+
+You can also do the following include the integration JARs in the Flux installation in the `examples/getting-started` 
+project (again taking advantage of Gradle's ability to extrapolate task names):
+
+    ./gradlew copyemb buildtoolfor
+
 ## Configuring the version
 
 You can specify a version for Flux when building Flux via any of the following:
@@ -70,11 +91,16 @@ If you are running the tests in Intellij with Java 17, you will need to perform 
 --add-opens java.base/sun.util.calendar=ALL-UNNAMED 
 --add-opens java.base/java.io=ALL-UNNAMED 
 --add-opens java.base/sun.nio.cs=ALL-UNNAMED
+--add-opens java.base/sun.security.action=ALL-UNNAMED
 ```
 
 When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to 
 pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to 
 delete that configuration first via the "Run -> Edit Configurations" panel.
+
+If you are running tests in Intellij via Intellij and not via the Gradle wrapper, you will also need to run 
+`./gradlew shadowJar` first to ensure a couple shadow jars are created that are required by some of the `flux-cli` 
+tests. You do not need to do this if you have Intellij configured to use Gradle to run tests in Intellij.
 
 ## Generating code quality reports with SonarQube
 
@@ -92,7 +118,7 @@ To configure the SonarQube service, perform the following steps:
 7. Click on "Use the global setting" and then "Create project".
 8. On the "Analysis Method" page, click on "Locally".
 9. In the "Provide a token" panel, click on "Generate". Copy the token.
-10. Add `systemProp.sonar.token=your token pasted here` to `gradle-local.properties` in the root of your project, creating
+10. Add `systemProp.sonar.login=your token pasted here` to `gradle-local.properties` in the root of your project, creating
     that file if it does not exist yet.
 
 To run SonarQube, run the following Gradle tasks with Java 17 or higher, which will run all the tests with code 
@@ -100,10 +126,10 @@ coverage and then generate a quality report with SonarQube:
 
     ./gradlew test sonar
 
-If you do not add `systemProp.sonar.token` to your `gradle-local.properties` file, you can specify the token via the
+If you do not add `systemProp.sonar.login` to your `gradle-local.properties` file, you can specify the token via the
 following:
 
-    ./gradlew test sonar -Dsonar.token=paste your token here
+    ./gradlew test sonar -Dsonar.login=paste your token here
 
 When that completes, you will see a line like this near the end of the logging:
 
@@ -256,7 +282,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.1-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.2-SNAPSHOT-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -264,7 +290,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.1-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.2-SNAPSHOT-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -281,7 +307,7 @@ to something you can access):
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/marklogic-flux-1.1-SNAPSHOT-all.jar \
+flux-cli/build/libs/marklogic-flux-1.2-SNAPSHOT-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

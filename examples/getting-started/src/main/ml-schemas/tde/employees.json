@@ -6,8 +6,8 @@
     ],
     "rows": [
       {
-        "schemaName": "Example",
-        "viewName": "Employees",
+        "schemaName": "example",
+        "viewName": "employees",
         "columns": [
           {
             "name": "id",

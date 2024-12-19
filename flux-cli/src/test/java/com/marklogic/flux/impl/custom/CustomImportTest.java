@@ -4,9 +4,8 @@
 package com.marklogic.flux.impl.custom;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
-import org.jdom2.Namespace;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +32,6 @@ class CustomImportTest extends AbstractTest {
         assertCollectionSize("parquet-test", 32);
 
         XmlNode doc = readXmlDocument("/parquet/Merc 230.xml");
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example")});
         doc.assertElementValue("/ex:my-parquet/ex:mpg", "22.8");
     }
 

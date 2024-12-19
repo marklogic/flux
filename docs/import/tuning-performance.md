@@ -2,7 +2,7 @@
 layout: default
 title: Tuning performance
 parent: Importing Data
-nav_order: 6
+nav_order: 8
 ---
 
 When writing to MarkLogic, the two main settings within Flux that affect performance (i.e. ignoring how the MarkLogic
@@ -22,7 +22,10 @@ Flux will log the number of partitions for each import command as shown below:
 
     INFO com.marklogic.spark: Number of partitions: 1
 
-You can force a number of partitions via the `--repartition` option.
+Because each partition writer in an import process has its own pool of threads (independent from the number of 
+Spark worker threads), you typically will not need to worry about the number of partitions for an import process. 
+Setting `--thread-count` gives you the control you will typically need to ensure that Flux is able to use a sufficient 
+number of threads for sending requests to MarkLogic.
 
 ### Thread count and cluster size
 

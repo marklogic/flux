@@ -81,3 +81,13 @@ The `copy` command supports many of the same options as the [import commands](im
 writing documents. Similar to the output connection options, each option for controlling how documents are written
 is prefixed with `output`. For example, to specify collections for the documents, `--output-collections` is used instead
 of `--collections`.
+
+## Building a RAG data pipeline
+
+[Retrieval-augmented generation](https://www.progress.com/marklogic/solutions/generative-ai), or RAG, with MarkLogic depends on preparing data so that the most relevant
+chunks of text for a user's question can be sent to a Large Language Model, or LLM. Starting with release 1.2.0, Flux
+supports the construction of a data pipeline by splitting the text in a document into chunks and adding a vector
+embedding to each chunk while copying data. Please see [the guide on splitting text](import/splitting.md) and
+[the guide on adding embeddings](import/embedder/embedder.md) for more information. All options pertaining to splitting
+text and adding embeddings are available in the `copy` operation.
+

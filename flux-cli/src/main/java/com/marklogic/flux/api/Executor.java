@@ -51,6 +51,13 @@ public interface Executor<T extends Executor> {
     T limit(int limit);
 
     /**
+     * @param partitionCount the number of partitions to use for writing or processing the data that has been read.
+     * @return instance of this executor
+     * @since 1.2.0
+     */
+    T repartition(int partitionCount);
+
+    /**
      * @return the count of rows to be read by this executor from its data source.
      */
     long count();

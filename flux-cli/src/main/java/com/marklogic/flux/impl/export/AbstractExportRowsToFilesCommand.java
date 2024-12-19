@@ -37,6 +37,11 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
     }
 
     @Override
+    protected String getCustomSparkMasterUrl() {
+        return readParams.getPartitions() > 0 ? SparkUtil.makeSparkMasterUrl(readParams.getPartitions()) : null;
+    }
+
+    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         final Integer fileCount = getWriteFilesParams().getFileCount();
         if (fileCount != null && fileCount > 0) {

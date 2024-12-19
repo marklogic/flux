@@ -25,7 +25,11 @@ class ReprocessTest extends AbstractTest {
             "--read-javascript", "var collection; cts.uris(null, null, cts.collectionQuery(collection))",
             "--read-var", "collection=author",
             "--write-invoke", "/writeDocument.sjs",
-            "--write-var", "theValue=my value"
+            "--write-var", "theValue=my value",
+
+            // Included to ensure it doesn't cause any failures. This is only done for performance reasons, and we
+            // don't have any assertions to make on the effect of using multiple threads/partitions.
+            "--thread-count", "8"
         );
 
         // reprocess-test is the collection used by writeDocument.sjs.

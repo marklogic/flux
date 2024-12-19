@@ -59,6 +59,14 @@ public interface Reprocessor extends Executor<Reprocessor> {
         WriteOptions batchSize(int batchSize);
 
         WriteOptions logProgress(int interval);
+
+        /**
+         * @param threadCount the number of threads, which equates to the number of Spark partitions, to use for
+         *                    reprocessing items.
+         * @return instance of this executor
+         * @since 1.2.0
+         */
+        WriteOptions threadCount(int threadCount);
     }
 
     Reprocessor from(Consumer<ReadOptions> consumer);

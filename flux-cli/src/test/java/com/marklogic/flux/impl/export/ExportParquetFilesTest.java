@@ -5,7 +5,9 @@ package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.api.SaveMode;
+import com.marklogic.flux.junit5.TestDataReloader;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(TestDataReloader.class)
 class ExportParquetFilesTest extends AbstractTest {
 
     @Test

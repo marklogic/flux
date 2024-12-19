@@ -8,6 +8,7 @@ import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void multiplePaths() {
         run(
+            CommandLine.ExitCode.OK,
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*txt*",
             "--path", "src/test/resources/mixed-files/hello.json",
@@ -107,7 +109,7 @@ class ImportFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--auth-type", "notvalid"
-        ), "Invalid value for option '--auth-type': expected one of [BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, SAML] (case-insensitive) but was 'notvalid'");
+        ), "Invalid value for option '--auth-type': expected one of [BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, OAUTH, SAML] (case-insensitive) but was 'notvalid'");
     }
 
     @Test
@@ -244,8 +246,9 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void invalidGzippedFile() {
         run(
+            CommandLine.ExitCode.OK,
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--connection-string", makeConnectionString(),
             "--collections", "files",
@@ -262,8 +265,9 @@ class ImportFilesTest extends AbstractTest {
     @Test
     void abortOnReadFailure() {
         String stderr = runAndReturnStderr(() -> run(
+            CommandLine.ExitCode.SOFTWARE,
             "import-files",
-            "--path", "src/test/resources/json-files/array-of-objects.json",
+            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--collections", "files",
@@ -271,7 +275,7 @@ class ImportFilesTest extends AbstractTest {
             "--compression", "gzip"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: Unable to read file at"), "With --abort-read-on-failure, " +
+        assertTrue(stderr.contains("Error: Unable to read file at"), "With --abort-read-on-failure, " +
             "the command should fail when it encounters an invalid gzipped file.");
         assertCollectionSize("files", 0);
     }

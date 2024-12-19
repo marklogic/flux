@@ -56,6 +56,25 @@ class ImportJdbcTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 2",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{/customer_id}.json",
+            "--splitter-json-pointer", "/first_name"
+        );
+
+        JsonNode doc = readJsonDocument("/customer/1.json");
+        assertEquals("Mary", doc.get("chunks").get(0).get("text").asText());
+    }
+
+    @Test
     void tenCustomersWithUserAndPasswordInUrl() {
         run(
             "import-jdbc",
@@ -97,7 +116,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbc-driver", "not.valid.driver.value",
             "--connection-string", makeConnectionString(),
             "--query", "select * from customer"
-        ), "Command failed, cause: Unable to load class: not.valid.driver.value; " +
+        ), "Error: Unable to load class: not.valid.driver.value; " +
             "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
     }
 

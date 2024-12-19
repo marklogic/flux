@@ -1,0 +1,22 @@
+<root xmlns="org:example">
+  <url>https://docs.marklogic.com/guide/java/intro</url>
+  <text>When working with the Java API, you first create a manager for the type of document or operation you want to
+    perform on the database (for instance, a JSONDocumentManager to write and read JSON documents or a QueryManager to
+    search the database). To write or read the content for a database operation, you use standard Java APIs such as
+    InputStream, DOM, StAX, JAXB, and Transformer as well as Open Source APIs such as JDOM and Jackson.
+
+    The Java API provides a handle (a kind of adapter) as a uniform interface for content representation. As a result,
+    you can use APIs as different as InputStream and DOM to provide content for one read() or write() method. In
+    addition, you can extend the Java API so you can use the existing read() or write() methods with new APIs that
+    provide useful representations for your content.
+
+    This chapter covers a number of basic architecture aspects of the Java API, including fundamental structures such as
+    database clients, managers, and handles used in almost every program you will write with it. Before starting to
+    code, you need to understand these structures and the concepts behind them.
+
+    The MarkLogic Java Client API is built on top of the MarkLogic REST API. The REST API, in turn, is built using
+    XQuery that is evaluated against an HTTP App Server. For this reason, you need a REST API instance on MarkLogic
+    Server to use the Java API. A suitable REST API instance on port 8000 is pre-configured when you install MarkLogic
+    Server. You can also create your own on another port. For details, see Choose a REST API Instance.
+  </text>
+</root>

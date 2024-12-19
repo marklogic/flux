@@ -39,6 +39,21 @@ class ImportParquetFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/parquet/{model}.json",
+            "--splitter-json-pointer", "/model"
+        );
+
+        JsonNode doc = readJsonDocument("/parquet/Valiant.json");
+        assertEquals("Valiant", doc.get("chunks").get(0).get("text").asText());
+    }
+
+    @Test
     void uriIncludeFilePath() {
         run(
             "import-parquet-files",
@@ -152,7 +167,7 @@ class ImportParquetFilesTest extends AbstractTest {
         );
 
         assertTrue(
-            stderr.contains("Command failed, cause: [CANNOT_READ_FILE_FOOTER]"),
+            stderr.contains("Error: [CANNOT_READ_FILE_FOOTER]"),
             "Sometimes Spark will throw a SparkException that wraps a SparkException, and it's the wrapped exception " +
                 "that has the useful message in it. This test verifies that we use the message from the wrapped " +
                 "SparkException, which is far more helpful for this particular failure. Unexpected stderr: " + stderr

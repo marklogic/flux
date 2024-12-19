@@ -4,7 +4,9 @@
 package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.junit5.TestDataReloader;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -12,6 +14,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(TestDataReloader.class)
 class ExportAvroFilesTest extends AbstractTest {
 
     @Test
@@ -58,7 +61,7 @@ class ExportAvroFilesTest extends AbstractTest {
             "-PavroSchema=intentionally-invalid"
         ));
 
-        assertTrue(stderr.contains("Command failed, cause: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
+        assertTrue(stderr.contains("Error: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
             "This test is verifying that -P params are passed to the Avro data source. Since an invalid " +
                 "Avro schema is being set, this test expects an error. Unexpected stderr: " + stderr);
     }

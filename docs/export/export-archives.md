@@ -52,8 +52,11 @@ The following options control which documents are selected to be exported:
 | `--string-query` | A string query utilizing MarkLogic's search grammar. |
 | `--uris` | Newline-delimited sequence of document URIs to retrieve.  |
 
-You must specify at least one of `--collections`, `--directory`, `--query`, `--string-query`, or `--uris`. You may specify any
-combination of those options as well, with the exception that `--query` will be ignored if `--uris` is specified.
+You may specify any combination of these options, with the exception that `--query` will be ignored if `--uris` is specified.
+
+Prior to Flux 1.2.0, Flux required at least one of `--collections`, `--directory`, `--query`,
+`--string-query`, or `--uris` to be specified. Starting in Flux 1.2.0, if you do not specify any of those options, then
+Flux will select all documents that the configured MarkLogic user is able to read.  
 
 You must then use the `--path` option to specify a directory to write archive files to.
 

@@ -6,8 +6,6 @@ package com.marklogic.flux.impl.custom;
 import com.marklogic.flux.api.CustomDocumentsExporter;
 import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.ReadDocumentsOptions;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.export.ReadDocumentParams;
 import com.marklogic.flux.impl.export.ReadDocumentParamsImpl;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
@@ -25,17 +23,6 @@ public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<Cu
 
     @CommandLine.Mixin
     private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
-
-    @Override
-    public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
-        super.validateCommandLineOptions(parseResult);
-        OptionsUtil.verifyHasAtLeastOneOption(parseResult, ReadDocumentParams.REQUIRED_QUERY_OPTIONS);
-    }
-
-    @Override
-    protected void validateDuringApiUsage() {
-        readParams.verifyAtLeastOneQueryOptionIsSet("export");
-    }
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {

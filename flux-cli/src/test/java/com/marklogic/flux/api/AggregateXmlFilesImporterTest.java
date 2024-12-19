@@ -3,9 +3,8 @@
  */
 package com.marklogic.flux.api;
 
-import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
-import org.jdom2.Namespace;
+import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -33,7 +32,6 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
         assertCollectionSize("with-all-options", 3);
         Stream.of("Person-1.xml", "Person-2.xml", "Person-3.xml").forEach(uri -> {
             XmlNode doc = readXmlDocument(uri);
-            doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ex", "org:example")});
             doc.assertElementExists("/ex:person/ex:name");
         });
     }

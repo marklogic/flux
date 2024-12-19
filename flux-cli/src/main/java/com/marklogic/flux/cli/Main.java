@@ -3,7 +3,10 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.*;
+import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.Command;
+import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.VersionCommand;
 import com.marklogic.flux.impl.copy.CopyCommand;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
@@ -17,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -62,7 +66,13 @@ public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
+    // Intended to be invoked solely by the application script. Tests should invoke "run" instead to avoid the
+    // System.exit call.
     public static void main(String[] args) {
+        System.exit(run(args));
+    }
+
+    public static int run(String[] args) {
         if (args.length == 0 || args[0].trim().equals("")) {
             args = new String[]{"help"};
         } else if (args[0].equals("help") && args.length == 1) {
@@ -74,8 +84,9 @@ public class Main {
                 .setUsageHelpWidth(120)
                 .setAbbreviatedSubcommandsAllowed(true)
                 .execute(args);
+            return CommandLine.ExitCode.USAGE;
         } else {
-            new Main().newCommandLine().execute(args);
+            return new Main().newCommandLine().execute(args);
         }
     }
 
@@ -109,22 +120,33 @@ public class Main {
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
         if (selectedCommand instanceof AbstractCommand) {
-            CommonParams commonParams = ((AbstractCommand) selectedCommand).getCommonParams();
-            masterUrl = commonParams.getSparkMasterUrl();
+            masterUrl = ((AbstractCommand) selectedCommand).determineSparkMasterUrl();
         }
-
         return masterUrl != null && masterUrl.trim().length() > 0 ?
             SparkUtil.buildSparkSession(masterUrl) :
             SparkUtil.buildSparkSession();
     }
 
     private void printException(CommandLine.ParseResult parseResult, Exception ex) {
-        if (parseResult.subcommand().hasMatchedOption("--stacktrace")) {
+        final boolean includeStacktrace = parseResult.subcommand().hasMatchedOption("--stacktrace");
+        if (includeStacktrace) {
             logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
         }
+
         String message = removeStacktraceFromExceptionMessage(ex);
         PrintWriter stderr = parseResult.commandSpec().commandLine().getErr();
-        stderr.println(String.format("%nCommand failed, cause: %s", message));
+
+        if (includeStacktrace) {
+            stderr.println(String.format("%nCommand failed, error: %s", message));
+        } else {
+            stderr.println(String.format("%nCommand failed; consider running the command with the --stacktrace option to see more error information."));
+            if (ex.getCause() instanceof SQLException) {
+                stderr.println("The error is from the database you are connecting to via the configured JDBC driver.");
+                stderr.println("You may find it helpful to consult your database documentation for the error message.");
+            }
+            stderr.println(String.format("Error: %s", message));
+        }
+
         if (message != null && message.contains("XDMP-OLDSTAMP")) {
             printMessageForTimestampError(stderr);
         }

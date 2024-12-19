@@ -7,6 +7,8 @@ import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * All the tests in here that verify options have to include at least one read/write piece of custom code so that
  * the overall class validation of parameters does not fail.
@@ -167,5 +169,57 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
         assertOptions(command.writeParams.get(),
             Options.WRITE_XQUERY_FILE, "my-code.xqy"
         );
+    }
+
+    @Test
+    void masterUrlBasedOffRepartitionCount() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--repartition", "32",
+            "--thread-count", "0",
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--write-invoke", "/my/invoke.sjs"
+        );
+
+        String url = command.determineSparkMasterUrl();
+        assertEquals("local[32]", url);
+    }
+
+    @Test
+    void masterUrlBasedOffThreadCount() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--thread-count", "24",
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--write-invoke", "/my/invoke.sjs"
+        );
+
+        String url = command.determineSparkMasterUrl();
+        assertEquals("local[24]", url);
+    }
+
+    @Test
+    void defaultMasterUrl() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--write-invoke", "/my/invoke.sjs"
+        );
+
+        String url = command.determineSparkMasterUrl();
+        assertEquals("local[16]", url, "The reprocess command defaults to 16 threads.");
+    }
+
+    @Test
+    void zeroThreadCount() {
+        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
+            "--thread-count", "0",
+            "--connection-string", "user:password@host:8000",
+            "--read-invoke", "/my/invoke.sjs",
+            "--write-invoke", "/my/invoke.sjs"
+        );
+
+        String url = command.determineSparkMasterUrl();
+        assertEquals("local[*]", url, "When thread count is zero, the default Spark URL should be used.");
     }
 }

@@ -31,6 +31,9 @@ public class ReadRowsParams implements ReadRowsOptions {
     @CommandLine.Option(names = "--disable-aggregation-push-down", hidden = true)
     private boolean disableAggregationPushDown;
 
+    // As of 1.2.0, this now affects the Spark master URL. This ensures that if the user e.g. creates 16 partitions for
+    // reading rows, then the Spark master URL will specify 16 worker threads. The user may still reconfigure the
+    // number of partitions during the writer phase via "--repartition".
     @CommandLine.Option(names = "--partitions", description = "Number of partitions to create when reading rows from MarkLogic. " +
         "Increasing this may improve performance as the number of rows to read increases.")
     private int partitions;
@@ -79,5 +82,9 @@ public class ReadRowsParams implements ReadRowsOptions {
     public ReadRowsOptions logProgress(int interval) {
         this.progressInterval = interval;
         return this;
+    }
+
+    public int getPartitions() {
+        return partitions;
     }
 }

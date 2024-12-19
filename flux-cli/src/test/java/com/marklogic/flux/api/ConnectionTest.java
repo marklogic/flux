@@ -93,4 +93,25 @@ class ConnectionTest extends AbstractTest {
             ex.getMessage()
         );
     }
+
+    @Test
+    void oauth() {
+        GenericFilesImporter importer = Flux.importGenericFiles()
+            .connection(options -> options
+                .host(getDatabaseClient().getHost())
+                .port(getDatabaseClient().getPort())
+                .authenticationType(AuthenticationType.OAUTH)
+                .oauthToken("abc123")
+                // Including these to ensure that they're ignored in favor of the bogus OAuth token, as the auth type
+                // is set to OAUTH.
+                .username(DEFAULT_USER)
+                .password(DEFAULT_PASSWORD)
+            )
+            .from("src/test/resources");
+
+        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        assertEquals("Unable to connect to MarkLogic; status code: 401; error message: Unauthorized", ex.getMessage(),
+            "We don't have a way of simulating a properly configured OAuth app server, so just verifying that this " +
+                "results in an expected 401 since the app server requires digest auth.");
+    }
 }

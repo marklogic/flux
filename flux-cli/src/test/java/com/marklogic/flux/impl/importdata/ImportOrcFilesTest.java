@@ -53,6 +53,21 @@ class ImportOrcFilesTest extends AbstractTest {
     }
 
     @Test
+    void splitterSmokeTest() {
+        run(
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/orc-test/{LastName}.json",
+            "--splitter-json-pointer", "/LastName"
+        );
+
+        JsonNode doc = readJsonDocument("/orc-test/Awton.json");
+        assertEquals("Awton", doc.get("chunks").get(0).get("text").asText());
+    }
+
+    @Test
     void aggregate() {
         run(
             "import-orc-files",

@@ -5,19 +5,23 @@ package com.marklogic.flux.impl.export;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marklogic.client.io.SearchHandle;
+import com.marklogic.client.query.QueryManager;
+import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.Row;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExportFilesTest extends AbstractTest {
 
@@ -49,6 +53,24 @@ class ExportFilesTest extends AbstractTest {
             assertTrue(doc.has("CitationID"));
             assertTrue(doc.has("LastName"));
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"doesntexist", "has space", "has+plus"})
+    void pathDoesntExist(String directoryName, @TempDir Path tempDir) {
+        File dir = new File(tempDir.toFile(), directoryName);
+        assertFalse(dir.exists());
+
+        run(
+            "export-files",
+            "--path", dir.getAbsolutePath(),
+            "--connection-string", makeConnectionString(),
+            "--uris", "/citations.xml"
+        );
+
+        assertTrue(dir.exists(), "Directory was not created: " + dir.getAbsolutePath());
+        assertEquals(1, dir.listFiles().length);
+        assertTrue(new File(dir, "citations.xml").exists());
     }
 
     @Test
@@ -154,19 +176,27 @@ class ExportFilesTest extends AbstractTest {
 
     @Test
     void exportWithNoQuery(@TempDir Path tempDir) {
-        String stderr = runAndReturnStderr(() -> {
-            run(
-                "export-files",
-                "--path", tempDir.toFile().getAbsolutePath(),
-                "--compression", "gzip",
-                "--connection-string", makeConnectionString()
-            );
-        });
-
-        assertTrue(
-            stderr.contains("Must specify at least one of the following options: [--collections, --directory, --query, --string-query, --uris]."),
-            "Unexpected stderr: " + stderr
+        run(
+            "export-files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--compression", "zip",
+            "--zip-file-count", "1",
+            "--connection-string", makeConnectionString()
         );
+
+        long countOfExportedDocuments = newSparkSession()
+            .read().format("marklogic")
+            .option(Options.READ_FILES_COMPRESSION, "zip")
+            .load(tempDir.toFile().getAbsolutePath())
+            .count();
+
+        QueryManager queryManager = getDatabaseClient().newQueryManager();
+        StructuredQueryDefinition allDocumentsQuery = queryManager.newStructuredQueryBuilder().and();
+        SearchHandle searchHandle = queryManager.search(allDocumentsQuery, new SearchHandle());
+
+        assertEquals(searchHandle.getTotalResults(), countOfExportedDocuments, "As of the Flux 1.2.0 release, if no " +
+            "query option is specified, then Flux should use a true-query as the query so that all documents are " +
+            "selected.");
     }
 
     @Test

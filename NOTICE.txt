@@ -1,4 +1,4 @@
-MarkLogic® Flux™ v1
+MarkLogic® Flux™
 
 Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
 
@@ -9,7 +9,7 @@ Third Party Notices
 aws-java-sdk-s3 1.12.262 (Apache-2.0)
 hadoop-aws 3.3.4 (Apache-2.0)
 hadoop-client 3.3.4 (Apache-2.0)
-marklogic-spark-connector 2.4.0 (Apache-2.0)
+marklogic-spark-connector 2.5.0 (Apache-2.0)
 picocli 4.7.6 (Apache-2.0)
 spark-avro_2.12 3.5.3 (Apache-2.0)
 spark-sql_2.12 3.5.3 (Apache-2.0)
@@ -20,12 +20,11 @@ Apache License 2.0 (Apache-2.0)
 
 Third-Party Components
 
-The following is a list of the third-party components used by MarkLogic® Flux™ v1 (last updated July 2, 2024):
+The following is a list of the third-party components used by MarkLogic® Flux™ 1.2.0 (last updated December 17, 2024):
 
 aws-java-sdk-s3 1.12.262 (Apache-2.0)
 https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3
 For the full text of the Apache-2.0 license, see Apache License 2.0 (Apache-2.0)
-
 
 hadoop-aws 3.3.4 (Apache-2.0)
 https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws
@@ -35,7 +34,7 @@ hadoop-client 3.3.4 (Apache-2.0)
 https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-client
 For the full text of the Apache-2.0 license, see Apache License 2.0 (Apache-2.0)
 
-marklogic-spark-connector 2.34.0(Apache-2.0)
+marklogic-spark-connector 2.5.0 (Apache-2.0)
 https://repo1.maven.org/maven2/com/marklogic/marklogic-spark-connector
 For the full text of the Apache-2.0 license, see Apache License 2.0 (Apache-2.0)
 
