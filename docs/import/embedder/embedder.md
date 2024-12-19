@@ -11,7 +11,7 @@ associated with a "chunk" of text that is usually, but not necessarily, produced
 [support for splitting text](../splitting.md). Flux can add embeddings during 
 any import operation and also when [copying documents](../../copy.md). Adding embeddings to documents is a critical 
 part of creating a data pipeline in support of 
-[retrieval-augmented generation, or RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), 
+[retrieval-augmented generation, or RAG](https://www.progress.com/marklogic/solutions/generative-ai), 
 use cases that utilize MarkLogic's support for 
 [vector queries](https://docs.marklogic.com/12.0/guide/release-notes/en/new-features-in-marklogic-12-0-ea1/native-vector-support.html). 
 
