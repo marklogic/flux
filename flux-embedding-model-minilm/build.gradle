@@ -1,7 +1,71 @@
 plugins {
   id 'com.gradleup.shadow' version '8.3.3'
+  id 'maven-publish'
 }
 
 dependencies {
   implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0"
+}
+
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
+publishing {
+  publications {
+    mainJava(MavenPublication) {
+      groupId = group
+      version = version
+      from components.java
+      pom {
+        description = "Integration for minilm with the MarkLogic Flux API"
+        packaging = "jar"
+        url = "https://github.com/marklogic/flux"
+        licenses {
+          license {
+            name = "The Apache License, Version 2.0"
+            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+        developers {
+          developer {
+            id = "marklogic"
+            name = "MarkLogic Github Contributors"
+            email = "general@developer.marklogic.com"
+            organization = "MarkLogic"
+            organizationUrl = "https://www.marklogic.com"
+          }
+        }
+        scm {
+          url = "git@github.com:marklogic/flux.git"
+          connection = "scm:git@github.com:marklogic/flux.git"
+          developerConnection = "scm:git@github.com:marklogic/flux.git"
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      if (project.hasProperty("mavenUser")) {
+        credentials {
+          username mavenUser
+          password mavenPassword
+        }
+        url publishUrl
+        allowInsecureProtocol = true
+      } else {
+        name = "central"
+        url = mavenCentralUrl
+        credentials {
+          username mavenCentralUsername
+          password mavenCentralPassword
+        }
+      }
+    }
+  }
+}
+
+components.java.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
+  skip()
 }
