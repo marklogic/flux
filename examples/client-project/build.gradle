@@ -21,11 +21,21 @@ repositories {
 
 dependencies {
   implementation "com.marklogic:flux-api:1.2.0"
+  implementation "com.marklogic:flux-embedding-model-minilm:1.2.0"
 }
 
 tasks.register("runApp", JavaExec) {
   description = "Verify that the example program can be compiled and run with flux-api as a dependency. "
   mainClass = "org.example.App"
+  classpath = sourceSets.main.runtimeClasspath
+  jvmArgs = [
+    // Required when running on Java 17.
+    '--add-exports=java.base/sun.nio.ch=ALL-UNNAMED'
+  ]
+}
+
+tasks.register("runEmbeddingExample", JavaExec) {
+  mainClass = "org.example.ImportWithEmbeddings"
   classpath = sourceSets.main.runtimeClasspath
   jvmArgs = [
     // Required when running on Java 17.
