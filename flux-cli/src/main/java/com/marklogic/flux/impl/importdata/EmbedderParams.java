@@ -154,9 +154,9 @@ public class EmbedderParams implements EmbedderOptions {
         return this;
     }
 
-    private String determineClassName(String embedderValue) {
-        embedderValue = embedderValue.toLowerCase();
-        switch (embedderValue) {
+    private String determineClassName(final String embedderValue) {
+        String abbreviation = embedderValue.toLowerCase();
+        switch (abbreviation) {
             case "minilm":
                 return "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction";
             case "azure":
