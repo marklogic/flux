@@ -11,9 +11,18 @@ import java.util.Map;
 public interface EmbedderOptions {
 
     /**
-     * @param name the fully-qualified class name of an implementation of
+     * Valid values:
+     * <ul>
+     *     <li>azure</li>
+     *     <li>minilm</li>
+     *     <li>ollama</li>
+     * </ul>
+     *
+     * @param name either one of the abbreviations listed above, or the fully-qualified class name of an implementation of
      *             {@code java.util.Function<Map<String, String>, dev.langchain4j.model.embedding.EmbeddingModel>} or
-     *             an abbreviation associated with the class name of an implementation.
+     *             an abbreviation associated with the class name of an implementation. Due to a bug in Flux 1.2.0,
+     *             the class name must not contain any uppercase characters. This will be fixed in the next Flux
+     *             release.
      * @return
      */
     EmbedderOptions embedder(String name);
