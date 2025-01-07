@@ -4,11 +4,10 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.impl.ConnectionString;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.SslHostnameVerifier;
-import com.marklogic.spark.ConnectionString;
-import com.marklogic.spark.ConnectorException;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
@@ -26,7 +25,7 @@ public abstract class ConnectionInputs {
         public String convert(String value) {
             try {
                 new ConnectionString(value, "connection string");
-            } catch (ConnectorException e) {
+            } catch (IllegalArgumentException e) {
                 // See https://picocli.info/#_handling_invalid_input .
                 throw new CommandLine.TypeConversionException(e.getMessage());
             }
@@ -75,7 +74,7 @@ public abstract class ConnectionInputs {
         if (connectionString != null && connectionString.trim().length() > 0) {
             try {
                 new ConnectionString(connectionString, inputNameForErrorMessage);
-            } catch (ConnectorException e) {
+            } catch (IllegalArgumentException e) {
                 throw new FluxException(e.getMessage());
             }
         }
