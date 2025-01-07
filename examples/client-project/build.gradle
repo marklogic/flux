@@ -6,7 +6,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.2.0"
+    classpath "com.marklogic:flux-api:1.2.1"
   }
 }
 
@@ -20,8 +20,8 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:1.2.0"
-  implementation "com.marklogic:flux-embedding-model-minilm:1.2.0"
+  implementation "com.marklogic:flux-api:1.2.1"
+  implementation "com.marklogic:flux-embedding-model-minilm:1.2.1"
 }
 
 tasks.register("runApp", JavaExec) {
