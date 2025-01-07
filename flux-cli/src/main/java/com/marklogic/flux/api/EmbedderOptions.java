@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -20,9 +20,7 @@ public interface EmbedderOptions {
      *
      * @param name either one of the abbreviations listed above, or the fully-qualified class name of an implementation of
      *             {@code java.util.Function<Map<String, String>, dev.langchain4j.model.embedding.EmbeddingModel>} or
-     *             an abbreviation associated with the class name of an implementation. Due to a bug in Flux 1.2.0,
-     *             the class name must not contain any uppercase characters. This will be fixed in the next Flux
-     *             release.
+     *             an abbreviation associated with the class name of an implementation.
      * @return
      */
     EmbedderOptions embedder(String name);

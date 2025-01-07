@@ -33,8 +33,10 @@ publishing {
     mainJava(MavenPublication) {
       groupId = group
       version = version
+      artifactId = project.name
       from components.java
       pom {
+        name = "${group}:${project.name}"
         description = "Integration for Ollama with the MarkLogic Flux API"
         packaging = "jar"
         url = "https://github.com/marklogic/flux"

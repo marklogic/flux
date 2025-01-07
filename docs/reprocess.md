@@ -234,6 +234,9 @@ setting either option will adjust the default value of the `--spark-master-url` 
 the number of Spark worker threads. This ensures that each partition processing items will have a Spark worker thread
 available to it. 
 
+When using an option such as `--limit`, where you do not want to wait for all the data to be read first, 
+you may want to include `--thread-count 0` to prevent the data from being repartitioned.
+
 You may also be able to improve reader performance by partitioning your query by database forests. The section on 
 creating partitions above uses the following, which is a simple way to both create and use forest-based partitions:
 

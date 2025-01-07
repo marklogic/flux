@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -197,5 +197,21 @@ class GenericFilesImporterTest extends AbstractTest {
             assertTrue(chunk.has("embedding"));
             assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
         });
+    }
+
+    @Test
+    void splitAndEmbedWithFullClassName() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/json-files/java-client-intro.json")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .uriTemplate("/split-test.json")
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
+                .embedder(embedderOptions -> embedderOptions.embedder("com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction"))
+            ).execute();
+
+        JsonNode doc = readJsonDocument("/split-test.json");
+        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
     }
 }

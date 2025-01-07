@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -154,9 +154,9 @@ public class EmbedderParams implements EmbedderOptions {
         return this;
     }
 
-    private String determineClassName(String embedderValue) {
-        embedderValue = embedderValue.toLowerCase();
-        switch (embedderValue) {
+    private String determineClassName(final String embedderValue) {
+        String abbreviation = embedderValue.toLowerCase();
+        switch (abbreviation) {
             case "minilm":
                 return "com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction";
             case "azure":
