@@ -84,9 +84,9 @@ dependencies {
   // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
   // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
   // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
-  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
-  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
-  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+//  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
+//  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
+//  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
 
   shadowDependencies "com.marklogic:marklogic-spark-connector:2.5.1"
   shadowDependencies "info.picocli:picocli:4.7.6"
