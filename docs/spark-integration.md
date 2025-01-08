@@ -40,7 +40,10 @@ To use Flux with `spark-submit`, first download the `marklogic-flux-1.2.1-all.ja
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
-You can now run any Flux command with `spark-submit`.  
+You can now run any Flux command with `spark-submit`. As of Flux 1.2.0, Flux depends on Spark 3.5.3, and thus you should
+use Spark 3.5.3 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
+runtime that depends on Scala 2.12 and not Scala 2.13.
+
 The following shows a notional example of running the Flux `import-files` command:
 
 {% tabs log %}
