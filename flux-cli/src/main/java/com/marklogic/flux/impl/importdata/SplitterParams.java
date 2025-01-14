@@ -129,6 +129,42 @@ public class SplitterParams implements SplitterOptions {
     )
     private String xmlNamespace;
 
+    @CommandLine.Option(
+        names = "--classifier-host",
+        description = "Hostname of the classifier service."
+    )
+    private String classifierHost;
+
+    @CommandLine.Option(
+        names = "--classifier-port",
+        description = "Port number of the classifier service."
+    )
+    private String classifierPort;
+
+    @CommandLine.Option(
+        names = "--classifier-protocol",
+        description = "Protocol (http/https) of the classifier service."
+    )
+    private String classifierProtocol;
+
+    @CommandLine.Option(
+        names = "--classifier-endpoint",
+        description = "Endpoint of the classifier service."
+    )
+    private String classifierEndpoint;
+
+    @CommandLine.Option(
+        names = "--classifier-api-key",
+        description = "API key granting access to the classifier service."
+    )
+    private String classifierApikey;
+
+    @CommandLine.Option(
+        names = "--classifier-token-endpoint",
+        description = "Endpoint of the token generator for the classifier service."
+    )
+    private String classifierTokenEndpoint;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_SPLITTER_XPATH, xpath,
@@ -144,7 +180,13 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, permissions,
             Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, rootName,
             Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, uriPrefix,
-            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix
+            Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix,
+            Options.WRITE_CLASSIFIER_HOST, classifierHost,
+            Options.WRITE_CLASSIFIER_PORT, classifierPort,
+            Options.WRITE_CLASSIFIER_PROTOCOL, classifierProtocol,
+            Options.WRITE_CLASSIFIER_ENDPOINT, classifierEndpoint,
+            Options.WRITE_CLASSIFIER_APIKEY, classifierApikey,
+            Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, classifierTokenEndpoint
         );
 
         // Empty string is a valid value.
@@ -277,6 +319,42 @@ public class SplitterParams implements SplitterOptions {
     @Override
     public SplitterOptions outputXmlNamespace(String xmlNamespace) {
         this.xmlNamespace = xmlNamespace;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierHost(String classifierHost) {
+        this.classifierHost = classifierHost;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierPort(String classifierPort) {
+        this.classifierPort = classifierPort;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierProtocol(String classifierProtocol) {
+        this.classifierProtocol = classifierProtocol;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierEndpoint(String classifierEndpoint) {
+        this.classifierEndpoint = classifierEndpoint;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierApiKey(String classifierApiKey) {
+        this.classifierApikey = classifierApiKey;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputClassifierTokenEndpoint(String classifierTokenEndpoint) {
+        this.classifierTokenEndpoint = classifierTokenEndpoint;
         return this;
     }
 }
