@@ -29,7 +29,7 @@ dependencies {
     exclude module: "rocksdbjni"
   }
 
-  implementation "com.marklogic:marklogic-spark-connector:2.5.1"
+  implementation "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
