@@ -142,10 +142,10 @@ public class SplitterParams implements SplitterOptions {
     private String classifierPort;
 
     @CommandLine.Option(
-        names = "--classifier-protocol",
-        description = "Protocol (http/https) of the classifier service."
+        names = "--classifier-https",
+        description = "Specifies the https protocol for the classifier service."
     )
-    private String classifierProtocol;
+    private boolean classifierHttps;
 
     @CommandLine.Option(
         names = "--classifier-endpoint",
@@ -183,7 +183,7 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix,
             Options.WRITE_CLASSIFIER_HOST, classifierHost,
             Options.WRITE_CLASSIFIER_PORT, classifierPort,
-            Options.WRITE_CLASSIFIER_PROTOCOL, classifierProtocol,
+            Options.WRITE_CLASSIFIER_HTTPS, classifierHttps ? "true" : null,
             Options.WRITE_CLASSIFIER_ENDPOINT, classifierEndpoint,
             Options.WRITE_CLASSIFIER_APIKEY, classifierApikey,
             Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, classifierTokenEndpoint
@@ -323,37 +323,37 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions outputClassifierHost(String classifierHost) {
+    public SplitterOptions classifierHost(String classifierHost) {
         this.classifierHost = classifierHost;
         return this;
     }
 
     @Override
-    public SplitterOptions outputClassifierPort(String classifierPort) {
+    public SplitterOptions classifierPort(String classifierPort) {
         this.classifierPort = classifierPort;
         return this;
     }
 
     @Override
-    public SplitterOptions outputClassifierProtocol(String classifierProtocol) {
-        this.classifierProtocol = classifierProtocol;
+    public SplitterOptions classifierHttps(Boolean classifierHttps) {
+        this.classifierHttps = (classifierHttps != null) ? true : false;
         return this;
     }
 
     @Override
-    public SplitterOptions outputClassifierEndpoint(String classifierEndpoint) {
+    public SplitterOptions classifierEndpoint(String classifierEndpoint) {
         this.classifierEndpoint = classifierEndpoint;
         return this;
     }
 
     @Override
-    public SplitterOptions outputClassifierApiKey(String classifierApiKey) {
+    public SplitterOptions classifierApiKey(String classifierApiKey) {
         this.classifierApikey = classifierApiKey;
         return this;
     }
 
     @Override
-    public SplitterOptions outputClassifierTokenEndpoint(String classifierTokenEndpoint) {
+    public SplitterOptions classifierTokenEndpoint(String classifierTokenEndpoint) {
         this.classifierTokenEndpoint = classifierTokenEndpoint;
         return this;
     }

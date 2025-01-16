@@ -46,17 +46,17 @@ public interface SplitterOptions {
 
     SplitterOptions outputXmlNamespace(String xmlNamespace);
 
-    SplitterOptions outputClassifierHost(String classifierHost);
+    SplitterOptions classifierHost(String classifierHost);
 
-    SplitterOptions outputClassifierPort(String classifierPort);
+    SplitterOptions classifierPort(String classifierPort);
 
-    SplitterOptions outputClassifierProtocol(String classifierProtocol);
+    SplitterOptions classifierHttps(Boolean classifierProtocol);
 
-    SplitterOptions outputClassifierEndpoint(String classifierEndpoint);
+    SplitterOptions classifierEndpoint(String classifierEndpoint);
 
-    SplitterOptions outputClassifierApiKey(String classifierApiKey);
+    SplitterOptions classifierApiKey(String classifierApiKey);
 
-    SplitterOptions outputClassifierTokenEndpoint(String classifierTokenEndpoint);
+    SplitterOptions classifierTokenEndpoint(String classifierTokenEndpoint);
 
     enum ChunkDocumentType {
         JSON,
