@@ -58,6 +58,8 @@ public interface SplitterOptions {
 
     SplitterOptions classifierTokenEndpoint(String classifierTokenEndpoint);
 
+    SplitterOptions classifierConceptsArrayName(String classifierConceptsArrayName);
+
     enum ChunkDocumentType {
         JSON,
         XML

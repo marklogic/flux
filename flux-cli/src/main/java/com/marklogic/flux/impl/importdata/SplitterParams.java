@@ -165,6 +165,12 @@ public class SplitterParams implements SplitterOptions {
     )
     private String classifierTokenEndpoint;
 
+    @CommandLine.Option(
+        names = "--classifier-concepts-array-name",
+        description = "The name of the array holding the Concepts."
+    )
+    private String classifierConceptsArrayName;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = OptionsUtil.makeOptions(
             Options.WRITE_SPLITTER_XPATH, xpath,
@@ -186,7 +192,8 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_CLASSIFIER_HTTPS, classifierHttps ? "true" : null,
             Options.WRITE_CLASSIFIER_ENDPOINT, classifierEndpoint,
             Options.WRITE_CLASSIFIER_APIKEY, classifierApikey,
-            Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, classifierTokenEndpoint
+            Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, classifierTokenEndpoint,
+            Options.WRITE_CLASSIFIER_CONCEPTS_ARRAY, classifierConceptsArrayName
         );
 
         // Empty string is a valid value.
@@ -357,4 +364,11 @@ public class SplitterParams implements SplitterOptions {
         this.classifierTokenEndpoint = classifierTokenEndpoint;
         return this;
     }
+
+    @Override
+    public SplitterOptions classifierConceptsArrayName(String classifierConceptsArrayName) {
+        this.classifierConceptsArrayName = classifierConceptsArrayName;
+        return this;
+    }
+
 }

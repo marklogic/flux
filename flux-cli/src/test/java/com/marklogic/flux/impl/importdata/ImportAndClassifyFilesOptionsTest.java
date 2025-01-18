@@ -55,4 +55,30 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, "token-endpoint"
         );
     }
+
+    @Test
+    void specifyElementArrayName() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--classifier-host", "classifier.host.com",
+            "--classifier-port", "443",
+            "--classifier-https",
+            "--classifier-endpoint", "cls-endpoint",
+            "--classifier-api-key", "secret key",
+            "--classifier-token-endpoint", "token-endpoint",
+            "--classifier-concepts-array-name", "differentName"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_CLASSIFIER_HOST, "classifier.host.com",
+            Options.WRITE_CLASSIFIER_PORT, "443",
+            Options.WRITE_CLASSIFIER_HTTPS, "true",
+            Options.WRITE_CLASSIFIER_ENDPOINT, "cls-endpoint",
+            Options.WRITE_CLASSIFIER_APIKEY, "secret key",
+            Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, "token-endpoint",
+            Options.WRITE_CLASSIFIER_CONCEPTS_ARRAY, "differentName"
+        );
+    }
 }
