@@ -50,7 +50,7 @@ public interface SplitterOptions {
 
     SplitterOptions classifierPort(String classifierPort);
 
-    SplitterOptions classifierHttps(Boolean classifierProtocol);
+    SplitterOptions classifierHttps();
 
     SplitterOptions classifierEndpoint(String classifierEndpoint);
 

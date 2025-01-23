@@ -49,7 +49,7 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
         assertOptions(command.getWriteParams().makeOptions(),
             Options.WRITE_CLASSIFIER_HOST, "classifier.host.com",
             Options.WRITE_CLASSIFIER_PORT, "443",
-            Options.WRITE_CLASSIFIER_HTTPS, null,
+            Options.WRITE_CLASSIFIER_HTTPS, "false",
             Options.WRITE_CLASSIFIER_ENDPOINT, "cls-endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "secret key",
             Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, "token-endpoint"
