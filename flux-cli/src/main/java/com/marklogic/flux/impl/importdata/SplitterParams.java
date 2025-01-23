@@ -145,7 +145,7 @@ public class SplitterParams implements SplitterOptions {
         names = "--classifier-https",
         description = "Specifies the https protocol for the classifier service."
     )
-    private boolean classifierHttps;
+    private boolean classifierHttps = false;
 
     @CommandLine.Option(
         names = "--classifier-endpoint",
@@ -183,7 +183,7 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix,
             Options.WRITE_CLASSIFIER_HOST, classifierHost,
             Options.WRITE_CLASSIFIER_PORT, classifierPort,
-            Options.WRITE_CLASSIFIER_HTTPS, classifierHttps ? "true" : null,
+            Options.WRITE_CLASSIFIER_HTTPS, Boolean.toString(classifierHttps),
             Options.WRITE_CLASSIFIER_ENDPOINT, classifierEndpoint,
             Options.WRITE_CLASSIFIER_APIKEY, classifierApikey,
             Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, classifierTokenEndpoint
@@ -335,8 +335,8 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions classifierHttps(Boolean classifierHttps) {
-        this.classifierHttps = (classifierHttps != null) ? true : false;
+    public SplitterOptions classifierHttps() {
+        this.classifierHttps = true;
         return this;
     }
 
