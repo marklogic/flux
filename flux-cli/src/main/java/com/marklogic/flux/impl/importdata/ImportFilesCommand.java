@@ -7,6 +7,10 @@ import com.marklogic.flux.api.CompressionType;
 import com.marklogic.flux.api.GenericFilesImporter;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import com.marklogic.spark.udf.TextExtractor;
+import org.apache.spark.sql.Column;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -41,6 +45,15 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     @Override
     protected String getReadFormat() {
         return MARKLOGIC_CONNECTOR;
+    }
+
+    @Override
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        // This might not be the right time, as it's before the limit/repartition stuff is implemented.
+        if (writeParams.extractText) {
+            dataset = dataset.withColumn("extractedText", TextExtractor.build().apply(new Column("content")));
+        }
+        return super.afterDatasetLoaded(dataset);
     }
 
     @Override
@@ -117,6 +130,10 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     public static class WriteGenericDocumentsParams extends WriteDocumentParams<WriteGenericDocumentsOptions> implements WriteGenericDocumentsOptions {
 
         private DocumentType documentType;
+
+        @CommandLine.Option(names = "--extract-text", description = "Specifies that text should be extracted from each " +
+            "file and saved as a separate document.")
+        private boolean extractText;
 
         @Override
         @CommandLine.Option(
