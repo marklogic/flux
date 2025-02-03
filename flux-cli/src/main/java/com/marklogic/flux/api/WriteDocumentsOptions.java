@@ -50,4 +50,6 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T uriSuffix(String uriSuffix);
 
     T uriTemplate(String uriTemplate);
+
+    T classifier(Consumer<ClassifierOptions> consumer);
 }
