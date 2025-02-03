@@ -3,18 +3,17 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.marklogic.flux.api.ConnectionOptions;
-import com.marklogic.flux.api.DocumentCopier;
-import com.marklogic.flux.api.EmbedderOptions;
-import com.marklogic.flux.api.SplitterOptions;
+import com.marklogic.flux.api.*;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
+import com.marklogic.flux.impl.importdata.ClassifierParams;
 import com.marklogic.flux.impl.importdata.EmbedderParams;
 import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.SaveMode;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -163,6 +162,9 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @CommandLine.Mixin
         private EmbedderParams embedderParams = new EmbedderParams();
 
+        @CommandLine.Mixin
+        private ClassifierParams classifierParams = new ClassifierParams();
+
         protected Map<String, String> makeOptions() {
             Map<String, String> options = splitterParams.makeOptions();
             options.putAll(embedderParams.makeOptions());
@@ -237,6 +239,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsOptions embedder(Consumer<EmbedderOptions> consumer) {
             consumer.accept(embedderParams);
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions classifier(Consumer<ClassifierOptions> consumer) {
+            consumer.accept(classifierParams);
             return this;
         }
 

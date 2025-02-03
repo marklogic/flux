@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.ClassifierOptions;
 import com.marklogic.flux.api.EmbedderOptions;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
@@ -129,6 +130,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @CommandLine.Mixin
     private EmbedderParams embedderParams = new EmbedderParams();
 
+    @CommandLine.Mixin
+    private ClassifierParams classifierParams = new ClassifierParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
@@ -154,6 +158,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
         options.putAll(splitterParams.makeOptions());
         options.putAll(embedderParams.makeOptions());
+        options.putAll(classifierParams.makeOptions());
         return options;
     }
 
@@ -217,6 +222,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
+    public T classifier(Consumer<ClassifierOptions> consumer) {
+        consumer.accept(classifierParams);
+        return (T) this;
+    }
+
+    @Override
     public T temporalCollection(String temporalCollection) {
         this.temporalCollection = temporalCollection;
         return (T) this;
@@ -274,6 +285,10 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     public T uriTemplate(String uriTemplate) {
         this.uriTemplate = uriTemplate;
         return (T) this;
+    }
+
+    public ClassifierParams getClassifierParams() {
+        return classifierParams;
     }
 
     public void setStreaming(boolean streaming) {

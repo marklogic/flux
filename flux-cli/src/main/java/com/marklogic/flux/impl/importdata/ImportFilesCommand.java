@@ -11,6 +11,7 @@ import com.marklogic.spark.udf.TextExtractor;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.expressions.UserDefinedFunction;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -52,6 +53,11 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         // This might not be the right time, as it's before the limit/repartition stuff is implemented.
         if (writeParams.extractText) {
             dataset = dataset.withColumn("extractedText", TextExtractor.build().apply(new Column("content")));
+        }
+        Map<String, String> classifierOptions = writeParams.makeOptions();
+        if (classifierOptions.containsKey(Options.WRITE_CLASSIFIER_HOST) && !classifierOptions.get(Options.WRITE_CLASSIFIER_HOST).isEmpty()) {
+            UserDefinedFunction textClassifier = writeParams.getClassifierParams().buildTextClassifier();
+            dataset = dataset.withColumn("classificationResponse", textClassifier.apply(new Column("content")));
         }
         return super.afterDatasetLoaded(dataset);
     }

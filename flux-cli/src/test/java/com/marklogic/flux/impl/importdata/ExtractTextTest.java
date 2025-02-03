@@ -23,7 +23,7 @@ class ExtractTextTest extends AbstractTest {
         );
 
         assertCollectionSize("Should have the 2 binary docs and the 2 docs with extracted text", collection, 4);
-        assertInCollections("/extraction-files/hello-world.docx-extracted-text.txt", collection);
-        assertInCollections("/extraction-files/marklogic-getting-started.pdf-extracted-text.txt", collection);
+        assertInCollections("/extraction-files/hello-world.docx-extracted-text.json", collection);
+        assertInCollections("/extraction-files/marklogic-getting-started.pdf-extracted-text.json", collection);
     }
 }
