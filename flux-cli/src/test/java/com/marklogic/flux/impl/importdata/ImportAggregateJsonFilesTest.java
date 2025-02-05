@@ -49,6 +49,13 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         assertEquals("object 4", doc.get("hello").asText());
     }
 
+    /**
+     * ARGH.
+     *
+     * So for this use case, the JSON pointer is against the serialized document.
+     *
+     * But for arbitrary rows, we need the document to be serialized first.
+     */
     @Test
     void splitterSmokeTest() {
         run(

@@ -38,7 +38,7 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
     }
 
     @Override
-    protected Supplier<Map<String, String>> getWriteParams() {
+    protected WriteDocumentParams<WriteDocumentParamsImpl> getWriteParams() {
         return writeParams;
     }
 

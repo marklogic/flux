@@ -7,9 +7,7 @@ import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractCommand;
 import org.apache.spark.sql.*;
-
-import java.util.Map;
-import java.util.function.Supplier;
+import org.apache.spark.sql.expressions.UserDefinedFunction;
 
 /**
  * Base class for commands that import files and write to MarkLogic.
@@ -23,9 +21,9 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
      */
     protected abstract String getReadFormat();
 
-    protected abstract <P extends ReadFilesParams> P getReadParams();
+    protected abstract <RFP extends ReadFilesParams> RFP getReadParams();
 
-    protected abstract Supplier<Map<String, String>> getWriteParams();
+    protected abstract <WDP extends WriteDocumentParams> WDP getWriteParams();
 
     @Override
     protected void validateDuringApiUsage() {
@@ -41,10 +39,20 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
             logger.info("Importing files from: {}", readFilesParams.getPaths());
         }
         readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
-        return reader
+        Dataset<Row> dataset = reader
             .format(getReadFormat())
             .options(readFilesParams.makeOptions())
             .load(readFilesParams.getPaths().toArray(new String[]{}));
+
+        // This is a little funky, how the splitter UDF stuff is in the writer params, but we invoke the UDF before
+        // the writer starts.
+        UserDefinedFunction textSplitter = getWriteParams().getSplitterParams().buildTextSplitter();
+        if (textSplitter != null) {
+            dataset.show();
+            dataset = dataset.withColumn("chunks", textSplitter.apply(new Column("content")));
+        }
+
+        return dataset;
     }
 
     @Override

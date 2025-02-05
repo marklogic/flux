@@ -7,6 +7,8 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
+import com.marklogic.spark.udf.TextSplitterConfig;
+import org.apache.spark.sql.expressions.UserDefinedFunction;
 import picocli.CommandLine;
 
 import java.util.*;
@@ -129,15 +131,38 @@ public class SplitterParams implements SplitterOptions {
     )
     private String xmlNamespace;
 
+    public UserDefinedFunction buildTextSplitter() {
+        if (text || xpath != null || !jsonPointer.isEmpty()) {
+            TextSplitterConfig config = new TextSplitterConfig();
+            config.setCustomClass(customClass);
+            config.setCustomClassOptions(customClassOptions);
+            config.setJoinDelimiter(joinDelimiter);
+            config.setNamespaces(xmlNamespaces);
+            config.setRegex(regex);
+            config.setJsonPointers(jsonPointer);
+            config.setXpathExpression(xpath);
+            if (maxChunkSize != null) {
+                config.setMaxChunkSize(maxChunkSize);
+            }
+            if (maxOverlapSize != null) {
+                config.setMaxOverlapSize(maxOverlapSize);
+            }
+            return config.buildUDF();
+        }
+        return null;
+    }
+
+    /**
+     * Stuff to pass to UDF:
+     * xpath, max chunk size, max overlap size, text,  regex, join delimiter, custom class
+     * <p>
+     * Stuff to pass to options:
+     * sidecar options,
+     *
+     * @return
+     */
     public Map<String, String> makeOptions() {
-        Map<String, String> options = OptionsUtil.makeOptions(
-            Options.WRITE_SPLITTER_XPATH, xpath,
-            Options.WRITE_SPLITTER_MAX_CHUNK_SIZE, OptionsUtil.integerOption(maxChunkSize),
-            Options.WRITE_SPLITTER_MAX_OVERLAP_SIZE, OptionsUtil.integerOption(maxOverlapSize),
-            Options.WRITE_SPLITTER_TEXT, text ? "true" : null,
-            Options.WRITE_SPLITTER_REGEX, regex,
-            Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter,
-            Options.WRITE_SPLITTER_CUSTOM_CLASS, customClass,
+        return OptionsUtil.makeOptions(
             Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
             Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
             Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, collections,
@@ -146,24 +171,6 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, uriPrefix,
             Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix
         );
-
-        // Empty string is a valid value.
-        if (xmlNamespace != null) {
-            options.put(Options.WRITE_SPLITTER_SIDECAR_XML_NAMESPACE, xmlNamespace);
-        }
-
-        if (!jsonPointer.isEmpty()) {
-            options.put(Options.WRITE_SPLITTER_JSON_POINTERS, jsonPointer.stream().collect(Collectors.joining("\n")));
-        }
-
-        xmlNamespaces.entrySet().stream().forEach(entry ->
-            options.put(Options.XPATH_NAMESPACE_PREFIX + entry.getKey(), entry.getValue()));
-
-        customClassOptions.forEach((key, value) ->
-            options.put(Options.WRITE_SPLITTER_CUSTOM_CLASS_OPTION_PREFIX + key, value)
-        );
-
-        return options;
     }
 
     @Override

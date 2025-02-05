@@ -37,7 +37,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
     }
 
     @Override
-    protected Supplier<Map<String, String>> getWriteParams() {
+    protected WriteTriplesDocumentsParams getWriteParams() {
         return writeParams;
     }
 

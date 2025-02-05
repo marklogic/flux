@@ -294,4 +294,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     public void setStreaming(boolean streaming) {
         this.streaming = streaming;
     }
+
+    public SplitterParams getSplitterParams() {
+        return splitterParams;
+    }
 }
