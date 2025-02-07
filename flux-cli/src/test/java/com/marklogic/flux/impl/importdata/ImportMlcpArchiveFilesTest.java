@@ -68,19 +68,6 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
     }
 
     @Test
-    void splitterSmokeTest() {
-        run(
-            "import-mlcp-archive-files",
-            "--path", "src/test/resources/mlcp-archives",
-            "--connection-string", makeConnectionString(),
-            "--splitter-xpath", "/hello/text()"
-        );
-
-        XmlNode doc = readXmlDocument("/test/1.xml");
-        doc.assertElementValue("/hello/model:chunks/model:chunk/model:text", "world");
-    }
-
-    @Test
     void invalidFileDontAbort() {
         run(
             "import-mlcp-archive-files",

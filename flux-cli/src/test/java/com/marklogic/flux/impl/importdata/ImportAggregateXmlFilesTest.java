@@ -97,22 +97,6 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
     }
 
     @Test
-    void splitterSmokeTest() {
-        run(
-            "import-aggregate-xml-files",
-            "--path", "src/test/resources/xml-file/people.xml",
-            "--element", "person",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-replace", ".*/xml-file,''",
-            "--splitter-xpath", "/person/company/text()"
-        );
-
-        XmlNode doc = readXmlDocument("/people.xml-1.xml");
-        doc.assertElementValue("/person/model:chunks/model:chunk/model:text", "company-1");
-    }
-
-    @Test
     void importZippedXml() {
         run(
             "import-aggregate-xml-files",

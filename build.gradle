@@ -4,8 +4,11 @@ subprojects {
   group = "com.marklogic"
 
   java {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    // Flux requires Java 11 for all operations besides splitting and embedding, which require Java 17 due to
+    // the requirements of the langchain4j dependency.
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(11)
+    }
   }
 
   repositories {
@@ -31,6 +34,20 @@ subprojects {
       events 'started', 'passed', 'skipped', 'failed'
       exceptionFormat 'full'
     }
+    jvmArgs = [
+      // Needed for all Java 17 testing.
+      "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+
+      // For Spark's SerializationDebugger when using Java 17. See ReprocessTest for one example of why this is needed.
+      "--add-opens", "java.base/sun.security.action=ALL-UNNAMED",
+
+      // Needed by the JDBC tests.
+      "--add-opens", "java.base/sun.util.calendar=ALL-UNNAMED",
+
+      // Needed by CustomImportTest
+      "--add-opens", "java.base/java.io=ALL-UNNAMED",
+      "--add-opens", "java.base/sun.nio.cs=ALL-UNNAMED"
+    ]
   }
 }
 
