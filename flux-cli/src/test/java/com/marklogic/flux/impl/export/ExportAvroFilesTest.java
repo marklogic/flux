@@ -47,8 +47,6 @@ class ExportAvroFilesTest extends AbstractTest {
      * Unlike Parquet and ORC files, setting a different compression doesn't result in a different filename that can
      * be asserted on when using Avro. So to verify that dynamic params are recognized, this intentionally causes an
      * error with a dynamic param.
-     *
-     * @param tempDir
      */
     @Test
     void dynamicParameter(@TempDir Path tempDir) {
@@ -64,5 +62,6 @@ class ExportAvroFilesTest extends AbstractTest {
         assertTrue(stderr.contains("Error: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
             "This test is verifying that -P params are passed to the Avro data source. Since an invalid " +
                 "Avro schema is being set, this test expects an error. Unexpected stderr: " + stderr);
+        assertTrue(tempDir.toFile().exists(), "Making Sonar happy, which complains otherwise that the temp dir is not used.");
     }
 }

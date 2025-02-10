@@ -59,6 +59,8 @@ class ExportParquetFilesTest extends AbstractTest {
 
         assertTrue(stderr.contains("already exists"), "This test is just verifying that --mode is interpreted " +
             "correctly; unexpected stderr: " + stderr);
+        assertTrue(tempDir.toFile().exists(), "Verifying the temp dir exists, which also prevents Sonar from " +
+            "complaining that the tempDir isn't used (even though it is above).");
     }
 
     @Test
