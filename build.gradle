@@ -11,6 +11,16 @@ subprojects {
     }
   }
 
+  // Allows for quickly identifying compiler warnings.
+  tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+  }
+
+  javadoc.failOnError = false
+  // Ignores warnings on params that don't have descriptions, which is a little too noisy
+  javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+
   repositories {
     mavenCentral()
     mavenLocal()
