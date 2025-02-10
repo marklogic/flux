@@ -1,7 +1,7 @@
 /*
  * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
  */
-package com.marklogic.flux.impl.importdata.splitter;
+package com.marklogic.flux.impl.importdata;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;

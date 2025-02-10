@@ -3,8 +3,15 @@ plugins {
   id 'maven-publish'
 }
 
+java {
+  // Must use Java 17 as langchain4j depends on 17+.
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
 dependencies {
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0"
+  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.0.0-alpha1"
 }
 
 java {
