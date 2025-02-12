@@ -66,6 +66,7 @@ task gettingStartedZip(type: Zip) {
     "on the GitHub release page."
   from "examples/getting-started"
   exclude "build", ".gradle", "gradle-*.properties", "flux", ".gitignore", "marklogic-flux"
+  exclude "src/main/ml-schemas/tde/chunks.json"
   into "marklogic-flux-getting-started-${version}"
   archiveFileName = "marklogic-flux-getting-started-${version}.zip"
   destinationDirectory = file("build")
