@@ -7,11 +7,6 @@ import com.marklogic.flux.api.CompressionType;
 import com.marklogic.flux.api.GenericFilesImporter;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
-import com.marklogic.spark.udf.TextExtractor;
-import org.apache.spark.sql.Column;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.expressions.UserDefinedFunction;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -46,20 +41,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     @Override
     protected String getReadFormat() {
         return MARKLOGIC_CONNECTOR;
-    }
-
-    @Override
-    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        // This might not be the right time, as it's before the limit/repartition stuff is implemented.
-        if (writeParams.extractText) {
-            dataset = dataset.withColumn("extractedText", TextExtractor.build().apply(new Column("content")));
-        }
-        Map<String, String> classifierOptions = writeParams.makeOptions();
-        if (classifierOptions.containsKey(Options.WRITE_CLASSIFIER_HOST) && !classifierOptions.get(Options.WRITE_CLASSIFIER_HOST).isEmpty()) {
-            UserDefinedFunction textClassifier = writeParams.getClassifierParams().buildTextClassifier();
-            dataset = dataset.withColumn("classificationResponse", textClassifier.apply(new Column("content")));
-        }
-        return super.afterDatasetLoaded(dataset);
     }
 
     @Override
@@ -137,9 +118,36 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         private DocumentType documentType;
 
-        @CommandLine.Option(names = "--extract-text", description = "Specifies that text should be extracted from each " +
-            "file and saved as a separate document.")
+        @CommandLine.Option(
+            names = "--extract-text",
+            description = "Specifies that text should be extracted from each file and saved as a separate document."
+        )
         private boolean extractText;
+
+        @CommandLine.Option(
+            names = "--extracted-text-document-type",
+            description = "Specifies the type of document to create with the extracted text. Defaults to JSON."
+        )
+        private String extractedTextDocumentType;
+
+        @CommandLine.Option(
+            names = "--extracted-text-collections",
+            description = "Comma-delimited sequence of collection names to add to each extracted text document."
+        )
+        private String extractedTextCollections;
+
+        @CommandLine.Option(
+            names = "--extracted-text-permissions",
+            description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each extracted " +
+                "text document - e.g. role1,read,role2,update,role3,execute."
+        )
+        private String extractedTextPermissions;
+
+        @CommandLine.Option(
+            names = "--extracted-text-drop-source",
+            description = "Specify this to not write the content that text was extracted from as its own document."
+        )
+        private boolean extractedTextDropSource;
 
         @Override
         @CommandLine.Option(
@@ -154,7 +162,12 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+                Options.WRITE_EXTRACTED_TEXT, extractText ? "true" : null,
+                Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, extractedTextDocumentType,
+                Options.WRITE_EXTRACTED_TEXT_COLLECTIONS, extractedTextCollections,
+                Options.WRITE_EXTRACTED_TEXT_PERMISSIONS, extractedTextPermissions,
+                Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, extractedTextDropSource ? "true" : null
             );
         }
     }

@@ -35,7 +35,12 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-replace", ".*value,''",
             "--uri-suffix", ".suffix",
             "--uri-template", "/test/{value}.json",
-            "--streaming"
+            "--streaming",
+            "--extract-text",
+            "--extracted-text-document-type", "XML",
+            "--extracted-text-collections", "e1,e2",
+            "--extracted-text-permissions", "e1,read,e2,update",
+            "--extracted-text-drop-source"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -67,7 +72,12 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_REPLACE, ".*value,''",
             Options.WRITE_URI_SUFFIX, ".suffix",
             Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
-            Options.STREAM_FILES, "true"
+            Options.STREAM_FILES, "true",
+            Options.WRITE_EXTRACTED_TEXT, "true",
+            Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
+            Options.WRITE_EXTRACTED_TEXT_COLLECTIONS, "e1,e2",
+            Options.WRITE_EXTRACTED_TEXT_PERMISSIONS, "e1,read,e2,update",
+            Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, "true"
         );
     }
 
