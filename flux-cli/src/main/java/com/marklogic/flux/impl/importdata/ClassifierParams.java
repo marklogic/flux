@@ -6,8 +6,6 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.ClassifierOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
-import com.marklogic.spark.udf.TextClassifierUdf;
-import org.apache.spark.sql.expressions.UserDefinedFunction;
 import picocli.CommandLine;
 
 import java.util.HashMap;
@@ -25,7 +23,7 @@ public class ClassifierParams implements ClassifierOptions {
         names = "--classifier-port",
         description = "Port number of the classifier service."
     )
-    private String port;
+    private int port;
 
     @CommandLine.Option(
         names = "--classifier-https",
@@ -56,7 +54,7 @@ public class ClassifierParams implements ClassifierOptions {
         if (host != null) {
             OptionsUtil.addOptions(options,
                 Options.WRITE_CLASSIFIER_HOST, host,
-                Options.WRITE_CLASSIFIER_PORT, port,
+                Options.WRITE_CLASSIFIER_PORT, OptionsUtil.intOption(port),
                 Options.WRITE_CLASSIFIER_HTTPS, Boolean.toString(https),
                 Options.WRITE_CLASSIFIER_ENDPOINT, endpoint,
                 Options.WRITE_CLASSIFIER_APIKEY, apikey,
@@ -66,10 +64,6 @@ public class ClassifierParams implements ClassifierOptions {
         return options;
     }
 
-    public UserDefinedFunction buildTextClassifier() {
-        return TextClassifierUdf.build(host, https, port, endpoint, apikey, tokenEndpoint);
-    }
-
     @Override
     public ClassifierOptions host(String host) {
         this.host = host;
@@ -77,7 +71,7 @@ public class ClassifierParams implements ClassifierOptions {
     }
 
     @Override
-    public ClassifierOptions port(String port) {
+    public ClassifierOptions port(int port) {
         this.port = port;
         return this;
     }

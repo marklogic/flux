@@ -12,7 +12,7 @@ public interface ClassifierOptions {
 
     ClassifierOptions https();
 
-    ClassifierOptions port(String port);
+    ClassifierOptions port(int port);
 
     ClassifierOptions endpoint(String endpoint);
 
