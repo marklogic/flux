@@ -19,7 +19,8 @@ class ExtractTextTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", collection,
             "--uri-replace", ".*/resources,''",
-            "--extract-text"
+            "--extract-text",
+            "--extracted-text-collection", collection
         );
 
         assertCollectionSize("Should have the 2 binary docs and the 2 docs with extracted text", collection, 4);

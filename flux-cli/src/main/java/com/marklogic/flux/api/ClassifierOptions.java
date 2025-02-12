@@ -10,13 +10,13 @@ public interface ClassifierOptions {
 
     ClassifierOptions host(String host);
 
-    ClassifierOptions https();
+    ClassifierOptions http();
 
     ClassifierOptions port(int port);
 
-    ClassifierOptions endpoint(String endpoint);
+    ClassifierOptions path(String endpoint);
 
     ClassifierOptions apiKey(String apiKey);
 
-    ClassifierOptions tokenEndpoint(String tokenEndpoint);
+    ClassifierOptions tokenPath(String tokenEndpoint);
 }

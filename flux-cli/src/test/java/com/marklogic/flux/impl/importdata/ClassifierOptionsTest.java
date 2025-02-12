@@ -22,10 +22,10 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
                 classifierOptions
                     .host("classifier.host.com")
                     .port(443)
-                    .https()
-                    .endpoint("/cls/endpoint")
+                    .http()
+                    .path("/cls/endpoint")
                     .apiKey("MyApiKey")
-                    .tokenEndpoint("token/endpoint");
+                    .tokenPath("token/endpoint");
                 reference.set(classifierOptions);
             }));
 
@@ -33,10 +33,10 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
         assertOptions(params.makeOptions(),
             Options.WRITE_CLASSIFIER_HOST, "classifier.host.com",
             Options.WRITE_CLASSIFIER_PORT, "443",
-            Options.WRITE_CLASSIFIER_HTTPS, "true",
-            Options.WRITE_CLASSIFIER_ENDPOINT, "/cls/endpoint",
+            Options.WRITE_CLASSIFIER_HTTP, "true",
+            Options.WRITE_CLASSIFIER_PATH, "/cls/endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "MyApiKey",
-            Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, "token/endpoint"
+            Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint"
         );
     }
 }
