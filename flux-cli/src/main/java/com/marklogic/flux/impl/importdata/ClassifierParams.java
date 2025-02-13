@@ -26,16 +26,16 @@ public class ClassifierParams implements ClassifierOptions {
     private int port;
 
     @CommandLine.Option(
-        names = "--classifier-https",
-        description = "Specifies the https protocol for the classifier service."
+        names = "--classifier-http",
+        description = "Specifies the use of HTTP instead of HTTPS for the classifier service."
     )
-    private boolean https = false;
+    private boolean useHttp;
 
     @CommandLine.Option(
-        names = "--classifier-endpoint",
-        description = "Endpoint of the classifier service."
+        names = "--classifier-path",
+        description = "Path of the classifier service."
     )
-    private String endpoint;
+    private String path;
 
     @CommandLine.Option(
         names = "--classifier-api-key",
@@ -44,10 +44,10 @@ public class ClassifierParams implements ClassifierOptions {
     private String apikey;
 
     @CommandLine.Option(
-        names = "--classifier-token-endpoint",
-        description = "Endpoint of the token generator for the classifier service."
+        names = "--classifier-token-path",
+        description = "Path of the token generator for the classifier service."
     )
-    private String tokenEndpoint;
+    private String tokenPath;
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
@@ -55,10 +55,10 @@ public class ClassifierParams implements ClassifierOptions {
             OptionsUtil.addOptions(options,
                 Options.WRITE_CLASSIFIER_HOST, host,
                 Options.WRITE_CLASSIFIER_PORT, OptionsUtil.intOption(port),
-                Options.WRITE_CLASSIFIER_HTTPS, Boolean.toString(https),
-                Options.WRITE_CLASSIFIER_ENDPOINT, endpoint,
+                Options.WRITE_CLASSIFIER_HTTP, Boolean.toString(useHttp),
+                Options.WRITE_CLASSIFIER_PATH, path,
                 Options.WRITE_CLASSIFIER_APIKEY, apikey,
-                Options.WRITE_CLASSIFIER_TOKEN_ENDPOINT, tokenEndpoint
+                Options.WRITE_CLASSIFIER_TOKEN_PATH, tokenPath
             );
         }
         return options;
@@ -77,14 +77,14 @@ public class ClassifierParams implements ClassifierOptions {
     }
 
     @Override
-    public ClassifierOptions https() {
-        this.https = true;
+    public ClassifierOptions http() {
+        this.useHttp = true;
         return this;
     }
 
     @Override
-    public ClassifierOptions endpoint(String endpoint) {
-        this.endpoint = endpoint;
+    public ClassifierOptions path(String path) {
+        this.path = path;
         return this;
     }
 
@@ -95,8 +95,8 @@ public class ClassifierParams implements ClassifierOptions {
     }
 
     @Override
-    public ClassifierOptions tokenEndpoint(String tokenEndpoint) {
-        this.tokenEndpoint = tokenEndpoint;
+    public ClassifierOptions tokenPath(String tokenPath) {
+        this.tokenPath = tokenPath;
         return this;
     }
 }
