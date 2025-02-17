@@ -4,7 +4,7 @@
  */
 dependencies {
   compileOnly "com.marklogic:marklogic-client-api:7.1.0"
-  compileOnly "org.apache.spark:spark-sql_2.12:3.5.3"
+  compileOnly "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 
   api("com.marklogic:marklogic-junit5:1.5.0") {
     // Use the Java Client in the connector jar.
@@ -27,6 +27,6 @@ dependencies {
   implementation "org.postgresql:postgresql:42.7.4"
 
   // For tests involving text extraction.
-  testImplementation "org.apache.tika:tika-parser-microsoft-module:3.0.0"
-  implementation "org.apache.tika:tika-parser-pdf-module:3.0.0"
+//  implementation "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
+  implementation "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
 }

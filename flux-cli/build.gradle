@@ -24,7 +24,7 @@ configurations.all {
 }
 
 dependencies {
-  implementation("org.apache.spark:spark-sql_2.12:3.5.3") {
+  implementation("org.apache.spark:spark-sql_2.12:${sparkVersion}") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }

@@ -11,7 +11,7 @@ java {
 }
 
 dependencies {
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.0.0-alpha1"
+  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:${langchain4jVersion}"
 }
 
 java {
