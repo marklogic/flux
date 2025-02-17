@@ -65,6 +65,15 @@ The URI of each document will default to a UUID followed by `.json`. To include 
 include the `--uri-include-file-path` option. You can also make use of the
 [common import features](../common-import-features.md) for controlling document URIs.
 
+## Importing delimited files with different columns
+
+If you are importing two or more files that have different sets of columns, include `-Pmode=PERMISSIVE` as an option.
+The default mode value of `MALFORMED` may otherwise result in some columns being dropped if they do not appear in all
+files. 
+
+The `-Pmode` option is an example of an advanced option. See the section below on "Advanced options" for more 
+information on these options and how to configure them. 
+
 ## Specifying a JSON root name
 
 By default, each column in a delimited text file will become a top-level field in a JSON document written to 
