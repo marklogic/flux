@@ -7,7 +7,7 @@ java {
 
 dependencies {
   // Required for compile-time references in the tests to langchain4j classes.
-  testImplementation "dev.langchain4j:langchain4j:1.0.0-alpha1"
+  testImplementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
 
   testImplementation project(":flux-tests-api")
   testImplementation project(":flux-cli")
