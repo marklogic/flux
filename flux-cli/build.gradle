@@ -10,27 +10,28 @@ plugins {
 configurations {
   // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
   shadowDependencies
-}
 
-configurations.all {
-  // By default, Spark 3.5.3 does not include the log4j 1.x dependency via its zookeeper dependency. But somehow, by
-  // adding hadoop-client 3.3.4 to the mix, the log4j 1.x dependency comes via the zookeeper 3.6.3 dependency. Per
-  // the release notes at https://zookeeper.apache.org/doc/r3.6.4/releasenotes.html, using zookeeper 3.6.4 - which
-  // removes log4j 1.x, thus avoiding the major CVE associated with log4j 1.x - appears safe, which is confirmed by
-  // tests as well.
-  resolutionStrategy {
-    force "org.apache.zookeeper:zookeeper:3.6.4"
-  }
+  // Defines dependencies to be included in the Flux distribution (in addition to all normal runtime dependencies),
+  // but should not be transitive dependencies of the Flux API. Typically, a Flux API user can easily choose to include
+  // those transitive dependencies if desired.
+  distributionDependencies
+
+  // Since the distribution dependencies are included in Flux, we want to test them. So the test runtime includes all
+  // distribution dependencies.
+  testImplementation.extendsFrom(distributionDependencies)
 }
 
 dependencies {
-  implementation("org.apache.spark:spark-sql_2.12:${sparkVersion}") {
-    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
-    exclude module: "rocksdbjni"
-  }
-
+  implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
   implementation "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
+
+  // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
+  // API since spark-submit provides that.
+  // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
+  // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
+  shadowDependencies "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
   // Spark - through 3.5.1 - depend on Hadoop 3.3.4 as well.
@@ -58,13 +59,13 @@ dependencies {
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.5.3"
 
+  distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
+  distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
+
   testImplementation project(":flux-tests-api")
 
   // For testing custom commands with a 3rd party connector.
   testImplementation "com.databricks:spark-xml_2.12:0.18.0"
-
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.5.1"
-  shadowDependencies "info.picocli:picocli:4.7.6"
 }
 
 javadoc {
@@ -106,6 +107,14 @@ distributions {
       from("hadoop") {
         include "libhadoop.so"
         into "lib/native"
+      }
+      // The distributionDependencies configuration allows us to include dependencies that should be part of the Flux
+      // distribution, but not part of the default Flux API set of dependencies.
+      into("lib") {
+        from configurations.distributionDependencies
+        // It's expected to run into duplicates with dependencies already on the runtime classpath, so any duplicates
+        // can safely be excluded.
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
       }
     }
   }
