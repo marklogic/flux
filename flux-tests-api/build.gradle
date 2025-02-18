@@ -25,8 +25,4 @@ dependencies {
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   api "org.springframework:spring-jdbc:5.3.39"
   implementation "org.postgresql:postgresql:42.7.4"
-
-  // For tests involving text extraction.
-//  implementation "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
-  implementation "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
 }
