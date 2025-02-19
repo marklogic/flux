@@ -24,6 +24,31 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     interface WriteGenericDocumentsOptions extends WriteDocumentsOptions<WriteGenericDocumentsOptions> {
         WriteGenericDocumentsOptions documentType(DocumentType documentType);
+
+        /**
+         * @since 1.3.0
+         */
+        WriteGenericDocumentsOptions extractText();
+
+        /**
+         * @since 1.3.0
+         */
+        WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType);
+
+        /**
+         * @since 1.3.0
+         */
+        WriteGenericDocumentsOptions extractedTextCollections(String commaDelimitedCollections);
+
+        /**
+         * @since 1.3.0
+         */
+        WriteGenericDocumentsOptions extractedTextPermissionsString(String rolesAndCapabilities);
+
+        /**
+         * @since 1.3.0
+         */
+        WriteGenericDocumentsOptions extractedTextDropSource();
     }
 
     GenericFilesImporter from(Consumer<ReadGenericFilesOptions> consumer);
