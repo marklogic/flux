@@ -35,6 +35,7 @@ def runtests(){
   '''
   junit '**/*.xml'
 }
+
 def postCleanup(){
   sh label:'mlcleanup', script: '''#!/bin/bash
     cd $WORKSPACE/flux;
@@ -45,6 +46,7 @@ def postCleanup(){
     echo "y" | docker volume prune --filter all=1 || true;
   '''
 }
+
 def runSonarScan(String javaVersion){
     sh label:'test', script: '''#!/bin/bash
       export JAVA_HOME=$'''+javaVersion+'''
@@ -68,6 +70,7 @@ pipeline{
     DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
   }
   stages{
+  /*
     stage('tests'){
       environment{
         scannerHome = tool 'SONAR_Progress'
@@ -85,6 +88,24 @@ pipeline{
         }
       }
     }
+*/
+    stage('publishApi'){
+      agent {label 'devExpLinuxPool'}
+      when {
+        branch 'develop'
+      }
+      steps{
+        sh label:'publishApi', script: '''#!/bin/bash
+          export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
+          export GRADLE_USER_HOME=$WORKSPACE/$GRADLE_DIR
+          export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+          cp ~/.gradle/gradle.properties $GRADLE_USER_HOME;
+          cd $WORKSPACE/flux;
+          ./gradlew flux-cli:publish
+        '''
+      }
+    }
+
     stage('publish'){
       agent{ label 'devExpLinuxPool'}
       when {
@@ -116,6 +137,7 @@ pipeline{
         }
       }
     }
+    /*
     stage('regressions'){
       when{
         allOf{
@@ -136,5 +158,7 @@ pipeline{
         }
       }
     }
+    */
+
   }
 }
