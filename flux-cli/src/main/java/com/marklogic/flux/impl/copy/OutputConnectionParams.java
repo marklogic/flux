@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.marklogic.client.DatabaseClient;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
@@ -92,14 +91,14 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
         names = "--output-connection-type",
         description = "Set to 'DIRECT' if connections can be made directly to each host in the MarkLogic cluster. Defaults to 'GATEWAY'. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
-    public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
+    public ConnectionOptions connectionType(ConnectionType connectionType) {
         this.connectionType = connectionType;
         return this;
     }
 
     @Override
     public ConnectionOptions connectionType(String connectionType) {
-        return connectionType(DatabaseClient.ConnectionType.valueOf(connectionType));
+        return connectionType(ConnectionType.valueOf(connectionType));
     }
 
     @Override

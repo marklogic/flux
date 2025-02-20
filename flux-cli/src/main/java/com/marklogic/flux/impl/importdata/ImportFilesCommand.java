@@ -170,5 +170,38 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
                 Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, extractedTextDropSource ? "true" : null
             );
         }
+
+        @Override
+        public WriteGenericDocumentsOptions extractText() {
+            this.extractText = true;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType) {
+            if (DocumentType.TEXT.equals(documentType)) {
+                documentType = DocumentType.JSON;
+            }
+            this.extractedTextDocumentType = documentType.name();
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextCollections(String commaDelimitedCollections) {
+            this.extractedTextCollections = commaDelimitedCollections;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextPermissionsString(String rolesAndCapabilities) {
+            this.extractedTextPermissions = rolesAndCapabilities;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextDropSource() {
+            this.extractedTextDropSource = true;
+            return this;
+        }
     }
 }

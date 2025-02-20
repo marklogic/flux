@@ -3,8 +3,6 @@
  */
 package com.marklogic.flux.impl;
 
-import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.impl.ConnectionString;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.SslHostnameVerifier;
@@ -18,6 +16,8 @@ import java.util.Map;
  * with parameter annotations.
  */
 public abstract class ConnectionInputs {
+
+    public enum ConnectionType {DIRECT, GATEWAY}
 
     public static class ConnectionStringValidator implements CommandLine.ITypeConverter<String> {
 
@@ -38,7 +38,7 @@ public abstract class ConnectionInputs {
     protected int port;
     protected String basePath;
     protected String database;
-    protected DatabaseClient.ConnectionType connectionType;
+    protected ConnectionType connectionType;
     protected boolean disableGzippedResponses;
     protected AuthenticationType authType;
     protected String username;
