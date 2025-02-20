@@ -104,7 +104,7 @@ pipeline{
           export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
           export GRADLE_USER_HOME=$WORKSPACE/$GRADLE_DIR
           export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
-          cp ~/.gradle/gradle.properties $GRADLE_USER_HOME;
+          cp ~/.gradle/gradle.properties $GRADLE_USER_HOME/gradle.properties;
           cd $WORKSPACE/flux;
           ./gradlew publish
         '''
