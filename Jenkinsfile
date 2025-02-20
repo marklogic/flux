@@ -106,7 +106,7 @@ pipeline{
           export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
           cp ~/.gradle/gradle.properties $GRADLE_USER_HOME;
           cd $WORKSPACE/flux;
-          ./gradlew flux-cli:publish
+          ./gradlew publish
         '''
       }
     }
