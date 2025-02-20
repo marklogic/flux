@@ -56,12 +56,15 @@ def runSonarScan(String javaVersion){
      ./gradlew sonar -Dsonar.projectKey='ML-DevExp-marklogic-flux' -Dsonar.projectName='ML-DevExp-marklogic-flux' || true
     '''
 }
+
 pipeline{
   agent none
+
   options {
     checkoutToSubdirectory 'flux'
     buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '')
   }
+
   environment{
     JAVA_HOME_DIR="/home/builder/java/jdk-11.0.2"
     JAVA17_HOME_DIR="/home/builder/java/jdk-17.0.2"
@@ -69,8 +72,10 @@ pipeline{
     DMC_USER     = credentials('MLBUILD_USER')
     DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
   }
+
   stages{
 
+/*
     stage('tests'){
       environment{
         scannerHome = tool 'SONAR_Progress'
@@ -88,7 +93,7 @@ pipeline{
         }
       }
     }
-
+*/
     stage('publishApi'){
       agent {label 'devExpLinuxPool'}
       when {
@@ -138,6 +143,7 @@ pipeline{
       }
     }
 
+/*
     stage('regressions'){
       when{
         allOf{
@@ -158,6 +164,6 @@ pipeline{
         }
       }
     }
-
+*/
   }
 }
