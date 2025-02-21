@@ -75,7 +75,6 @@ pipeline{
 
   stages{
 
-/*
     stage('tests'){
       environment{
         scannerHome = tool 'SONAR_Progress'
@@ -93,7 +92,7 @@ pipeline{
         }
       }
     }
-*/
+
     stage('publishApi'){
       agent {label 'devExpLinuxPool'}
       when {
@@ -143,7 +142,6 @@ pipeline{
       }
     }
 
-/*
     stage('regressions'){
       when{
         allOf{
@@ -164,6 +162,6 @@ pipeline{
         }
       }
     }
-*/
+
   }
 }
