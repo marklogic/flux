@@ -22,6 +22,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T permissionsString(String rolesAndCapabilities);
 
     /**
+     * @since 1.3.0
+     */
+    T pipelineBatchSize(int batchSize);
+
+    /**
      * @since 1.2.0
      */
     T splitter(Consumer<SplitterOptions> consumer);

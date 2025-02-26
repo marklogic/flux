@@ -25,7 +25,8 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
                     .http()
                     .path("/cls/endpoint")
                     .apiKey("MyApiKey")
-                    .tokenPath("token/endpoint");
+                    .tokenPath("token/endpoint")
+                    .batchSize(30);
                 reference.set(classifierOptions);
             }));
 
@@ -36,7 +37,8 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_HTTP, "true",
             Options.WRITE_CLASSIFIER_PATH, "/cls/endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "MyApiKey",
-            Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint"
+            Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint",
+            Options.WRITE_CLASSIFIER_BATCH_SIZE, "30"
         );
     }
 }

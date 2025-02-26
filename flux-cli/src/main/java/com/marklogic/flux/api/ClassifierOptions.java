@@ -19,4 +19,6 @@ public interface ClassifierOptions {
     ClassifierOptions apiKey(String apiKey);
 
     ClassifierOptions tokenPath(String tokenEndpoint);
+
+    ClassifierOptions batchSize(int batchSize);
 }
