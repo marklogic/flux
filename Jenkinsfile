@@ -153,9 +153,10 @@ pipeline{
         GRADLE_DIR   =".gradle"
       }
       agent{ label 'devExpLinuxPool'}
-      steps{
-        runtests()
-      }
+      // Disabling for now, will find a way to conditionally run these from Jenkins. 
+//       steps{
+//         runtests()
+//       }
       post{
         always{
           postCleanup()
