@@ -68,6 +68,14 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private int batchSize = 100;
 
         @CommandLine.Option(
+            names = "--output-pipeline-batch-size",
+            description = "The number of documents to collect in a batch before sending them through the document " +
+                "processing pipeline, which consists of text extraction, text splitting, text classification, and " +
+                "embedding generation."
+        )
+        private int pipelineBatchSize = 100;
+
+        @CommandLine.Option(
             names = "--output-collections",
             description = "Comma-delimited sequence of collection names to add to each document."
         )
@@ -227,6 +235,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams permissionsString(String rolesAndCapabilities) {
             this.permissions = rolesAndCapabilities;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions pipelineBatchSize(int batchSize) {
+            this.pipelineBatchSize = batchSize;
             return this;
         }
 

@@ -67,6 +67,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-collections", "c1,c2",
             "--output-failed-documents-path", "/my/failures",
             "--output-permissions", "rest-reader,read,qconsole-user,update",
+            "--output-pipeline-batch-size", "13",
             "--output-temporal-collection", "t1",
             "--output-thread-count", "7",
             "--output-transform", "transform1",

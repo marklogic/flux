@@ -49,6 +49,12 @@ public class ClassifierParams implements ClassifierOptions {
     )
     private String tokenPath;
 
+    @CommandLine.Option(
+        names = "--classifier-batch-size",
+        description = "Number of documents and/or chunks of text to send to the classifier service in a single request."
+    )
+    private Integer batchSize = 20;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (host != null) {
@@ -58,7 +64,8 @@ public class ClassifierParams implements ClassifierOptions {
                 Options.WRITE_CLASSIFIER_HTTP, Boolean.toString(useHttp),
                 Options.WRITE_CLASSIFIER_PATH, path,
                 Options.WRITE_CLASSIFIER_APIKEY, apikey,
-                Options.WRITE_CLASSIFIER_TOKEN_PATH, tokenPath
+                Options.WRITE_CLASSIFIER_TOKEN_PATH, tokenPath,
+                Options.WRITE_CLASSIFIER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
             );
         }
         return options;
@@ -97,6 +104,12 @@ public class ClassifierParams implements ClassifierOptions {
     @Override
     public ClassifierOptions tokenPath(String tokenPath) {
         this.tokenPath = tokenPath;
+        return this;
+    }
+
+    @Override
+    public ClassifierOptions batchSize(int batchSize) {
+        this.batchSize = batchSize;
         return this;
     }
 }

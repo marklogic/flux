@@ -36,6 +36,14 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private int batchSize = 200;
 
     @CommandLine.Option(
+        names = "--pipeline-batch-size",
+        description = "The number of documents to collect in a batch before sending them through the document " +
+            "processing pipeline, which consists of text extraction, text splitting, text classification, and " +
+            "embedding generation."
+    )
+    private Integer pipelineBatchSize;
+
+    @CommandLine.Option(
         names = "--collections",
         description = "Comma-delimited sequence of collection names to add to each document - e.g. collection1,collection2."
     )
@@ -140,6 +148,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+            Options.WRITE_PIPELINE_BATCH_SIZE, OptionsUtil.integerOption(pipelineBatchSize),
             Options.WRITE_COLLECTIONS, collections,
             Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(progressInterval),
             Options.WRITE_PERMISSIONS, permissions,
@@ -224,6 +233,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T classifier(Consumer<ClassifierOptions> consumer) {
         consumer.accept(classifierParams);
+        return (T) this;
+    }
+
+    @Override
+    public T pipelineBatchSize(int batchSize) {
+        this.pipelineBatchSize = batchSize;
         return (T) this;
     }
 
