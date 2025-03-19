@@ -3,6 +3,7 @@
  */
 package org.example;
 
+import dev.langchain4j.data.document.DefaultDocument;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
@@ -31,7 +32,7 @@ public class EnronEmailSplitter implements DocumentSplitter {
     public List<TextSegment> split(Document document) {
         String text = document.text();
         String textToSplit = removeEmailHeaders(text);
-        return this.documentSplitter.split(new Document(textToSplit));
+        return this.documentSplitter.split(new DefaultDocument(textToSplit));
     }
 
     /**
