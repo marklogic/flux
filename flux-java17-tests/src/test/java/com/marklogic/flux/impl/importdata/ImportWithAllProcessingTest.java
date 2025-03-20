@@ -31,7 +31,7 @@ class ImportWithAllProcessingTest extends AbstractJava17Test {
         assertInCollections("/marklogic-getting-started.pdf", "binary-file");
 
         assertCollectionSize("extracted-text", 1);
-        assertInCollections("/marklogic-getting-started.pdf/extracted-text.json", "extracted-text");
+        assertInCollections("/marklogic-getting-started.pdf-extracted-text.json", "extracted-text");
 
         assertCollectionSize("Expecting 5 chunks based on the PDF size and the max chunk size", "chunks", 5);
     }

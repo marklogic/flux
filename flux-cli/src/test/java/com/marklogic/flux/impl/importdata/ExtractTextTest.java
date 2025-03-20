@@ -27,8 +27,8 @@ class ExtractTextTest extends AbstractTest {
         );
 
         assertCollectionSize("Should have the 2 binary docs and the 2 docs with extracted text", collection, 4);
-        assertInCollections("/extraction-files/hello-world.docx/extracted-text.json", collection);
-        assertInCollections("/extraction-files/marklogic-getting-started.pdf/extracted-text.json", collection);
+        assertInCollections("/extraction-files/hello-world.docx-extracted-text.json", collection);
+        assertInCollections("/extraction-files/marklogic-getting-started.pdf-extracted-text.json", collection);
     }
 
     /**
@@ -53,10 +53,10 @@ class ExtractTextTest extends AbstractTest {
         );
 
         assertCollectionSize(collection, 2);
-        JsonNode doc = readJsonDocument("/extraction-files/hello-world.docx/extracted-text.json", collection);
+        JsonNode doc = readJsonDocument("/extraction-files/hello-world.docx-extracted-text.json", collection);
         assertEquals("/extraction-files/hello-world.docx", doc.get("source-uri").asText());
         assertEquals("Hello world.\n\nThis file is used for testing text extraction.\n", doc.get("content").asText());
         assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            doc.get("metadata").get("Content-Type").asText());
+            doc.get("extracted-metadata").get("Content-Type").asText());
     }
 }
