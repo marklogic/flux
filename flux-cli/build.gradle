@@ -42,19 +42,21 @@ dependencies {
   // Flux does not create a YARN cluster. It uses a local standalone Spark cluster. A user may choose to use Flux with
   // spark-submit against a Spark cluster using YARN, but at that point, the user is 100% responsible for how they
   // configure their own Spark cluster.
-  implementation("org.apache.hadoop:hadoop-aws:3.3.4") {
+  implementation("org.apache.hadoop:hadoop-aws:3.4.1") {
     // We don't include the entire aws-java-sdk-bundle, as that clocks in as a single 380mb jar. We only need the S3
     // portion of the AWS SDK.
-    exclude module: "aws-java-sdk-bundle"
+//    exclude module: "aws-java-sdk-core"
+//    exclude group: "software.amazon.awssdk"
   }
 
   // Depending on 262, which is what hadoop-aws 3.3.4 depends on.
-  implementation "com.amazonaws:aws-java-sdk-s3:1.12.262"
+  implementation "com.amazonaws:aws-java-sdk-s3:1.12.270"
+//  implementation "software.amazon.awssdk:s3:2.24.6"
 
   // With version 262 of the AWS SDK, we get a NoClassDefFoundError if this dynamodb module is not included.
-  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
+//  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.270"
 
-  implementation "org.apache.hadoop:hadoop-client:3.3.4"
+  implementation "org.apache.hadoop:hadoop-client:3.4.1"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.12:3.5.3"

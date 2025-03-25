@@ -45,6 +45,10 @@ subprojects {
         details.because "Need to match the version used by Apache Tika. Spark uses 2.20.0 but automated tests confirm " +
           "that Spark seems fine with 2.24.3."
       }
+      if (details.requested.group.equals("org.apache.hadoop")) {
+        details.useVersion "3.4.1"
+        details.because "Testing out Spark 3.5.x with Hadoop 3.4.1"
+      }
     }
 
     resolutionStrategy {
