@@ -126,6 +126,15 @@ effects on the `import-aggregate-json-files` command:
 `--xml-namespace`, and `--ignore-null-fields`.
 4. You can still read a gzipped file if its filename ends in `.gz`.
 
+### Failing fast on malformed JSON
+
+Flux defaults to reading JSON lines with a mode of "permissive". With this mode, any malformed lines will be dropped 
+and Flux will continue processing lines. 
+
+You can configure the underlying [Spark JSON data source](https://spark.apache.org/docs/latest/sql-data-sources-json.html) to 
+instead fail fast when it encounters a malformed line by including `-Pmode=failfast` as an option. When Flux encounters
+a malformed line, it will immediately fail with an error message describing the problem with the line. 
+
 ## Specifying a JSON root name
 
 It is often useful to have a single "root" field in a JSON document so that it is more self-describing. It
