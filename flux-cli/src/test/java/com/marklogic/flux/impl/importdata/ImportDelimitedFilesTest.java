@@ -38,6 +38,38 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void twoFilesWithDifferentSchemas() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv",
+            "--path", "src/test/resources/delimited-files/three-other-rows.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "csv-test"
+        );
+
+        assertCollectionSize(
+            "As of 1.3, Flux should default to mode=PERMISSIVE for delimited files to support the use case of " +
+                "importing multiple delimited files that have different schemas.", "csv-test", 6);
+    }
+
+    @Test
+    void twoFilesWithDifferentSchemasAndDropMalformedMode() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv",
+            "--path", "src/test/resources/delimited-files/three-other-rows.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "csv-test",
+            "-Pmode=DROPMALFORMED"
+        );
+
+        assertCollectionSize("The user can use -Pmode to drop rows that don't conform to the " +
+            "schema inferred from all files.", "csv-test", 3);
+    }
+
+    @Test
     void multiLine() {
         run(
             "import-delimited-files",

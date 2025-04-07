@@ -79,8 +79,11 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     private void addOptionsToNotFailOnReadError(Map<String, String> options) {
         // For commands that use the MarkLogic connector to read files.
         options.put(Options.READ_FILES_ABORT_ON_FAILURE, "false");
-        // For commands that use Spark JSON / CSV.
-        options.put("mode", "DROPMALFORMED");
+
+        // For commands that use Spark JSON/CSV to read files. Changed in 1.3 to support the common use case of
+        // importing multiple files at once that have different schemas.
+        options.put("mode", "PERMISSIVE");
+
         // For commands that use Spark Parquet / Avro / ORC. This does not appear to affect Spark JSON / CSV, as
         // those use the 'mode' option to determine what to do with corrupt data.
         options.put("ignoreCorruptFiles", "true");
