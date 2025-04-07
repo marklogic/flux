@@ -1,4 +1,4 @@
-number,flag
-4,true
-5,false
-6,true
+number,color,status
+4,blue,on
+5,blue,off
+6,red,on

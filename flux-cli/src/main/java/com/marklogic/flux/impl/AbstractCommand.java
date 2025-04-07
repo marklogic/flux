@@ -60,6 +60,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             }
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = readDataset(session);
+            logger.warn("SCHEMA: {}", dataset.schema().prettyJson());
             if (commonParams.isCount()) {
                 logger.info("Count: {}", dataset.count());
             } else if (commonParams.getPreview().isPreviewRequested()) {

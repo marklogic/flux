@@ -71,7 +71,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         public Map<String, String> makeOptions() {
             Map<String, String> options = super.makeOptions();
             options.putIfAbsent("header", "true");
-            options.putIfAbsent("inferSchema", "true");
+//            options.putIfAbsent("inferSchema", "true");
             if (delimiter != null) {
                 options.putIfAbsent("sep", delimiter);
             }

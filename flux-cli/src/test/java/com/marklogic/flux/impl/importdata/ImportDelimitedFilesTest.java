@@ -45,7 +45,10 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--path", "src/test/resources/delimited-files/three-other-rows.csv",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "csv-test"
+            "--collections", "csv-test",
+//            "-Pmode=PERMISSIVE",
+//            "-PenforceSchema=false"
+            "--uri-template", "/aaa/{number}.json"
         );
 
         assertCollectionSize(
