@@ -59,7 +59,7 @@ class ArchiveFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(options -> options.collections("author").categories("content", "collections", "permissions"));
 
-        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(exporter::execute);
         assertEquals("Must specify a file path", ex.getMessage());
     }
 }

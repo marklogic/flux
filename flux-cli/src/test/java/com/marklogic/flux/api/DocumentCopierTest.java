@@ -3,11 +3,8 @@
  */
 package com.marklogic.flux.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DocumentCopierTest extends AbstractTest {
 

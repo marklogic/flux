@@ -22,6 +22,6 @@ public abstract class AbstractTest extends AbstractFluxTest {
     }
 
     protected final FluxException assertThrowsFluxException(Runnable r) {
-        return assertThrows(FluxException.class, () -> r.run());
+        return assertThrows(FluxException.class, r::run);
     }
 }

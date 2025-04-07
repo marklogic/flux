@@ -71,7 +71,7 @@ public abstract class ConnectionInputs {
      * Used by the API to eagerly fail on an invalid connection string and provide a meaningful error message.
      */
     public void validateConnectionString(String inputNameForErrorMessage) {
-        if (connectionString != null && connectionString.trim().length() > 0) {
+        if (connectionString != null && !connectionString.trim().isEmpty()) {
             try {
                 new ConnectionString(connectionString, inputNameForErrorMessage);
             } catch (IllegalArgumentException e) {

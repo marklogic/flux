@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ExportJsonLinesFilesTest extends AbstractTest {
 
     @Test
-    void test(@TempDir Path tempDir) throws Exception {
+    void test(@TempDir Path tempDir) {
         run(
             "export-json-lines-files",
             "--connection-string", makeConnectionString(),

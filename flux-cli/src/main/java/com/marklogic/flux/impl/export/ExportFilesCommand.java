@@ -113,7 +113,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         public void validatePath() {
-            if (path == null || path.trim().length() == 0) {
+            if (path == null || path.trim().isEmpty()) {
                 throw new FluxException("Must specify a file path");
             }
         }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Disabled("Only intended for ad hoc testing by using explicit S3 auth values.")
 class ImportFromS3Test extends AbstractTest {
 
-    private final static String PATH = "s3a://changeme/";
+    private static final String PATH = "s3a://changeme/";
 
     @Test
     void test() {

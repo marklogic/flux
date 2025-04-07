@@ -35,7 +35,7 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     public void validatePath() {
-        if (path == null || path.trim().length() == 0) {
+        if (path == null || path.trim().isEmpty()) {
             throw new FluxException("Must specify a file path");
         }
     }
