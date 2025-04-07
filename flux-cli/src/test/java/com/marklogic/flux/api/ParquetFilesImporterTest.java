@@ -54,7 +54,7 @@ class ParquetFilesImporterTest extends AbstractTest {
         ParquetFilesImporter importer = Flux.importParquetFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

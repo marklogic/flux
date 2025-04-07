@@ -128,7 +128,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
          * @return
          */
         private String determineCategories() {
-            if (categories != null && categories.trim().length() > 0) {
+            if (categories != null && !categories.trim().isEmpty()) {
                 return "content," + categories;
             }
             return "content,metadata";

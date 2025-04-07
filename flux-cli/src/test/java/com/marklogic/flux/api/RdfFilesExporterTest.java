@@ -75,7 +75,7 @@ class RdfFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .to(options -> options.path("build/doesnt-matter"));
 
-        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(exporter::execute);
         assertEquals("Must specify at least one of the following for the triples to export: " +
                 "collections; a directory; graphs; a string query; a structured, serialized, or combined query; or URIs.",
             ex.getMessage());

@@ -122,7 +122,7 @@ public class Main {
         if (selectedCommand instanceof AbstractCommand) {
             masterUrl = ((AbstractCommand) selectedCommand).determineSparkMasterUrl();
         }
-        return masterUrl != null && masterUrl.trim().length() > 0 ?
+        return masterUrl != null && !masterUrl.trim().isEmpty() ?
             SparkUtil.buildSparkSession(masterUrl) :
             SparkUtil.buildSparkSession();
     }

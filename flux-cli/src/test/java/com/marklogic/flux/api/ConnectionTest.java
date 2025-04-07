@@ -31,7 +31,7 @@ class ConnectionTest extends AbstractTest {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connectionString(connectionString);
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Invalid value for connection string; must be username:password@host:port/optionalDatabaseName",
             ex.getMessage());
     }
@@ -42,7 +42,7 @@ class ConnectionTest extends AbstractTest {
             .connection(options -> options.port(8000).username("doesnt").password("matter"))
             .from("src/test/resources");
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, importer::execute);
         assertEquals("Unable to connect to MarkLogic; cause: No host provided", ex.getMessage(),
             "For an API user, it seems reasonable to receive a ConnectorException for certain errors, as it's " +
                 "still a MarkLogic-specific error and not a Spark-specific one.");
@@ -54,7 +54,7 @@ class ConnectionTest extends AbstractTest {
             .connection(options -> options.host("localhost").username("doesnt").password("matter"))
             .from("src/test/resources");
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, importer::execute);
         assertEquals("Unable to connect to MarkLogic; cause: unexpected port: 0", ex.getMessage());
     }
 
@@ -64,7 +64,7 @@ class ConnectionTest extends AbstractTest {
             .connection(options -> options.host("localhost").port(8000).password("something"))
             .from("src/test/resources");
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, importer::execute);
         assertEquals("Unable to connect to MarkLogic; cause: Must specify a username when using digest authentication.",
             ex.getMessage());
     }
@@ -75,7 +75,7 @@ class ConnectionTest extends AbstractTest {
             .connection(options -> options.host("localhost").port(8000).username("something"))
             .from("src/test/resources");
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, importer::execute);
         assertEquals("Unable to connect to MarkLogic; cause: Must specify a password when using digest authentication.",
             ex.getMessage());
     }
@@ -87,7 +87,7 @@ class ConnectionTest extends AbstractTest {
             .outputConnectionString("not@valid:port")
             .from(options -> options.collections("anything"));
 
-        FluxException ex = assertThrowsFluxException(() -> copier.execute());
+        FluxException ex = assertThrowsFluxException(copier::execute);
         assertEquals(
             "Invalid value for output connection string; must be username:password@host:port/optionalDatabaseName",
             ex.getMessage()
@@ -109,7 +109,7 @@ class ConnectionTest extends AbstractTest {
             )
             .from("src/test/resources");
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        ConnectorException ex = assertThrows(ConnectorException.class, importer::execute);
         assertEquals("Unable to connect to MarkLogic; status code: 401; error message: Unauthorized", ex.getMessage(),
             "We don't have a way of simulating a properly configured OAuth app server, so just verifying that this " +
                 "results in an expected 401 since the app server requires digest auth.");

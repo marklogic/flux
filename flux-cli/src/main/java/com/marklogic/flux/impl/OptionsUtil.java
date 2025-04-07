@@ -22,7 +22,7 @@ public abstract class OptionsUtil {
         Map<String, String> options = new HashMap<>();
         for (int i = 0; i < keysAndValues.length; i += 2) {
             String value = keysAndValues[i + 1];
-            if (value != null && value.length() > 0) {
+            if (value != null && !value.isEmpty()) {
                 options.put(keysAndValues[i], value);
             }
         }
@@ -46,7 +46,7 @@ public abstract class OptionsUtil {
         for (int i = 0; i < optionNamesAndMessages.length; i += 2) {
             String key = optionNamesAndMessages[i];
             String value = options.get(key);
-            if (value == null || value.trim().length() == 0) {
+            if (value == null || value.trim().isEmpty()) {
                 throw new FluxException(optionNamesAndMessages[i + 1]);
             }
         }

@@ -37,7 +37,7 @@ class DelimitedFilesImporterTest extends AbstractTest {
         DelimitedFilesImporter importer = Flux.importDelimitedFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }
