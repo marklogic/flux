@@ -28,7 +28,7 @@ docker exec -it flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental"
 docker exec -it flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
 ```
 
-The Docker file includes a pgadmin instance which can be accessed at <http://localhost:15432/>. 
+The Docker file includes a pgadmin instance which can be accessed at <http://localhost:5480/>. 
 If you wish to login to this, do so with "postgres@pgadmin.com" and 
 a password of "postgres". For logging into Postgres itself, use "postgres" as the username and password. You can then
 register a server that connects to the "postgres" server.
@@ -104,44 +104,8 @@ tests. You do not need to do this if you have Intellij configured to use Gradle 
 
 ## Generating code quality reports with SonarQube
 
-In order to use SonarQube, you must have used Docker to run this project's `docker-compose.yml` file, and you must
-have the services in that file running. You must also use Java 17 to run the `sonar` Gradle task. 
-
-To configure the SonarQube service, perform the following steps:
-
-1. Go to http://localhost:9000 .
-2. Login as admin/admin. SonarQube will ask you to change this password; you can choose whatever you want ("password" works).
-3. Click on "Create project manually".
-4. Enter "flux" for the Project Name; use that as the Project Key too.
-5. Enter "main" as the main branch name.
-6. Click on "Next".
-7. Click on "Use the global setting" and then "Create project".
-8. On the "Analysis Method" page, click on "Locally".
-9. In the "Provide a token" panel, click on "Generate". Copy the token.
-10. Add `systemProp.sonar.login=your token pasted here` to `gradle-local.properties` in the root of your project, creating
-    that file if it does not exist yet.
-
-To run SonarQube, run the following Gradle tasks with Java 17 or higher, which will run all the tests with code 
-coverage and then generate a quality report with SonarQube:
-
-    ./gradlew test sonar
-
-If you do not add `systemProp.sonar.login` to your `gradle-local.properties` file, you can specify the token via the
-following:
-
-    ./gradlew test sonar -Dsonar.login=paste your token here
-
-When that completes, you will see a line like this near the end of the logging:
-
-    ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=flux
-
-Click on that link. If it's the first time you've run the report, you'll see all issues. If you've run the report
-before, then SonarQube will show "New Code" by default. That's handy, as you can use that to quickly see any issues
-you've introduced on the feature branch you're working on. You can then click on "Overall Code" to see all issues.
-
-Note that if you only need results on code smells and vulnerabilities, you can repeatedly run `./gradlew sonar`
-without having to re-run the tests. If you get an error from Sonar about Java sources, you just need to compile the 
-Java code, so run `./gradlew compileTestJava sonar`. 
+Please see our internal Wiki page - search for "Developer Experience SonarQube" -
+for information on setting up SonarQube and using it with this repository.
 
 ## Testing the documentation locally
 
