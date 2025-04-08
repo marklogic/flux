@@ -23,14 +23,14 @@ configurations {
 
 dependencies {
   implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-  implementation "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
+  implementation "com.marklogic:marklogic-spark-connector:2.6-SNAPSHOT"
   implementation "info.picocli:picocli:4.7.6"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
   // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.5-SNAPSHOT"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:2.6-SNAPSHOT"
   shadowDependencies "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
