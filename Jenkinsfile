@@ -28,8 +28,8 @@ def runtests(){
     ./gradlew -i  mlDeploy;
     wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
     unzip dvdrental.zip -d docker/postgres/ ;
-    docker exec -i flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
-    docker exec -i  flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
+    docker exec -i docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
+    docker exec -i docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
     cd $WORKSPACE/flux/;
     ./gradlew --refresh-dependencies clean test || true;
   '''
