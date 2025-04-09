@@ -2,7 +2,7 @@
  * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 
-package com.marklogic.flux.impl.importdata.classifier;
+package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
@@ -16,7 +16,7 @@ class ClassifierTest extends AbstractTest {
 
     @Test
     @EnabledIfEnvironmentVariable(named = "SEMAPHORE_API_KEY", matches = ".*")
-    void testJsonClassifierUdf() {
+    void testJsonClassifier() {
         final String collection = "classification-test";
         final String API_KEY = System.getenv("SEMAPHORE_API_KEY");
 
@@ -28,20 +28,20 @@ class ClassifierTest extends AbstractTest {
             "--collections", collection,
             "--uri-replace", ".*/resources,''",
             "--classifier-host", "demo.data.progress.cloud",
-            "--classifier-https",
             "--classifier-port", "443",
-            "--classifier-endpoint", "/cls/dev/cs1/",
+            "--classifier-path", "/cls/dev/cs1/",
             "--classifier-api-key", API_KEY,
-            "--classifier-token-endpoint", "token/"
+            "--classifier-token-path", "token/"
         );
 
         JsonNode jsonDoc = readJsonDocument("/json-files/java-client-intro.json");
-        assertTrue(jsonDoc.get("classification").has("URL"));
+        assertTrue(jsonDoc.get("classification").has("SYSTEM"));
+        assertTrue(jsonDoc.get("classification").has("META"));
     }
 
     @Test
     @EnabledIfEnvironmentVariable(named = "SEMAPHORE_API_KEY", matches = ".*")
-    void testXmlClassifierUdf() {
+    void testXmlClassifier() {
         final String collection = "classification-test";
         final String API_KEY = System.getenv("SEMAPHORE_API_KEY");
 
@@ -53,14 +53,14 @@ class ClassifierTest extends AbstractTest {
             "--collections", collection,
             "--uri-replace", ".*/resources,''",
             "--classifier-host", "demo.data.progress.cloud",
-            "--classifier-https",
             "--classifier-port", "443",
-            "--classifier-endpoint", "/cls/dev/cs1/",
+            "--classifier-path", "/cls/dev/cs1/",
             "--classifier-api-key", API_KEY,
-            "--classifier-token-endpoint", "token/"
+            "--classifier-token-path", "token/"
         );
 
         XmlNode xmlDoc = readXmlDocument("/xml-file/namespaced-java-client-intro.xml");
-        xmlDoc.assertElementExists("/ex:root/model:classification/model:URL");
+        xmlDoc.assertElementExists("/ex:root/model:classification/model:SYSTEM[1]");
+        xmlDoc.assertElementExists("/ex:root/model:classification/model:META[1]");
     }
 }

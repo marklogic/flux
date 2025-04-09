@@ -3,7 +3,7 @@ layout: default
 title: Adding embeddings
 parent: Importing Data
 has_children: true
-nav_order: 7
+nav_order: 8
 ---
 
 Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding is 
