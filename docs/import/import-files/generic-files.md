@@ -125,3 +125,51 @@ You can also use the `--document-type` option as described above to force a docu
 extension not recognized by MarkLogic. The `--streaming` option introduced in Flux 1.1.0 can also be used for ZIP files
 containing very large binary files that may not fit into the memory available to Flux or to MarkLogic.
 
+## Extracting text
+
+As of Flux 1.3.0, text can be extracted from files via [Apache Tika](https://tika.apache.org/) and written as separate 
+documents in MarkLogic. This is typically useful when importing binary content such as PDF and Word files, where both 
+the binary file and extracted text can be stored in MarkLogic.
+
+Text extraction is enabled by including the following option when executing the `import-files` command:
+
+    --extract-text
+
+When included, Flux will extract text from each file and create a separate document based on the following default
+behavior:
+
+1. The document will be JSON with a URI equalling that of the binary document URI plus `-extracted-text.json`.
+2. The document will inherit any permissions assigned to the binary document.
+3. The document will not inherit any collections assigned to the binary document.
+4. The document will have keys of `source-uri`, `content`, and `extracted-metadata`. 
+
+The `content` in the document contains the extracted text. The `extracted-metadata` contains each metadata key and value
+produced by Apache Tika. 
+
+If you do not want Flux to write the file to a separate document but only want the extracted text document written, 
+include the following option:
+
+    --extracted-text-drop-source
+
+### Writing extracted text XML documents
+
+Extracted text documents can be written as XML instead of JSON by including the following option:
+
+    --extracted-text-document-type XML
+
+When writing Tika metadata to the extracted text document, Flux will attempt to determine a well-known namespace based
+on the name of the metadata key. For example, a Tika metadata key that begins with `pdf:` will result in an element 
+assigned to the `http://ns.adobe.com/pdf/1.3/` namespace.
+
+### Assigning metadata to extracted text documents
+
+Collections can be assigned to extracted text documents via the following option, which accepts a comma-delimited list 
+of collection names:
+
+    --extracted-text-collections collection1,collection2
+
+Permissions can be assigned to extracted text documents via the following options, which accepts a comma-delimited 
+sequence of MarkLogic role names and capabilities:
+
+    --extracted-text-permissions role1,read,role2,update
+
