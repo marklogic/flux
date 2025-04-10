@@ -10,7 +10,7 @@ application installed:
 Next, run the following to pull a small model for the test instance of Ollama to use; this will be used by one or more
 embedder tests:
 
-    docker exec -it flux-ollama-1 ollama pull all-minilm
+    docker exec -it docker-tests-flux-ollama-1 ollama pull all-minilm
 
 Some of the tests depend on the Postgres instance deployed via Docker. Follow these steps to load a sample dataset
 into it:
@@ -24,8 +24,8 @@ downloading the `dvdrental.zip` and extracting it to produce a file named `dvdre
 Once you have the `dvdrental.tar` file in place, run these commands to load it into Postgres:
 
 ```
-docker exec -it flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental"
-docker exec -it flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
+docker exec -it docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental"
+docker exec -it docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
 ```
 
 The Docker file includes a pgadmin instance which can be accessed at <http://localhost:5480/>. 
