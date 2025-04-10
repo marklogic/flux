@@ -39,13 +39,13 @@ public class ClassifierParams implements ClassifierOptions {
 
     @CommandLine.Option(
         names = "--classifier-api-key",
-        description = "API key granting access to the classifier service."
+        description = "API key granting access to the classifier service when hosted in Progress Data Cloud."
     )
     private String apikey;
 
     @CommandLine.Option(
         names = "--classifier-token-path",
-        description = "Path of the token generator for the classifier service."
+        description = "Path of the token generator for the classifier service when hosted in Progress Data Cloud."
     )
     private String tokenPath;
 
@@ -54,6 +54,12 @@ public class ClassifierParams implements ClassifierOptions {
         description = "Number of documents and/or chunks of text to send to the classifier service in a single request."
     )
     private Integer batchSize = 20;
+
+    @CommandLine.Option(
+        names = "-L",
+        description = "Specify additional options for configuring the behavior of the classifier service."
+    )
+    private Map<String, String> additionalOptions = new HashMap<>();
 
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
@@ -67,6 +73,10 @@ public class ClassifierParams implements ClassifierOptions {
                 Options.WRITE_CLASSIFIER_TOKEN_PATH, tokenPath,
                 Options.WRITE_CLASSIFIER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
             );
+            if (additionalOptions != null) {
+                additionalOptions.entrySet().forEach(entry -> options.put(
+                    Options.WRITE_CLASSIFIER_OPTION_PREFIX + entry.getKey(), entry.getValue()));
+            }
         }
         return options;
     }
@@ -110,6 +120,12 @@ public class ClassifierParams implements ClassifierOptions {
     @Override
     public ClassifierOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
+        return this;
+    }
+
+    @Override
+    public ClassifierOptions additionalOptions(Map<String, String> additionalOptions) {
+        this.additionalOptions = additionalOptions;
         return this;
     }
 }

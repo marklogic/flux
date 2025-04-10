@@ -20,7 +20,9 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             "--classifier-http",
             "--classifier-path", "cls-endpoint",
             "--classifier-api-key", "secret key",
-            "--classifier-token-path", "token-endpoint"
+            "--classifier-token-path", "token-endpoint",
+            "-Lthreshold=17",
+            "-LsomethingElse=can-be-anything"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
@@ -29,7 +31,9 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_HTTP, "true",
             Options.WRITE_CLASSIFIER_PATH, "cls-endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "secret key",
-            Options.WRITE_CLASSIFIER_TOKEN_PATH, "token-endpoint"
+            Options.WRITE_CLASSIFIER_TOKEN_PATH, "token-endpoint",
+            Options.WRITE_CLASSIFIER_OPTION_PREFIX + "threshold", "17",
+            Options.WRITE_CLASSIFIER_OPTION_PREFIX + "somethingElse", "can-be-anything"
         );
     }
 
