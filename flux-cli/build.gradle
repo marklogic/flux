@@ -57,7 +57,7 @@ dependencies {
   implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.12:3.5.3"
+  implementation "org.apache.spark:spark-avro_2.12:${sparkVersion}"
 
   distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
   distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"

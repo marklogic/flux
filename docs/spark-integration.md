@@ -15,7 +15,7 @@ require more system resources than what are available when running Flux as a com
 
 ## Spark security notice
 
-As of October 2024 and the Flux 1.1.0 release, all public releases of Apache Spark 3.4.x through 3.5.3 depend on 
+As of October 2024 and the Flux 1.1.0 release, all public releases of Apache Spark 3.4.x through 3.5.5 depend on 
 Apache Hadoop 3.3.4. This version of Hadoop has a 
 [CVE filed against it](https://nvd.nist.gov/vuln/detail/CVE-2023-26031). The CVE involves Spark running with a 
 YARN cluster manager and the YARN cluster "is accepting work from remote (authenticated) users". 
@@ -40,8 +40,8 @@ To use Flux with `spark-submit`, first download the `marklogic-flux-1.2.1-all.ja
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
-You can now run any Flux command with `spark-submit`. As of Flux 1.2.0, Flux depends on Spark 3.5.3, and thus you should
-use Spark 3.5.3 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
+You can now run any Flux command with `spark-submit`. As of Flux 1.2.0, Flux depends on Spark 3.5.5, and thus you should
+use Spark 3.5.5 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
 runtime that depends on Scala 2.12 and not Scala 2.13.
 
 The following shows a notional example of running the Flux `import-files` command:
