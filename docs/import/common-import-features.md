@@ -137,3 +137,7 @@ The following shows an example of each option:
 The above link for REST transforms includes instructions on manually installing a transform. If you are using
 [ml-gradle to deploy an application to MarkLogic](https://github.com/marklogic/ml-gradle), you can let ml-gradle 
 [automatically install your transform](https://github.com/marklogic/ml-gradle/wiki/How-modules-are-loaded).
+
+Note that a REST transform is executed within MarkLogic and is applied to each document sent by Flux to MarkLogic.
+If you only wish to transform a subset of documents sent to MarkLogic, you should add logic to your REST transform to 
+determine if a document should be processed or not.
