@@ -22,7 +22,7 @@ To add Flux as a dependency to your application, add the following to your Maven
 <dependency>
   <groupId>com.marklogic</groupId>
   <artifactId>flux-api</artifactId>
-  <version>1.2.1</version>
+  <version>1.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:1.2.1"
+  implementation "com.marklogic:flux-api:1.3-SNAPSHOT"
 }
 ```
 
@@ -63,9 +63,9 @@ the typical method to invoke.
 - `count()` returns the number of records that will be read by the executor, but no data will be written. This method is
 is used when you first want to get a count of how much data will be processed.
 
-## Examples
+### Example Java program
 
-The following program shows a simple example of importing files via the Flux API.
+The following Java program shows a simple example of importing files via the Flux API.
 
 ```
 package org.example;
@@ -87,9 +87,11 @@ public class App {
 }
 ```
 
-### Using the Flux API in Gradle
+## Using the Flux API in Gradle
 
-You can use the Flux API in a `build.gradle` Gradle file too. You must first add it as a dependency to your build file:
+You can use the Flux API in a `build.gradle` Gradle file too. This avoids the need for setting up a Java project and 
+creating a separate Java class. You must first add the Flux API as a dependency to your build file so that it is 
+available to custom Gradle tasks:
 
 ```
 buildscript {
@@ -97,12 +99,13 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.2.1"
+    classpath "com.marklogic:flux-api:1.3-SNAPSHOT"
   }
 }
 ```
 
-You can then create a custom task that makes use of the Flux API in a similar fashion to using it in Java code:
+You can then create a custom task that makes use of the Flux API in a similar fashion to using it in Java code, but 
+without the need for a separate Java source file:
 
 ```
 import com.marklogic.flux.api.Flux
@@ -117,6 +120,12 @@ tasks.register("importFiles") {
 }
 ```
 
+For additional examples, please see the 
+[client project in the Flux GitHub repository](https://github.com/marklogic/flux/blob/main/examples/client-project/build.gradle)
+which demonstrates multiple ways of using the Flux API within Gradle.
+
+### Granting access to Java modules
+
 If you are running Gradle with Java 17 or higher, you will likely need to specify one or more `--add-opens` arguments
 when running Gradle. For example, if you run Gradle with `--stacktrace` and see the text 
 "because module java.base does not export sun.nio.ch" in the exception, you can add the following to your 
@@ -124,10 +133,46 @@ when running Gradle. For example, if you run Gradle with `--stacktrace` and see 
 
     org.gradle.jvmargs=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
 
-The [Gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)  provides more information
+The [Gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html) provides more information
 on the `org.gradle.jvmargs` property along with other ways to customize the Gradle environment.
 
-Please note that you cannot yet use the Flux API in your Gradle buildscript when you are also using the
-MarkLogic [ml-gradle plugin](https://github.com/marklogic/ml-gradle). This is due to a classpath conflict, where the
-MarkLogic Spark connector used by Flux must alter an underlying library so as not to conflict with Spark itself - but
-that altered library then conflicts with ml-gradle. We will have a resolution for this soon.
+### Using the Flux API alongside ml-gradle
+
+Prior to Flux 1.3.0, the Flux API could not be used in the Gradle buildscript classpath if you were also using version
+5.0.0 or higher of 
+[the ml-gradle plugin](https://github.com/marklogic/ml-gradle) due to a classpath conflict. This conflict has been
+resolved with Flux 1.3.0.
+
+However, you must include the following `configurations` block in your `build.gradle` file to ensure that when 
+running a custom task that depends on the Flux API while also applying the ml-gradle plugin, 
+the required version of a particularly shared dependency is used:
+
+```
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "com.marklogic:flux-api:1.3-SNAPSHOT"
+  }
+  configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+      if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+        details.useVersion '2.15.2'
+        details.because 'Must ensure the Jackson version preferred by Spark is used to avoid classpath conflicts.'
+      }
+    }
+  }
+}
+```
+
+Without the `configurations` block shown above, you will encounter an error similar to the one shown below 
+(you will likely need to include the Gradle `--stacktrace` option to see this error):
+
+```
+Scala module 2.17.2 requires Jackson Databind version >= 2.17.0 and < 2.18.0 - Found jackson-databind version 2.15.2
+```
+
+You may encounter this error with Gradle plugins other than ml-gradle that also use the Jackson library. If you do, 
+the solution is the same - include the `configurations` block shown above in the `buildscript` of your `build.gradle`
+file.
