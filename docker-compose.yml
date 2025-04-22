@@ -7,7 +7,6 @@ services:
   caddy-load-balancer:
     image: caddy:2-alpine
     volumes:
-      - ./test-app/caddy/data:/data
       - ./test-app/caddy/config/Caddyfile:/etc/caddy/Caddyfile
     ports:
       # Expand this range as needed. See Caddyfile for which ports are used for reverse proxies.
