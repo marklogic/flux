@@ -180,6 +180,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+                Options.WRITE_PIPELINE_BATCH_SIZE, OptionsUtil.integerOption(pipelineBatchSize),
                 Options.WRITE_COLLECTIONS, collections,
                 Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress),
                 Options.WRITE_PERMISSIONS, permissions,

@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -108,7 +109,7 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
             System.out.flush();
             System.setOut(original);
         }
-        String stdout = new String(outputStream.toByteArray());
+        String stdout = new String(outputStream.toByteArray(), Charset.defaultCharset());
         logger.info("Captured stdout:\n{}", stdout);
         return stdout;
     }
@@ -124,7 +125,7 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
             System.err.flush();
             System.setErr(original);
         }
-        return new String(outputStream.toByteArray());
+        return new String(outputStream.toByteArray(), Charset.defaultCharset());
     }
 
     protected final void assertStderrContains(Runnable r, String expectedContentInStderr) {
