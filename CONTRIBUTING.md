@@ -107,6 +107,11 @@ tests. You do not need to do this if you have Intellij configured to use Gradle 
 Please see our internal Wiki page - search for "Developer Experience SonarQube" -
 for information on setting up SonarQube and using it with this repository.
 
+You can run `./gradlew clean testCodeCoverageReport` to run the tests and generate code coverage data. The output will
+be written to `code-coverage-report/build`. Unfortunately though, Sonarqube does not appear to consume this data 
+correctly. For example, as of 2025-04-23, the Jacoco test report will show 84% coverage but Sonarqube will only report 
+76% coverage.
+
 ## Testing the documentation locally
 
 The docs for this project are stored in the `./docs` directory as a set of Markdown files. These are published via
