@@ -21,7 +21,7 @@ dependencies {
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.3.14"
+  testImplementation "ch.qos.logback:logback-classic:1.5.18"
 }
 
 shadowJar {
