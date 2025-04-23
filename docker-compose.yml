@@ -58,7 +58,5 @@ services:
       - 8008:11434
 
 volumes:
-  sonarqube_data:
-  sonarqube_extensions:
   postgresql:
   postgresql_data:

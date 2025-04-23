@@ -31,7 +31,7 @@ def runtests(){
     docker exec -i docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
     docker exec -i docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
     cd $WORKSPACE/flux/;
-    ./gradlew --refresh-dependencies clean test || true;
+    ./gradlew --refresh-dependencies clean testCodeCoverageReport || true;
   '''
   junit '**/*.xml'
 }
