@@ -78,7 +78,11 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-suffix", ".xml",
             "--output-uri-template", "/{example}.xml",
             "--splitter-text",
-            "--embedder", "doesnt-matter"
+            "--embedder", "doesnt-matter",
+            "-Mmeta1=value1",
+            "-Mmeta2=value2",
+            "-Rprop1=value1",
+            "-Rprop2=value2"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -98,7 +102,11 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_SUFFIX, ".xml",
             Options.WRITE_URI_TEMPLATE, "/{example}.xml",
             Options.WRITE_SPLITTER_TEXT, "true",
-            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter"
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
         );
     }
 
@@ -189,8 +197,12 @@ class CopyOptionsTest extends AbstractOptionsTest {
         int count = 0;
         for (Field field : CopyCommand.CopyWriteDocumentsParams.class.getDeclaredFields()) {
             CommandLine.Option option = field.getAnnotation(CommandLine.Option.class);
-            if (option != null && option.names()[0].startsWith("--output")) {
-                count++;
+            if (option != null) {
+                String name = option.names()[0];
+                // The dynamic params can't start with "--output", piccolo requires a single letter.
+                if (name.startsWith("--output") || name.equals("-M") || name.equals("-R")) {
+                    count++;
+                }
             }
         }
         return count;

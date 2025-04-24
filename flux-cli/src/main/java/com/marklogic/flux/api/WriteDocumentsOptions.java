@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
@@ -56,5 +57,18 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
 
     T uriTemplate(String uriTemplate);
 
+    /**
+     * @since 1.3.0
+     */
     T classifier(Consumer<ClassifierOptions> consumer);
+
+    /**
+     * @since 1.3.0
+     */
+    T metadataValues(Map<String, String> metadataValues);
+
+    /**
+     * @since 1.3.0
+     */
+    T documentProperties(Map<String, String> documentProperties);
 }

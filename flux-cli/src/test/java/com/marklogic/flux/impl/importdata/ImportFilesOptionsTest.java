@@ -41,7 +41,11 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--extracted-text-document-type", "XML",
             "--extracted-text-collections", "e1,e2",
             "--extracted-text-permissions", "e1,read,e2,update",
-            "--extracted-text-drop-source"
+            "--extracted-text-drop-source",
+            "-Mmeta1=value1",
+            "-Mmeta2=value2",
+            "-Rprop1=value1",
+            "-Rprop2=value2"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -79,7 +83,11 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
             Options.WRITE_EXTRACTED_TEXT_COLLECTIONS, "e1,e2",
             Options.WRITE_EXTRACTED_TEXT_PERMISSIONS, "e1,read,e2,update",
-            Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, "true"
+            Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, "true",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
         );
     }
 
