@@ -119,6 +119,16 @@ distributions {
   }
 }
 
+tasks.register("deleteEmbeddingModelJars", Delete) {
+  delete fileTree("src/dist/ext").matching {
+    include "*.jar"
+  }
+}
+// We don't want to include the embedding model jars in the distribution zip, which greatly increases the size of the
+// zip. Users wishing to generate embeddings are required to download the appropriate jar and add it to the "ext"
+// folder in their Flux installation.
+distZip.dependsOn deleteEmbeddingModelJars
+
 tasks.register("copyEmbeddingModelJarsIntoDistribution", Copy) {
   description = "Intended for internal usage when building the Flux zip with all the embedding model integrations included."
   dependsOn ":flux-embedding-model-azure-open-ai:shadowJar"
