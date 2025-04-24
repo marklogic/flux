@@ -17,7 +17,7 @@ buildscript {
   // that is incompatible with the version of Apache Spark used by Flux.
   configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-      if (details.requested.group.startsWith('com.fasterxml.jacksonQWE')) {
+      if (details.requested.group.startsWith('com.fasterxml.jackson')) {
         details.useVersion '2.15.2'
         details.because 'Must ensure the Jackson version preferred by Spark is used to avoid classpath conflicts.'
       }
