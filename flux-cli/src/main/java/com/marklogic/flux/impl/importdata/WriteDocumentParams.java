@@ -11,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -132,6 +133,18 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriTemplate;
 
+    @CommandLine.Option(
+        names = {"-M"},
+        description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+    )
+    private Map<String, String> metadataValues = new HashMap<>();
+
+    @CommandLine.Option(
+        names = {"-R"},
+        description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+    )
+    private Map<String, String> documentProperties = new HashMap<>();
+
     @CommandLine.Mixin
     private SplitterParams splitterParams = new SplitterParams();
 
@@ -165,9 +178,30 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
-        options.putAll(splitterParams.makeOptions());
-        options.putAll(embedderParams.makeOptions());
-        options.putAll(classifierParams.makeOptions());
+        if (metadataValues != null) {
+            metadataValues.entrySet().forEach(entry -> options.put(
+                Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
+            ));
+        }
+
+        if (documentProperties != null) {
+            documentProperties.entrySet().forEach(entry -> options.put(
+                Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + entry.getKey(), entry.getValue()
+            ));
+        }
+
+        if (splitterParams != null) {
+            options.putAll(splitterParams.makeOptions());
+        }
+
+        if (embedderParams != null) {
+            options.putAll(embedderParams.makeOptions());
+        }
+
+        if (classifierParams != null) {
+            options.putAll(classifierParams.makeOptions());
+        }
+
         return options;
     }
 
@@ -302,11 +336,19 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         return (T) this;
     }
 
-    public ClassifierParams getClassifierParams() {
-        return classifierParams;
-    }
-
     public void setStreaming(boolean streaming) {
         this.streaming = streaming;
+    }
+
+    @Override
+    public T metadataValues(Map<String, String> metadataValues) {
+        this.metadataValues = metadataValues;
+        return (T) this;
+    }
+
+    @Override
+    public T documentProperties(Map<String, String> documentProperties) {
+        this.documentProperties = documentProperties;
+        return (T) this;
     }
 }

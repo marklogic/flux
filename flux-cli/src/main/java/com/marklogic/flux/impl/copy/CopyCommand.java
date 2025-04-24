@@ -16,6 +16,7 @@ import org.apache.spark.sql.*;
 import org.apache.spark.sql.SaveMode;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -164,6 +165,18 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         )
         private String uriTemplate;
 
+        @CommandLine.Option(
+            names = {"-M"},
+            description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+        )
+        private Map<String, String> metadataValues = new HashMap<>();
+
+        @CommandLine.Option(
+            names = {"-R"},
+            description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+        )
+        private Map<String, String> documentProperties = new HashMap<>();
+
         @CommandLine.Mixin
         private SplitterParams splitterParams = new SplitterParams();
 
@@ -174,8 +187,24 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private ClassifierParams classifierParams = new ClassifierParams();
 
         protected Map<String, String> makeOptions() {
-            Map<String, String> options = splitterParams.makeOptions();
-            options.putAll(embedderParams.makeOptions());
+            Map<String, String> options = splitterParams != null ? splitterParams.makeOptions() : new HashMap<>();
+
+            if (embedderParams != null) {
+                options.putAll(embedderParams.makeOptions());
+            }
+
+            if (metadataValues != null) {
+                metadataValues.entrySet().forEach(entry -> options.put(
+                    Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
+                ));
+            }
+
+            if (documentProperties != null) {
+                documentProperties.entrySet().forEach(entry -> options.put(
+                    Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + entry.getKey(), entry.getValue()
+                ));
+            }
+
             return OptionsUtil.addOptions(options,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
@@ -320,6 +349,18 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams uriTemplate(String uriTemplate) {
             this.uriTemplate = uriTemplate;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions metadataValues(Map<String, String> metadataValues) {
+            this.metadataValues = metadataValues;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions documentProperties(Map<String, String> documentProperties) {
+            this.documentProperties = documentProperties;
             return this;
         }
     }
