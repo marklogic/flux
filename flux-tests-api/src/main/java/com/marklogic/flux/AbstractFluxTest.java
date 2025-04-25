@@ -30,9 +30,9 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.fail;
 
-public class AbstractFluxTest extends AbstractMarkLogicTest {
+public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
 
-    private static DatabaseClient databaseClient;
+    private DatabaseClient databaseClient;
 
     protected static final String DEFAULT_PERMISSIONS = "flux-test-role,read,flux-test-role,update";
 
@@ -68,7 +68,7 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
         if (database != null) {
             props.setProperty("marklogic.client.database", database);
         }
-        return DatabaseClientFactory.newClient(propertyName -> props.get(propertyName));
+        return DatabaseClientFactory.newClient(props::get);
     }
 
     protected final Properties loadTestProperties() {
@@ -98,12 +98,14 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
      * proving to be very fragile, as sometimes nothing gets written to the byte stream. An individual test that uses
      * this will work fine, but then it may fail when run in the entire suite. Not yet known why.
      */
+    // Telling Sonar not to worry about System.out usage.
+    @SuppressWarnings("java:S106")
     protected final String runAndReturnStdout(Runnable r) {
         System.out.flush();
         PrintStream original = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            System.setOut(new PrintStream(outputStream, true));
+        try (PrintStream ps = new PrintStream(outputStream, true)) {
+            System.setOut(ps);
             r.run();
         } finally {
             System.out.flush();
@@ -114,12 +116,14 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
         return stdout;
     }
 
+    // Telling Sonar not to worry about System.err usage.
+    @SuppressWarnings("java:S106")
     protected final String runAndReturnStderr(Runnable r) {
         System.err.flush();
         PrintStream original = System.err;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            System.setErr(new PrintStream(outputStream, true));
+        try (PrintStream ps = new PrintStream(outputStream, true)) {
+            System.setErr(ps);
             r.run();
         } finally {
             System.err.flush();
@@ -128,6 +132,8 @@ public class AbstractFluxTest extends AbstractMarkLogicTest {
         return new String(outputStream.toByteArray(), Charset.defaultCharset());
     }
 
+    // Sonar mistakenly thinks this is production code since it's in src/main/java.
+    @SuppressWarnings("java:S5960")
     protected final void assertStderrContains(Runnable r, String expectedContentInStderr) {
         final String stderr = runAndReturnStderr(r);
         logger.info("Captured stderr:\n{}", stderr);

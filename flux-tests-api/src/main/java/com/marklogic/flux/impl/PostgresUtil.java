@@ -3,11 +3,14 @@
  */
 package com.marklogic.flux.impl;
 
-public interface PostgresUtil {
+public abstract class PostgresUtil {
 
-    String URL = "jdbc:postgresql://localhost/dvdrental";
-    String DRIVER = "org.postgresql.Driver";
-    String USER = "postgres";
-    String PASSWORD = "postgres";
-    String URL_WITH_AUTH = String.format("%s?user=%s&password=%s", URL, USER, PASSWORD);
+    public static final String URL = "jdbc:postgresql://localhost/dvdrental";
+    public static final String DRIVER = "org.postgresql.Driver";
+    public static final String USER = "postgres";
+    public static final String PASSWORD = "postgres";
+    public static final String URL_WITH_AUTH = String.format("%s?user=%s&password=%s", URL, USER, PASSWORD);
+
+    private PostgresUtil() {
+    }
 }
