@@ -103,4 +103,24 @@ class GenericFilesImporterTest extends AbstractTest {
         FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
+
+    @Test
+    void extractText() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("src/test/resources/extraction-files/hello-world.docx")
+            .to(options -> options
+                .collections("binary")
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .extractText()
+                .extractedTextPermissionsString(DEFAULT_PERMISSIONS)
+                .extractedTextCollections("extracted-text")
+                .extractedTextDocumentType(GenericFilesImporter.DocumentType.XML)
+                .extractedTextDropSource()
+            )
+            .execute();
+
+        assertCollectionSize("The original docx file should have been dropped", "binary", 0);
+        assertCollectionSize("extracted-text", 1);
+    }
 }
