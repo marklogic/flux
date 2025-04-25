@@ -16,8 +16,9 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
     public EmbeddingModel apply(Map<String, String> options) {
         // See https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai/#spring-boot-1 for reference
         // of all properties that should be configurable.
-        if (!options.containsKey("api-key") && !options.containsKey("non-azure-api-key")) {
-            throw new IllegalArgumentException("Must specify either api-key or non-azure-api-key.");
+        final String nonAzureKey = "non-azure-api-key";
+        if (!options.containsKey("api-key") && !options.containsKey(nonAzureKey)) {
+            throw new IllegalArgumentException(String.format("Must specify either api-key or %s.", nonAzureKey));
         }
 
         AzureOpenAiEmbeddingModel.Builder builder = AzureOpenAiEmbeddingModel.builder()
@@ -27,8 +28,8 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
             .dimensions(getInteger(options, "dimensions"))
             .maxRetries(getInteger(options, "max-retries"));
 
-        if (options.containsKey("non-azure-api-key")) {
-            builder.nonAzureApiKey(options.get("non-azure-api-key"));
+        if (options.containsKey(nonAzureKey)) {
+            builder.nonAzureApiKey(options.get(nonAzureKey));
         }
 
         if (options.containsKey("log-requests-and-responses")) {

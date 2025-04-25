@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SplitWithApiTest extends AbstractJava17Test {
+class SplitWithApiTest extends AbstractJava17Test {
 
     @Test
     void splitXml() {
