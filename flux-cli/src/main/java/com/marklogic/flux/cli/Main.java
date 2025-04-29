@@ -21,6 +21,7 @@ import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
 
 @CommandLine.Command(
@@ -122,13 +123,15 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
-        Objects.requireNonNull(selectedCommand);
+        Map<String, String> sparkSessionBuilderParams = null;
         if (selectedCommand instanceof AbstractCommand) {
-            masterUrl = ((AbstractCommand) selectedCommand).determineSparkMasterUrl();
+            AbstractCommand<?> abstractCommand = (AbstractCommand<?>) selectedCommand;
+            masterUrl = abstractCommand.determineSparkMasterUrl();
+            if (abstractCommand.getCommonParams() != null) {
+                sparkSessionBuilderParams = abstractCommand.getCommonParams().getSparkSessionBuilderParams();
+            }
         }
-        return masterUrl != null && !masterUrl.trim().isEmpty() ?
-            SparkUtil.buildSparkSession(masterUrl) :
-            SparkUtil.buildSparkSession();
+        return SparkUtil.buildSparkSession(masterUrl, sparkSessionBuilderParams);
     }
 
     private void printException(CommandLine.ParseResult parseResult, Exception ex) {

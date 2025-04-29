@@ -9,6 +9,9 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface SparkUtil {
 
     static String makeSparkMasterUrl(int workerThreads) {
@@ -16,13 +19,16 @@ public interface SparkUtil {
     }
 
     static SparkSession buildSparkSession() {
-        return buildSparkSession("local[*]");
+        return buildSparkSession(null, new HashMap<>());
     }
 
-    static SparkSession buildSparkSession(String masterUrl) {
+    static SparkSession buildSparkSession(String masterUrl, Map<String, String> sparkConfigParams) {
+        if (masterUrl == null || masterUrl.trim().isEmpty()) {
+            masterUrl = "local[*]";
+        }
+
         SparkSession.Builder builder = SparkSession.builder()
             .master(masterUrl)
-
             // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
             // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
             // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
@@ -34,6 +40,12 @@ public interface SparkUtil {
             // handles constructing a SparkSession. We may eventually provide a feature though for providing options
             // at this point for local users that want more control over the SparkSession itself.
             .config("spark.sql.session.timeZone", "UTC");
+
+        if (sparkConfigParams != null) {
+            for (Map.Entry<String, String> entry : sparkConfigParams.entrySet()) {
+                builder = builder.config(entry.getKey(), entry.getValue());
+            }
+        }
 
         return builder.getOrCreate();
     }

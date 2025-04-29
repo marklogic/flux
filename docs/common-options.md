@@ -527,10 +527,23 @@ improved by using more partitions than were created when reading data - this is 
 `reprocess` command.
 
 As of Flux 1.2.0, setting `--repartition` will default the value of the `--spark-master-url` option to be `local[N]`, 
-where `N` is the value of `--repartition`. This ensure that each partition writer has a Spark worker thread available
+where `N` is the value of `--repartition`. This ensures that each partition writer has a Spark worker thread available
 to it. You can still override `--spark-master-url` if you wish.
 
-### Configuring the Spark runtime
+### Configuring Spark Session creation
+
+Many [Spark configuration options](https://spark.apache.org/docs/latest/configuration.html) must be specified before
+the Spark Session is built. For example, if you wish to 
+[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/latest/security.html#local-storage-encryption), 
+the `spark.io.encryption.enabled=true` option must be set before the Spark session is built. 
+
+To specify options that control how the Spark Session is built, use the `-B` option as many times as need. For example, 
+to enable encryption with a custom value for the key size in bits, include the following options:
+
+    -Bspark.io.encryption.enabled=true \
+    -Bspark.io.encryption.keySizeBits=256
+
+### Configuring the Spark Session at runtime
 
 Some Flux commands reuse [Spark data sources](https://spark.apache.org/docs/latest/sql-data-sources.html) that 
 accept configuration items via the Spark runtime. You can provide these configuration items via the `-C` option. 
@@ -539,6 +552,5 @@ identifies several configuration items, such as `spark.sql.avro.compression.code
 including `-Cspark.sql.avro.compression.codec=snappy` as a command line option. 
 
 Note that the majority of [Spark cluster configuration properties](https://spark.apache.org/docs/latest/configuration.html)
-cannot be set via the `-C` option as those options must be set before a Spark session is created. For further control 
-over the Spark session, please see the [Spark Integration guide](spark-integration.md) for details on integrating Flux
-with `spark-submit`.
+cannot be set via the `-C` option as those options must be set before a Spark session is built. Please see the section
+above on using the `-B` option for options that control how a Spark session is built.
