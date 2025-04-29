@@ -1,9 +1,10 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
 import com.marklogic.flux.api.*;
+import com.marklogic.flux.cli.PicoliUtil;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -386,7 +387,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         super.validateCommandLineOptions(parseResult);
         Objects.requireNonNull(outputConnectionParams);
         if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
-            CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
+            CopyCommand copyCommand = (CopyCommand) PicoliUtil.getCommandInstance(parseResult);
             Objects.requireNonNull(copyCommand);
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }

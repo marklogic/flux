@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.cli;
 
@@ -16,7 +16,10 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
 
     public int handleParseException(CommandLine.ParameterException ex, String[] args) {
         CommandLine cmd = ex.getCommandLine();
+        Objects.requireNonNull(cmd);
         PrintWriter err = cmd.getErr();
+        Objects.requireNonNull(err);
+        Objects.requireNonNull(cmd.getColorScheme());
 
         // if tracing at DEBUG level, show the location of the issue
         if ("DEBUG".equalsIgnoreCase(System.getProperty("picocli.trace"))) {
@@ -24,7 +27,6 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         }
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
-        Objects.requireNonNull(cmd.getColorScheme());
         err.println(cmd.getColorScheme().errorText(exceptionMessage)); // bold red
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);

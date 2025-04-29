@@ -104,7 +104,7 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         System.out.flush();
         PrintStream original = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (PrintStream ps = new PrintStream(outputStream, true)) {
+        try (PrintStream ps = new PrintStream(outputStream, true, Charset.defaultCharset())) {
             System.setOut(ps);
             r.run();
         } finally {
@@ -122,7 +122,7 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         System.err.flush();
         PrintStream original = System.err;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (PrintStream ps = new PrintStream(outputStream, true)) {
+        try (PrintStream ps = new PrintStream(outputStream, true, Charset.defaultCharset())) {
             System.setErr(ps);
             r.run();
         } finally {

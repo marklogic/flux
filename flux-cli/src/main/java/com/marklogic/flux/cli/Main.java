@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.cli;
 
@@ -104,7 +104,7 @@ public class Main {
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
-        final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
+        final Command command = PicoliUtil.getCommandInstance(parseResult);
         try {
             Objects.requireNonNull(command);
             command.validateCommandLineOptions(parseResult);
@@ -132,6 +132,8 @@ public class Main {
     }
 
     private void printException(CommandLine.ParseResult parseResult, Exception ex) {
+        Objects.requireNonNull(parseResult);
+        Objects.requireNonNull(parseResult.subcommand());
         final boolean includeStacktrace = parseResult.subcommand().hasMatchedOption("--stacktrace");
         if (includeStacktrace) {
             logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
