@@ -12,10 +12,7 @@ import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -112,8 +109,9 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
     private int getCountOfNonNullParams(CommandLine.ParseResult parseResult, String... options) {
         int count = 0;
+        Objects.requireNonNull(parseResult);
         for (String option : options) {
-            if (parseResult.subcommand().hasMatchedOption(option)) {
+            if (parseResult.subcommand() != null && parseResult.subcommand().hasMatchedOption(option)) {
                 count++;
             }
         }

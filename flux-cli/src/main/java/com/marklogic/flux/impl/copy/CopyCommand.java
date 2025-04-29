@@ -18,6 +18,7 @@ import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -383,8 +384,10 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     @Override
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         super.validateCommandLineOptions(parseResult);
+        Objects.requireNonNull(outputConnectionParams);
         if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
             CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
+            Objects.requireNonNull(copyCommand);
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }
     }

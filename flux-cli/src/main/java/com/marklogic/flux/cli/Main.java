@@ -21,6 +21,7 @@ import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -102,8 +103,10 @@ public class Main {
     }
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
+        Objects.requireNonNull(parseResult);
         final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
         try {
+            Objects.requireNonNull(command);
             command.validateCommandLineOptions(parseResult);
             SparkSession session = buildSparkSession(command);
             if (logger.isDebugEnabled()) {
@@ -119,6 +122,7 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
+        Objects.requireNonNull(selectedCommand);
         if (selectedCommand instanceof AbstractCommand) {
             masterUrl = ((AbstractCommand) selectedCommand).determineSparkMasterUrl();
         }
