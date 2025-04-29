@@ -6,6 +6,7 @@ package com.marklogic.flux.cli;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
+import java.util.Objects;
 
 /**
  * Copied from https://picocli.info/#_invalid_user_input . Typically, showing the usage - which has dozens of options -
@@ -23,6 +24,7 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         }
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
+        Objects.requireNonNull(cmd.getColorScheme());
         err.println(cmd.getColorScheme().errorText(exceptionMessage)); // bold red
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);

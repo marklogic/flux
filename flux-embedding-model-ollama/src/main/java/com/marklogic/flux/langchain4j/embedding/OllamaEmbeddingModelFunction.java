@@ -27,7 +27,10 @@ public class OllamaEmbeddingModelFunction implements Function<Map<String, String
             .maxRetries(getInteger(options, "max-retries"));
 
         if (options.containsKey("duration")) {
-            builder.timeout(Duration.ofSeconds(getInteger(options, "duration")));
+            Integer duration = getInteger(options, "duration");
+            if (duration != null) {
+                builder.timeout(Duration.ofSeconds(duration));
+            }
         }
         if (options.containsKey("log-requests")) {
             builder.logRequests(Boolean.valueOf(options.get("log-requests")));

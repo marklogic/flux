@@ -37,7 +37,10 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
         }
 
         if (options.containsKey("duration")) {
-            builder.timeout(Duration.ofSeconds(getInteger(options, "duration")));
+            Integer duration = getInteger(options, "duration");
+            if (duration != null) {
+                builder.timeout(Duration.ofSeconds(duration));
+            }
         }
 
         return builder.build();

@@ -11,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * Defines all inputs with a "--output" prefix so that it can be used in {@code CopyCommand} without conflicting with
@@ -23,11 +24,12 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
      * the normal connection params for the target database.
      */
     public boolean atLeastOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
+        Objects.requireNonNull(parseResult);
         for (Method method : getClass().getMethods()) {
             CommandLine.Option option = method.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 for (String name : option.names()) {
-                    if (parseResult.subcommand().hasMatchedOption(name)) {
+                    if (parseResult.subcommand() != null && parseResult.subcommand().hasMatchedOption(name)) {
                         return true;
                     }
                 }
