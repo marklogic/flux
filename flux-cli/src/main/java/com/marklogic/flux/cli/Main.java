@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
@@ -134,10 +135,10 @@ public class Main {
         return SparkUtil.buildSparkSession(masterUrl, sparkSessionBuilderParams);
     }
 
-    private void printException(CommandLine.ParseResult parseResult, Exception ex) {
-        Objects.requireNonNull(parseResult);
-        Objects.requireNonNull(parseResult.subcommand());
-        final boolean includeStacktrace = parseResult.subcommand().hasMatchedOption("--stacktrace");
+    private void printException(@NotNull CommandLine.ParseResult parseResult, Exception ex) {
+        CommandLine.ParseResult subcommand = parseResult.subcommand();
+        Objects.requireNonNull(subcommand);
+        final boolean includeStacktrace = subcommand.hasMatchedOption("--stacktrace");
         if (includeStacktrace) {
             logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
         }
