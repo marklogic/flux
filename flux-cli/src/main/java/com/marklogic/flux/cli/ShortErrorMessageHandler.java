@@ -5,6 +5,7 @@ package com.marklogic.flux.cli;
 
 import picocli.CommandLine;
 
+import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.util.Objects;
 
@@ -14,28 +15,29 @@ import java.util.Objects;
  */
 class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler {
 
-    public int handleParseException(CommandLine.ParameterException ex, String[] args) {
-        CommandLine cmd = ex.getCommandLine();
-        Objects.requireNonNull(cmd);
-        PrintWriter err = cmd.getErr();
-        Objects.requireNonNull(err);
-        Objects.requireNonNull(cmd.getColorScheme());
+    public int handleParseException(@NotNull CommandLine.ParameterException ex, String[] args) {
+        @NotNull final CommandLine commandLine = ex.getCommandLine();
+        @NotNull final PrintWriter err = commandLine.getErr();
+        final CommandLine.Help.ColorScheme colorScheme = commandLine.getColorScheme();
+        Objects.requireNonNull(colorScheme);
 
         // if tracing at DEBUG level, show the location of the issue
         if ("DEBUG".equalsIgnoreCase(System.getProperty("picocli.trace"))) {
-            err.println(cmd.getColorScheme().stackTraceText(ex));
+            err.println(colorScheme.stackTraceText(ex));
         }
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
-        err.println(cmd.getColorScheme().errorText(exceptionMessage)); // bold red
+        err.println(colorScheme.errorText(exceptionMessage)); // bold red
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
-        err.print(cmd.getHelp().fullSynopsis());
+        if (commandLine.getHelp() != null) {
+            err.print(commandLine.getHelp().fullSynopsis());
+        }
 
-        CommandLine.Model.CommandSpec spec = cmd.getCommandSpec();
+        CommandLine.Model.CommandSpec spec = commandLine.getCommandSpec();
         err.printf("Run '%s' for more information.%n", spec.qualifiedName(" help "));
-        return cmd.getExitCodeExceptionMapper() != null
-            ? cmd.getExitCodeExceptionMapper().getExitCode(ex)
+        return commandLine.getExitCodeExceptionMapper() != null
+            ? commandLine.getExitCodeExceptionMapper().getExitCode(ex)
             : spec.exitCodeOnInvalidInput();
     }
 
