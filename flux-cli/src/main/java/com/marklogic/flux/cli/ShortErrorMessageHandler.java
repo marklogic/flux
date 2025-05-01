@@ -16,8 +16,10 @@ import java.util.Objects;
 class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler {
 
     public int handleParseException(@NotNull CommandLine.ParameterException ex, String[] args) {
-        @NotNull final CommandLine commandLine = ex.getCommandLine();
-        @NotNull final PrintWriter err = commandLine.getErr();
+        final CommandLine commandLine = ex.getCommandLine();
+        Objects.requireNonNull(commandLine);
+        final PrintWriter err = commandLine.getErr();
+        Objects.requireNonNull(err);
         final CommandLine.Help.ColorScheme colorScheme = commandLine.getColorScheme();
         Objects.requireNonNull(colorScheme);
 
