@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -44,7 +44,7 @@ public class CommonParams {
     @CommandLine.Option(
         names = "-B",
         description = "Specify any key and value to be applied when building the underlying Spark Session; " +
-            "%ne e.g.-Bspark.io.encryption.enabled=true . "
+            "%ne e.g. -Bspark.io.encryption.enabled=true . "
     )
     private Map<String, String> sparkSessionBuilderParams = new HashMap<>();
 
