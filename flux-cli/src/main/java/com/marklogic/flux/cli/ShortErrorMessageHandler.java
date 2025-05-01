@@ -29,7 +29,9 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         }
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
-        err.println(colorScheme.errorText(exceptionMessage)); // bold red
+        if (exceptionMessage != null) {
+            err.println(colorScheme.errorText(exceptionMessage)); // bold red
+        }
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
         if (commandLine.getHelp() != null) {
@@ -37,6 +39,7 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         }
 
         CommandLine.Model.CommandSpec spec = commandLine.getCommandSpec();
+        Objects.requireNonNull(spec);
         err.printf("Run '%s' for more information.%n", spec.qualifiedName(" help "));
         return commandLine.getExitCodeExceptionMapper() != null
             ? commandLine.getExitCodeExceptionMapper().getExitCode(ex)
