@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -70,7 +70,7 @@ class GenericFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(options -> options.collections("author"));
 
-        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(exporter::execute);
         assertEquals("Must specify a file path", ex.getMessage());
     }
 }

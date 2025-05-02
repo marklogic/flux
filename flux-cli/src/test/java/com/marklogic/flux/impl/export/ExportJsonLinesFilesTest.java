@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ExportJsonLinesFilesTest extends AbstractTest {
 
     @Test
-    void test(@TempDir Path tempDir) throws Exception {
+    void test(@TempDir Path tempDir) {
         run(
             "export-json-lines-files",
             "--connection-string", makeConnectionString(),

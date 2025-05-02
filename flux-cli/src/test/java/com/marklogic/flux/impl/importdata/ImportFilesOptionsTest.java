@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -26,6 +26,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--encoding", "UTF-16",
             "--failed-documents-path", "/my/failures",
             "--permissions", "role1,read,role2,update",
+            "--pipeline-batch-size", "27",
             "--temporal-collection", "temporal1",
             "--thread-count", "17",
             "--transform", "transform1",
@@ -35,7 +36,16 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-replace", ".*value,''",
             "--uri-suffix", ".suffix",
             "--uri-template", "/test/{value}.json",
-            "--streaming"
+            "--streaming",
+            "--extract-text",
+            "--extracted-text-document-type", "XML",
+            "--extracted-text-collections", "e1,e2",
+            "--extracted-text-permissions", "e1,read,e2,update",
+            "--extracted-text-drop-source",
+            "-Mmeta1=value1",
+            "-Mmeta2=value2",
+            "-Rprop1=value1",
+            "-Rprop2=value2"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -58,6 +68,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_COLLECTIONS, "collection1",
             Options.WRITE_DOCUMENT_TYPE, "XML",
             Options.WRITE_PERMISSIONS, "role1,read,role2,update",
+            Options.WRITE_PIPELINE_BATCH_SIZE, "27",
             Options.WRITE_TEMPORAL_COLLECTION, "temporal1",
             Options.WRITE_THREAD_COUNT, "17",
             Options.WRITE_TRANSFORM_NAME, "transform1",
@@ -67,7 +78,16 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_REPLACE, ".*value,''",
             Options.WRITE_URI_SUFFIX, ".suffix",
             Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
-            Options.STREAM_FILES, "true"
+            Options.STREAM_FILES, "true",
+            Options.WRITE_EXTRACTED_TEXT, "true",
+            Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
+            Options.WRITE_EXTRACTED_TEXT_COLLECTIONS, "e1,e2",
+            Options.WRITE_EXTRACTED_TEXT_PERMISSIONS, "e1,read,e2,update",
+            Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, "true",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
         );
     }
 

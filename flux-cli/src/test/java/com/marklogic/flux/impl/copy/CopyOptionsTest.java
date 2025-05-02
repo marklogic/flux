@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
@@ -67,6 +67,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-collections", "c1,c2",
             "--output-failed-documents-path", "/my/failures",
             "--output-permissions", "rest-reader,read,qconsole-user,update",
+            "--output-pipeline-batch-size", "13",
             "--output-temporal-collection", "t1",
             "--output-thread-count", "7",
             "--output-transform", "transform1",
@@ -77,12 +78,17 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-suffix", ".xml",
             "--output-uri-template", "/{example}.xml",
             "--splitter-text",
-            "--embedder", "doesnt-matter"
+            "--embedder", "doesnt-matter",
+            "-Mmeta1=value1",
+            "-Mmeta2=value2",
+            "-Rprop1=value1",
+            "-Rprop2=value2"
         );
 
         assertOptions(command.writeParams.makeOptions(),
             Options.WRITE_ABORT_ON_FAILURE, "true",
             Options.WRITE_BATCH_SIZE, "123",
+            Options.WRITE_PIPELINE_BATCH_SIZE, "13",
             Options.WRITE_COLLECTIONS, "c1,c2",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, "/my/failures",
             Options.WRITE_PERMISSIONS, "rest-reader,read,qconsole-user,update",
@@ -96,7 +102,11 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_SUFFIX, ".xml",
             Options.WRITE_URI_TEMPLATE, "/{example}.xml",
             Options.WRITE_SPLITTER_TEXT, "true",
-            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter"
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
+            Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
         );
     }
 
@@ -187,8 +197,12 @@ class CopyOptionsTest extends AbstractOptionsTest {
         int count = 0;
         for (Field field : CopyCommand.CopyWriteDocumentsParams.class.getDeclaredFields()) {
             CommandLine.Option option = field.getAnnotation(CommandLine.Option.class);
-            if (option != null && option.names()[0].startsWith("--output")) {
-                count++;
+            if (option != null) {
+                String name = option.names()[0];
+                // The dynamic params can't start with "--output", piccolo requires a single letter.
+                if (name.startsWith("--output") || name.equals("-M") || name.equals("-R")) {
+                    count++;
+                }
             }
         }
         return count;

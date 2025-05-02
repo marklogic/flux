@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -72,22 +72,6 @@ class ImportAvroFilesTest extends AbstractTest {
 
         JsonNode doc = readJsonDocument("/avro/blue.json");
         assertEquals(1, doc.get("myAvroData").get("number").asInt());
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-avro-files",
-            "--path", "src/test/resources/avro/*",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--json-root-name", "myAvroData",
-            "--uri-template", "/avro/{/myAvroData/color}.json",
-            "--splitter-json-pointer", "/myAvroData/color"
-        );
-
-        JsonNode doc = readJsonDocument("/avro/blue.json");
-        assertEquals("blue", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

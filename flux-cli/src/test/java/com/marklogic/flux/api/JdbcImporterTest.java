@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -62,7 +62,7 @@ class JdbcImporterTest extends AbstractTest {
             .from(options -> options.query(QUERY))
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify a JDBC URL", ex.getMessage());
     }
 
@@ -72,7 +72,7 @@ class JdbcImporterTest extends AbstractTest {
             .from(options -> options.url(PostgresUtil.URL))
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify a query", ex.getMessage());
     }
 }

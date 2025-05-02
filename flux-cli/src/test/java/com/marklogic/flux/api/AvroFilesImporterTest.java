@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -38,7 +38,7 @@ class AvroFilesImporterTest extends AbstractTest {
                 .collections("avro-test")
                 .uriTemplate("/avro/{color}.json"));
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertTrue(ex.getMessage().contains("Unrecognized token"), "Unexpected error: " + ex.getMessage() + "; " +
             "verifying that the additionalOptions map is processed, which should cause an error due to the " +
             "invalid Avro schema.");
@@ -49,7 +49,7 @@ class AvroFilesImporterTest extends AbstractTest {
         AvroFilesImporter importer = Flux.importAvroFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -62,7 +62,7 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify an aggregate XML element name", ex.getMessage());
     }
 
@@ -77,7 +77,7 @@ class AggregateXmlFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("zipped-person"));
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -42,10 +42,12 @@ class VerifyOptionNamesTest {
         Files.walkFileTree(dir.toPath(), new FileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                if ("../docs".equals(path) && dir.endsWith("assets")) {
+                if (
                     // Don't need to check any of the docs/assets files.
-                    return FileVisitResult.SKIP_SUBTREE;
-                } else if ("../test-app".equals(path) && dir.endsWith("caddy")) {
+                    ("../docs".equals(path) && dir.endsWith("assets")) ||
+                        // Don't need to check the caddy folder in the test-app.
+                        ("../test-app".equals(path) && dir.endsWith("caddy"))
+                ) {
                     return FileVisitResult.SKIP_SUBTREE;
                 }
                 return FileVisitResult.CONTINUE;

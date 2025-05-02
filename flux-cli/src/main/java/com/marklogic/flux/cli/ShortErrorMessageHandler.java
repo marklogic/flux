@@ -1,11 +1,13 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.cli;
 
 import picocli.CommandLine;
 
+import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
+import java.util.Objects;
 
 /**
  * Copied from https://picocli.info/#_invalid_user_input . Typically, showing the usage - which has dozens of options -
@@ -13,25 +15,34 @@ import java.io.PrintWriter;
  */
 class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler {
 
-    public int handleParseException(CommandLine.ParameterException ex, String[] args) {
-        CommandLine cmd = ex.getCommandLine();
-        PrintWriter err = cmd.getErr();
+    public int handleParseException(@NotNull CommandLine.ParameterException ex, String[] args) {
+        final CommandLine commandLine = ex.getCommandLine();
+        Objects.requireNonNull(commandLine);
+        final PrintWriter err = commandLine.getErr();
+        Objects.requireNonNull(err);
+        final CommandLine.Help.ColorScheme colorScheme = commandLine.getColorScheme();
+        Objects.requireNonNull(colorScheme);
 
         // if tracing at DEBUG level, show the location of the issue
         if ("DEBUG".equalsIgnoreCase(System.getProperty("picocli.trace"))) {
-            err.println(cmd.getColorScheme().stackTraceText(ex));
+            err.println(colorScheme.stackTraceText(ex));
         }
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
-        err.println(cmd.getColorScheme().errorText(exceptionMessage)); // bold red
+        if (exceptionMessage != null) {
+            err.println(colorScheme.errorText(exceptionMessage)); // bold red
+        }
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
-        err.print(cmd.getHelp().fullSynopsis());
+        if (commandLine.getHelp() != null) {
+            err.print(commandLine.getHelp().fullSynopsis());
+        }
 
-        CommandLine.Model.CommandSpec spec = cmd.getCommandSpec();
+        CommandLine.Model.CommandSpec spec = commandLine.getCommandSpec();
+        Objects.requireNonNull(spec);
         err.printf("Run '%s' for more information.%n", spec.qualifiedName(" help "));
-        return cmd.getExitCodeExceptionMapper() != null
-            ? cmd.getExitCodeExceptionMapper().getExitCode(ex)
+        return commandLine.getExitCodeExceptionMapper() != null
+            ? commandLine.getExitCodeExceptionMapper().getExitCode(ex)
             : spec.exitCodeOnInvalidInput();
     }
 

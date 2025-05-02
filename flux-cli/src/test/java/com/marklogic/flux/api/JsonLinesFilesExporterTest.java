@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -41,7 +41,7 @@ class JsonLinesFilesExporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from(READ_AUTHORS_OPTIC_QUERY);
 
-        FluxException ex = assertThrowsFluxException(() -> exporter.execute());
+        FluxException ex = assertThrowsFluxException(exporter::execute);
         assertEquals("Must specify a file path", ex.getMessage());
     }
 }

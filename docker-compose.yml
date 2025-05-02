@@ -1,4 +1,4 @@
-name: flux
+name: docker-tests-flux
 
 services:
 
@@ -7,7 +7,6 @@ services:
   caddy-load-balancer:
     image: caddy:2-alpine
     volumes:
-      - ./test-app/caddy/data:/data
       - ./test-app/caddy/config/Caddyfile:/etc/caddy/Caddyfile
     ports:
       # Expand this range as needed. See Caddyfile for which ports are used for reverse proxies.
@@ -47,25 +46,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: postgres
       PGADMIN_LISTEN_PORT: 80
     ports:
-      - 15432:80
+      - 5480:80
     depends_on:
       - postgres
-
-  # Copied from https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/install-the-server/#example-docker-compose-configuration .
-  sonarqube:
-    image: sonarqube:lts-community
-    depends_on:
-      - postgres
-    environment:
-      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/postgres
-      SONAR_JDBC_USERNAME: postgres
-      SONAR_JDBC_PASSWORD: postgres
-    volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - ./docker/sonarqube/logs:/opt/sonarqube/logs
-    ports:
-      - "9000:9000"
 
   # Using Ollama for testing an embedding model.
   # See https://github.com/ollama/ollama for more information.
@@ -75,7 +58,5 @@ services:
       - 8008:11434
 
 volumes:
-  sonarqube_data:
-  sonarqube_extensions:
   postgresql:
   postgresql_data:

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.langchain4j.embedding;
 
@@ -27,7 +27,10 @@ public class OllamaEmbeddingModelFunction implements Function<Map<String, String
             .maxRetries(getInteger(options, "max-retries"));
 
         if (options.containsKey("duration")) {
-            builder.timeout(Duration.ofSeconds(getInteger(options, "duration")));
+            Integer duration = getInteger(options, "duration");
+            if (duration != null) {
+                builder.timeout(Duration.ofSeconds(duration));
+            }
         }
         if (options.containsKey("log-requests")) {
             builder.logRequests(Boolean.valueOf(options.get("log-requests")));

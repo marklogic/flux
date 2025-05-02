@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -118,6 +118,37 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         private DocumentType documentType;
 
+        @CommandLine.Option(
+            names = "--extract-text",
+            description = "Specifies that text should be extracted from each file and saved as a separate document."
+        )
+        private boolean extractText;
+
+        @CommandLine.Option(
+            names = "--extracted-text-document-type",
+            description = "Specifies the type of document to create with the extracted text. Defaults to JSON."
+        )
+        private String extractedTextDocumentType;
+
+        @CommandLine.Option(
+            names = "--extracted-text-collections",
+            description = "Comma-delimited sequence of collection names to add to each extracted text document."
+        )
+        private String extractedTextCollections;
+
+        @CommandLine.Option(
+            names = "--extracted-text-permissions",
+            description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each extracted " +
+                "text document - e.g. role1,read,role2,update,role3,execute."
+        )
+        private String extractedTextPermissions;
+
+        @CommandLine.Option(
+            names = "--extracted-text-drop-source",
+            description = "Specify this to not write the content that text was extracted from as its own document."
+        )
+        private boolean extractedTextDropSource;
+
         @Override
         @CommandLine.Option(
             names = "--document-type",
@@ -131,8 +162,46 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+                Options.WRITE_EXTRACTED_TEXT, extractText ? "true" : null,
+                Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, extractedTextDocumentType,
+                Options.WRITE_EXTRACTED_TEXT_COLLECTIONS, extractedTextCollections,
+                Options.WRITE_EXTRACTED_TEXT_PERMISSIONS, extractedTextPermissions,
+                Options.WRITE_EXTRACTED_TEXT_DROP_SOURCE, extractedTextDropSource ? "true" : null
             );
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractText() {
+            this.extractText = true;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType) {
+            if (DocumentType.TEXT.equals(documentType)) {
+                documentType = DocumentType.JSON;
+            }
+            this.extractedTextDocumentType = documentType.name();
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextCollections(String commaDelimitedCollections) {
+            this.extractedTextCollections = commaDelimitedCollections;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextPermissionsString(String rolesAndCapabilities) {
+            this.extractedTextPermissions = rolesAndCapabilities;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextDropSource() {
+            this.extractedTextDropSource = true;
+            return this;
         }
     }
 }

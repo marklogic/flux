@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -94,22 +94,6 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
         verifyDoc("Person-1", "Person-1", "company-1", "/*[name()='person']/*[name()='%s']");
         verifyDoc("Person-2", "Person-2", "company-2", "/*[name()='person']/*[name()='%s']");
         verifyDoc("Person-3", "Person-3", "company-3", "/*[name()='person']/*[name()='%s']");
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-aggregate-xml-files",
-            "--path", "src/test/resources/xml-file/people.xml",
-            "--element", "person",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-replace", ".*/xml-file,''",
-            "--splitter-xpath", "/person/company/text()"
-        );
-
-        XmlNode doc = readXmlDocument("/people.xml-1.xml");
-        doc.assertElementValue("/person/model:chunks/model:chunk/model:text", "company-1");
     }
 
     @Test

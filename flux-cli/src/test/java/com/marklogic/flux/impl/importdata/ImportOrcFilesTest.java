@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -50,21 +50,6 @@ class ImportOrcFilesTest extends AbstractTest {
             assertTrue(uri.startsWith("/orc-files/authors.orc/"), "Actual URI: " + uri);
             assertTrue(uri.endsWith(".json"), "Actual URI: " + uri);
         });
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-orc-files",
-            "--path", "src/test/resources/orc-files/authors.orc",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/orc-test/{LastName}.json",
-            "--splitter-json-pointer", "/LastName"
-        );
-
-        JsonNode doc = readJsonDocument("/orc-test/Awton.json");
-        assertEquals("Awton", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

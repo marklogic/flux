@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -97,21 +97,6 @@ class ImportDelimitedFilesTest extends AbstractTest {
 
         JsonNode doc = readJsonDocument("/delimited/1.json");
         assertEquals("blue", doc.get("myData").get("color").asText());
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-delimited-files",
-            "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/delimited/{/number}.json",
-            "--splitter-json-pointer", "/color"
-        );
-
-        JsonNode doc = readJsonDocument("/delimited/1.json");
-        assertEquals("blue", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

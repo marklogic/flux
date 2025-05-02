@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -56,15 +56,15 @@ public class S3Params {
             config.set(S3N_ACCESS_KEY, credentials.getAWSAccessKeyId());
             config.set(S3N_SECRET_KEY, credentials.getAWSSecretKey());
         }
-        if (accessKeyId != null && accessKeyId.trim().length() > 0) {
+        if (accessKeyId != null && !accessKeyId.trim().isEmpty()) {
             config.set(S3A_ACCESS_KEY, accessKeyId);
             config.set(S3N_ACCESS_KEY, accessKeyId);
         }
-        if (secretAccessKey != null && secretAccessKey.trim().length() > 0) {
+        if (secretAccessKey != null && !secretAccessKey.trim().isEmpty()) {
             config.set(S3A_SECRET_KEY, secretAccessKey);
             config.set(S3N_SECRET_KEY, secretAccessKey);
         }
-        if (endpoint != null && endpoint.trim().length() > 0) {
+        if (endpoint != null && !endpoint.trim().isEmpty()) {
             config.set("fs.s3a.endpoint", endpoint);
             config.set("fs.s3n.endpoint", endpoint);
         }

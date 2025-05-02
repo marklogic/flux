@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -47,23 +47,6 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         doc = readJsonDocument("/json-object/4.json");
         assertEquals(4, doc.get("number").asInt());
         assertEquals("object 4", doc.get("hello").asText());
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-aggregate-json-files",
-            "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "json-objects",
-            "--uri-template", "/json-object/{number}.json",
-            "--splitter-json-pointer", "/description",
-            "--splitter-max-chunk-size", "30"
-        );
-
-        JsonNode doc = readJsonDocument("/json-object/2.json");
-        assertEquals(2, doc.get("chunks").size());
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -44,7 +44,7 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
         AggregateJsonFilesImporter importer = Flux.importAggregateJsonFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -128,7 +128,7 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
          * @return
          */
         private String determineCategories() {
-            if (categories != null && categories.trim().length() > 0) {
+            if (categories != null && !categories.trim().isEmpty()) {
                 return "content," + categories;
             }
             return "content,metadata";

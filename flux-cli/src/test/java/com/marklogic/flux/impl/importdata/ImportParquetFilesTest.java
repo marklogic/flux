@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -36,21 +36,6 @@ class ImportParquetFilesTest extends AbstractTest {
         verifyCarDoc("/parquet/Datsun 710.json", 22.8, 4, 1);
         verifyCarDoc("/parquet/Ferrari Dino.json", 19.7, 5, 6);
         verifyCarDoc("/parquet/Toyota Corolla.json", 33.9, 4, 1);
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-parquet-files",
-            "--path", "src/test/resources/parquet/individual/cars.parquet",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/parquet/{model}.json",
-            "--splitter-json-pointer", "/model"
-        );
-
-        JsonNode doc = readJsonDocument("/parquet/Valiant.json");
-        assertEquals("Valiant", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

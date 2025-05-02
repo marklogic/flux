@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -42,10 +42,18 @@ public class CommonParams {
     private String sparkMasterUrl;
 
     @CommandLine.Option(
-        names = "-C",
-        description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true."
+        names = "-B",
+        description = "Specify any key and value to be applied when building the underlying Spark Session; " +
+            "%ne e.g. -Bspark.io.encryption.enabled=true . "
     )
-    private Map<String, String> configParams = new HashMap<>();
+    private Map<String, String> sparkSessionBuilderParams = new HashMap<>();
+
+    @CommandLine.Option(
+        names = "-C",
+        description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true . " +
+            "This only accepts Spark configuration options that can be specified after the Spark session has been built."
+    )
+    private Map<String, String> sparkSessionConfigParams = new HashMap<>();
 
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit > 0) {
@@ -73,8 +81,12 @@ public class CommonParams {
         return sparkMasterUrl;
     }
 
-    public Map<String, String> getConfigParams() {
-        return configParams;
+    public Map<String, String> getSparkSessionConfigParams() {
+        return sparkSessionConfigParams;
+    }
+
+    public Map<String, String> getSparkSessionBuilderParams() {
+        return sparkSessionBuilderParams;
     }
 
     public Preview getPreview() {

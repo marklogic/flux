@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -53,25 +53,6 @@ class ImportJdbcTest extends AbstractTest {
 
         JsonNode doc = readJsonDocument("/customer/1.json");
         assertEquals("Mary", doc.get("customer").get("first_name").asText());
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-jdbc",
-            "--jdbc-url", PostgresUtil.URL,
-            "--jdbc-user", PostgresUtil.USER,
-            "--jdbc-password", PostgresUtil.PASSWORD,
-            "--jdbc-driver", PostgresUtil.DRIVER,
-            "--query", "select * from customer where customer_id < 2",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/customer/{/customer_id}.json",
-            "--splitter-json-pointer", "/first_name"
-        );
-
-        JsonNode doc = readJsonDocument("/customer/1.json");
-        assertEquals("Mary", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

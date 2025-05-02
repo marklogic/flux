@@ -15,7 +15,7 @@ require more system resources than what are available when running Flux as a com
 
 ## Spark security notice
 
-As of October 2024 and the Flux 1.1.0 release, all public releases of Apache Spark 3.4.x through 3.5.3 depend on 
+As of October 2024 and the Flux 1.1.0 release, all public releases of Apache Spark 3.4.x through 3.5.5 depend on 
 Apache Hadoop 3.3.4. This version of Hadoop has a 
 [CVE filed against it](https://nvd.nist.gov/vuln/detail/CVE-2023-26031). The CVE involves Spark running with a 
 YARN cluster manager and the YARN cluster "is accepting work from remote (authenticated) users". 
@@ -35,13 +35,13 @@ Flux integrates with [spark-submit](https://spark.apache.org/docs/latest/submitt
 submit a Flux command invocation to a remote Spark cluster. Every Flux command is a Spark application, and thus every
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
-To use Flux with `spark-submit`, first download the `marklogic-flux-1.2.1-all.jar` file from the 
-[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.2.1). This jar file includes Flux and all of 
+To use Flux with `spark-submit`, first download the `marklogic-flux-1.3.0-all.jar` file from the 
+[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.3.0). This jar file includes Flux and all of 
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
-You can now run any Flux command with `spark-submit`. As of Flux 1.2.0, Flux depends on Spark 3.5.3, and thus you should
-use Spark 3.5.3 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
+You can now run any Flux command with `spark-submit`. As of Flux 1.2.0, Flux depends on Spark 3.5.5, and thus you should
+use Spark 3.5.5 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
 runtime that depends on Scala 2.12 and not Scala 2.13.
 
 The following shows a notional example of running the Flux `import-files` command:
@@ -51,7 +51,7 @@ The following shows a notional example of running the Flux `import-files` comman
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
     --master spark://changeme:7077 \
-    marklogic-flux-1.2.1-all.jar \
+    marklogic-flux-1.3.0-all.jar \
     import-files \
     --path path/to/data \
     --connection-string user:password@host:8000 \
@@ -62,7 +62,7 @@ $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 ```
 $SPARK_HOME\bin\spark-submit --class com.marklogic.flux.spark.Submit ^
     --master spark://changeme:7077 ^
-    marklogic-flux-1.2.1-all.jar ^
+    marklogic-flux-1.3.0-all.jar ^
     import-files ^
     --path path/to/data ^
     --connection-string user:password@host:8000 ^

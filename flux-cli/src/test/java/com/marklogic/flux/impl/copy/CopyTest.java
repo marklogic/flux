@@ -1,9 +1,8 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.client.io.SearchHandle;
 import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
@@ -33,23 +32,6 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "copy",
-            "--categories", "content",
-            "--collections", "author",
-            "--connection-string", makeConnectionString(),
-            "--output-collections", "author-copies",
-            "--output-uri-prefix", "/copied",
-            "--output-permissions", DEFAULT_PERMISSIONS,
-            "--splitter-json-pointer", "/ForeName"
-        );
-
-        JsonNode doc = readJsonDocument("/copied/author/author4.json");
-        assertEquals("Rani", doc.get("chunks").get(0).get("text").asText());
     }
 
     @Test

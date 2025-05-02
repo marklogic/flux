@@ -1,9 +1,8 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
-import com.marklogic.client.DatabaseClient;
 import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
@@ -12,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * Defines all inputs with a "--output" prefix so that it can be used in {@code CopyCommand} without conflicting with
@@ -24,11 +24,12 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
      * the normal connection params for the target database.
      */
     public boolean atLeastOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
+        Objects.requireNonNull(parseResult);
         for (Method method : getClass().getMethods()) {
             CommandLine.Option option = method.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 for (String name : option.names()) {
-                    if (parseResult.subcommand().hasMatchedOption(name)) {
+                    if (parseResult.subcommand() != null && parseResult.subcommand().hasMatchedOption(name)) {
                         return true;
                     }
                 }
@@ -92,14 +93,14 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
         names = "--output-connection-type",
         description = "Set to 'DIRECT' if connections can be made directly to each host in the MarkLogic cluster. Defaults to 'GATEWAY'. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
-    public ConnectionOptions connectionType(DatabaseClient.ConnectionType connectionType) {
+    public ConnectionOptions connectionType(ConnectionType connectionType) {
         this.connectionType = connectionType;
         return this;
     }
 
     @Override
     public ConnectionOptions connectionType(String connectionType) {
-        return connectionType(DatabaseClient.ConnectionType.valueOf(connectionType));
+        return connectionType(ConnectionType.valueOf(connectionType));
     }
 
     @Override

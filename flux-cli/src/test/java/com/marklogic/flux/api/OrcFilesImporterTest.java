@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -38,7 +38,7 @@ class OrcFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("orc-test"));
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("IllegalArgumentException: For input string: \"not-valid-value\"", ex.getMessage(), "Expecting a failure due to the " +
             "invalid value for the ORC 'mergeSchema' option.");
     }
@@ -48,7 +48,7 @@ class OrcFilesImporterTest extends AbstractTest {
         OrcFilesImporter importer = Flux.importOrcFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 }

@@ -1,8 +1,9 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
@@ -20,6 +21,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T logProgress(int interval);
 
     T permissionsString(String rolesAndCapabilities);
+
+    /**
+     * @since 1.3.0
+     */
+    T pipelineBatchSize(int batchSize);
 
     /**
      * @since 1.2.0
@@ -50,4 +56,19 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T uriSuffix(String uriSuffix);
 
     T uriTemplate(String uriTemplate);
+
+    /**
+     * @since 1.3.0
+     */
+    T classifier(Consumer<ClassifierOptions> consumer);
+
+    /**
+     * @since 1.3.0
+     */
+    T metadataValues(Map<String, String> metadataValues);
+
+    /**
+     * @since 1.3.0
+     */
+    T documentProperties(Map<String, String> documentProperties);
 }

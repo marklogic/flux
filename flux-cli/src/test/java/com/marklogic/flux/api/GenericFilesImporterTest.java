@@ -3,15 +3,9 @@
  */
 package com.marklogic.flux.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
-import com.marklogic.junit5.XmlNode;
-import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +74,7 @@ class GenericFilesImporterTest extends AbstractTest {
             .connectionString(makeConnectionString())
             .from("path/doesnt/exist");
 
-        FluxException ex = assertThrowsFluxException(() -> command.execute());
+        FluxException ex = assertThrowsFluxException(command::execute);
         assertTrue(ex.getMessage().contains("Path does not exist"),
             "Unexpected message: " + ex.getMessage() + ". And I'm not sure we want this Spark-specific " +
                 "exception to escape. Think we need for AbstractCommand to catch Throwable and look for a " +
@@ -97,7 +91,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .abortOnWriteFailure(true)
                 .permissionsString("not-a-real-role,update"));
 
-        FluxException ex = assertThrows(FluxException.class, () -> command.execute());
+        FluxException ex = assertThrows(FluxException.class, command::execute);
         assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
 
@@ -106,112 +100,27 @@ class GenericFilesImporterTest extends AbstractTest {
         GenericFilesImporter importer = Flux.importGenericFiles()
             .connectionString(makeConnectionString());
 
-        FluxException ex = assertThrowsFluxException(() -> importer.execute());
+        FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
     }
 
     @Test
-    void splitXml() {
+    void extractText() {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
-            .from("src/test/resources/xml-file/namespaced-java-client-intro.xml")
-            .to(writeOptions -> writeOptions
+            .from("src/test/resources/extraction-files/hello-world.docx")
+            .to(options -> options
+                .collections("binary")
                 .permissionsString(DEFAULT_PERMISSIONS)
-                .collections("files")
-                .uriReplace(".*/xml-file,''")
-                .splitter(splitterOptions -> splitterOptions
-                    .xpath("/ex:root/ex:text/text()")
-                    .xmlNamespaces("ex", "org:example")
-                    .maxChunkSize(500)
-                    .maxOverlapSize(0)
-                    .outputCollections("xml-chunks")
-                    .outputDocumentType(SplitterOptions.ChunkDocumentType.XML)
-                    .outputMaxChunks(2)
-                    .outputPermissionsString("flux-test-role,read,flux-test-role,update,qconsole-user,read")
-                    .outputRootName("my-chunk")
-                    .outputUriPrefix("/chunk/")
-                    .outputUriSuffix("/chunk.xml")
-                    .outputXmlNamespace("org:example:chunk")
-                )
-            ).execute();
+                .extractText()
+                .extractedTextPermissionsString(DEFAULT_PERMISSIONS)
+                .extractedTextCollections("extracted-text")
+                .extractedTextDocumentType(GenericFilesImporter.DocumentType.XML)
+                .extractedTextDropSource()
+            )
+            .execute();
 
-        String uri = getUrisInCollection("xml-chunks", 2).get(0);
-        assertTrue(uri.startsWith("/chunk/"));
-        assertTrue(uri.endsWith("/chunk.xml"));
-
-        XmlNode doc = readXmlDocument(uri);
-        doc.setNamespaces(new Namespace[]{Namespace.getNamespace("ch", "org:example:chunk")});
-        doc.assertElementCount("/ch:my-chunk/ch:chunks/ch:chunk", 2);
-    }
-
-    @Test
-    void splitJson() {
-        Flux.importGenericFiles()
-            .connectionString(makeConnectionString())
-            .from("src/test/resources/json-files/java-client-intro.json")
-            .to(writeOptions -> writeOptions
-                .permissionsString(DEFAULT_PERMISSIONS)
-                .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text"))
-            ).execute();
-
-        JsonNode doc = readJsonDocument("/split-test.json");
-        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
-    }
-
-    @Test
-    void splitWithCustomClass() {
-        Flux.importGenericFiles()
-            .connectionString(makeConnectionString())
-            .from("src/test/resources/json-files/java-client-intro.json")
-            .to(writeOptions -> writeOptions
-                .permissionsString(DEFAULT_PERMISSIONS)
-                .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text")
-                    .documentSplitterClassName("com.marklogic.flux.impl.importdata.splitter.CustomSplitter")
-                    .documentSplitterClassOptions(Map.of("textToReturn", "just testing")))
-            ).execute();
-
-        ArrayNode chunks = (ArrayNode) readJsonDocument("/split-test.json").get("chunks");
-        assertEquals(1, chunks.size());
-        assertEquals("just testing", chunks.get(0).get("text").asText());
-    }
-
-    @Test
-    void splitAndEmbed() {
-        Flux.importGenericFiles()
-            .connectionString(makeConnectionString())
-            .from("src/test/resources/json-files/java-client-intro.json")
-            .to(writeOptions -> writeOptions
-                .permissionsString(DEFAULT_PERMISSIONS)
-                .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
-                .embedder(embedderOptions -> embedderOptions.embedder("minilm"))
-            ).execute();
-
-        JsonNode doc = readJsonDocument("/split-test.json");
-        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
-
-        doc.get("chunks").forEach(chunk -> {
-            assertTrue(chunk.has("text"));
-            assertTrue(chunk.has("embedding"));
-            assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
-        });
-    }
-
-    @Test
-    void splitAndEmbedWithFullClassName() {
-        Flux.importGenericFiles()
-            .connectionString(makeConnectionString())
-            .from("src/test/resources/json-files/java-client-intro.json")
-            .to(writeOptions -> writeOptions
-                .permissionsString(DEFAULT_PERMISSIONS)
-                .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
-                .embedder(embedderOptions -> embedderOptions.embedder("com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction"))
-            ).execute();
-
-        JsonNode doc = readJsonDocument("/split-test.json");
-        assertEquals(2, doc.get("chunks").size(), "Should get 2 chunks with the default max chunk size of 1000.");
+        assertCollectionSize("The original docx file should have been dropped", "binary", 0);
+        assertCollectionSize("extracted-text", 1);
     }
 }

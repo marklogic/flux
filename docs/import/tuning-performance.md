@@ -2,7 +2,7 @@
 layout: default
 title: Tuning performance
 parent: Importing Data
-nav_order: 8
+nav_order: 9
 ---
 
 When writing to MarkLogic, the two main settings within Flux that affect performance (i.e. ignoring how the MarkLogic

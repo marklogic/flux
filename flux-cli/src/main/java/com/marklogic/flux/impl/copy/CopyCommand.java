@@ -1,23 +1,25 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
-import com.marklogic.flux.api.ConnectionOptions;
-import com.marklogic.flux.api.DocumentCopier;
-import com.marklogic.flux.api.EmbedderOptions;
-import com.marklogic.flux.api.SplitterOptions;
+import com.marklogic.flux.api.*;
+import com.marklogic.flux.cli.PicoliUtil;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.ConnectionParamsValidator;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
+import com.marklogic.flux.impl.importdata.ClassifierParams;
 import com.marklogic.flux.impl.importdata.EmbedderParams;
 import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.SaveMode;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,6 +69,14 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             description = "The maximum number of documents written in a single call to MarkLogic."
         )
         private int batchSize = 100;
+
+        @CommandLine.Option(
+            names = "--output-pipeline-batch-size",
+            description = "The number of documents to collect in a batch before sending them through the document " +
+                "processing pipeline, which consists of text extraction, text splitting, text classification, and " +
+                "embedding generation."
+        )
+        private int pipelineBatchSize = 100;
 
         @CommandLine.Option(
             names = "--output-collections",
@@ -157,19 +167,51 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         )
         private String uriTemplate;
 
+        @CommandLine.Option(
+            names = {"-M"},
+            description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+        )
+        private Map<String, String> metadataValues = new HashMap<>();
+
+        @CommandLine.Option(
+            names = {"-R"},
+            description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+        )
+        private Map<String, String> documentProperties = new HashMap<>();
+
         @CommandLine.Mixin
         private SplitterParams splitterParams = new SplitterParams();
 
         @CommandLine.Mixin
         private EmbedderParams embedderParams = new EmbedderParams();
 
+        @CommandLine.Mixin
+        private ClassifierParams classifierParams = new ClassifierParams();
+
         protected Map<String, String> makeOptions() {
-            Map<String, String> options = splitterParams.makeOptions();
-            options.putAll(embedderParams.makeOptions());
+            Map<String, String> options = splitterParams != null ? splitterParams.makeOptions() : new HashMap<>();
+
+            if (embedderParams != null) {
+                options.putAll(embedderParams.makeOptions());
+            }
+
+            if (metadataValues != null) {
+                metadataValues.entrySet().forEach(entry -> options.put(
+                    Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
+                ));
+            }
+
+            if (documentProperties != null) {
+                documentProperties.entrySet().forEach(entry -> options.put(
+                    Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + entry.getKey(), entry.getValue()
+                ));
+            }
+
             return OptionsUtil.addOptions(options,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+                Options.WRITE_PIPELINE_BATCH_SIZE, OptionsUtil.integerOption(pipelineBatchSize),
                 Options.WRITE_COLLECTIONS, collections,
                 Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(logProgress),
                 Options.WRITE_PERMISSIONS, permissions,
@@ -229,6 +271,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
 
         @Override
+        public CopyWriteDocumentsOptions pipelineBatchSize(int batchSize) {
+            this.pipelineBatchSize = batchSize;
+            return this;
+        }
+
+        @Override
         public CopyWriteDocumentsParams splitter(Consumer<SplitterOptions> consumer) {
             consumer.accept(splitterParams);
             return this;
@@ -237,6 +285,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsOptions embedder(Consumer<EmbedderOptions> consumer) {
             consumer.accept(embedderParams);
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions classifier(Consumer<ClassifierOptions> consumer) {
+            consumer.accept(classifierParams);
             return this;
         }
 
@@ -299,6 +353,18 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             this.uriTemplate = uriTemplate;
             return this;
         }
+
+        @Override
+        public CopyWriteDocumentsOptions metadataValues(Map<String, String> metadataValues) {
+            this.metadataValues = metadataValues;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions documentProperties(Map<String, String> documentProperties) {
+            this.documentProperties = documentProperties;
+            return this;
+        }
     }
 
     @CommandLine.Mixin
@@ -319,8 +385,10 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     @Override
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         super.validateCommandLineOptions(parseResult);
+        Objects.requireNonNull(outputConnectionParams);
         if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
-            CopyCommand copyCommand = (CopyCommand) parseResult.subcommand().commandSpec().userObject();
+            CopyCommand copyCommand = (CopyCommand) PicoliUtil.getCommandInstance(parseResult);
+            Objects.requireNonNull(copyCommand);
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
         }
     }

@@ -91,6 +91,10 @@ into related sets and provide a convenient mechanism for queries. You will typic
 least one set of `read` and `update` permissions for your documents to ensure that non-admin users can access your data.
 A temporal collection is only necessary when leveraging MarkLogic's support for querying bi-temporal data. 
 
+Starting with Flux 1.3.0, you can also configure 
+[metadata values](https://docs.progress.com/bundle/marklogic-server-administrate-11/page/topics/fields-database-settings/understanding-field-configurations/metadata-fields.html) 
+and [document properties](https://docs.progress.com/bundle/marklogic-server-develop-server-side-apps-11/page/topics/properties.html).
+
 Each of the above types of metadata can be configured via the following options:
 
 | Option | Description | 
@@ -98,13 +102,17 @@ Each of the above types of metadata can be configured via the following options:
 | `--collections` | Comma-delimited list of collection names to add to each document. |
 | `--permissions` | Comma-delimited list of MarkLogic role names and capabilities - e.g. `rest-reader,read,rest-writer,update`. |
 | `--temporal-collection` | Name of a MarkLogic temporal collection to assign to each document. |
+| `-Mkey=value` | Key and value to add as a metadata value. Can be specified multiple times. |
+| `-Rkey=value` | Key and value to add as a document property. Can be specified multiple times. |
 
 The following shows an example of each option:
 
 ```
 --collections employees,imported-data \
 --permissions my-reader-role,read,my-writer-role,update \
---temporal-collection my-temporal-data
+--temporal-collection my-temporal-data \
+-Mmeta1=value1 -Mmeta2=value2 \
+-Rprop1=value1 -Pprop2-value 
 ```
 
 ## Building a RAG data pipeline
@@ -137,3 +145,7 @@ The following shows an example of each option:
 The above link for REST transforms includes instructions on manually installing a transform. If you are using
 [ml-gradle to deploy an application to MarkLogic](https://github.com/marklogic/ml-gradle), you can let ml-gradle 
 [automatically install your transform](https://github.com/marklogic/ml-gradle/wiki/How-modules-are-loaded).
+
+Note that a REST transform is executed within MarkLogic and is applied to each document sent by Flux to MarkLogic.
+If you only wish to transform a subset of documents sent to MarkLogic, you should add logic to your REST transform to 
+determine if a document should be processed or not.

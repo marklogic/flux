@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -113,7 +113,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         public void validatePath() {
-            if (path == null || path.trim().length() == 0) {
+            if (path == null || path.trim().isEmpty()) {
                 throw new FluxException("Must specify a file path");
             }
         }

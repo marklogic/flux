@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -53,7 +53,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public final void execute(SparkSession session) {
         try {
-            commonParams.getConfigParams().entrySet().stream()
+            commonParams.getSparkSessionConfigParams().entrySet().stream()
                 .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
             if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
                 logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());

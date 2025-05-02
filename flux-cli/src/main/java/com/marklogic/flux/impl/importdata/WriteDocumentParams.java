@@ -1,8 +1,9 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.ClassifierOptions;
 import com.marklogic.flux.api.EmbedderOptions;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
@@ -10,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -33,6 +35,14 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         description = "The maximum number of documents written in a single call to MarkLogic."
     )
     private int batchSize = 200;
+
+    @CommandLine.Option(
+        names = "--pipeline-batch-size",
+        description = "The number of documents to collect in a batch before sending them through the document " +
+            "processing pipeline, which consists of text extraction, text splitting, text classification, and " +
+            "embedding generation."
+    )
+    private Integer pipelineBatchSize;
 
     @CommandLine.Option(
         names = "--collections",
@@ -123,11 +133,26 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String uriTemplate;
 
+    @CommandLine.Option(
+        names = {"-M"},
+        description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+    )
+    private Map<String, String> metadataValues = new HashMap<>();
+
+    @CommandLine.Option(
+        names = {"-R"},
+        description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+    )
+    private Map<String, String> documentProperties = new HashMap<>();
+
     @CommandLine.Mixin
     private SplitterParams splitterParams = new SplitterParams();
 
     @CommandLine.Mixin
     private EmbedderParams embedderParams = new EmbedderParams();
+
+    @CommandLine.Mixin
+    private ClassifierParams classifierParams = new ClassifierParams();
 
     private boolean streaming;
 
@@ -136,6 +161,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
             Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
             Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
+            Options.WRITE_PIPELINE_BATCH_SIZE, OptionsUtil.integerOption(pipelineBatchSize),
             Options.WRITE_COLLECTIONS, collections,
             Options.WRITE_LOG_PROGRESS, OptionsUtil.intOption(progressInterval),
             Options.WRITE_PERMISSIONS, permissions,
@@ -152,8 +178,30 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
-        options.putAll(splitterParams.makeOptions());
-        options.putAll(embedderParams.makeOptions());
+        if (metadataValues != null) {
+            metadataValues.entrySet().forEach(entry -> options.put(
+                Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
+            ));
+        }
+
+        if (documentProperties != null) {
+            documentProperties.entrySet().forEach(entry -> options.put(
+                Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + entry.getKey(), entry.getValue()
+            ));
+        }
+
+        if (splitterParams != null) {
+            options.putAll(splitterParams.makeOptions());
+        }
+
+        if (embedderParams != null) {
+            options.putAll(embedderParams.makeOptions());
+        }
+
+        if (classifierParams != null) {
+            options.putAll(classifierParams.makeOptions());
+        }
+
         return options;
     }
 
@@ -213,6 +261,18 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T embedder(Consumer<EmbedderOptions> consumer) {
         consumer.accept(embedderParams);
+        return (T) this;
+    }
+
+    @Override
+    public T classifier(Consumer<ClassifierOptions> consumer) {
+        consumer.accept(classifierParams);
+        return (T) this;
+    }
+
+    @Override
+    public T pipelineBatchSize(int batchSize) {
+        this.pipelineBatchSize = batchSize;
         return (T) this;
     }
 
@@ -278,5 +338,17 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     public void setStreaming(boolean streaming) {
         this.streaming = streaming;
+    }
+
+    @Override
+    public T metadataValues(Map<String, String> metadataValues) {
+        this.metadataValues = metadataValues;
+        return (T) this;
+    }
+
+    @Override
+    public T documentProperties(Map<String, String> documentProperties) {
+        this.documentProperties = documentProperties;
+        return (T) this;
     }
 }

@@ -3,8 +3,19 @@ plugins {
   id 'maven-publish'
 }
 
+java {
+  // Must use Java 17 as langchain4j depends on 17+.
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
 dependencies {
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0"
+  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:${langchain4jVersion}") {
+    // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
+    // will bring in a later version of Jackson that causes Spark to fail.
+    exclude group: "com.fasterxml.jackson.core"
+  }
 }
 
 java {

@@ -1,12 +1,39 @@
+plugins {
+  id "org.sonarqube" version "6.1.0.5360"
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "flux"
+    property "sonar.host.url", "http://localhost:9000"
+    property "sonar.coverage.jacoco.xmlReportPaths", "code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+    // Avoids a warning from Gradle.
+    property "sonar.gradle.skipCompile", "true"
+  }
+}
+
 subprojects {
   apply plugin: "java-library"
 
   group = "com.marklogic"
 
   java {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    // Flux requires Java 11 for all operations besides splitting and embedding, which require Java 17 due to
+    // the requirements of the langchain4j dependency.
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(11)
+    }
   }
+
+  // Allows for quickly identifying compiler warnings.
+  tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+  }
+
+  javadoc.failOnError = false
+  // Ignores warnings on params that don't have descriptions, which is a little too noisy
+  javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
   repositories {
     mavenCentral()
@@ -22,7 +49,42 @@ subprojects {
         details.useVersion '2.15.2'
         details.because 'Need to match the version used by Spark.'
       }
+      if (details.requested.group.equals("org.slf4j")) {
+        details.useVersion "2.0.16"
+        details.because "Ensures that slf4j-api 1.x does not appear on the Flux classpath in particular, which can " +
+          "lead to this issue - https://www.slf4j.org/codes.html#StaticLoggerBinder."
+      }
+      if (details.requested.group.equals("org.apache.logging.log4j")) {
+        details.useVersion "2.24.3"
+        details.because "Need to match the version used by Apache Tika. Spark uses 2.20.0 but automated tests confirm " +
+          "that Spark seems fine with 2.24.3."
+      }
     }
+
+    resolutionStrategy {
+      // By default, Spark 3.5.x does not include the log4j 1.x dependency via its zookeeper dependency. But somehow, by
+      // adding hadoop-client 3.3.4 to the mix, the log4j 1.x dependency comes via the zookeeper 3.6.3 dependency. Per
+      // the release notes at https://zookeeper.apache.org/doc/r3.6.4/releasenotes.html, using zookeeper 3.6.4 - which
+      // removes log4j 1.x, thus avoiding the major CVE associated with log4j 1.x - appears safe, which is confirmed by
+      // tests as well.
+      force "org.apache.zookeeper:zookeeper:3.6.4"
+
+      // Avoids a classpath conflict between Spark and tika-parser-microsoft-module. Forces Spark to use the
+      // version that tika-parser-microsoft-module wants.
+      // Avoids another classpath conflict between Spark and tika-parser-microsoft-module.
+      force "org.apache.commons:commons-compress:1.27.1"
+    }
+
+    // Without this exclusion, we have multiple slf4j providers, leading to an ugly warning at the start
+    // of each Flux execution.
+    exclude group: "org.slf4j", module: "slf4j-reload4j"
+
+    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
+    exclude module: "rocksdbjni"
+  }
+
+  task allDeps(type: DependencyReportTask) {
+    description = "Allows for generating dependency reports for every subproject in a single task."
   }
 
   test {
@@ -31,6 +93,20 @@ subprojects {
       events 'started', 'passed', 'skipped', 'failed'
       exceptionFormat 'full'
     }
+    jvmArgs = [
+      // Needed for all Java 17 testing.
+      "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+
+      // For Spark's SerializationDebugger when using Java 17. See ReprocessTest for one example of why this is needed.
+      "--add-opens", "java.base/sun.security.action=ALL-UNNAMED",
+
+      // Needed by the JDBC tests.
+      "--add-opens", "java.base/sun.util.calendar=ALL-UNNAMED",
+
+      // Needed by CustomImportTest
+      "--add-opens", "java.base/java.io=ALL-UNNAMED",
+      "--add-opens", "java.base/sun.nio.cs=ALL-UNNAMED"
+    ]
   }
 }
 
@@ -39,6 +115,7 @@ task gettingStartedZip(type: Zip) {
     "on the GitHub release page."
   from "examples/getting-started"
   exclude "build", ".gradle", "gradle-*.properties", "flux", ".gitignore", "marklogic-flux"
+  exclude "src/main/ml-schemas/tde/chunks.json"
   into "marklogic-flux-getting-started-${version}"
   archiveFileName = "marklogic-flux-getting-started-${version}.zip"
   destinationDirectory = file("build")

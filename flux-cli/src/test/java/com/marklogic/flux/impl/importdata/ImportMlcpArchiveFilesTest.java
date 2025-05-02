@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -65,19 +65,6 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
             assertEquals(0, metadata.getProperties().size());
             assertEquals(0, metadata.getQuality());
         }
-    }
-
-    @Test
-    void splitterSmokeTest() {
-        run(
-            "import-mlcp-archive-files",
-            "--path", "src/test/resources/mlcp-archives",
-            "--connection-string", makeConnectionString(),
-            "--splitter-xpath", "/hello/text()"
-        );
-
-        XmlNode doc = readXmlDocument("/test/1.xml");
-        doc.assertElementValue("/hello/model:chunks/model:chunk/model:text", "world");
     }
 
     @Test

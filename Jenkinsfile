@@ -28,13 +28,14 @@ def runtests(){
     ./gradlew -i  mlDeploy;
     wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
     unzip dvdrental.zip -d docker/postgres/ ;
-    docker exec -i flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
-    docker exec -i  flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
+    docker exec -i docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
+    docker exec -i docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
     cd $WORKSPACE/flux/;
-    ./gradlew --refresh-dependencies clean test || true;
+    ./gradlew --refresh-dependencies clean testCodeCoverageReport || true;
   '''
   junit '**/*.xml'
 }
+
 def postCleanup(){
   sh label:'mlcleanup', script: '''#!/bin/bash
     cd $WORKSPACE/flux;
@@ -45,6 +46,7 @@ def postCleanup(){
     echo "y" | docker volume prune --filter all=1 || true;
   '''
 }
+
 def runSonarScan(String javaVersion){
     sh label:'test', script: '''#!/bin/bash
       export JAVA_HOME=$'''+javaVersion+'''
@@ -54,12 +56,15 @@ def runSonarScan(String javaVersion){
      ./gradlew sonar -Dsonar.projectKey='ML-DevExp-marklogic-flux' -Dsonar.projectName='ML-DevExp-marklogic-flux' || true
     '''
 }
+
 pipeline{
   agent none
+
   options {
     checkoutToSubdirectory 'flux'
     buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '')
   }
+
   environment{
     JAVA_HOME_DIR="/home/builder/java/jdk-11.0.2"
     JAVA17_HOME_DIR="/home/builder/java/jdk-17.0.2"
@@ -67,7 +72,9 @@ pipeline{
     DMC_USER     = credentials('MLBUILD_USER')
     DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
   }
+
   stages{
+
     stage('tests'){
       environment{
         scannerHome = tool 'SONAR_Progress'
@@ -85,6 +92,25 @@ pipeline{
         }
       }
     }
+
+    stage('publishApi'){
+      agent {label 'devExpLinuxPool'}
+      when {
+        branch 'develop'
+      }
+      steps{
+        sh label:'publishApi', script: '''#!/bin/bash
+          export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
+          export GRADLE_USER_HOME=$WORKSPACE/$GRADLE_DIR
+          export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+          ./gradlew clean;
+          cp ~/.gradle/gradle.properties $GRADLE_USER_HOME/gradle.properties;
+          cd $WORKSPACE/flux;
+          ./gradlew publish
+        '''
+      }
+    }
+
     stage('publish'){
       agent{ label 'devExpLinuxPool'}
       when {
@@ -116,6 +142,7 @@ pipeline{
         }
       }
     }
+
     stage('regressions'){
       when{
         allOf{
@@ -136,5 +163,6 @@ pipeline{
         }
       }
     }
+
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 MarkLogic Corporation. All Rights Reserved.
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
 package com.marklogic.flux.cli;
 
@@ -19,8 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.Objects;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -102,8 +105,10 @@ public class Main {
     }
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
-        final Command command = (Command) parseResult.subcommand().commandSpec().userObject();
+        Objects.requireNonNull(parseResult);
+        final Command command = PicoliUtil.getCommandInstance(parseResult);
         try {
+            Objects.requireNonNull(command);
             command.validateCommandLineOptions(parseResult);
             SparkSession session = buildSparkSession(command);
             if (logger.isDebugEnabled()) {
@@ -119,16 +124,21 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
+        Map<String, String> sparkSessionBuilderParams = null;
         if (selectedCommand instanceof AbstractCommand) {
-            masterUrl = ((AbstractCommand) selectedCommand).determineSparkMasterUrl();
+            AbstractCommand<?> abstractCommand = (AbstractCommand<?>) selectedCommand;
+            masterUrl = abstractCommand.determineSparkMasterUrl();
+            if (abstractCommand.getCommonParams() != null) {
+                sparkSessionBuilderParams = abstractCommand.getCommonParams().getSparkSessionBuilderParams();
+            }
         }
-        return masterUrl != null && masterUrl.trim().length() > 0 ?
-            SparkUtil.buildSparkSession(masterUrl) :
-            SparkUtil.buildSparkSession();
+        return SparkUtil.buildSparkSession(masterUrl, sparkSessionBuilderParams);
     }
 
-    private void printException(CommandLine.ParseResult parseResult, Exception ex) {
-        final boolean includeStacktrace = parseResult.subcommand().hasMatchedOption("--stacktrace");
+    private void printException(@NotNull CommandLine.ParseResult parseResult, Exception ex) {
+        CommandLine.ParseResult subcommand = parseResult.subcommand();
+        Objects.requireNonNull(subcommand);
+        final boolean includeStacktrace = subcommand.hasMatchedOption("--stacktrace");
         if (includeStacktrace) {
             logger.error("Displaying stacktrace due to use of --stacktrace option", ex);
         }
