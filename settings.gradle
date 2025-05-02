@@ -1,5 +1,5 @@
-include "flux-embedding-model-ollama"
-//include "flux-embedding-model-minilm"
+//include "flux-embedding-model-ollama"
+include "flux-embedding-model-minilm"
 //include "flux-embedding-model-azure-open-ai"
 //include "flux-tests-api"
 //include "flux-cli"
