@@ -3,15 +3,23 @@
  */
 package com.marklogic.flux.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
+import com.marklogic.spark.reader.optic.SchemaInferrer;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
@@ -60,7 +68,11 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             }
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = readDataset(session);
-            if (commonParams.isCount()) {
+            if (commonParams.isShowTde()) {
+                ObjectNode tde = TdeUtil.buildTde(dataset.schema());
+                logger.info("TDE:\n{}", tde.toPrettyString());
+            }
+            else if (commonParams.isCount()) {
                 logger.info("Count: {}", dataset.count());
             } else if (commonParams.getPreview().isPreviewRequested()) {
                 commonParams.getPreview().showPreview(dataset);

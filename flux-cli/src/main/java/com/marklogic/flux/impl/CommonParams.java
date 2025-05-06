@@ -22,6 +22,9 @@ public class CommonParams {
     @CommandLine.Option(names = "--count", description = "Show a count of records to be read from the data source without writing any of the data.")
     private boolean count;
 
+    @CommandLine.Option(names = "--tde", description = "Read the data from given data source and then print a TDE based on the schema of the data without writing any of the data.")
+    private boolean showTde;
+
     // picocli doesn't allow a Mixin on an ArgGroup, so we use another ArgGroup here. No need for a heading though as
     // we still want these to show up in the Common Options section in each command's "help" output.
     @CommandLine.ArgGroup(exclusive = false)
@@ -95,5 +98,9 @@ public class CommonParams {
 
     public int getRepartition() {
         return repartition;
+    }
+
+    public boolean isShowTde() {
+        return showTde;
     }
 }
