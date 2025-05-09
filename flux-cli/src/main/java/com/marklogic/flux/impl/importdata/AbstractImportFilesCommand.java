@@ -6,8 +6,11 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractCommand;
+import org.apache.spark.SparkFiles;
 import org.apache.spark.sql.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -41,10 +44,23 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
             logger.info("Importing files from: {}", readFilesParams.getPaths());
         }
         readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+
+        List<String> paths = readFilesParams.getPaths();
+        List<String> newPaths = new ArrayList<>();
+        paths.forEach(path -> {
+            if (path.startsWith("http://") || path.startsWith("https://")) {
+                session.sparkContext().addFile(path);
+                String filename = path.substring(path.lastIndexOf('/') + 1);
+                String localPath = SparkFiles.get(filename);
+                newPaths.add(localPath);
+            } else {
+                newPaths.add(path);
+            }
+        });
         return reader
             .format(getReadFormat())
             .options(readFilesParams.makeOptions())
-            .load(readFilesParams.getPaths().toArray(new String[]{}));
+            .load(newPaths.toArray(new String[]{}));
     }
 
     @Override

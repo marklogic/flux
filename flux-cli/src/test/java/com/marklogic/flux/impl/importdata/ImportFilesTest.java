@@ -24,6 +24,16 @@ class ImportFilesTest extends AbstractTest {
     private static final String[] MIXED_FILES_URIS = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
 
     @Test
+    void url() {
+        run(
+            "import-files",
+            "--path", "https://s3.amazonaws.com/files.leagueathletics.com/Text/Documents/7258/104946.pdf",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS
+        );
+    }
+
+    @Test
     void multiplePaths() {
         run(
             CommandLine.ExitCode.OK,
