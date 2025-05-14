@@ -1,0 +1,233 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Reprocessor API",
+    "version": "1.0.0",
+    "description": "API for reading data from MarkLogic via custom code and reprocessing it via custom code."
+  },
+  "paths": {
+    "/reprocess": {
+      "post": {
+        "summary": "Reprocess data from MarkLogic",
+        "description": "Reads data from MarkLogic using custom code and reprocesses it using custom code.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReprocessRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reprocessing completed successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReprocessRequest": {
+        "type": "object",
+        "properties": {
+          "read": {
+            "$ref": "#/components/schemas/ReadOptions"
+          },
+          "write": {
+            "$ref": "#/components/schemas/WriteOptions"
+          },
+          "connection": {
+            "$ref": "#/components/schemas/ConnectionOptions"
+          },
+          "common": {
+            "$ref": "#/components/schemas/CommonOptions"
+          }
+        },
+        "required": ["read", "write", "connection"]
+      },
+      "ReadOptions": {
+        "type": "object",
+        "properties": {
+          "invoke": {
+            "type": "string",
+            "description": "Path to a module to invoke for reading data (in the modules database)."
+          },
+          "javascript": {
+            "type": "string",
+            "description": "JavaScript code to execute for reading data."
+          },
+          "javascriptFile": {
+            "type": "string",
+            "description": "Local file containing JavaScript code to execute for reading data."
+          },
+          "xquery": {
+            "type": "string",
+            "description": "XQuery code to execute for reading data."
+          },
+          "xqueryFile": {
+            "type": "string",
+            "description": "Local file containing XQuery code to execute for reading data."
+          },
+          "partitionsInvoke": {
+            "type": "string",
+            "description": "Path to a module to invoke to define partitions for reading."
+          },
+          "partitionsJavascript": {
+            "type": "string",
+            "description": "JavaScript code to define partitions for reading."
+          },
+          "partitionsJavascriptFile": {
+            "type": "string",
+            "description": "Local file containing JavaScript code to define partitions for reading."
+          },
+          "partitionsXquery": {
+            "type": "string",
+            "description": "XQuery code to define partitions for reading."
+          },
+          "partitionsXqueryFile": {
+            "type": "string",
+            "description": "Local file containing XQuery code to define partitions for reading."
+          },
+          "vars": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Variables to send to the code for reading data."
+          },
+          "logProgress": {
+            "type": "integer",
+            "description": "Log a count of total items read every time this many items are read.",
+            "default": 10000
+          }
+        }
+      },
+      "WriteOptions": {
+        "type": "object",
+        "properties": {
+          "invoke": {
+            "type": "string",
+            "description": "Path to a module to invoke for writing data (in the modules database)."
+          },
+          "javascript": {
+            "type": "string",
+            "description": "JavaScript code to execute for writing data."
+          },
+          "javascriptFile": {
+            "type": "string",
+            "description": "Local file containing JavaScript code to execute for writing data."
+          },
+          "xquery": {
+            "type": "string",
+            "description": "XQuery code to execute for writing data."
+          },
+          "xqueryFile": {
+            "type": "string",
+            "description": "Local file containing XQuery code to execute for writing data."
+          },
+          "externalVariableName": {
+            "type": "string",
+            "description": "Name of the external variable in the custom code for writing.",
+            "default": "URI"
+          },
+          "externalVariableDelimiter": {
+            "type": "string",
+            "description": "Delimiter for multiple values in the external variable.",
+            "default": ","
+          },
+          "vars": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Variables to send to the code for writing data."
+          },
+          "abortOnWriteFailure": {
+            "type": "boolean",
+            "description": "Fail the command when a batch of documents cannot be written."
+          },
+          "batchSize": {
+            "type": "integer",
+            "description": "Number of values sent to the code for writing data in a single call.",
+            "default": 1
+          },
+          "logProgress": {
+            "type": "integer",
+            "description": "Log a count of total items processed every time this many items are processed.",
+            "default": 10000
+          },
+          "threadCount": {
+            "type": "integer",
+            "description": "Number of threads for processing items (also defines Spark partitions).",
+            "default": 16
+          }
+        }
+      },
+      "ConnectionOptions": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "MarkLogic host to connect to."
+          },
+          "port": {
+            "type": "integer",
+            "description": "MarkLogic port to connect to."
+          },
+          "database": {
+            "type": "string",
+            "description": "MarkLogic database to connect to."
+          },
+          "user": {
+            "type": "string",
+            "description": "MarkLogic user name."
+          },
+          "password": {
+            "type": "string",
+            "description": "MarkLogic password."
+          },
+          "ssl": {
+            "type": "boolean",
+            "description": "Use SSL for the connection."
+          },
+          "auth": {
+            "type": "string",
+            "description": "Authentication method. Only 'cloud' is supported.",
+            "enum": ["cloud"],
+            "default": "cloud"
+          }
+        },
+        "required": ["host", "user", "password"]
+      },
+      "CommonOptions": {
+        "type": "object",
+        "properties": {
+          "sparkMasterUrl": {
+            "type": "string",
+            "description": "Spark master URL."
+          },
+          "repartition": {
+            "type": "integer",
+            "description": "Number of Spark partitions to use."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Limit the number of documents processed."
+          },
+          "count": {
+            "type": "boolean",
+            "description": "Only count the number of documents, do not write."
+          },
+          "preview": {
+            "type": "integer",
+            "description": "Show a preview of the first N documents."
+          },
+          "sparkSessionConfig": {
+            "type": "object",
+            "additionalProperties": { "type": "string" },
+            "description": "Additional Spark session configuration parameters."
+          }
+        }
+      }
+    }
+  }
+}
