@@ -127,6 +127,16 @@ to the next line:
    .limit(10)"
 ```
 
+When using an option such as `--uris` that supports specifying multiple values delimited by a newline symbol, 
+you can use the same approach as above to specify multiple values across multiple lines:
+
+```
+--uris
+"/uri1.json\
+/uri2.json\
+/uri3.json"
+```
+
 ## Connecting to MarkLogic
 
 Every command in Flux will need to connect to a MarkLogic database, either for reading data or writing data or both. 
