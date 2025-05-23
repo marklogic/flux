@@ -5,6 +5,8 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.cli.Main;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -34,6 +36,21 @@ public abstract class AbstractOptionsTest {
             })
             .execute(args);
         return selectedCommand.get();
+    }
+
+    protected final String applyOptionsAndReturnStderr(String... args) {
+        AtomicReference<Command> selectedCommand = new AtomicReference<>();
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        new Main().newCommandLine()
+            .setErr(pw)
+            .setExecutionStrategy(parseResult -> {
+                selectedCommand.set((Command) parseResult.subcommand().commandSpec().userObject());
+                return 0;
+            })
+            .execute(args);
+        pw.flush();
+        return sw.toString();
     }
 
 }

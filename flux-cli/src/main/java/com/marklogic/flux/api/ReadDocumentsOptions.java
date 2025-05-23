@@ -3,6 +3,8 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.Map;
+
 public interface ReadDocumentsOptions<T extends ReadDocumentsOptions> {
 
     T stringQuery(String stringQuery);
@@ -35,4 +37,34 @@ public interface ReadDocumentsOptions<T extends ReadDocumentsOptions> {
      * @since 1.1.2
      */
     T noSnapshot();
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisJavaScript(String secondaryUrisJavaScript);
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisXQuery(String secondaryUrisXQuery);
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisJavaScriptFile(String secondaryUrisJavaScriptFile);
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisXQueryFile(String secondaryUrisXQueryFile);
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisInvoke(String secondaryUrisInvoke);
+
+    /**
+     * @since 1.4.0
+     */
+    T secondaryUrisVars(Map<String, String> secondaryUrisVars);
 }
