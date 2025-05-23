@@ -8,6 +8,8 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,6 +52,27 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     @CommandLine.Option(names = "--batch-size", description = "Number of documents to retrieve in each call to MarkLogic.")
     private int batchSize = 500;
 
+    @CommandLine.Option(names = "--expand-uris-invoke")
+    private String expandUrisInvoke;
+
+    @CommandLine.Option(names = "--expand-uris-javascript", description = "JavaScript code to expand URIs.")
+    private String expandUrisJavascript;
+
+    @CommandLine.Option(names = "--expand-uris-xquery", description = "XQuery code to expand URIs.")
+    private String expandUrisXquery;
+
+    @CommandLine.Option(names = "--expand-uris-javascript-file", description = "JavaScript file to expand URIs.")
+    private String expandUrisJavascriptFile;
+
+    @CommandLine.Option(names = "--expand-uris-xquery-file", description = "XQuery file to expand URIs.")
+    private String expandUrisXqueryFile;
+
+    @CommandLine.Option(
+        names = "--expand-uris-var", arity = "*",
+        description = "Define variables to be sent to the code for expanding URIs; e.g. '--expand-uris-var var1=value1'."
+    )
+    private List<String> expandUrisVars = new ArrayList<>();
+
     @CommandLine.Option(names = "--partitions-per-forest", description = "Number of partition readers to create for each forest.")
     private int partitionsPerForest = 4;
 
@@ -79,7 +102,7 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
     }
 
     private Map<String, String> makeQueryOptions() {
-        Map<String, String> queryOptions = OptionsUtil.makeOptions(
+        final Map<String, String> queryOptions = OptionsUtil.makeOptions(
             Options.READ_DOCUMENTS_STRING_QUERY, stringQuery,
             Options.READ_DOCUMENTS_URIS, uris,
             Options.READ_DOCUMENTS_QUERY, query,
@@ -91,6 +114,26 @@ public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadD
             String trueQuery = "{\"query\": {\"queries\": [{\"true-query\": null}]}}";
             queryOptions.put(Options.READ_DOCUMENTS_QUERY, trueQuery);
         }
+
+        OptionsUtil.addOptions(queryOptions,
+            Options.READ_EXPAND_URIS_INVOKE, expandUrisInvoke,
+            Options.READ_EXPAND_URIS_JAVASCRIPT, expandUrisJavascript,
+            Options.READ_EXPAND_URIS_XQUERY, expandUrisXquery,
+            Options.READ_EXPAND_URIS_JAVASCRIPT_FILE, expandUrisJavascriptFile,
+            Options.READ_EXPAND_URIS_XQUERY_FILE, expandUrisXqueryFile
+        );
+
+        // TODO Need a helper for this, repeated in 3 places now.
+        if (expandUrisVars != null) {
+            expandUrisVars.forEach(var -> {
+                int pos = var.indexOf("=");
+                if (pos < 0) {
+                    throw new IllegalArgumentException("Value of --expand-uris-var argument must be 'varName=varValue'; invalid value: " + var);
+                }
+                queryOptions.put(Options.READ_VARS_PREFIX + var.substring(0, pos), var.substring(pos + 1));
+            });
+        }
+
         return queryOptions;
     }
 

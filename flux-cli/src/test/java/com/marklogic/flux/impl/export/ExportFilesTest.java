@@ -20,6 +20,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,6 +88,49 @@ class ExportFilesTest extends AbstractTest {
         assertEquals(1, authorsDir.listFiles().length, "Expecting the query to only retrieve the 'Vivienne' author.");
     }
 
+    @Test
+    void expandUrisJavascript(@TempDir Path tempDir) {
+        run(
+            "export-files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--connection-string", makeConnectionString(),
+            "--uris", "/author/author1.json\n/author/author2.json",
+            "--expand-uris-javascript", "var URIs;" +
+                "const citationIds = cts.elementValues(xs.QName('CitationID'), null, null, cts.documentQuery(URIs));" +
+                "cts.uris(null, null, cts.andQuery([ " +
+                "   cts.notQuery(cts.documentQuery(URIs)), " +
+                "   cts.collectionQuery('author'), " +
+                "   cts.jsonPropertyValueQuery('CitationID', citationIds)" +
+                "]))"
+        );
+
+        File authorsDir = new File(tempDir.toFile(), "author");
+        assertEquals(5, authorsDir.listFiles().length, "Expecting 5 files - the 2 original URIs and 3 expanded URIs. " +
+            "The expanded URIs come from the query on the CitationID property.");
+
+        Stream.of("author1.json", "author2.json",
+                "author4.json", "author8.json", "author14.json")
+            .forEach(uri -> assertTrue(new File(authorsDir, uri).exists(), "Expecting to find URI: " + uri));
+    }
+
+    @Test
+    void expandUrisJavascriptFile(@TempDir Path tempDir) {
+        run(
+            "export-files",
+            "--path", tempDir.toFile().getAbsolutePath(),
+            "--connection-string", makeConnectionString(),
+            "--uris", "/author/author1.json\n/author/author2.json",
+            "--expand-uris-javascript-file", "src/test/resources/custom-code/expand-uris-citation-id.js"
+        );
+
+        File authorsDir = new File(tempDir.toFile(), "author");
+        assertEquals(5, authorsDir.listFiles().length, "Expecting 5 files - the 2 original URIs and 3 expanded URIs. " +
+            "The expanded URIs come from the query on the CitationID property.");
+
+        Stream.of("author1.json", "author2.json",
+                "author4.json", "author8.json", "author14.json")
+            .forEach(uri -> assertTrue(new File(authorsDir, uri).exists(), "Expecting to find URI: " + uri));
+    }
 
     @Test
     void exportViaUris(@TempDir Path tempDir) {
