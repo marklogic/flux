@@ -27,7 +27,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     private ReadAvroFilesParams readParams = new ReadAvroFilesParams();
 
     @CommandLine.Mixin
-    private WriteStructuredDocumentParams writeDocumentParams = new WriteStructuredDocumentParams();
+    private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
     protected String getReadFormat() {
@@ -41,7 +41,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
     @Override
     protected WriteDocumentParams getWriteParams() {
-        return writeDocumentParams;
+        return writeParams;
     }
 
     public static class ReadAvroFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
@@ -100,7 +100,14 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        return readParams.aggregationParams.applyGroupBy(dataset);
+
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        if (writeParams.generateTde(dataset.schema())) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override
@@ -117,7 +124,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
     @Override
     public AvroFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
-        consumer.accept(writeDocumentParams);
+        consumer.accept(writeParams);
         return this;
     }
 }

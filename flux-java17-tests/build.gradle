@@ -22,4 +22,10 @@ dependencies {
   testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
   testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
   testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+
+  // This will be brought in transitively, but we need it here so we can compile some tests against Spark APIs.
+  testImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+
+  // For deep equals on JSON with diff.
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
 }

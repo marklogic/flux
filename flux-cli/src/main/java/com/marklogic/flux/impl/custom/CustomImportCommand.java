@@ -36,6 +36,14 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
     }
 
     @Override
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        if (writeParams.generateTde(dataset.schema())) {
+            return null;
+        }
+        return super.afterDatasetLoaded(dataset);
+    }
+
+    @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writer.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())
