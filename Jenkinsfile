@@ -20,7 +20,9 @@ def runtests(){
       }
     }
   }
+  // 'set -e' causes the script to fail if any command fails.
   sh label:'runtests', script: '''#!/bin/bash
+    set -e
     export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
     export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
     export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
