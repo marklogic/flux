@@ -100,7 +100,14 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        return readParams.aggregationParams.applyGroupBy(dataset);
+
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        if (writeParams.generateTde(dataset.schema())) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override

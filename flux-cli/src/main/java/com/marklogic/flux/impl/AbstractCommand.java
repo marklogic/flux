@@ -60,15 +60,17 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             }
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = readDataset(session);
-            if (commonParams.isCount()) {
-                logger.info("Count: {}", dataset.count());
-            } else if (commonParams.getPreview().isPreviewRequested()) {
-                commonParams.getPreview().showPreview(dataset);
-            } else {
-                applyWriter(session, dataset.write());
-            }
-            if (logger.isInfoEnabled()) {
-                logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+            if (dataset != null) {
+                if (commonParams.isCount()) {
+                    logger.info("Count: {}", dataset.count());
+                } else if (commonParams.getPreview().isPreviewRequested()) {
+                    commonParams.getPreview().showPreview(dataset);
+                } else {
+                    applyWriter(session, dataset.write());
+                }
+                if (logger.isInfoEnabled()) {
+                    logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+                }
             }
         } catch (ConnectorException ex) {
             throw ex;
@@ -90,7 +92,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     public long count() {
         try {
             SparkSession session = prepareApiExecution();
-            return readDataset(session).count();
+            Dataset<Row> dataset = readDataset(session);
+            return dataset != null ? dataset.count() : 0;
         } catch (ConnectorException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -123,14 +126,14 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     private Dataset<Row> readDataset(SparkSession session) throws Exception {
         Dataset<Row> dataset = loadDataset(session, session.read());
         dataset = afterDatasetLoaded(dataset);
-        return commonParams.applyParams(dataset);
+        return dataset != null ? commonParams.applyParams(dataset) : null;
     }
 
     /**
      * Allows a subclass to modify the dataset after "load()" has been called but before "write()" is called.
      *
      * @param dataset
-     * @return
+     * @return the same or modified dataset, or null if the dataset should not be written
      */
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
         return dataset;

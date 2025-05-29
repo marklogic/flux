@@ -130,6 +130,27 @@ class ImportJdbcTest extends AbstractTest {
             "--ignore-null-fields being used, the document in MarkLogic should not have Base64Value.");
     }
 
+    @Test
+    void generateAndLogTde() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+
+            "--tde-schema", "demo",
+            "--tde-view", "example",
+            "--tde-preview"
+        );
+
+        assertCollectionSize(
+            "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
+                "logged due to the user of tde-preview.", "customer", 0);
+    }
+    
     private void verifyTenCustomersWereImported() {
         assertCollectionSize("customer", 10);
         JsonNode doc = readJsonDocument("/customer/1.json");
