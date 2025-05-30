@@ -25,10 +25,10 @@ import java.util.function.Supplier;
 public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {
 
     @CommandLine.Mixin
-    private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
+    protected final ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
     @CommandLine.Mixin
-    protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
+    protected final WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
 
     @CommandLine.Option(
         names = "--streaming",
