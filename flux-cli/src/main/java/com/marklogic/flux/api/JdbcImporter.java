@@ -13,7 +13,16 @@ import java.util.function.Consumer;
 public interface JdbcImporter extends Executor<JdbcImporter> {
 
     interface ReadJdbcOptions extends JdbcOptions<ReadJdbcOptions> {
+        /**
+         * Either this or {@link #table(String)} must be invoked.
+         */
         ReadJdbcOptions query(String query);
+
+        /**
+         * Either this or {@link #query(String)} must be invoked.
+         * @since 1.4.0
+         */
+        ReadJdbcOptions table(String table);
 
         ReadJdbcOptions groupBy(String groupBy);
 

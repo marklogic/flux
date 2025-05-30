@@ -36,6 +36,43 @@ class ImportJdbcTest extends AbstractTest {
     }
 
     @Test
+    void tableInsteadOfQuery() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--table", "customer",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json",
+            "--collections", "customer"
+        );
+
+        assertCollectionSize(
+            "All customers should be imported (and oddly, the sample dataset has 599 and not 600 customers in it).",
+            "customer", 599
+        );
+    }
+
+    @Test
+    void noQueryNorTable() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--connection-string", makeConnectionString()
+        ));
+
+        // The formatting of the error is defined by picocli.
+        assertTrue(stderr.contains("Missing required argument (specify one of these): (--query <query> | --table <table>)"),
+            "Actual stderr: " + stderr);
+    }
+
+    @Test
     void jsonRootName() {
         run(
             "import-jdbc",
@@ -150,7 +187,7 @@ class ImportJdbcTest extends AbstractTest {
             "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
                 "logged due to the user of tde-preview.", "customer", 0);
     }
-    
+
     private void verifyTenCustomersWereImported() {
         assertCollectionSize("customer", 10);
         JsonNode doc = readJsonDocument("/customer/1.json");
