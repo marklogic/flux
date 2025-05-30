@@ -33,7 +33,10 @@ Connection details are specified via the following options:
 
 ## Importing data
 
-To import all rows in a table, use the `--query` option with a SQL query selecting all rows:
+To select data to import, use either the `--query` option with a SQL query, or the `--table` option with a table name.
+Support for the `--table` option was added in Flux 1.4.0. 
+
+The first example below shows usage of the `--query` option, which can be any valid SQL query that your database supports:
 
 {% tabs log %}
 {% tab log Unix %}
@@ -58,8 +61,35 @@ bin\flux import-jdbc ^
 {% endtab %}
 {% endtabs %}
 
+The next example shows usage of the `--table` option, which will select all rows from the specified table:
 
-The SQL query can contain any syntax supported by your database. 
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-jdbc \
+    --table "customer" \
+    --jdbc-url "..." \
+    --jdbc-driver "..." \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --table "customer" ^
+    --jdbc-url "..." ^
+    --jdbc-driver "..." ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
+The `--table` option maps to the `dbtable` option for 
+[the Spark JDBC data source](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html). Per the Spark documentation, 
+in addition to a table name, you can also specify "anything that is valid in the `FROM` clause of a SQL query... 
+such as a subquery in parentheses".
 
 ## Specifying a JSON root name
 
