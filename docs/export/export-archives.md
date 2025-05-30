@@ -60,6 +60,12 @@ Flux will select all documents that the configured MarkLogic user is able to rea
 
 You must then use the `--path` option to specify a directory to write archive files to.
 
+### Including additional URIs
+
+In some scenarios, it may not be possible to express all the URIs you wish to export via a single query. Please see
+the [guide for exporting documents](export-documents.md) and the section titled "Including additional URIs" for
+information on the options that allow you to export additional URIs via a secondary query.
+
 ### Windows-specific issues with ZIP files
 
 In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a ZIP file
