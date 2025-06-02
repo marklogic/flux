@@ -3,11 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.tde.SparkColumnIterator;
-import com.marklogic.flux.tde.TdeGenerator;
+import com.marklogic.flux.tde.TdeBuilder;
 import com.marklogic.flux.tde.TdeInputs;
 import com.marklogic.spark.Options;
 import com.marklogic.spark.Util;
@@ -80,13 +79,16 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
      */
     public boolean generateTde(StructType sparkSchema) {
         if (tdeSchema != null && tdeView != null) {
-            ObjectNode tde = TdeGenerator.generateTde(
-                new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
-                    .withJsonRootName(jsonRootName));
+            TdeInputs inputs = new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
+                .withJsonRootName(jsonRootName)
+                .withXmlRootName(xmlRootName, xmlNamespace);
+
+            TdeBuilder tdeBuilder = TdeBuilder.newTdeBuilder(inputs);
+            String tde = tdeBuilder.buildTde(inputs);
 
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
-                    Util.MAIN_LOGGER.info("Generated TDE:\n{}", tde.toPrettyString());
+                    Util.MAIN_LOGGER.info("Generated TDE:\n{}", tde);
                 }
                 return true;
             }
