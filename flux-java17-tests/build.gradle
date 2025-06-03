@@ -28,4 +28,7 @@ dependencies {
 
   // For deep equals on JSON with diff.
   testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+
+  // For deep equals on XML with diff.
+  testImplementation "org.xmlunit:xmlunit-core:2.10.0"
 }

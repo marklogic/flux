@@ -168,7 +168,7 @@ class ImportJdbcTest extends AbstractTest {
     }
 
     @Test
-    void generateAndLogTde() {
+    void buildAndLogJsonTde() {
         run(
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL,
@@ -180,6 +180,30 @@ class ImportJdbcTest extends AbstractTest {
 
             "--tde-schema", "demo",
             "--tde-view", "example",
+            "--json-root-name", "customer",
+            "--tde-preview"
+        );
+
+        assertCollectionSize(
+            "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
+                "logged due to the user of tde-preview.", "customer", 0);
+    }
+
+    @Test
+    void buildAndLogXmlTde() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+
+            "--tde-schema", "demo",
+            "--tde-view", "example",
+            "--xml-root-name", "customer",
+            "--xml-namespace", "http://example.com/customer",
             "--tde-preview"
         );
 

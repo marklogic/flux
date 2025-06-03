@@ -9,15 +9,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Iterator;
 
-/**
- * Trying to keep this class decoupled from Spark for now - the thought being that it could move into
- * the Java Client API once it matures a bit more.
- */
-public abstract class TdeGenerator {
+public class JsonTdeBuilder implements TdeBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static ObjectNode generateTde(TdeInputs tdeInputs) {
+    @Override
+    public String buildTde(TdeInputs tdeInputs) {
         ObjectNode tde = MAPPER.createObjectNode();
         ObjectNode template = tde.putObject("template");
         template.put("context", tdeInputs.getContext());
@@ -34,7 +31,7 @@ public abstract class TdeGenerator {
         row.put("viewName", tdeInputs.getViewName());
         addColumns(row, tdeInputs);
 
-        return tde;
+        return tde.toPrettyString();
     }
 
     private static void addColumns(ObjectNode row, TdeInputs tdeInputs) {
@@ -51,9 +48,5 @@ public abstract class TdeGenerator {
             columnNode.put("val", column.getVal());
             columnNode.put("scalarType", scalarType);
         }
-    }
-
-    private TdeGenerator() {
-        //  No reason for this class to have any state yet.
     }
 }

@@ -4,7 +4,6 @@
 package com.marklogic.flux.tde;
 
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
  * This test is in this Java17-dependent project solely for using triple quotes for easily putting the
  * expected TDE template in the test.
  */
-class GenerateTdeTest {
+class BuildJsonTdeTest {
 
     @Test
     void allTypes() {
@@ -99,8 +98,8 @@ class GenerateTdeTest {
                 .add("myInnerString", DataTypes.StringType))
             .add("myNull", DataTypes.NullType);
 
-        ObjectNode tde = TdeGenerator.generateTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema)));
+        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema));
+        String tde = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
 
         JsonAssertions.assertThatJson(tde)
             .describedAs("For now, we're ignoring array/map/struct types in the TDE template, " +
@@ -129,9 +128,10 @@ class GenerateTdeTest {
 
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
-        ObjectNode tde = TdeGenerator.generateTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
-                .withJsonRootName("my-root"));
+        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+            .withJsonRootName("my-root");
+
+        String tde = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
 
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
