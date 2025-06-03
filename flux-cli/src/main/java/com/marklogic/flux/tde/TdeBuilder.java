@@ -8,6 +8,6 @@ public interface TdeBuilder {
     static TdeBuilder newTdeBuilder(TdeInputs inputs) {
         return inputs.isJson() ? new JsonTdeBuilder() : new XmlTdeBuilder();
     }
-    
-    String buildTde(TdeInputs inputs);
+
+    TdeTemplate buildTde(TdeInputs inputs);
 }

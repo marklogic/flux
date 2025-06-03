@@ -3,9 +3,12 @@
  */
 package com.marklogic.flux.tde;
 
+import marklogicspark.marklogic.client.io.DOMHandle;
+import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 
@@ -17,11 +20,6 @@ class BuildXmlTdeTest {
 
     @Test
     void noNamespace() {
-        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
-            .withXmlRootName("my-root", null);
-
-        final String doc = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
-
         final String expectedXml = """
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
@@ -43,6 +41,10 @@ class BuildXmlTdeTest {
               </collections>
             </template>""";
 
+        Document doc = buildTde(
+            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+                .withXmlRootName("my-root", null));
+
         Diff diff = DiffBuilder.compare(expectedXml)
             .withTest(doc)
             .ignoreWhitespace()
@@ -54,11 +56,6 @@ class BuildXmlTdeTest {
 
     @Test
     void withNamespace() {
-        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
-            .withXmlRootName("my-root", "org:example");
-
-        final String doc = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
-
         final String expectedXml = """
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
@@ -86,6 +83,10 @@ class BuildXmlTdeTest {
               </collections>
             </template>""";
 
+        Document doc = buildTde(
+            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+                .withXmlRootName("my-root", "org:example"));
+
         Diff diff = DiffBuilder.compare(expectedXml)
             .withTest(doc)
             .ignoreWhitespace()
@@ -93,5 +94,10 @@ class BuildXmlTdeTest {
             .build();
 
         assertFalse(diff.hasDifferences(), "XML does not match expected template:\n" + diff);
+    }
+
+    private Document buildTde(TdeInputs inputs) {
+        AbstractWriteHandle handle = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs).toWriteHandle();
+        return ((DOMHandle) handle).get();
     }
 }

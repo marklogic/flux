@@ -5,6 +5,8 @@ package com.marklogic.flux.tde;
 
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.dom.DOMHelper;
+import marklogicspark.marklogic.client.io.DOMHandle;
+import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -19,7 +21,7 @@ public class XmlTdeBuilder implements TdeBuilder {
     private static final String NAMESPACE = "http://marklogic.com/xdmp/tde";
 
     @Override
-    public String buildTde(TdeInputs tdeInputs) {
+    public TdeTemplate buildTde(TdeInputs tdeInputs) {
         Document doc;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -46,7 +48,8 @@ public class XmlTdeBuilder implements TdeBuilder {
         while (columns.hasNext()) {
             xmlTemplate.addColumn(columns.next());
         }
-        return DOMHelper.prettyPrintNode(doc);
+
+        return new DOMTemplate(doc);
     }
 
     private static class XmlTemplate {
@@ -107,5 +110,21 @@ public class XmlTdeBuilder implements TdeBuilder {
         }
     }
 
+    private static class DOMTemplate implements TdeTemplate {
+        private final Document tdeTemplate;
 
+        public DOMTemplate(Document tdeTemplate) {
+            this.tdeTemplate = tdeTemplate;
+        }
+
+        @Override
+        public AbstractWriteHandle toWriteHandle() {
+            return new DOMHandle(tdeTemplate);
+        }
+
+        @Override
+        public String toPrettyString() {
+            return DOMHelper.prettyPrintNode(tdeTemplate);
+        }
+    }
 }
