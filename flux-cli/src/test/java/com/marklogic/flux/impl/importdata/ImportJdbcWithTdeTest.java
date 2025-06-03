@@ -1,0 +1,128 @@
+/*
+ * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
+ */
+package com.marklogic.flux.impl.importdata;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.expression.PlanBuilder;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.row.RowManager;
+import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.impl.PostgresUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ImportJdbcWithTdeTest extends AbstractTest {
+
+    @AfterEach
+    void deleteCustomerTemplate() {
+        // This needs to be deleted after a test so as not to impact other tests that aren't aware that this might
+        // exist.
+        try (DatabaseClient client = newDatabaseClient("flux-test-schemas")) {
+            client.newDocumentManager().delete("/tde/junit/customer.json");
+        }
+    }
+
+    @Test
+    void buildAndLogJsonTde() {
+        importJdbcWithArgs(
+            "--tde-schema", "demo",
+            "--tde-view", "example",
+            "--json-root-name", "customer",
+            "--tde-preview"
+        );
+
+        assertCollectionSize(
+            "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
+                "logged due to the user of tde-preview.", "customer", 0);
+    }
+
+    @Test
+    void buildAndLogXmlTde() {
+        importJdbcWithArgs(
+            "--tde-schema", "demo",
+            "--tde-view", "example",
+            "--xml-root-name", "customer",
+            "--xml-namespace", "http://example.com/customer",
+            "--tde-preview"
+        );
+
+        assertCollectionSize(
+            "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
+                "logged due to the user of tde-preview.", "customer", 0);
+    }
+
+    @Test
+    void loadTde() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update"
+        );
+
+        assertCollectionSize("customer", 10);
+
+        RowManager rm = getDatabaseClient().newRowManager();
+        PlanBuilder op = rm.newPlanBuilder();
+        JsonNode result = rm.resultDoc(op.fromView("junit", "customer", "")
+                .select(op.col("customer_id"), op.col("first_name"))
+                .orderBy(op.col("customer_id")),
+            new JacksonHandle()).get();
+
+        JsonNode rows = result.get("rows");
+        assertEquals(10, rows.size());
+        assertEquals("Mary", rows.get(0).get("first_name").get("value").asText());
+    }
+
+    @Test
+    void invalidPermissions() {
+        String stderr = runAndReturnStderr(() -> run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+            "--collections", "customer",
+            "--permissions", DEFAULT_PERMISSIONS,
+
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role"
+        ));
+
+        assertTrue(stderr.contains("Unable to parse permissions string"), "Actual stderr: " + stderr);
+        assertCollectionSize(
+            "No data should be loaded if an error occurs while loading the TDE template.",
+            "customer", 0
+        );
+    }
+
+    private void importJdbcWithArgs(String... options) {
+        List<String> defaultArgs = List.of(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+            "--collections", "customer",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json"
+        );
+        List<String> args = new ArrayList<>(defaultArgs);
+        for (String option : options) {
+            args.add(option);
+        }
+        run(args.toArray(new String[0]));
+    }
+}

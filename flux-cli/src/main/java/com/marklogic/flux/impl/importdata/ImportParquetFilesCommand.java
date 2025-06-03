@@ -100,10 +100,10 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        
+
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
 
-        if (writeParams.generateTde(dataset.schema())) {
+        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
             return null;
         }
 

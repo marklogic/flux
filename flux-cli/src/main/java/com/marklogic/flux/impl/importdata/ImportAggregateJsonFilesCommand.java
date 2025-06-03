@@ -136,7 +136,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (writeParams.generateTde(dataset.schema())) {
+        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
             return null;
         }
 

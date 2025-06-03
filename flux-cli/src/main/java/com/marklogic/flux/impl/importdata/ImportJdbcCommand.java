@@ -53,7 +53,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
-        if (writeParams.generateTde(dataset.schema())) {
+        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
             return null;
         }
         return dataset;

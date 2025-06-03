@@ -103,7 +103,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
 
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
 
-        if (writeParams.generateTde(dataset.schema())) {
+        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
             return null;
         }
 

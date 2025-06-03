@@ -2,6 +2,7 @@
   "user-name": "flux-test-admin",
   "password": "password",
   "role": [
-    "admin"
+    "admin",
+    "flux-test-role"
   ]
 }

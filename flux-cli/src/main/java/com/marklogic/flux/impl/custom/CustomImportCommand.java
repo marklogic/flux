@@ -37,7 +37,7 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (writeParams.generateTde(dataset.schema())) {
+        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
             return null;
         }
         return super.afterDatasetLoaded(dataset);

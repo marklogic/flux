@@ -23,12 +23,14 @@ public class TdeInputs {
     private final String schemaName;
     private final String viewName;
     private final Iterator<Column> columns;
-    private String context = "/";
     private final Map<String, String> namespaces = new HashMap<>();
+
+    private String context = "/";
+    private String permissions;
     private boolean json = true; // Default to JSON TDE, can be set to false for XML TDE
 
     // Temporary until this is configurable by the user.
-    private List<String> collections = List.of("changeme");
+    private List<String> collections = List.of("customer");
 
     public TdeInputs(String schemaName, String viewName, Iterator<Column> columns) {
         this.schemaName = schemaName;
@@ -53,6 +55,11 @@ public class TdeInputs {
                 this.context = "/" + xmlRootName;
             }
         }
+        return this;
+    }
+
+    public TdeInputs withPermissions(String permissions) {
+        this.permissions = permissions;
         return this;
     }
 
@@ -82,5 +89,9 @@ public class TdeInputs {
 
     public boolean isJson() {
         return json;
+    }
+
+    public String getPermissions() {
+        return permissions;
     }
 }

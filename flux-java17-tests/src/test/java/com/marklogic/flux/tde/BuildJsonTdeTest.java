@@ -24,7 +24,7 @@ class BuildJsonTdeTest {
             {
               "template" : {
                 "context" : "/",
-                "collections" : [ "changeme" ],
+                "collections" : [ "customer" ],
                 "rows" : [ {
                   "schemaName" : "my-schema",
                   "viewName" : "my-view",
@@ -114,7 +114,7 @@ class BuildJsonTdeTest {
             {
               "template" : {
                 "context" : "/my-root",
-                "collections" : [ "changeme" ],
+                "collections" : [ "customer" ],
                 "rows" : [ {
                   "schemaName" : "my-schema",
                   "viewName" : "my-view",

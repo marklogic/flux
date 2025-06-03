@@ -25,10 +25,26 @@
       "kind": "execute"
     },
     {
+      "privilege-name": "xdmp-eval",
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-eval",
+      "kind": "execute"
+    },
+    {
+      "privilege-name": "xdmp-eval-in",
+      "action": "http://marklogic.com/xdmp/privileges/xdmp-eval-in",
+      "kind": "execute"
+    },
+    {
       "privilege-name": "any-uri",
       "action": "http://marklogic.com/xdmp/privileges/any-uri",
       "kind": "execute"
     },
+    {
+      "privilege-name": "any-collection",
+      "action": "http://marklogic.com/xdmp/privileges/any-collection",
+      "kind": "execute"
+    },
+
     {
       "privilege-name": "unprotected-collections",
       "action": "http://marklogic.com/xdmp/privileges/unprotected-collections",
