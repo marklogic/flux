@@ -6,6 +6,8 @@ package com.marklogic.flux.tde;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import marklogicspark.marklogic.client.io.JacksonHandle;
+import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 
 import java.util.Iterator;
 
@@ -14,7 +16,7 @@ public class JsonTdeBuilder implements TdeBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
-    public String buildTde(TdeInputs tdeInputs) {
+    public TdeTemplate buildTde(TdeInputs tdeInputs) {
         ObjectNode tde = MAPPER.createObjectNode();
         ObjectNode template = tde.putObject("template");
         template.put("context", tdeInputs.getContext());
@@ -31,7 +33,7 @@ public class JsonTdeBuilder implements TdeBuilder {
         row.put("viewName", tdeInputs.getViewName());
         addColumns(row, tdeInputs);
 
-        return tde.toPrettyString();
+        return new JsonTemplate(tde);
     }
 
     private static void addColumns(ObjectNode row, TdeInputs tdeInputs) {
@@ -47,6 +49,24 @@ public class JsonTdeBuilder implements TdeBuilder {
             columnNode.put("name", column.getName());
             columnNode.put("val", column.getVal());
             columnNode.put("scalarType", scalarType);
+        }
+    }
+
+    private static class JsonTemplate implements TdeTemplate {
+        private final ObjectNode tdeTemplate;
+
+        public JsonTemplate(ObjectNode tdeTemplate) {
+            this.tdeTemplate = tdeTemplate;
+        }
+
+        @Override
+        public AbstractWriteHandle toWriteHandle() {
+            return new JacksonHandle(tdeTemplate);
+        }
+
+        @Override
+        public String toPrettyString() {
+            return tdeTemplate.toPrettyString();
         }
     }
 }

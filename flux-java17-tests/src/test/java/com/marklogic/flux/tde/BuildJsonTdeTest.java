@@ -4,6 +4,9 @@
 package com.marklogic.flux.tde;
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.marklogic.client.io.JacksonHandle;
+import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
@@ -98,9 +101,7 @@ class BuildJsonTdeTest {
                 .add("myInnerString", DataTypes.StringType))
             .add("myNull", DataTypes.NullType);
 
-        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema));
-        String tde = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
-
+        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema)));
         JsonAssertions.assertThatJson(tde)
             .describedAs("For now, we're ignoring array/map/struct types in the TDE template, " +
                 "we may add support for them later.")
@@ -128,11 +129,14 @@ class BuildJsonTdeTest {
 
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
-        TdeInputs inputs = new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
-            .withJsonRootName("my-root");
-
-        String tde = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
+        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+            .withJsonRootName("my-root"));
 
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+    }
+
+    private ObjectNode buildTde(TdeInputs inputs) {
+        AbstractWriteHandle handle = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs).toWriteHandle();
+        return (ObjectNode) ((JacksonHandle) handle).get();
     }
 }

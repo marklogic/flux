@@ -8,8 +8,11 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.tde.SparkColumnIterator;
 import com.marklogic.flux.tde.TdeBuilder;
 import com.marklogic.flux.tde.TdeInputs;
+import com.marklogic.flux.tde.TdeTemplate;
 import com.marklogic.spark.Options;
 import com.marklogic.spark.Util;
+import marklogicspark.marklogic.client.DatabaseClient;
+import marklogicspark.marklogic.client.DatabaseClientFactory;
 import org.apache.spark.sql.types.StructType;
 import picocli.CommandLine;
 
@@ -83,14 +86,26 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
                 .withJsonRootName(jsonRootName)
                 .withXmlRootName(xmlRootName, xmlNamespace);
 
-            TdeBuilder tdeBuilder = TdeBuilder.newTdeBuilder(inputs);
-            String tde = tdeBuilder.buildTde(inputs);
+            TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
 
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
-                    Util.MAIN_LOGGER.info("Generated TDE:\n{}", tde);
+                    Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
                 }
                 return true;
+            } else {
+                // Load it! Hack away for now.
+                StringBuilder script = new StringBuilder("declareUpdate(); const tde = require('/MarkLogic/tde.xqy'); ");
+                script.append("var TEMPLATE; ");
+                script.append("tde.templateBatchInsert([tde.templateInfo('/hey.json', TEMPLATE)]); ");
+
+                // Will figure out how to connect in the next PR.
+                try (DatabaseClient client = DatabaseClientFactory.newClient("localhost", 8003,
+                    new DatabaseClientFactory.DigestAuthContext("admin", "admin"))) {
+                    client.newServerEval().javascript(script.toString())
+                        .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
+                        .evalAs(String.class);
+                }
             }
         }
         return false;

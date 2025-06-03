@@ -177,6 +177,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--connection-string", makeConnectionString(),
+            "--collections", "customer",
 
             "--tde-schema", "demo",
             "--tde-view", "example",
@@ -199,6 +200,7 @@ class ImportJdbcTest extends AbstractTest {
             "--jdbc-driver", PostgresUtil.DRIVER,
             "--query", "select * from customer where customer_id < 11",
             "--connection-string", makeConnectionString(),
+            "--collections", "customer",
 
             "--tde-schema", "demo",
             "--tde-view", "example",
@@ -210,6 +212,27 @@ class ImportJdbcTest extends AbstractTest {
         assertCollectionSize(
             "Just verifying that for now, no documents were imported because a TDE should have been generated and " +
                 "logged due to the user of tde-preview.", "customer", 0);
+    }
+
+    @Test
+    void loadTde() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+            "--collections", "customer",
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json",
+
+            "--tde-schema", "demo",
+            "--tde-view", "example"
+        );
+
+        assertCollectionSize("customer", 10);
     }
 
     private void verifyTenCustomersWereImported() {
