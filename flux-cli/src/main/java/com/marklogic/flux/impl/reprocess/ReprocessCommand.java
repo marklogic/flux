@@ -184,7 +184,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             names = "--read-var", arity = "*",
             description = "Define variables to be sent to the code for reading data; e.g. '--read-var var1=value1'."
         )
-        private List<String> readVars = new ArrayList<>();
+        private Map<String, String> readVars = new HashMap<>();
 
         @CommandLine.Option(
             names = "--log-read-progress",
@@ -227,13 +227,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             );
 
             if (readVars != null) {
-                readVars.forEach(readVar -> {
-                    int pos = readVar.indexOf("=");
-                    if (pos < 0) {
-                        throw new IllegalArgumentException("Value of --read-var argument must be 'varName=varValue'; invalid value: " + readVar);
-                    }
-                    options.put(Options.READ_VARS_PREFIX + readVar.substring(0, pos), readVar.substring(pos + 1));
-                });
+                readVars.entrySet().forEach(entry ->
+                    options.put(Options.READ_VARS_PREFIX + entry.getKey(), entry.getValue()));
             }
 
             return options;
@@ -301,9 +296,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @Override
         public ReadOptions vars(Map<String, String> namesAndValues) {
-            this.readVars = namesAndValues.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.toList());
+            this.readVars = namesAndValues;
             return this;
         }
 
@@ -362,7 +355,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             names = "--write-var", arity = "*",
             description = "Define variables to be sent to the code for writing data; e.g. '--write-var var1=value1'."
         )
-        private List<String> writeVars = new ArrayList<>();
+        private Map<String, String> writeVars = new HashMap<>();
 
         @CommandLine.Option(
             names = "--abort-on-write-failure",
@@ -413,13 +406,8 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             );
 
             if (writeVars != null) {
-                writeVars.forEach(writeVar -> {
-                    int pos = writeVar.indexOf("=");
-                    if (pos < 0) {
-                        throw new IllegalArgumentException("Value of --write-var argument must be 'varName=varValue'; invalid value: " + writeVar);
-                    }
-                    options.put(Options.WRITE_VARS_PREFIX + writeVar.substring(0, pos), writeVar.substring(pos + 1));
-                });
+                writeVars.entrySet().forEach(entry ->
+                    options.put(Options.WRITE_VARS_PREFIX + entry.getKey(), entry.getValue()));
             }
 
             return options;
@@ -469,9 +457,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @Override
         public WriteOptions vars(Map<String, String> namesAndValues) {
-            this.writeVars = namesAndValues.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.toList());
+            this.writeVars = namesAndValues;
             return this;
         }
 
