@@ -13,7 +13,6 @@ import org.w3c.dom.Element;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class XmlTdeBuilder implements TdeBuilder {
@@ -41,12 +40,16 @@ public class XmlTdeBuilder implements TdeBuilder {
             throw new FluxException("Failed to create XML DocumentBuilder", e);
         }
 
-        XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName());
+        XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName(), tdeInputs.getViewLayout());
         xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getNamespaces());
         xmlTemplate.setCollections(tdeInputs.getCollections());
+        xmlTemplate.setDirectories(tdeInputs.getDirectories());
         Iterator<TdeInputs.Column> columns = tdeInputs.getColumns();
         while (columns.hasNext()) {
             xmlTemplate.addColumn(columns.next());
+        }
+        if (tdeInputs.isDisabled()) {
+            xmlTemplate.setDisabled();
         }
 
         return new DOMTemplate(doc);
@@ -58,7 +61,7 @@ public class XmlTdeBuilder implements TdeBuilder {
         private final Element row;
         private final Element columns;
 
-        XmlTemplate(Document doc, String schemaName, String viewName) {
+        XmlTemplate(Document doc, String schemaName, String viewName, String viewLayout) {
             this.doc = doc;
             this.root = doc.createElementNS(NAMESPACE, "template");
             doc.appendChild(root);
@@ -67,7 +70,16 @@ public class XmlTdeBuilder implements TdeBuilder {
             row = addChild(rows, "row");
             addChildWithText(row, "schema-name", schemaName);
             addChildWithText(row, "view-name", viewName);
+            if (viewLayout != null && !viewLayout.isEmpty()) {
+                addChildWithText(row, "view-layout", viewLayout);
+            }
             columns = addChild(row, "columns");
+        }
+
+        void setViewLayout(String viewLayout) {
+            if (viewLayout != null && !viewLayout.isEmpty()) {
+                addChildWithText(row, "view-layout", viewLayout);
+            }
         }
 
         void setContext(String context, Map<String, String> namespaces) {
@@ -89,11 +101,26 @@ public class XmlTdeBuilder implements TdeBuilder {
             addChildWithText(columnElement, "val", column.getVal());
         }
 
-        void setCollections(List<String> collections) {
-            if (collections != null && !collections.isEmpty()) {
-                Element collectionsElement = addChild(root, "collections");
-                collections.forEach(collection -> addChildWithText(collectionsElement, "collection", collection));
+        void setCollections(String[] collections) {
+            if (collections != null && collections.length > 0) {
+                Element wrapper = addChild(root, "collections");
+                for (String collection : collections) {
+                    addChildWithText(wrapper, "collection", collection);
+                }
             }
+        }
+
+        void setDirectories(String[] directories) {
+            if (directories != null && directories.length > 0) {
+                Element wrapper = addChild(root, "directories");
+                for (String directory : directories) {
+                    addChildWithText(wrapper, "directory", directory);
+                }
+            }
+        }
+
+        void setDisabled() {
+            addChildWithText(root, "enabled", "false");
         }
 
         private Element addChild(Element parent, String tagName) {

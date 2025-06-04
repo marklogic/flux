@@ -14,6 +14,7 @@ import marklogicspark.marklogic.client.DatabaseClient;
 import org.apache.spark.sql.types.StructType;
 import picocli.CommandLine;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,6 +67,43 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private String tdePermissions;
 
+    @CommandLine.Option(
+        names = "--tde-collections",
+        description = "Comma-delimited sequence of collection names to include in the generated TDE template - e.g. collection1,collection2."
+    )
+    private String tdeCollections;
+
+    @CommandLine.Option(
+        names = "--tde-directory",
+        description = "Database directories to include in the generated TDE template."
+    )
+    private List<String> tdeDirectories;
+
+    @CommandLine.Option(
+        names = "--tde-context",
+        description = "Context path to use for the generated TDE template. Will override the default context path of " +
+            "'/' and any context path determined by the use of --json-root-name or --xml-root-name."
+    )
+    private String tdeContext;
+
+    @CommandLine.Option(
+        names = "--tde-uri",
+        description = "URI for loading the generated TDE template."
+    )
+    private String tdeUri;
+
+    @CommandLine.Option(
+        names = "--tde-template-disabled",
+        description = "If set, the TDE template will be loaded but in a disabled state."
+    )
+    private boolean tdeTemplateDisabled;
+
+    @CommandLine.Option(
+        names = "--tde-view-layout",
+        description = "View layout for the TDE template; defaults to 'sparse', can instead be set to 'identical'."
+    )
+    private String tdeViewLayout;
+
     @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = super.makeOptions();
@@ -91,11 +129,7 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
      */
     public boolean generateTde(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeSchema != null && tdeView != null) {
-            TdeInputs inputs = new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
-                .withPermissions(tdePermissions)
-                .withJsonRootName(jsonRootName)
-                .withXmlRootName(xmlRootName, xmlNamespace);
-
+            TdeInputs inputs = buildTdeInputs(sparkSchema);
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
                     TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
@@ -110,6 +144,19 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
         }
 
         return false;
+    }
+
+    protected final TdeInputs buildTdeInputs(StructType sparkSchema) {
+        return new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
+            .withUri(tdeUri)
+            .withDisabled(tdeTemplateDisabled)
+            .withPermissions(tdePermissions)
+            .withCollections(tdeCollections != null ? tdeCollections.split(",") : null)
+            .withDirectories(tdeDirectories != null ? tdeDirectories.toArray(new String[0]) : null)
+            .withContext(tdeContext)
+            .withJsonRootName(jsonRootName)
+            .withXmlRootName(xmlRootName, xmlNamespace)
+            .withViewLayout(tdeViewLayout);
     }
 
     @Override
