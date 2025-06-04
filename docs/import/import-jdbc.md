@@ -138,6 +138,13 @@ it may be important to query for documents that have a particular field with a v
 The `import-jdbc` command supports aggregating related rows together to produce hierarchical documents. See
 [Aggregating rows](aggregating-rows.md) for more information.
 
+## Generating a TDE
+
+Will have a lot more here before release. 
+
+Need to document that user needs the "xdmp-eval" and "xdmp-eval-in" privileges in order to insert a TDE.
+And "any-collection"!
+
 ## Advanced options
 
 The `import-jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of

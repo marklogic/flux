@@ -4,15 +4,13 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
+import com.marklogic.flux.impl.ConnectionParams;
 import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.tde.SparkColumnIterator;
-import com.marklogic.flux.tde.TdeBuilder;
-import com.marklogic.flux.tde.TdeInputs;
-import com.marklogic.flux.tde.TdeTemplate;
+import com.marklogic.flux.tde.*;
+import com.marklogic.spark.ContextSupport;
 import com.marklogic.spark.Options;
 import com.marklogic.spark.Util;
 import marklogicspark.marklogic.client.DatabaseClient;
-import marklogicspark.marklogic.client.DatabaseClientFactory;
 import org.apache.spark.sql.types.StructType;
 import picocli.CommandLine;
 
@@ -62,6 +60,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private boolean tdePreview;
 
+    @CommandLine.Option(
+        names = "--tde-permissions",
+        description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to the generated TDE template - e.g. role1,read,role2,update,role3,execute."
+    )
+    private String tdePermissions;
+
     @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = super.makeOptions();
@@ -77,37 +81,34 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
 
     /**
      * @param sparkSchema
+     * @param connectionParams
      * @return true if TDE was generated and previewed, false otherwise. This will likely change once we
-     * support loading the TDE into MarkLogic.
+     * support loading the TDE into MarkLogic
+     * <p>
+     * Pretty sure this logic will move before all the stories for the feature are done. The params in this class can
+     * be used to construct a TdeInputs instance, and the rest of everything can hopefully happen outside of the
+     * command/params hierarchy as opposed to happening here.
      */
-    public boolean generateTde(StructType sparkSchema) {
+    public boolean generateTde(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeSchema != null && tdeView != null) {
             TdeInputs inputs = new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
+                .withPermissions(tdePermissions)
                 .withJsonRootName(jsonRootName)
                 .withXmlRootName(xmlRootName, xmlNamespace);
 
-            TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
-
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
+                    TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
                     Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
                 }
                 return true;
             } else {
-                // Load it! Hack away for now.
-                StringBuilder script = new StringBuilder("declareUpdate(); const tde = require('/MarkLogic/tde.xqy'); ");
-                script.append("var TEMPLATE; ");
-                script.append("tde.templateBatchInsert([tde.templateInfo('/hey.json', TEMPLATE)]); ");
-
-                // Will figure out how to connect in the next PR.
-                try (DatabaseClient client = DatabaseClientFactory.newClient("localhost", 8003,
-                    new DatabaseClientFactory.DigestAuthContext("admin", "admin"))) {
-                    client.newServerEval().javascript(script.toString())
-                        .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
-                        .evalAs(String.class);
+                try (DatabaseClient client = new ContextSupport(connectionParams.makeOptions()).connectToMarkLogic()) {
+                    new TdeLoader(client).loadTde(inputs);
                 }
             }
         }
+
         return false;
     }
 

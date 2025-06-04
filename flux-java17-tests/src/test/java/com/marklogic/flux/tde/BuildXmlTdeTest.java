@@ -37,7 +37,7 @@ class BuildXmlTdeTest {
               </rows>
               <context>/my-root</context>
               <collections>
-                <collection>changeme</collection>
+                <collection>customer</collection>
               </collections>
             </template>""";
 
@@ -79,7 +79,7 @@ class BuildXmlTdeTest {
                 </path-namespace>
               </path-namespaces>
               <collections>
-                <collection>changeme</collection>
+                <collection>customer</collection>
               </collections>
             </template>""";
 
