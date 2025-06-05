@@ -182,6 +182,34 @@ class ImportJdbcWithTdeTest extends AbstractTest {
         assertTrue(stderr.contains("TDE-INVALIDTEMPLATENODEVAL"), "Actual stderr: " + stderr);
     }
 
+    @Test
+    void tdeWithAllColumnCustomizations() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-collections", "customer",
+
+            "--tde-column-val", "customer_id=customerId",
+            "--tde-column-val", "first_name=firstName",
+            "--tde-column-type", "customer_id=int",
+            "--tde-column-default", "customer_id=0",
+            "--tde-column-type", "first_name=string",
+            "--tde-column-reindexing", "customer_id=visible",
+            "--tde-column-reindexing", "first_name=hidden",
+            "--tde-column-invalid-values", "customer_id=reject",
+            "--tde-column-invalid-values", "first_name=ignore",
+            "--tde-column-permissions", "customer_id=flux-test-role",
+            "--tde-column-permissions", "first_name=flux-test-role,qconsole-user",
+            "--tde-column-nullable", "customer_id",
+            "--tde-column-nullable", "first_name",
+            "--tde-column-collation", "first_name=http://marklogic.com/collation/codepoint"
+        );
+
+        assertCollectionSize("customer", 10);
+        verifyTdeContainsColumnCustomizations();
+    }
+
     private void importJdbcWithArgs(String... options) {
         List<String> defaultArgs = List.of(
             "import-jdbc",
@@ -213,5 +241,47 @@ class ImportJdbcWithTdeTest extends AbstractTest {
         JsonNode rows = result.get("rows");
         assertEquals(10, rows.size());
         assertEquals("Mary", rows.get(0).get("first_name").get("value").asText());
+    }
+
+    private void verifyTdeContainsColumnCustomizations() {
+        JsonNode tdeTemplate = schemasDatabaseClient.newJSONDocumentManager()
+            .read(DEFAULT_TDE_URI, new JacksonHandle()).get();
+
+        JsonNode columns = tdeTemplate.get("template").get("rows").get(0).get("columns");
+
+        // Find the customer_id column and verify its customizations
+        JsonNode customerIdColumn = null;
+        JsonNode firstNameColumn = null;
+
+        for (JsonNode column : columns) {
+            String name = column.get("name").asText();
+            if ("customer_id".equals(name)) {
+                customerIdColumn = column;
+            } else if ("first_name".equals(name)) {
+                firstNameColumn = column;
+            }
+        }
+
+        assertNotNull(customerIdColumn, "customer_id column should exist in TDE");
+        assertNotNull(firstNameColumn, "first_name column should exist in TDE");
+
+        // Verify customer_id customizations
+        assertEquals("customerId", customerIdColumn.get("val").asText());
+        assertEquals("int", customerIdColumn.get("scalarType").asText());
+        assertEquals("visible", customerIdColumn.get("reindexing").asText());
+        assertEquals("flux-test-role", customerIdColumn.get("permissions").get(0).asText());
+        assertTrue(customerIdColumn.get("nullable").asBoolean());
+        assertEquals("reject", customerIdColumn.get("invalidValues").asText());
+        assertEquals(0, customerIdColumn.get("default").asInt());
+
+        // Verify first_name customizations
+        assertEquals("firstName", firstNameColumn.get("val").asText());
+        assertEquals("string", firstNameColumn.get("scalarType").asText());
+        assertEquals("hidden", firstNameColumn.get("reindexing").asText());
+        assertEquals("flux-test-role", firstNameColumn.get("permissions").get(0).asText());
+        assertEquals("qconsole-user", firstNameColumn.get("permissions").get(1).asText());
+        assertTrue(firstNameColumn.get("nullable").asBoolean());
+        assertEquals("http://marklogic.com/collation/codepoint", firstNameColumn.get("collation").asText());
+        assertEquals("ignore", firstNameColumn.get("invalidValues").asText());
     }
 }

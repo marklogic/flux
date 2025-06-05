@@ -46,7 +46,7 @@ public class XmlTdeBuilder implements TdeBuilder {
         xmlTemplate.setDirectories(tdeInputs.getDirectories());
         Iterator<TdeInputs.Column> columns = tdeInputs.getColumns();
         while (columns.hasNext()) {
-            xmlTemplate.addColumn(columns.next());
+            xmlTemplate.addColumn(columns.next(), tdeInputs);
         }
         if (tdeInputs.isDisabled()) {
             xmlTemplate.setDisabled();
@@ -56,6 +56,7 @@ public class XmlTdeBuilder implements TdeBuilder {
     }
 
     private static class XmlTemplate {
+
         private final Document doc;
         private final Element root;
         private final Element row;
@@ -76,12 +77,6 @@ public class XmlTdeBuilder implements TdeBuilder {
             columns = addChild(row, "columns");
         }
 
-        void setViewLayout(String viewLayout) {
-            if (viewLayout != null && !viewLayout.isEmpty()) {
-                addChildWithText(row, "view-layout", viewLayout);
-            }
-        }
-
         void setContext(String context, Map<String, String> namespaces) {
             addChildWithText(root, "context", context);
             if (namespaces != null && !namespaces.isEmpty()) {
@@ -94,11 +89,51 @@ public class XmlTdeBuilder implements TdeBuilder {
             }
         }
 
-        void addColumn(TdeInputs.Column column) {
+        void addColumn(TdeInputs.Column column, TdeInputs inputs) {
+            Element columnElement = addColumnWithRequiredFields(column, inputs);
+            final String name = column.getName();
+            
+            if (inputs.getNullableColumns() != null && inputs.getNullableColumns().contains(name)) {
+                addChildWithText(columnElement, "nullable", "true");
+            }
+
+            if (inputs.getColumnDefaultValues() != null && inputs.getColumnDefaultValues().containsKey(name)) {
+                addChildWithText(columnElement, "default", inputs.getColumnDefaultValues().get(name));
+            }
+
+            if (inputs.getColumnInvalidValues() != null && inputs.getColumnInvalidValues().containsKey(name)) {
+                addChildWithText(columnElement, "invalid-values", inputs.getColumnInvalidValues().get(name));
+            }
+
+            if (inputs.getColumnReindexing() != null && inputs.getColumnReindexing().containsKey(name)) {
+                addChildWithText(columnElement, "reindexing", inputs.getColumnReindexing().get(name));
+            }
+
+            if (inputs.getColumnPermissions() != null && inputs.getColumnPermissions().containsKey(name)) {
+                Element permissions = addChild(columnElement, "permissions");
+                for (String roleName : inputs.getColumnPermissions().get(name).split(",")) {
+                    addChildWithText(permissions, "role-name", roleName.trim());
+                }
+            }
+
+            if (inputs.getColumnCollations() != null && inputs.getColumnCollations().containsKey(name)) {
+                addChildWithText(columnElement, "collation", inputs.getColumnCollations().get(name));
+            }
+        }
+
+        private Element addColumnWithRequiredFields(TdeInputs.Column column, TdeInputs inputs) {
             Element columnElement = addChild(columns, "column");
-            addChildWithText(columnElement, "name", column.getName());
-            addChildWithText(columnElement, "scalar-type", column.getScalarType());
-            addChildWithText(columnElement, "val", column.getVal());
+            final String name = column.getName();
+            addChildWithText(columnElement, "name", name);
+
+            final String scalarType = (inputs.getColumnTypes() != null && inputs.getColumnTypes().containsKey(name))
+                ? inputs.getColumnTypes().get(name) : column.getScalarType();
+            addChildWithText(columnElement, "scalar-type", scalarType);
+
+            final String val = inputs.getColumnVals() != null && inputs.getColumnVals().containsKey(name) ?
+                inputs.getColumnVals().get(name) : name;
+            addChildWithText(columnElement, "val", val);
+            return columnElement;
         }
 
         void setCollections(String[] collections) {

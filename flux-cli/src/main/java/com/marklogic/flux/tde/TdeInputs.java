@@ -5,6 +5,7 @@ package com.marklogic.flux.tde;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class TdeInputs {
@@ -34,6 +35,14 @@ public class TdeInputs {
     private boolean json = true; // Default to JSON TDE, can be set to false for XML TDE
     private boolean disabled;
     private String viewLayout;
+    private Map<String, String> columnVals;
+    private Map<String, String> columnTypes;
+    private Map<String, String> columnDefaultValues;
+    private Map<String, String> columnInvalidValues;
+    private Map<String, String> columnReindexing;
+    private Map<String, String> columnPermissions;
+    private Map<String, String> columnCollations;
+    private List<String> nullableColumns;
 
     public TdeInputs(String schemaName, String viewName, Iterator<Column> columns) {
         this.schemaName = schemaName;
@@ -107,6 +116,46 @@ public class TdeInputs {
         return this;
     }
 
+    public TdeInputs withColumnVals(Map<String, String> columnVals) {
+        this.columnVals = columnVals;
+        return this;
+    }
+
+    public TdeInputs withColumnTypes(Map<String, String> columnTypes) {
+        this.columnTypes = columnTypes;
+        return this;
+    }
+
+    public TdeInputs withColumnDefaultValues(Map<String, String> columnDefaultValues) {
+        this.columnDefaultValues = columnDefaultValues;
+        return this;
+    }
+
+    public TdeInputs withColumnInvalidValues(Map<String, String> columnInvalidValues) {
+        this.columnInvalidValues = columnInvalidValues;
+        return this;
+    }
+
+    public TdeInputs withColumnReindexing(Map<String, String> columnReindexing) {
+        this.columnReindexing = columnReindexing;
+        return this;
+    }
+
+    public TdeInputs withColumnPermissions(Map<String, String> columnPermissions) {
+        this.columnPermissions = columnPermissions;
+        return this;
+    }
+
+    public TdeInputs withColumnCollations(Map<String, String> columnCollations) {
+        this.columnCollations = columnCollations;
+        return this;
+    }
+
+    public TdeInputs withNullableColumns(List<String> nullableColumns) {
+        this.nullableColumns = nullableColumns;
+        return this;
+    }
+
     public String getSchemaName() {
         return schemaName;
     }
@@ -153,5 +202,37 @@ public class TdeInputs {
 
     public String getViewLayout() {
         return viewLayout;
+    }
+
+    public Map<String, String> getColumnVals() {
+        return columnVals;
+    }
+
+    public Map<String, String> getColumnTypes() {
+        return columnTypes;
+    }
+
+    public Map<String, String> getColumnDefaultValues() {
+        return columnDefaultValues;
+    }
+
+    public Map<String, String> getColumnInvalidValues() {
+        return columnInvalidValues;
+    }
+
+    public Map<String, String> getColumnReindexing() {
+        return columnReindexing;
+    }
+
+    public Map<String, String> getColumnPermissions() {
+        return columnPermissions;
+    }
+
+    public Map<String, String> getColumnCollations() {
+        return columnCollations;
+    }
+
+    public List<String> getNullableColumns() {
+        return nullableColumns;
     }
 }
