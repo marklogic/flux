@@ -21,18 +21,34 @@ public class JsonTdeBuilder implements TdeBuilder {
         ObjectNode template = tde.putObject("template");
         template.put("context", tdeInputs.getContext());
 
-        if (tdeInputs.getCollections() != null) {
+        if (tdeInputs.isDisabled()) {
+            template.put("enabled", false);
+        }
+
+        if (tdeInputs.getCollections() != null && tdeInputs.getCollections().length > 0) {
             ArrayNode collectionsArray = template.putArray("collections");
             for (String collection : tdeInputs.getCollections()) {
                 collectionsArray.add(collection);
             }
         }
 
+        if (tdeInputs.getDirectories() != null && tdeInputs.getDirectories().length > 0) {
+            ArrayNode directoriesArray = template.putArray("directories");
+            for (String directory : tdeInputs.getDirectories()) {
+                directoriesArray.add(directory);
+            }
+        }
+
         ObjectNode row = template.putArray("rows").addObject();
         row.put("schemaName", tdeInputs.getSchemaName());
         row.put("viewName", tdeInputs.getViewName());
-        addColumns(row, tdeInputs);
 
+        final String viewLayout = tdeInputs.getViewLayout();
+        if (viewLayout != null && !viewLayout.isEmpty()) {
+            row.put("viewLayout", viewLayout);
+        }
+
+        addColumns(row, tdeInputs);
         return new JsonTemplate(tde);
     }
 

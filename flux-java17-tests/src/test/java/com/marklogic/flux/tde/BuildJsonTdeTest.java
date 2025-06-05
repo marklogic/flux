@@ -5,7 +5,7 @@ package com.marklogic.flux.tde;
 
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.marklogic.client.io.JacksonHandle;
+import marklogicspark.marklogic.client.io.JacksonHandle;
 import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.apache.spark.sql.types.DataTypes;
@@ -23,7 +23,7 @@ class BuildJsonTdeTest {
         final String expectedTemplate = """
             {
               "template" : {
-                "context" : "/",
+                "context" : "/some-custom-context",
                 "collections" : [ "customer" ],
                 "rows" : [ {
                   "schemaName" : "my-schema",
@@ -101,7 +101,11 @@ class BuildJsonTdeTest {
                 .add("myInnerString", DataTypes.StringType))
             .add("myNull", DataTypes.NullType);
 
-        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema)));
+        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+            .withCollections("customer")
+            .withDirectories()
+            .withContext("/some-custom-context")
+        );
         JsonAssertions.assertThatJson(tde)
             .describedAs("For now, we're ignoring array/map/struct types in the TDE template, " +
                 "we may add support for them later.")
@@ -109,12 +113,45 @@ class BuildJsonTdeTest {
     }
 
     @Test
-    void jsonRootName() {
+    void jsonRootNameWithViewLayout() {
         final String expectedTemplate = """
             {
               "template" : {
                 "context" : "/my-root",
-                "collections" : [ "customer" ],
+                "collections" : [ "customer", "customer2" ],
+                "directories" : [ "dir1/", "/dir2/" ],
+                "rows" : [ {
+                  "schemaName" : "my-schema",
+                  "viewName" : "my-view",
+                  "viewLayout": "identical",
+                  "columns" : [ {
+                    "name" : "myString",
+                    "val" : "myString",
+                    "scalarType" : "string"
+                  } ]
+                } ]
+              }
+            }""";
+
+        StructType schema = new StructType().add("myString", DataTypes.StringType);
+
+        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+            .withCollections("customer", "customer2")
+            .withDirectories("dir1/", "/dir2/")
+            .withJsonRootName("my-root")
+            .withViewLayout("identical")
+        );
+
+        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+    }
+
+    @Test
+    void jsonRootNameWithCustomContextAndDisabled() {
+        final String expectedTemplate = """
+            {
+              "template" : {
+                "context" : "/some-custom-context",
+                "enabled": false,
                 "rows" : [ {
                   "schemaName" : "my-schema",
                   "viewName" : "my-view",
@@ -130,8 +167,17 @@ class BuildJsonTdeTest {
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
         ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
-            .withJsonRootName("my-root"));
+            .withContext("/some-custom-context")
+            .withJsonRootName("my-root")
+            .withDisabled(true)
+        );
+        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
 
+        tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+            .withJsonRootName("my-root")
+            .withContext("/some-custom-context")
+            .withDisabled(true)
+        );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
 

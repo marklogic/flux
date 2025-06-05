@@ -31,7 +31,11 @@ public class TdeLoader {
     public void loadTde(TdeInputs inputs) {
         TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
         ObjectNode permissionsMap = buildPermissionsMap(inputs);
-        final String uri = String.format("/tde/%s/%s.json", inputs.getSchemaName(), inputs.getViewName());
+
+        final String inputUri = inputs.getUri();
+        final String uri = inputUri != null && !inputUri.isEmpty() ? inputUri :
+            String.format("/tde/%s/%s.json", inputs.getSchemaName(), inputs.getViewName());
+        
         databaseClient.newServerEval().javascript(SCRIPT)
             .addVariable("URI", uri)
             .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
