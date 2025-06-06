@@ -14,8 +14,11 @@ import marklogicspark.marklogic.client.DatabaseClient;
 import org.apache.spark.sql.types.StructType;
 import picocli.CommandLine;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * For import commands that can write "structured" rows with an arbitrary schema, either as JSON or XML documents.
@@ -150,7 +153,8 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
 
     @CommandLine.Option(
         names = "--tde-column-permissions",
-        description = "Permissions for a column name in the generated TDE template; e.g. --tde-column-permissions myColumn=role1,read,role2,update. " +
+        description = "Comma-delimited role names for defining read permissions for a column in the generated " +
+            "TDE template; e.g. --tde-column-permissions myColumn=role1,role2. " +
             "This option can be specified multiple times."
     )
     private Map<String, String> tdeColumnPermissions;
@@ -187,16 +191,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
      * @param connectionParams
      * @return true if TDE was generated and previewed, false otherwise. This will likely change once we
      * support loading the TDE into MarkLogic
-     * <p>
-     * Pretty sure this logic will move before all the stories for the feature are done. The params in this class can
-     * be used to construct a TdeInputs instance, and the rest of everything can hopefully happen outside of the
-     * command/params hierarchy as opposed to happening here.
      */
     public boolean generateTde(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeSchema != null && tdeView != null) {
-            TdeInputs inputs = buildTdeInputs(sparkSchema);
+            TdeInputs inputs = buildTdeInputs();
             TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeDocumentType) ? new XmlTdeBuilder() : new JsonTdeBuilder();
-            TdeTemplate tdeTemplate = tdeBuilder.buildTde(inputs);
+            TdeTemplate tdeTemplate = tdeBuilder.buildTde(inputs, new SparkColumnIterator(sparkSchema, inputs));
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
                     Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
@@ -212,8 +212,19 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
         return false;
     }
 
-    protected final TdeInputs buildTdeInputs(StructType sparkSchema) {
-        return new TdeInputs(tdeSchema, tdeView, new SparkColumnIterator(sparkSchema))
+    protected final TdeInputs buildTdeInputs() {
+        Map<String, Set<String>> permissions = null;
+        if (tdeColumnPermissions != null) {
+            permissions = tdeColumnPermissions.entrySet().stream()
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> Arrays.stream(entry.getValue().split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toSet())
+                ));
+        }
+
+        return new TdeInputs(tdeSchema, tdeView)
             .withUri(tdeUri)
             .withDisabled(tdeTemplateDisabled)
             .withPermissions(tdePermissions)
@@ -228,7 +239,7 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
             .withColumnDefaultValues(tdeColumnDefaultValues)
             .withColumnInvalidValues(tdeColumnInvalidValues)
             .withColumnReindexing(tdeColumnReindexing)
-            .withColumnPermissions(tdeColumnPermissions)
+            .withColumnPermissions(permissions)
             .withColumnCollations(tdeColumnCollation)
             .withNullableColumns(tdeNullableColumns);
     }

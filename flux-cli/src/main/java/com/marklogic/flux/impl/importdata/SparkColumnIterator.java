@@ -3,21 +3,25 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.tde.TdeBuilder;
 import com.marklogic.flux.tde.TdeInputs;
 import org.apache.spark.sql.types.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Contains the Spark-specific bits for generating a TDE.
  */
-public class SparkColumnIterator implements Iterator<TdeInputs.Column> {
+public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
 
     private final Iterator<StructField> fields;
+    private final TdeInputs tdeInputs;
 
-    public SparkColumnIterator(StructType structType) {
-        fields = Arrays.stream(structType.fields()).iterator();
+    public SparkColumnIterator(StructType schema, TdeInputs tdeInputs) {
+        this.fields = Arrays.stream(schema.fields()).iterator();
+        this.tdeInputs = tdeInputs;
     }
 
     @Override
@@ -26,16 +30,18 @@ public class SparkColumnIterator implements Iterator<TdeInputs.Column> {
     }
 
     @Override
-    public TdeInputs.Column next() {
-        return new SparkColumn(fields.next());
+    public TdeBuilder.Column next() {
+        return new SparkColumn(fields.next(), tdeInputs);
     }
 
-    private static class SparkColumn implements TdeInputs.Column {
+    private static class SparkColumn implements TdeBuilder.Column {
 
         private final StructField field;
+        private final TdeInputs tdeInputs;
 
-        public SparkColumn(StructField field) {
+        public SparkColumn(StructField field, TdeInputs tdeInputs) {
             this.field = field;
+            this.tdeInputs = tdeInputs;
         }
 
         @Override
@@ -44,8 +50,49 @@ public class SparkColumnIterator implements Iterator<TdeInputs.Column> {
         }
 
         @Override
+        public String getVal() {
+            String name = getName();
+            return tdeInputs.getColumnVals() != null && tdeInputs.getColumnVals().containsKey(name) ?
+                    tdeInputs.getColumnVals().get(name) : getName();
+        }
+
+        @Override
         public String getScalarType() {
+            String name = getName();
+            if (tdeInputs.getColumnTypes() != null && tdeInputs.getColumnTypes().containsKey(name)) {
+                return tdeInputs.getColumnTypes().get(name);
+            }
             return convertSparkTypeToTdeType(this.field.dataType());
+        }
+
+        @Override
+        public boolean isNullable() {
+            return tdeInputs.getNullableColumns() != null && tdeInputs.getNullableColumns().contains(getName());
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return tdeInputs.getColumnDefaultValues() != null ? tdeInputs.getColumnDefaultValues().get(getName()) : null;
+        }
+
+        @Override
+        public String getInvalidValues() {
+            return tdeInputs.getColumnInvalidValues() != null ? tdeInputs.getColumnInvalidValues().get(getName()) : null;
+        }
+
+        @Override
+        public String getReindexing() {
+            return tdeInputs.getColumnReindexing() != null ? tdeInputs.getColumnReindexing().get(getName()) : null;
+        }
+
+        @Override
+        public Set<String> getPermissions() {
+            return tdeInputs.getColumnPermissions() != null ? tdeInputs.getColumnPermissions().get(getName()) : null;
+        }
+
+        @Override
+        public String getCollation() {
+            return tdeInputs.getColumnCollations() != null ? tdeInputs.getColumnCollations().get(getName()) : null;
         }
 
         private String convertSparkTypeToTdeType(DataType sparkType) {

@@ -12,31 +12,42 @@ import org.w3c.dom.Element;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class XmlTdeBuilder implements TdeBuilder {
 
     private static final String NAMESPACE = "http://marklogic.com/xdmp/tde";
 
-    @Override
-    public TdeTemplate buildTde(TdeInputs tdeInputs) {
-        Document doc;
+    private final DocumentBuilderFactory documentBuilderFactory;
+
+    public XmlTdeBuilder() {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory = DocumentBuilderFactory.newInstance();
             // default to best practices for conservative security including recommendations per
             // https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            factory.setXIncludeAware(false);
-            factory.setExpandEntityReferences(false);
-            factory.setNamespaceAware(true);
-            factory.setValidating(false);
-            doc = factory.newDocumentBuilder().newDocument();
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            documentBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            documentBuilderFactory.setXIncludeAware(false);
+            documentBuilderFactory.setExpandEntityReferences(false);
+            documentBuilderFactory.setNamespaceAware(true);
+            documentBuilderFactory.setValidating(false);
         } catch (Exception e) {
+            throw new FluxException("Failed to create XML DocumentBuilderFactory", e);
+        }
+    }
+
+    @Override
+    public TdeTemplate buildTde(TdeInputs tdeInputs, Iterator<Column> columns) {
+        Document doc;
+        try {
+            doc = this.documentBuilderFactory.newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
             throw new FluxException("Failed to create XML DocumentBuilder", e);
         }
 
@@ -44,9 +55,8 @@ public class XmlTdeBuilder implements TdeBuilder {
         xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getNamespaces());
         xmlTemplate.setCollections(tdeInputs.getCollections());
         xmlTemplate.setDirectories(tdeInputs.getDirectories());
-        Iterator<TdeInputs.Column> columns = tdeInputs.getColumns();
         while (columns.hasNext()) {
-            xmlTemplate.addColumn(columns.next(), tdeInputs);
+            xmlTemplate.addColumn(columns.next());
         }
         if (tdeInputs.isDisabled()) {
             xmlTemplate.setDisabled();
@@ -89,51 +99,43 @@ public class XmlTdeBuilder implements TdeBuilder {
             }
         }
 
-        void addColumn(TdeInputs.Column column, TdeInputs inputs) {
-            Element columnElement = addColumnWithRequiredFields(column, inputs);
-            final String name = column.getName();
+        void addColumn(Column column) {
+            Element columnElement = addChild(columns, "column");
+            addChildWithText(columnElement, "name", column.getName());
+            addChildWithText(columnElement, "scalar-type", column.getScalarType());
+            addChildWithText(columnElement, "val", column.getVal());
 
-            if (inputs.getNullableColumns() != null && inputs.getNullableColumns().contains(name)) {
+            if (column.isNullable()) {
                 addChildWithText(columnElement, "nullable", "true");
             }
 
-            if (inputs.getColumnDefaultValues() != null && inputs.getColumnDefaultValues().containsKey(name)) {
-                addChildWithText(columnElement, "default", inputs.getColumnDefaultValues().get(name));
+            String defaultValue = column.getDefaultValue();
+            if (defaultValue != null) {
+                addChildWithText(columnElement, "default", defaultValue);
             }
 
-            if (inputs.getColumnInvalidValues() != null && inputs.getColumnInvalidValues().containsKey(name)) {
-                addChildWithText(columnElement, "invalid-values", inputs.getColumnInvalidValues().get(name));
+            String invalidValues = column.getInvalidValues();
+            if (invalidValues != null) {
+                addChildWithText(columnElement, "invalid-values", invalidValues);
             }
 
-            if (inputs.getColumnReindexing() != null && inputs.getColumnReindexing().containsKey(name)) {
-                addChildWithText(columnElement, "reindexing", inputs.getColumnReindexing().get(name));
+            String reindexing = column.getReindexing();
+            if (reindexing != null) {
+                addChildWithText(columnElement, "reindexing", reindexing);
             }
 
-            if (inputs.getColumnPermissions() != null && inputs.getColumnPermissions().containsKey(name)) {
-                Element permissions = addChild(columnElement, "permissions");
-                for (String roleName : inputs.getColumnPermissions().get(name).split(",")) {
-                    addChildWithText(permissions, "role-name", roleName.trim());
+            Set<String> permissions = column.getPermissions();
+            if (permissions != null) {
+                Element permissionsElement = addChild(columnElement, "permissions");
+                for (String roleName : permissions) {
+                    addChildWithText(permissionsElement, "role-name", roleName.trim());
                 }
             }
 
-            if (inputs.getColumnCollations() != null && inputs.getColumnCollations().containsKey(name)) {
-                addChildWithText(columnElement, "collation", inputs.getColumnCollations().get(name));
+            String collation = column.getCollation();
+            if (collation != null) {
+                addChildWithText(columnElement, "collation", collation);
             }
-        }
-
-        private Element addColumnWithRequiredFields(TdeInputs.Column column, TdeInputs inputs) {
-            Element columnElement = addChild(columns, "column");
-            final String name = column.getName();
-            addChildWithText(columnElement, "name", name);
-
-            final String scalarType = (inputs.getColumnTypes() != null && inputs.getColumnTypes().containsKey(name))
-                ? inputs.getColumnTypes().get(name) : column.getScalarType();
-            addChildWithText(columnElement, "scalar-type", scalarType);
-
-            final String val = inputs.getColumnVals() != null && inputs.getColumnVals().containsKey(name) ?
-                inputs.getColumnVals().get(name) : column.getVal();
-            addChildWithText(columnElement, "val", val);
-            return columnElement;
         }
 
         void setCollections(String[] collections) {

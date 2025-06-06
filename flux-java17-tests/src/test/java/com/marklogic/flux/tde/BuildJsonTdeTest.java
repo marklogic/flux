@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -107,10 +108,10 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .add("myInnerString", DataTypes.StringType))
             .add("myNull", DataTypes.NullType);
 
-        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
             .withCollections("customer")
             .withDirectories()
-            .withContext("/some-custom-context")
+            .withContext("/some-custom-context"), schema
         );
         JsonAssertions.assertThatJson(tde)
             .describedAs("For now, we're ignoring array/map/struct types in the TDE template, " +
@@ -139,13 +140,12 @@ class BuildJsonTdeTest extends AbstractTdeTest {
               }
             }""";
 
-        StructType schema = new StructType().add("myString", DataTypes.StringType);
-
-        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
-            .withCollections("customer", "customer2")
-            .withDirectories("dir1/", "/dir2/")
-            .withJsonRootName("my-root")
-            .withViewLayout("identical")
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
+                .withCollections("customer", "customer2")
+                .withDirectories("dir1/", "/dir2/")
+                .withJsonRootName("my-root")
+                .withViewLayout("identical"),
+            new StructType().add("myString", DataTypes.StringType)
         );
 
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
@@ -172,17 +172,19 @@ class BuildJsonTdeTest extends AbstractTdeTest {
 
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
-        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
-            .withContext("/some-custom-context")
-            .withJsonRootName("my-root")
-            .withDisabled(true)
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
+                .withContext("/some-custom-context")
+                .withJsonRootName("my-root")
+                .withDisabled(true),
+            schema
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
 
-        tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
-            .withJsonRootName("my-root")
-            .withContext("/some-custom-context")
-            .withDisabled(true)
+        tde = buildTde(new TdeInputs("myschema", "myview")
+                .withJsonRootName("my-root")
+                .withContext("/some-custom-context")
+                .withDisabled(true),
+            schema
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
@@ -212,9 +214,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
               }
             }""";
 
-        StructType schema = new StructType().add("myString", DataTypes.StringType);
-
-        TdeInputs inputs = new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
+        TdeInputs inputs = new TdeInputs("myschema", "myview")
             .withContext("/some-custom-context")
             .withJsonRootName("my-root")
             .withDisabled(true)
@@ -224,15 +224,15 @@ class BuildJsonTdeTest extends AbstractTdeTest {
             .withColumnDefaultValues(Map.of("myString", "0"))
             .withColumnInvalidValues(Map.of("myString", "reject"))
             .withColumnReindexing(Map.of("myString", "visible"))
-            .withColumnPermissions(Map.of("myString", "rest-reader,rest-writer"))
+            .withColumnPermissions(Map.of("myString", Set.of("rest-reader", "rest-writer")))
             .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
 
-        ObjectNode tde = buildTde(inputs);
+        ObjectNode tde = buildTde(inputs, new StructType().add("myString", DataTypes.StringType));
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
 
-    private ObjectNode buildTde(TdeInputs inputs) {
-        TdeTemplate template = new JsonTdeBuilder().buildTde(inputs);
+    private ObjectNode buildTde(TdeInputs inputs, StructType schema) {
+        TdeTemplate template = new JsonTdeBuilder().buildTde(inputs, new SparkColumnIterator(schema, inputs));
         assertEquals("/tde/%s/%s.json".formatted(inputs.getSchemaName(), inputs.getViewName()), template.getUri());
 
         verifyTdeCanBeLoaded(template);
