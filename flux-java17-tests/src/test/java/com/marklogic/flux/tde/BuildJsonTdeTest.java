@@ -12,6 +12,9 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * This test is in this Java17-dependent project solely for using triple quotes for easily putting the
  * expected TDE template in the test.
@@ -178,6 +181,50 @@ class BuildJsonTdeTest {
             .withContext("/some-custom-context")
             .withDisabled(true)
         );
+        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+    }
+
+    @Test
+    void customizedColumns() {
+        final String expectedTemplate = """
+            {
+              "template" : {
+                "context" : "/some-custom-context",
+                "enabled": false,
+                "rows" : [ {
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
+                  "columns" : [ {
+                    "name" : "myString",
+                    "val" : "myStringValue",
+                    "scalarType" : "string",
+                    "nullable" : true,
+                    "default" : "mydefault",
+                    "invalidValues" : "reject",
+                    "reindexing" : "visible",
+                    "permissions" : ["rest-reader", "rest-writer"],
+                    "collation" : "http://marklogic.com/collation/codepoint"
+                  } ]
+                } ]
+              }
+            }""";
+
+        StructType schema = new StructType().add("myString", DataTypes.StringType);
+
+        TdeInputs inputs = new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
+            .withContext("/some-custom-context")
+            .withJsonRootName("my-root")
+            .withDisabled(true)
+            .withColumnVals(Map.of("myString", "myStringValue"))
+            .withColumnTypes(Map.of("myString", "string"))
+            .withNullableColumns(List.of("myString"))
+            .withColumnDefaultValues(Map.of("myString", "mydefault"))
+            .withColumnInvalidValues(Map.of("myString", "reject"))
+            .withColumnReindexing(Map.of("myString", "visible"))
+            .withColumnPermissions(Map.of("myString", "rest-reader,rest-writer"))
+            .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
+
+        ObjectNode tde = buildTde(inputs);
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
 

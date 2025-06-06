@@ -104,6 +104,62 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private String tdeViewLayout;
 
+    @CommandLine.Option(
+        names = "--tde-column-val",
+        description = "Custom 'val' value for a column name in the generated TDE template; e.g. --tde-column-val myColumn=myValue. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnVals;
+
+    @CommandLine.Option(
+        names = "--tde-column-type",
+        description = "Custom scalar type for a column name in the generated TDE template; e.g. --tde-column-type myColumn=dateTime. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnTypes;
+
+    @CommandLine.Option(
+        names = "--tde-column-default",
+        description = "Default value for a column name in the generated TDE template; e.g. --tde-column-default myColumn=defaultValue. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnDefaultValues;
+
+    @CommandLine.Option(
+        names = "--tde-column-invalid-values",
+        description = "Invalid values handling for a column name in the generated TDE template; e.g. --tde-column-invalid-values myColumn=reject. " +
+            "Value can be 'ignore' or 'reject'. This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnInvalidValues;
+
+    @CommandLine.Option(
+        names = "--tde-column-reindexing",
+        description = "Reindexing setting for a column name in the generated TDE template; e.g. --tde-column-reindexing myColumn=visible. " +
+            "Value can be 'hidden' or 'visible'. This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnReindexing;
+
+    @CommandLine.Option(
+        names = "--tde-column-permissions",
+        description = "Permissions for a column name in the generated TDE template; e.g. --tde-column-permissions myColumn=role1,read,role2,update. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnPermissions;
+
+    @CommandLine.Option(
+        names = "--tde-column-nullable",
+        description = "Name of a column that should be marked as nullable in the generated TDE template. " +
+            "This option can be specified multiple times."
+    )
+    private List<String> tdeNullableColumns;
+
+    @CommandLine.Option(
+        names = "--tde-column-collation",
+        description = "Collation for a column name in the generated TDE template; e.g. --tde-column-collation myColumn=http://marklogic.com/collation/codepoint. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> tdeColumnCollation;
+
     @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = super.makeOptions();
@@ -156,7 +212,15 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
             .withContext(tdeContext)
             .withJsonRootName(jsonRootName)
             .withXmlRootName(xmlRootName, xmlNamespace)
-            .withViewLayout(tdeViewLayout);
+            .withViewLayout(tdeViewLayout)
+            .withColumnVals(tdeColumnVals)
+            .withColumnTypes(tdeColumnTypes)
+            .withColumnDefaultValues(tdeColumnDefaultValues)
+            .withColumnInvalidValues(tdeColumnInvalidValues)
+            .withColumnReindexing(tdeColumnReindexing)
+            .withColumnPermissions(tdeColumnPermissions)
+            .withColumnCollations(tdeColumnCollation)
+            .withNullableColumns(tdeNullableColumns);
     }
 
     @Override

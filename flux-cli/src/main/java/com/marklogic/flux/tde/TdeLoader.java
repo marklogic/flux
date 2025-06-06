@@ -6,6 +6,8 @@ package com.marklogic.flux.tde;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.marklogic.flux.api.FluxException;
+
 import marklogicspark.marklogic.client.DatabaseClient;
 import marklogicspark.marklogic.client.io.DocumentMetadataHandle;
 import marklogicspark.marklogic.client.io.JacksonHandle;
@@ -35,12 +37,18 @@ public class TdeLoader {
         final String inputUri = inputs.getUri();
         final String uri = inputUri != null && !inputUri.isEmpty() ? inputUri :
             String.format("/tde/%s/%s.json", inputs.getSchemaName(), inputs.getViewName());
-        
-        databaseClient.newServerEval().javascript(SCRIPT)
-            .addVariable("URI", uri)
-            .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
-            .addVariable("PERMISSIONS", new JacksonHandle(permissionsMap))
-            .evalAs(String.class);
+
+        try {
+            databaseClient.newServerEval().javascript(SCRIPT)
+                .addVariable("URI", uri)
+                .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
+                .addVariable("PERMISSIONS", new JacksonHandle(permissionsMap))
+                .evalAs(String.class);
+        } catch (Exception e) {
+            String message = String.format("Failed to load TDE template to URI '%s'; template: %s; cause: %s",
+                uri,tdeTemplate.toPrettyString(), e.getMessage());
+            throw new FluxException(message, e);
+        }
     }
 
     private ObjectNode buildPermissionsMap(TdeInputs inputs) {

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import marklogicspark.marklogic.client.io.JacksonHandle;
 import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class JsonTdeBuilder implements TdeBuilder {
@@ -61,11 +62,56 @@ public class JsonTdeBuilder implements TdeBuilder {
             if (scalarType == null) {
                 continue;
             }
-            ObjectNode columnNode = columnsArray.addObject();
-            columnNode.put("name", column.getName());
-            columnNode.put("val", column.getVal());
-            columnNode.put("scalarType", scalarType);
+            addColumn(columnsArray, column, tdeInputs);
         }
+    }
+
+    private static void addColumn(ArrayNode columns, TdeInputs.Column column, TdeInputs inputs) {
+        ObjectNode columnNode = buildColumnWithRequiredFields(columns, column, inputs);
+        final String name = column.getName();
+
+        if (inputs.getNullableColumns() != null && inputs.getNullableColumns().contains(name)) {
+            columnNode.put("nullable", true);
+        }
+
+        if (inputs.getColumnDefaultValues() != null && inputs.getColumnDefaultValues().containsKey(name)) {
+            columnNode.put("default", inputs.getColumnDefaultValues().get(name));
+        }
+
+        if (inputs.getColumnInvalidValues() != null && inputs.getColumnInvalidValues().containsKey(name)) {
+            columnNode.put("invalidValues", inputs.getColumnInvalidValues().get(name));
+        }
+
+        if (inputs.getColumnReindexing() != null && inputs.getColumnReindexing().containsKey(name)) {
+            columnNode.put("reindexing", inputs.getColumnReindexing().get(name));
+        }
+
+        if (inputs.getColumnPermissions() != null && inputs.getColumnPermissions().containsKey(name)) {
+            ArrayNode array = columnNode.putArray("permissions");
+            Arrays.stream(inputs.getColumnPermissions().get(name).split(","))
+                .map(String::trim)
+                .forEach(array::add);
+        }
+
+        if (inputs.getColumnCollations() != null && inputs.getColumnCollations().containsKey(name)) {
+            columnNode.put("collation", inputs.getColumnCollations().get(name));
+        }
+    }
+
+    private static ObjectNode buildColumnWithRequiredFields(ArrayNode columns, TdeInputs.Column column, TdeInputs inputs) {
+        ObjectNode columnNode = columns.addObject();
+        final String name = column.getName();
+        columnNode.put("name", name);
+
+        final String scalarType = (inputs.getColumnTypes() != null && inputs.getColumnTypes().containsKey(name))
+            ? inputs.getColumnTypes().get(name) : column.getScalarType();
+        columnNode.put("scalarType", scalarType);
+
+        final String val = (inputs.getColumnVals() != null && inputs.getColumnVals().containsKey(name))
+            ? inputs.getColumnVals().get(name) : name;
+        columnNode.put("val", val);
+
+        return columnNode;
     }
 
     private static class JsonTemplate implements TdeTemplate {

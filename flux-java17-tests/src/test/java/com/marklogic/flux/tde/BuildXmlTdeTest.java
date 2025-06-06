@@ -12,6 +12,9 @@ import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BuildXmlTdeTest {
@@ -129,6 +132,51 @@ class BuildXmlTdeTest {
                 .withXmlRootName("my-root", null)
                 .withDisabled(true)
                 .withContext("/some-custom-context"));
+
+        verifyTemplate(expectedXml, doc);
+    }
+
+    @Test
+    void customizedColumn() {
+        final String expectedXml = """
+            <template xmlns="http://marklogic.com/xdmp/tde">
+              <rows>
+                <row>
+                  <schema-name>my-schema</schema-name>
+                  <view-name>my-view</view-name>
+                  <columns>
+                    <column>
+                      <name>myString</name>
+                      <scalar-type>dateTime</scalar-type>
+                      <val>myStringValue</val>
+                      <nullable>true</nullable>
+                      <default>hello world</default>
+                      <invalid-values>reject</invalid-values>
+                      <reindexing>visible</reindexing>
+                      <permissions>
+                        <role-name>rest-reader</role-name>
+                        <role-name>rest-writer</role-name>
+                      </permissions>
+                      <collation>http://marklogic.com/collation/codepoint</collation>
+                    </column>
+                  </columns>
+                </row>
+              </rows>
+              <context>/my-root</context>
+            </template>""";
+
+        Document doc = buildTde(
+            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+                .withXmlRootName("my-root", null)
+                .withColumnVals(Map.of("myString", "myStringValue"))
+                .withColumnTypes(Map.of("myString", "dateTime"))
+                .withNullableColumns(List.of("myString"))
+                .withColumnDefaultValues(Map.of("myString", "hello world"))
+                .withColumnInvalidValues(Map.of("myString", "reject"))
+                .withColumnReindexing(Map.of("myString", "visible"))
+                .withColumnPermissions(Map.of("myString", "rest-reader,rest-writer"))
+                .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"))
+        );
 
         verifyTemplate(expectedXml, doc);
     }
