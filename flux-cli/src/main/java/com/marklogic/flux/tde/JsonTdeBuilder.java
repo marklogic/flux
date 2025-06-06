@@ -50,7 +50,7 @@ public class JsonTdeBuilder implements TdeBuilder {
         }
 
         addColumns(row, tdeInputs);
-        return new JsonTemplate(tde);
+        return new JsonTemplate(tde, tdeInputs.getPermissions(), tdeInputs);
     }
 
     private static void addColumns(ObjectNode row, TdeInputs tdeInputs) {
@@ -108,7 +108,7 @@ public class JsonTdeBuilder implements TdeBuilder {
         columnNode.put("scalarType", scalarType);
 
         final String val = (inputs.getColumnVals() != null && inputs.getColumnVals().containsKey(name))
-            ? inputs.getColumnVals().get(name) : name;
+            ? inputs.getColumnVals().get(name) : column.getVal();
         columnNode.put("val", val);
 
         return columnNode;
@@ -116,19 +116,35 @@ public class JsonTdeBuilder implements TdeBuilder {
 
     private static class JsonTemplate implements TdeTemplate {
         private final ObjectNode tdeTemplate;
+        private final String permissions;
+        private final String uri;
 
-        public JsonTemplate(ObjectNode tdeTemplate) {
+        public JsonTemplate(ObjectNode tdeTemplate, String permissions, TdeInputs inputs) {
             this.tdeTemplate = tdeTemplate;
+            this.permissions = permissions;
+            final String inputUri = inputs.getUri();
+            this.uri = inputUri != null && !inputUri.isEmpty() ? inputUri :
+                String.format("/tde/%s/%s.json", inputs.getSchemaName(), inputs.getViewName());
         }
 
         @Override
-        public AbstractWriteHandle toWriteHandle() {
+        public AbstractWriteHandle getWriteHandle() {
             return new JacksonHandle(tdeTemplate);
         }
 
         @Override
         public String toPrettyString() {
             return tdeTemplate.toPrettyString();
+        }
+
+        @Override
+        public String getUri() {
+            return uri;
+        }
+
+        @Override
+        public String getPermissions() {
+            return permissions;
         }
     }
 }

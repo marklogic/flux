@@ -52,7 +52,7 @@ public class XmlTdeBuilder implements TdeBuilder {
             xmlTemplate.setDisabled();
         }
 
-        return new DOMTemplate(doc);
+        return new DOMTemplate(doc, tdeInputs.getPermissions(), tdeInputs);
     }
 
     private static class XmlTemplate {
@@ -92,7 +92,7 @@ public class XmlTdeBuilder implements TdeBuilder {
         void addColumn(TdeInputs.Column column, TdeInputs inputs) {
             Element columnElement = addColumnWithRequiredFields(column, inputs);
             final String name = column.getName();
-            
+
             if (inputs.getNullableColumns() != null && inputs.getNullableColumns().contains(name)) {
                 addChildWithText(columnElement, "nullable", "true");
             }
@@ -131,7 +131,7 @@ public class XmlTdeBuilder implements TdeBuilder {
             addChildWithText(columnElement, "scalar-type", scalarType);
 
             final String val = inputs.getColumnVals() != null && inputs.getColumnVals().containsKey(name) ?
-                inputs.getColumnVals().get(name) : name;
+                inputs.getColumnVals().get(name) : column.getVal();
             addChildWithText(columnElement, "val", val);
             return columnElement;
         }
@@ -174,19 +174,35 @@ public class XmlTdeBuilder implements TdeBuilder {
 
     private static class DOMTemplate implements TdeTemplate {
         private final Document tdeTemplate;
+        private final String permissions;
+        private final String uri;
 
-        public DOMTemplate(Document tdeTemplate) {
+        public DOMTemplate(Document tdeTemplate, String permissions, TdeInputs inputs) {
             this.tdeTemplate = tdeTemplate;
+            this.permissions = permissions;
+            final String inputUri = inputs.getUri();
+            this.uri = inputUri != null && !inputUri.isEmpty() ? inputUri :
+                String.format("/tde/%s/%s.xml", inputs.getSchemaName(), inputs.getViewName());
         }
 
         @Override
-        public AbstractWriteHandle toWriteHandle() {
+        public AbstractWriteHandle getWriteHandle() {
             return new DOMHandle(tdeTemplate);
         }
 
         @Override
         public String toPrettyString() {
             return DOMHelper.prettyPrintNode(tdeTemplate);
+        }
+
+        @Override
+        public String getUri() {
+            return uri;
+        }
+
+        @Override
+        public String getPermissions() {
+            return permissions;
         }
     }
 }

@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ImportJdbcWithTdeTest extends AbstractTest {
 
-    private static final String DEFAULT_TDE_URI = "/tde/junit/customer.json";
+    private static final String JSON_TDE_URI = "/tde/junit/customer.json";
+    private static final String XML_TDE_URI = "/tde/junit/customer.xml";
 
     private DatabaseClient schemasDatabaseClient;
 
@@ -36,7 +37,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
     void deleteCustomerTemplate() {
         // This needs to be deleted after a test so as not to impact other tests that aren't aware that this might
         // exist.
-        schemasDatabaseClient.newDocumentManager().delete(DEFAULT_TDE_URI, "/tde/custom-uri.json");
+        schemasDatabaseClient.newDocumentManager().delete(JSON_TDE_URI, XML_TDE_URI, "/tde/custom-uri.json");
         schemasDatabaseClient.release();
     }
 
@@ -80,6 +81,26 @@ class ImportJdbcWithTdeTest extends AbstractTest {
 
         assertCollectionSize("customer", 10);
         verifyOpticQueryUsingTdeViewReturnsCustomers();
+
+        assertNotNull(schemasDatabaseClient.newDocumentManager().exists(JSON_TDE_URI));
+        assertNull(schemasDatabaseClient.newDocumentManager().exists(XML_TDE_URI));
+    }
+
+    @Test
+    void xmlTde() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-document-type", "xml",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-collections", "customer"
+        );
+
+        assertCollectionSize("customer", 10);
+        verifyOpticQueryUsingTdeViewReturnsCustomers();
+
+        assertNotNull(schemasDatabaseClient.newDocumentManager().exists(XML_TDE_URI));
+        assertNull(schemasDatabaseClient.newDocumentManager().exists(JSON_TDE_URI));
     }
 
     @Test
@@ -114,7 +135,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
         verifyOpticQueryUsingTdeViewReturnsCustomers();
 
         assertNotNull(schemasDatabaseClient.newDocumentManager().exists("/tde/custom-uri.json"));
-        assertNull(schemasDatabaseClient.newDocumentManager().exists(DEFAULT_TDE_URI));
+        assertNull(schemasDatabaseClient.newDocumentManager().exists(JSON_TDE_URI));
     }
 
     @Test
@@ -245,7 +266,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
 
     private void verifyTdeContainsColumnCustomizations() {
         JsonNode tdeTemplate = schemasDatabaseClient.newJSONDocumentManager()
-            .read(DEFAULT_TDE_URI, new JacksonHandle()).get();
+            .read(JSON_TDE_URI, new JacksonHandle()).get();
 
         JsonNode columns = tdeTemplate.get("template").get("rows").get(0).get("columns");
 

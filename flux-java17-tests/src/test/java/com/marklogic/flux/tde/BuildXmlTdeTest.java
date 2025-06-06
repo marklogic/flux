@@ -15,6 +15,7 @@ import org.xmlunit.diff.Diff;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class BuildXmlTdeTest {
@@ -182,7 +183,10 @@ class BuildXmlTdeTest {
     }
 
     private Document buildTde(TdeInputs inputs) {
-        AbstractWriteHandle handle = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs).toWriteHandle();
+        TdeTemplate template = new XmlTdeBuilder().buildTde(inputs);
+        assertEquals("/tde/%s/%s.xml".formatted(inputs.getSchemaName(), inputs.getViewName()), template.getUri());
+
+        AbstractWriteHandle handle = template.getWriteHandle();
         return ((DOMHandle) handle).get();
     }
 

@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * This test is in this Java17-dependent project solely for using triple quotes for easily putting the
  * expected TDE template in the test.
@@ -229,7 +231,10 @@ class BuildJsonTdeTest {
     }
 
     private ObjectNode buildTde(TdeInputs inputs) {
-        AbstractWriteHandle handle = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs).toWriteHandle();
+        TdeTemplate template = new JsonTdeBuilder().buildTde(inputs);
+        assertEquals("/tde/%s/%s.json".formatted(inputs.getSchemaName(), inputs.getViewName()), template.getUri());
+
+        AbstractWriteHandle handle = template.getWriteHandle();
         return (ObjectNode) ((JacksonHandle) handle).get();
     }
 }

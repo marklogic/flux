@@ -32,7 +32,6 @@ public class TdeInputs {
     private String[] collections;
     private String[] directories;
     private String permissions;
-    private boolean json = true; // Default to JSON TDE, can be set to false for XML TDE
     private boolean disabled;
     private String viewLayout;
     private Map<String, String> columnVals;
@@ -65,27 +64,23 @@ public class TdeInputs {
     }
 
     public TdeInputs withJsonRootName(String jsonRootName) {
-        if (jsonRootName != null && !jsonRootName.isEmpty()) {
-            this.json = true;
+        if (jsonRootName != null && !jsonRootName.isEmpty()
             // Don't override the context if the user already specified one.
-            if (DEFAULT_CONTEXT.equals(this.context)) {
-                this.context = "/" + jsonRootName;
-            }
+            && DEFAULT_CONTEXT.equals(this.context)) {
+            this.context = "/" + jsonRootName;
         }
         return this;
     }
 
     public TdeInputs withXmlRootName(String xmlRootName, String namespace) {
-        if (xmlRootName != null && !xmlRootName.isEmpty()) {
-            this.json = false;
+        if (xmlRootName != null && !xmlRootName.isEmpty()
             // Don't override the context if the user already specified one.
-            if (DEFAULT_CONTEXT.equals(this.context)) {
-                if (namespace != null) {
-                    this.namespaces.put("ns1", namespace);
-                    this.context = "/ns1:" + xmlRootName;
-                } else {
-                    this.context = "/" + xmlRootName;
-                }
+            && DEFAULT_CONTEXT.equals(this.context)) {
+            if (namespace != null) {
+                this.namespaces.put("ns1", namespace);
+                this.context = "/ns1:" + xmlRootName;
+            } else {
+                this.context = "/" + xmlRootName;
             }
         }
         return this;
@@ -182,10 +177,6 @@ public class TdeInputs {
 
     public Map<String, String> getNamespaces() {
         return namespaces;
-    }
-
-    public boolean isJson() {
-        return json;
     }
 
     public String getPermissions() {
