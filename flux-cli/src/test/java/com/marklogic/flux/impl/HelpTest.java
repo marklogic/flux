@@ -19,14 +19,14 @@ class HelpTest extends AbstractTest {
 
     @Test
     void summaryUsage() {
-        String stdout = runAndReturnStdout(() -> run());
+        String stdout = runAndReturnStdout();
         assertTrue(stdout.contains("Usage: ./bin/flux [COMMAND]"));
         assertFalse(stdout.contains("-host"), "No parameters should be shown with summary usage; stdout: " + stdout);
     }
 
     @Test
     void helpForSingleCommand() {
-        String stdout = runAndReturnStdout(() -> run("help", "import-files"));
+        String stdout = runAndReturnStdout("help", "import-files");
         assertTrue(stdout.contains("Usage: ./bin/flux import-files [OPTIONS]"));
         assertFalse(stdout.contains("import-jdbc"), "Only the given command should be shown.");
         assertTrue(stdout.contains("--host"));
@@ -43,14 +43,13 @@ class HelpTest extends AbstractTest {
 
     @Test
     void emptyStringCommand() {
-        String stdout = runAndReturnStdout(() -> run(""));
+        String stdout = runAndReturnStdout("");
         assertTrue(stdout.contains("Usage: ./bin/flux [COMMAND]"));
     }
 
     @Test
     void noCommandAfterHelp() {
-        String stdout = runAndReturnStdout(() -> run("help"));
-        System.out.println(stdout);
+        String stdout = runAndReturnStdout("help");
         assertTrue(stdout.contains("Usage: ./bin/flux help [OPTIONS] [COMMAND]"),
             "If 'help' is run with no command, then the help for 'help' should be shown.");
     }

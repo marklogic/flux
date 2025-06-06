@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public abstract class AbstractTest extends AbstractFluxTest {
 
     @Override
-    protected int run(PrintWriter errWriter, String... args) {
-        return Main.run(args, errWriter);
+    protected int run(PrintWriter outWriter, PrintWriter errWriter, String... args) {
+        return Main.run(outWriter, errWriter, args);
     }
 
     protected final FluxException assertThrowsFluxException(Runnable r) {

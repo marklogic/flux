@@ -75,39 +75,43 @@ public class Main {
         System.exit(run(args));
     }
 
-    public static int run(String[] args) {
-        return run(args, null);
+    public static int run(String... args) {
+        return run(null, null, args);
     }
 
     /**
      * @param args
-     * @param errWriter solely intended for usage in tests, allowing for stderr output to be captured
-     *                  and then verified.
-     * @return
+     * @param outWriter solely intended for usage in tests, allowing for stdout output to be captured and verified.
+     * @param errWriter solely intended for usage in tests, allowing for stderr output to be captured and verified.
+     * @return the system exit code.
+     * @since 1.4.0
      */
-    public static int run(String[] args, PrintWriter errWriter) {
+    public static int run(PrintWriter outWriter, PrintWriter errWriter, String... args) {
         if (args.length == 0 || args[0].trim().equals("")) {
             args = new String[]{"help"};
         } else if (args[0].equals("help") && args.length == 1) {
             args = new String[]{"help", "-h"};
         }
 
-        if (args[0].equals("help")) {
-            CommandLine commandLine = new CommandLine(new Main())
+        final boolean isHelpCommand = args[0].equals("help");
+        final CommandLine commandLine = isHelpCommand ?
+            new CommandLine(new Main())
                 .setUsageHelpWidth(120)
-                .setAbbreviatedSubcommandsAllowed(true);
-            if (errWriter != null) {
-                commandLine.setErr(errWriter);
-            }
+                .setAbbreviatedSubcommandsAllowed(true) :
+            new Main().newCommandLine();
+
+        if (outWriter != null) {
+            commandLine.setOut(outWriter);
+        }
+        if (errWriter != null) {
+            commandLine.setErr(errWriter);
+        }
+
+        if (isHelpCommand) {
             commandLine.execute(args);
             return CommandLine.ExitCode.USAGE;
-        } else {
-            CommandLine commandLine = new Main().newCommandLine();
-            if (errWriter != null) {
-                commandLine.setErr(errWriter);
-            }
-            return commandLine.execute(args);
         }
+        return commandLine.execute(args);
     }
 
     public CommandLine newCommandLine() {

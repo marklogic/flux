@@ -10,8 +10,8 @@ import java.io.PrintWriter;
 public abstract class AbstractJava17Test extends AbstractFluxTest {
 
     @Override
-    protected int run(PrintWriter errWriter, String... args) {
-        return Main.run(args, errWriter);
+    protected int run(PrintWriter outWriter, PrintWriter errWriter, String... args) {
+        return Main.run(outWriter, errWriter, args);
     }
 
 }
