@@ -5,12 +5,11 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.flux.tde.TdeInputs;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,7 +40,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        TdeInputs inputs = params.buildTdeInputs(new StructType().add("doesnt-matter", DataTypes.StringType));
+        TdeInputs inputs = params.buildTdeInputs();
         String[] directories = inputs.getDirectories();
         assertEquals(2, directories.length);
         assertEquals("/dir1", directories[0]);
@@ -76,10 +75,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        StructType schema = new StructType()
-            .add("column1", DataTypes.StringType)
-            .add("column2", DataTypes.StringType);
-        TdeInputs inputs = params.buildTdeInputs(schema);
+        TdeInputs inputs = params.buildTdeInputs();
 
         Map<String, String> columnVals = inputs.getColumnVals();
         assertEquals("customVal1", columnVals.get("column1"));
@@ -101,9 +97,10 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("visible", columnReindexing.get("column1"));
         assertEquals("hidden", columnReindexing.get("column2"));
 
-        Map<String, String> columnPermissions = inputs.getColumnPermissions();
-        assertEquals("role1,role2", columnPermissions.get("column1"));
-        assertEquals("role3", columnPermissions.get("column2"));
+        Map<String, Set<String>> columnPermissions = inputs.getColumnPermissions();
+        assertTrue(columnPermissions.get("column1").contains("role1"));
+        assertTrue(columnPermissions.get("column1").contains("role2"));
+        assertTrue(columnPermissions.get("column2").contains("role3"));
 
         Map<String, String> columnCollation = inputs.getColumnCollations();
         assertEquals("http://marklogic.com/collation/codepoint", columnCollation.get("column1"));

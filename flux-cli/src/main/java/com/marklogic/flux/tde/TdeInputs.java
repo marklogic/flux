@@ -4,25 +4,14 @@
 package com.marklogic.flux.tde;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TdeInputs {
 
-    public interface Column {
-        String getName();
-
-        default String getVal() {
-            return getName();
-        }
-
-        String getScalarType();
-    }
-
     private final String schemaName;
     private final String viewName;
-    private final Iterator<Column> columns;
     private final Map<String, String> namespaces = new HashMap<>();
 
     private static final String DEFAULT_CONTEXT = "/";
@@ -39,14 +28,13 @@ public class TdeInputs {
     private Map<String, String> columnDefaultValues;
     private Map<String, String> columnInvalidValues;
     private Map<String, String> columnReindexing;
-    private Map<String, String> columnPermissions;
+    private Map<String, Set<String>> columnPermissions;
     private Map<String, String> columnCollations;
     private List<String> nullableColumns;
 
-    public TdeInputs(String schemaName, String viewName, Iterator<Column> columns) {
+    public TdeInputs(String schemaName, String viewName) {
         this.schemaName = schemaName;
         this.viewName = viewName;
-        this.columns = columns;
     }
 
     public TdeInputs withContext(String context) {
@@ -136,7 +124,7 @@ public class TdeInputs {
         return this;
     }
 
-    public TdeInputs withColumnPermissions(Map<String, String> columnPermissions) {
+    public TdeInputs withColumnPermissions(Map<String, Set<String>> columnPermissions) {
         this.columnPermissions = columnPermissions;
         return this;
     }
@@ -157,10 +145,6 @@ public class TdeInputs {
 
     public String getViewName() {
         return viewName;
-    }
-
-    public Iterator<Column> getColumns() {
-        return columns;
     }
 
     public String getContext() {
@@ -215,7 +199,7 @@ public class TdeInputs {
         return columnReindexing;
     }
 
-    public Map<String, String> getColumnPermissions() {
+    public Map<String, Set<String>> getColumnPermissions() {
         return columnPermissions;
     }
 
