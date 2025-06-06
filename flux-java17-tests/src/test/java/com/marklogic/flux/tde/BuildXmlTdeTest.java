@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.tde;
 
+import com.marklogic.flux.impl.importdata.SparkColumnIterator;
 import marklogicspark.marklogic.client.io.DOMHandle;
 import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import org.apache.spark.sql.types.DataTypes;
@@ -18,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class BuildXmlTdeTest {
+class BuildXmlTdeTest extends AbstractTdeTest {
 
     private static final StructType SCHEMA = new StructType().add("myString", DataTypes.StringType);
 
@@ -28,8 +29,8 @@ class BuildXmlTdeTest {
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
                 <row>
-                  <schema-name>my-schema</schema-name>
-                  <view-name>my-view</view-name>
+                  <schema-name>my_schema</schema-name>
+                  <view-name>my_view</view-name>
                   <columns>
                     <column>
                       <name>myString</name>
@@ -46,7 +47,7 @@ class BuildXmlTdeTest {
             </template>""";
 
         Document doc = buildTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+            new TdeInputs("my_schema", "my_view", new SparkColumnIterator(SCHEMA))
                 .withCollections("customer")
                 .withDirectories()
                 .withXmlRootName("my-root", null));
@@ -60,8 +61,8 @@ class BuildXmlTdeTest {
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
                 <row>
-                  <schema-name>my-schema</schema-name>
-                  <view-name>my-view</view-name>
+                  <schema-name>my_schema</schema-name>
+                  <view-name>my_view</view-name>
                   <view-layout>sparse</view-layout>
                   <columns>
                     <column>
@@ -90,7 +91,7 @@ class BuildXmlTdeTest {
             </template>""";
 
         Document doc = buildTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+            new TdeInputs("my_schema", "my_view", new SparkColumnIterator(SCHEMA))
                 .withCollections("customer", "another-collection")
                 .withDirectories("/dir1/", "dir2/")
                 .withViewLayout("sparse")
@@ -105,8 +106,8 @@ class BuildXmlTdeTest {
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
                 <row>
-                  <schema-name>my-schema</schema-name>
-                  <view-name>my-view</view-name>
+                  <schema-name>my_schema</schema-name>
+                  <view-name>my_view</view-name>
                   <columns>
                     <column>
                       <name>myString</name>
@@ -121,7 +122,7 @@ class BuildXmlTdeTest {
             </template>""";
 
         Document doc = buildTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+            new TdeInputs("my_schema", "my_view", new SparkColumnIterator(SCHEMA))
                 .withContext("/some-custom-context")
                 .withDisabled(true)
                 .withXmlRootName("my-root", null));
@@ -129,7 +130,7 @@ class BuildXmlTdeTest {
         verifyTemplate(expectedXml, doc);
 
         doc = buildTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+            new TdeInputs("my_schema", "my_view", new SparkColumnIterator(SCHEMA))
                 .withXmlRootName("my-root", null)
                 .withDisabled(true)
                 .withContext("/some-custom-context"));
@@ -143,15 +144,15 @@ class BuildXmlTdeTest {
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
                 <row>
-                  <schema-name>my-schema</schema-name>
-                  <view-name>my-view</view-name>
+                  <schema-name>my_schema</schema-name>
+                  <view-name>my_view</view-name>
                   <columns>
                     <column>
                       <name>myString</name>
-                      <scalar-type>dateTime</scalar-type>
+                      <scalar-type>int</scalar-type>
                       <val>myStringValue</val>
                       <nullable>true</nullable>
-                      <default>hello world</default>
+                      <default>0</default>
                       <invalid-values>reject</invalid-values>
                       <reindexing>visible</reindexing>
                       <permissions>
@@ -167,12 +168,12 @@ class BuildXmlTdeTest {
             </template>""";
 
         Document doc = buildTde(
-            new TdeInputs("my-schema", "my-view", new SparkColumnIterator(SCHEMA))
+            new TdeInputs("my_schema", "my_view", new SparkColumnIterator(SCHEMA))
                 .withXmlRootName("my-root", null)
                 .withColumnVals(Map.of("myString", "myStringValue"))
-                .withColumnTypes(Map.of("myString", "dateTime"))
+                .withColumnTypes(Map.of("myString", "int"))
                 .withNullableColumns(List.of("myString"))
-                .withColumnDefaultValues(Map.of("myString", "hello world"))
+                .withColumnDefaultValues(Map.of("myString", "0"))
                 .withColumnInvalidValues(Map.of("myString", "reject"))
                 .withColumnReindexing(Map.of("myString", "visible"))
                 .withColumnPermissions(Map.of("myString", "rest-reader,rest-writer"))
@@ -185,6 +186,8 @@ class BuildXmlTdeTest {
     private Document buildTde(TdeInputs inputs) {
         TdeTemplate template = new XmlTdeBuilder().buildTde(inputs);
         assertEquals("/tde/%s/%s.xml".formatted(inputs.getSchemaName(), inputs.getViewName()), template.getUri());
+
+        verifyTdeCanBeLoaded(template);
 
         AbstractWriteHandle handle = template.getWriteHandle();
         return ((DOMHandle) handle).get();

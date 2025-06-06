@@ -5,6 +5,7 @@ package com.marklogic.flux.tde;
 
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.marklogic.flux.impl.importdata.SparkColumnIterator;
 import marklogicspark.marklogic.client.io.JacksonHandle;
 import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * This test is in this Java17-dependent project solely for using triple quotes for easily putting the
  * expected TDE template in the test.
  */
-class BuildJsonTdeTest {
+class BuildJsonTdeTest extends AbstractTdeTest {
 
     @Test
     void allTypes() {
@@ -31,8 +32,8 @@ class BuildJsonTdeTest {
                 "context" : "/some-custom-context",
                 "collections" : [ "customer" ],
                 "rows" : [ {
-                  "schemaName" : "my-schema",
-                  "viewName" : "my-view",
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
                   "columns" : [ {
                     "name" : "myInt",
                     "val" : "myInt",
@@ -106,7 +107,7 @@ class BuildJsonTdeTest {
                 .add("myInnerString", DataTypes.StringType))
             .add("myNull", DataTypes.NullType);
 
-        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
             .withCollections("customer")
             .withDirectories()
             .withContext("/some-custom-context")
@@ -126,8 +127,8 @@ class BuildJsonTdeTest {
                 "collections" : [ "customer", "customer2" ],
                 "directories" : [ "dir1/", "/dir2/" ],
                 "rows" : [ {
-                  "schemaName" : "my-schema",
-                  "viewName" : "my-view",
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
                   "viewLayout": "identical",
                   "columns" : [ {
                     "name" : "myString",
@@ -140,7 +141,7 @@ class BuildJsonTdeTest {
 
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
-        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
             .withCollections("customer", "customer2")
             .withDirectories("dir1/", "/dir2/")
             .withJsonRootName("my-root")
@@ -158,8 +159,8 @@ class BuildJsonTdeTest {
                 "context" : "/some-custom-context",
                 "enabled": false,
                 "rows" : [ {
-                  "schemaName" : "my-schema",
-                  "viewName" : "my-view",
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
                   "columns" : [ {
                     "name" : "myString",
                     "val" : "myString",
@@ -171,14 +172,14 @@ class BuildJsonTdeTest {
 
         StructType schema = new StructType().add("myString", DataTypes.StringType);
 
-        ObjectNode tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
             .withContext("/some-custom-context")
             .withJsonRootName("my-root")
             .withDisabled(true)
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
 
-        tde = buildTde(new TdeInputs("my-schema", "my-view", new SparkColumnIterator(schema))
+        tde = buildTde(new TdeInputs("myschema", "myview", new SparkColumnIterator(schema))
             .withJsonRootName("my-root")
             .withContext("/some-custom-context")
             .withDisabled(true)
@@ -201,7 +202,7 @@ class BuildJsonTdeTest {
                     "val" : "myStringValue",
                     "scalarType" : "string",
                     "nullable" : true,
-                    "default" : "mydefault",
+                    "default" : "0",
                     "invalidValues" : "reject",
                     "reindexing" : "visible",
                     "permissions" : ["rest-reader", "rest-writer"],
@@ -220,7 +221,7 @@ class BuildJsonTdeTest {
             .withColumnVals(Map.of("myString", "myStringValue"))
             .withColumnTypes(Map.of("myString", "string"))
             .withNullableColumns(List.of("myString"))
-            .withColumnDefaultValues(Map.of("myString", "mydefault"))
+            .withColumnDefaultValues(Map.of("myString", "0"))
             .withColumnInvalidValues(Map.of("myString", "reject"))
             .withColumnReindexing(Map.of("myString", "visible"))
             .withColumnPermissions(Map.of("myString", "rest-reader,rest-writer"))
@@ -233,6 +234,8 @@ class BuildJsonTdeTest {
     private ObjectNode buildTde(TdeInputs inputs) {
         TdeTemplate template = new JsonTdeBuilder().buildTde(inputs);
         assertEquals("/tde/%s/%s.json".formatted(inputs.getSchemaName(), inputs.getViewName()), template.getUri());
+
+        verifyTdeCanBeLoaded(template);
 
         AbstractWriteHandle handle = template.getWriteHandle();
         return (ObjectNode) ((JacksonHandle) handle).get();

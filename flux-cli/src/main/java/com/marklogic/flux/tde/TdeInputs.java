@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TdeInputs {
 
-    interface Column {
+    public interface Column {
         String getName();
 
         default String getVal() {
