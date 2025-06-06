@@ -43,13 +43,14 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
      */
     @Test
     void invalidNamespaceDeclaration() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Value for option '-X' (<String=String>) should be in KEY=VALUE format but was org:example",
             "import-files",
             "--path", "../flux-cli/src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
             "--splitter-xpath", "/ex:root/ex:text/text()",
             "-Xorg:example"
-        ), "Value for option '-X' (<String=String>) should be in KEY=VALUE format but was org:example");
+        );
     }
 
     @Test
@@ -143,30 +144,31 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
 
     @Test
     void invalidCustomSplitterClassName() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Error: Cannot find custom splitter with class name: doesnt.exist.ClassName",
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
             "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "doesnt.exist.ClassName"
-        ), "Error: Cannot find custom splitter with class name: doesnt.exist.ClassName");
+        );
     }
 
     @Test
     void invalidCustomSplitterOption() {
-        assertStderrContains(() -> run(
-                "import-files",
-                "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
-                "--connection-string", makeConnectionString(),
-                "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
-                "--splitter-json-pointer", "/text",
-                "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
-                "-Smissing an equals"
-            ),
+        assertStderrContains(
             // This is the default picocli error message for an invalid map option. It's a little technical, but seems
             // reasonable enough for a user to be able to fix their mistake.
-            "Value for option '-S' (<String=String>) should be in KEY=VALUE format but was missing an equals"
+            "Value for option '-S' (<String=String>) should be in KEY=VALUE format but was missing an equals",
+
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--splitter-json-pointer", "/text",
+            "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
+            "-Smissing an equals"
         );
     }
 }

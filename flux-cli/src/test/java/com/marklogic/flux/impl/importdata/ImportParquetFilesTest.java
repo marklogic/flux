@@ -83,14 +83,14 @@ class ImportParquetFilesTest extends AbstractTest {
 
     @Test
     void count() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-parquet-files",
             "--count",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test"
-        ));
+        );
 
         assertCollectionSize("No data should be written when --count is included",
             "parquet-test", 0);
@@ -143,12 +143,11 @@ class ImportParquetFilesTest extends AbstractTest {
 
     @Test
     void invalidParquetFile() {
-        String stderr = runAndReturnStderr(() ->
-            run("import-parquet-files",
-                "--connection-string", makeConnectionString(),
-                "--path", "src/test/resources/parquet/individual/invalid.parquet",
-                "--abort-on-read-failure"
-            )
+        String stderr = runAndReturnStderr(
+            "import-parquet-files",
+            "--connection-string", makeConnectionString(),
+            "--path", "src/test/resources/parquet/individual/invalid.parquet",
+            "--abort-on-read-failure"
         );
 
         assertTrue(
@@ -161,14 +160,12 @@ class ImportParquetFilesTest extends AbstractTest {
 
     @Test
     void badConfigurationItem() {
-        String stderr = runAndReturnStderr(() ->
-            run(
-                "import-parquet-files",
-                "--path", "src/test/resources/parquet/individual/cars.parquet",
-                "--connection-string", makeConnectionString(),
-                "--permissions", DEFAULT_PERMISSIONS,
-                "-Cspark.sql.parquet.filterPushdown=invalid-value"
-            )
+        String stderr = runAndReturnStderr(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "-Cspark.sql.parquet.filterPushdown=invalid-value"
         );
 
         assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
@@ -178,7 +175,7 @@ class ImportParquetFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/avro/colors.avro",
@@ -188,7 +185,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-cars"
-        ));
+        );
 
         assertCollectionSize("The cars.parquet file should still have been processed.", "parquet-cars", 32);
         assertFalse(stderr.contains("Command failed"), "The command should default to ignoreCorruptFiles=true for " +
@@ -197,7 +194,7 @@ class ImportParquetFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-parquet-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/avro/colors.avro",
@@ -207,7 +204,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "-PmergeSchema=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ));
+        );
 
         assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer for file"),
             "The command should have failed because Spark could not read the footer of the invalid Avro file; " +

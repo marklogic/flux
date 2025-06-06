@@ -225,14 +225,13 @@ class ExportFilesTest extends AbstractTest {
      */
     @Test
     void withTransformThatThrowsTimestampError() {
-        assertStderrContains(() -> run(
-                "export-files",
-                "--path", ".",
-                "--uris", "/jane.json",
-                "--connection-string", makeConnectionString(),
-                "--transform", "throwsTimestampError"
-            ),
-            "To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option"
+        assertStderrContains(
+            "To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option",
+            "export-files",
+            "--path", ".",
+            "--uris", "/jane.json",
+            "--connection-string", makeConnectionString(),
+            "--transform", "throwsTimestampError"
         );
     }
 

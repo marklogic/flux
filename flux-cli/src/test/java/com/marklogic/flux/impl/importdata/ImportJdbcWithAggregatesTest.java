@@ -139,7 +139,9 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     @Test
     void missingEqualsInAggregationExpression() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Invalid aggregation: payments,payment_id,amount; must be of the form " +
+                "newColumnName=columnToGroup1,columnToGroup2,etc.",
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", PostgresUtil.DRIVER,
@@ -148,8 +150,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--aggregate", "payments,payment_id,amount",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ), "Invalid aggregation: payments,payment_id,amount; must be of the form " +
-            "newColumnName=columnToGroup1,columnToGroup2,etc.");
+        );
     }
 
     @Test
@@ -159,7 +160,9 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "        inner join public.payment p on c.customer_id = p.customer_id\n" +
             "        where c.customer_id < 10";
 
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Unable to aggregate columns: [payment_id, notfound], [payment_date]; please ensure that each column name " +
+                "will be present in the data read from the data source.",
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", PostgresUtil.DRIVER,
@@ -169,7 +172,6 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--aggregate", "dates=payment_date",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ), "Unable to aggregate columns: [payment_id, notfound], [payment_date]; please ensure that each column name " +
-            "will be present in the data read from the data source.");
+        );
     }
 }

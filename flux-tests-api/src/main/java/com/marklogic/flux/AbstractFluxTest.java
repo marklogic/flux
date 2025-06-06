@@ -21,12 +21,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.fail;
 
@@ -116,33 +115,6 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         return stdout;
     }
 
-    // Telling Sonar not to worry about System.err usage.
-    @SuppressWarnings("java:S106")
-    protected final String runAndReturnStderr(Runnable r) {
-        System.err.flush();
-        PrintStream original = System.err;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (PrintStream ps = new PrintStream(outputStream, true, Charset.defaultCharset())) {
-            System.setErr(ps);
-            r.run();
-        } finally {
-            System.err.flush();
-            System.setErr(original);
-        }
-        return new String(outputStream.toByteArray(), Charset.defaultCharset());
-    }
-
-    // Sonar mistakenly thinks this is production code since it's in src/main/java.
-    @SuppressWarnings("java:S5960")
-    protected final void assertStderrContains(Runnable r, String expectedContentInStderr) {
-        final String stderr = runAndReturnStderr(r);
-        logger.info("Captured stderr:\n{}", stderr);
-        assertTrue(
-            stderr.contains(expectedContentInStderr),
-            String.format("Unexpected stderr; did not find '%s'; actual stderr: %s", expectedContentInStderr, stderr)
-        );
-    }
-
     /**
      * Useful for when testing the results of a command can be easily done by using our Spark connector.
      *
@@ -191,6 +163,50 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         return super.readXmlDocument(uri,
             Namespace.getNamespace("model", "http://marklogic.com/appservices/model"),
             Namespace.getNamespace("ex", "org:example")
+        );
+    }
+
+    protected final int run(String... args) {
+        return run(null, args);
+    }
+
+    protected abstract int run(PrintWriter errWriter, String... args);
+
+    // Sonar mistakenly thinks this is production code since it's in src/main/java and thus doesn't like the assert method.
+    @SuppressWarnings("java:S5960")
+    protected final int run(int expectedReturnCode, String... args) {
+        int code = run(args);
+        assertEquals(expectedReturnCode, code);
+        return code;
+    }
+
+    protected final String runAndReturnStderr(String... args) {
+        return runAndReturnStderr(null, args);
+    }
+
+    @SuppressWarnings("java:S5960")
+    protected final String runAndReturnStderr(Integer expectedReturnCode, String... args) {
+        StringWriter stderr = new StringWriter();
+        PrintWriter writer = new PrintWriter(stderr);
+        int actualReturnCode = run(writer, args);
+        if (expectedReturnCode != null) {
+            assertEquals(expectedReturnCode, actualReturnCode);
+        }
+        writer.flush();
+        return stderr.toString();
+    }
+
+    protected final void assertStderrContains(String expectedContentInStderr, String... args) {
+        assertStderrContains(expectedContentInStderr, null, args);
+    }
+
+    @SuppressWarnings("java:S5960")
+    protected final void assertStderrContains(String expectedContentInStderr, Integer expectedReturnCode, String... args) {
+        final String stderr = runAndReturnStderr(expectedReturnCode, args);
+        logger.info("Captured stderr:\n{}", stderr);
+        assertTrue(
+            stderr.contains(expectedContentInStderr),
+            String.format("Unexpected stderr; did not find '%s'; actual stderr: %s", expectedContentInStderr, stderr)
         );
     }
 }

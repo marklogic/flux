@@ -47,12 +47,13 @@ class ConfigureSparkMasterUrlTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS
         );
 
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Error: Could not parse Master URL: 'just-not-valid-at-all'",
             "import-parquet-files",
             "--spark-master-url", "just-not-valid-at-all",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ), "Error: Could not parse Master URL: 'just-not-valid-at-all'");
+        );
     }
 }

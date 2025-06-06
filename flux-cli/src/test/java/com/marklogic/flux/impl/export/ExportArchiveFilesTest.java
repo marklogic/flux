@@ -47,13 +47,13 @@ class ExportArchiveFilesTest extends AbstractTest {
 
     @Test
     void contentShouldAlwaysBeIncluded(@TempDir Path tempDir) {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "export-archive-files",
             "--connection-string", makeConnectionString(),
             "--collections", "author",
             "--path", tempDir.toFile().getAbsolutePath(),
             "--categories", "collections,permissions"
-        ));
+        );
 
         assertFalse(stderr.contains("Command failed"), "Unexpected command failure: " + stderr);
 

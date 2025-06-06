@@ -19,45 +19,49 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void invalidCommand() {
         assertStderrContains(
-            () -> run(CommandLine.ExitCode.USAGE, "not_a_real_command", "--connection-string", makeConnectionString()),
-            "Unmatched arguments from index 0: 'not_a_real_command'"
+            "Unmatched arguments from index 0: 'not_a_real_command'",
+            CommandLine.ExitCode.USAGE,
+            "not_a_real_command", "--connection-string", makeConnectionString()
         );
     }
 
     @Test
     void invalidParam() {
         assertStderrContains(
-            () -> run(CommandLine.ExitCode.USAGE, "import-files", "--not-a-real-param", "--path", "anywhere"),
-            "Unknown option: '--not-a-real-param'"
+            "Unknown option: '--not-a-real-param'",
+            CommandLine.ExitCode.USAGE,
+            "import-files", "--not-a-real-param", "--path", "anywhere"
         );
     }
 
     @Test
     void invalidParamWithSingleQuotesInIt() {
         assertStderrContains(
-            () -> run(CommandLine.ExitCode.USAGE, "import-files", "-not-a-'real'-param", "--path", "anywhere"),
-            "Unknown option: '-not-a-'real'-param'"
+            "Unknown option: '-not-a-'real'-param'",
+            CommandLine.ExitCode.USAGE,
+            "import-files", "-not-a-'real'-param", "--path", "anywhere"
         );
     }
 
     @Test
     void badDynamicOption() {
         assertStderrContains(
-            () -> run(CommandLine.ExitCode.USAGE, "import-files", "-CnoValue"),
-            "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue"
+            "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue",
+            CommandLine.ExitCode.USAGE, "import-files", "-CnoValue"
         );
     }
 
     @Test
     void missingRequiredParam() {
         assertStderrContains(
-            () -> run(CommandLine.ExitCode.USAGE, "import-files", "--connection-string", makeConnectionString()),
-            "Missing required option: '--path <path>'"
+            "Missing required option: '--path <path>'",
+            CommandLine.ExitCode.USAGE,
+            "import-files", "--connection-string", makeConnectionString()
         );
 
         assertStderrContains(
-            () -> run("import-files", "--connection-string", makeConnectionString()),
-            "Run './bin/flux help import-files' for more information."
+            "Run './bin/flux help import-files' for more information.",
+            "import-files", "--connection-string", makeConnectionString()
         );
     }
 
@@ -67,63 +71,56 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void sparkFailure() {
         assertStderrContains(
-            () -> run(
-                CommandLine.ExitCode.SOFTWARE,
-                "import-files",
-                "--path", "/not/valid",
-                "--connection-string", makeConnectionString()
-            ),
-            "Error: AnalysisException: [PATH_NOT_FOUND] Path does not exist: file:/not/valid."
+            "Error: AnalysisException: [PATH_NOT_FOUND] Path does not exist: file:/not/valid.",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "/not/valid",
+            "--connection-string", makeConnectionString()
         );
     }
 
     @Test
     void abortOnWriteFailure() {
         assertStderrContains(
-            () -> run(
-                CommandLine.ExitCode.SOFTWARE,
-                "import-files",
-                "--path", "src/test/resources/mixed-files/hello*",
-                "--repartition", "2",
-                "--connection-string", makeConnectionString(),
-                "--permissions", "invalid-role,read,rest-writer,update",
-                "--abort-on-write-failure",
-                // Including this to ensure it doesn't cause any problems. Not yet able to capture its output as it's
-                // via a logger.
-                "--stacktrace"
-            ),
-            "Role does not exist: sec:role-name = invalid-role"
+            "Role does not exist: sec:role-name = invalid-role",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--repartition", "2",
+            "--connection-string", makeConnectionString(),
+            "--permissions", "invalid-role,read,rest-writer,update",
+            "--abort-on-write-failure",
+            // Including this to ensure it doesn't cause any problems. Not yet able to capture its output as it's
+            // via a logger.
+            "--stacktrace"
         );
     }
 
     @Test
     void abortOnWriteFailureAndShowStacktrace() {
         assertStderrContains(
-            () -> run(
-                CommandLine.ExitCode.SOFTWARE,
-                "import-files",
-                "--path", "src/test/resources/mixed-files/hello*",
-                "--repartition", "2",
-                "--connection-string", makeConnectionString(),
-                "--permissions", "invalid-role,read,rest-writer,update",
-                "--stacktrace",
-                "--abort-on-write-failure"
-            ),
-            "Role does not exist: sec:role-name = invalid-role"
+            "Role does not exist: sec:role-name = invalid-role",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--repartition", "2",
+            "--connection-string", makeConnectionString(),
+            "--permissions", "invalid-role,read,rest-writer,update",
+            "--stacktrace",
+            "--abort-on-write-failure"
         );
     }
 
     @Test
     void dontAbortOnWriteFailure() {
-        String stderr = runAndReturnStderr(() -> run(
-            CommandLine.ExitCode.OK,
+        String stderr = runAndReturnStderr(
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             // Using two partitions to verify that both partition writers log an error.
             "--repartition", "2",
             "--connection-string", makeConnectionString(),
             "--permissions", "invalid-role,read,rest-writer,update"
-        ));
+        );
 
         assertFalse(stderr.contains("Command failed"), "The command should not have failed since it defaults to not " +
             "aborting on a write failure. Actual stderr: " + stderr);

@@ -58,14 +58,14 @@ class ImportJdbcTest extends AbstractTest {
 
     @Test
     void noQueryNorTable() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL,
             "--jdbc-user", PostgresUtil.USER,
             "--jdbc-password", PostgresUtil.PASSWORD,
             "--jdbc-driver", PostgresUtil.DRIVER,
             "--connection-string", makeConnectionString()
-        ));
+        );
 
         // The formatting of the error is defined by picocli.
         assertTrue(stderr.contains("Missing required argument (specify one of these): (--query <query> | --table <table>)"),
@@ -128,14 +128,15 @@ class ImportJdbcTest extends AbstractTest {
 
     @Test
     void badJdbcDriverValue() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Error: Unable to load class: not.valid.driver.value; " +
+                "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.",
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", "not.valid.driver.value",
             "--connection-string", makeConnectionString(),
             "--query", "select * from customer"
-        ), "Error: Unable to load class: not.valid.driver.value; " +
-            "for a JDBC driver, ensure you are specifying the fully-qualified class name for your JDBC driver.");
+        );
     }
 
     @Test

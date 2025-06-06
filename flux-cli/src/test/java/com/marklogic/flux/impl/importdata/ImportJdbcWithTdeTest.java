@@ -158,7 +158,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
 
     @Test
     void invalidPermissions() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL,
             "--jdbc-user", PostgresUtil.USER,
@@ -172,7 +172,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
             "--tde-schema", "junit",
             "--tde-view", "customer",
             "--tde-permissions", "flux-test-role,read,flux-test-role"
-        ));
+        );
 
         assertTrue(stderr.contains("Unable to parse permissions string"), "Actual stderr: " + stderr);
         assertCollectionSize(
@@ -183,7 +183,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
 
     @Test
     void invalidViewLayout() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-jdbc",
             "--jdbc-url", PostgresUtil.URL,
             "--jdbc-user", PostgresUtil.USER,
@@ -198,7 +198,7 @@ class ImportJdbcWithTdeTest extends AbstractTest {
             "--tde-view", "customer",
             "--tde-permissions", "flux-test-role,read,flux-test-role,update",
             "--tde-view-layout", "invalid-layout"
-        ));
+        );
 
         assertTrue(stderr.contains("TDE-INVALIDTEMPLATENODEVAL"), "Actual stderr: " + stderr);
     }
