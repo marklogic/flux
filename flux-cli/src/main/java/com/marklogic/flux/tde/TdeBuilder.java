@@ -5,9 +5,5 @@ package com.marklogic.flux.tde;
 
 public interface TdeBuilder {
 
-    static TdeBuilder newTdeBuilder(TdeInputs inputs) {
-        return inputs.isJson() ? new JsonTdeBuilder() : new XmlTdeBuilder();
-    }
-
     TdeTemplate buildTde(TdeInputs inputs);
 }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.FluxException;
-
 import marklogicspark.marklogic.client.DatabaseClient;
 import marklogicspark.marklogic.client.io.DocumentMetadataHandle;
 import marklogicspark.marklogic.client.io.JacksonHandle;
@@ -30,32 +29,28 @@ public class TdeLoader {
         this.databaseClient = databaseClient;
     }
 
-    public void loadTde(TdeInputs inputs) {
-        TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
-        ObjectNode permissionsMap = buildPermissionsMap(inputs);
-
-        final String inputUri = inputs.getUri();
-        final String uri = inputUri != null && !inputUri.isEmpty() ? inputUri :
-            String.format("/tde/%s/%s.json", inputs.getSchemaName(), inputs.getViewName());
+    public void loadTde(final TdeTemplate tdeTemplate) {
+        final ObjectNode permissionsMap = buildPermissionsMap(tdeTemplate.getPermissions());
+        final String uri = tdeTemplate.getUri();
 
         try {
             databaseClient.newServerEval().javascript(SCRIPT)
                 .addVariable("URI", uri)
-                .addVariable("TEMPLATE", tdeTemplate.toWriteHandle())
+                .addVariable("TEMPLATE", tdeTemplate.getWriteHandle())
                 .addVariable("PERMISSIONS", new JacksonHandle(permissionsMap))
                 .evalAs(String.class);
         } catch (Exception e) {
             String message = String.format("Failed to load TDE template to URI '%s'; template: %s; cause: %s",
-                uri,tdeTemplate.toPrettyString(), e.getMessage());
+                uri, tdeTemplate.toPrettyString(), e.getMessage());
             throw new FluxException(message, e);
         }
     }
 
-    private ObjectNode buildPermissionsMap(TdeInputs inputs) {
+    private ObjectNode buildPermissionsMap(String permissions) {
         ObjectNode permissionsMap = MAPPER.createObjectNode();
-        if (inputs.getPermissions() != null && !inputs.getPermissions().isEmpty()) {
+        if (permissions != null && !permissions.isEmpty()) {
             DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-            metadata.getPermissions().addFromDelimitedString(inputs.getPermissions());
+            metadata.getPermissions().addFromDelimitedString(permissions);
 
             metadata.getPermissions().entrySet().forEach(entry -> {
                 ArrayNode capabilities = permissionsMap.putArray(entry.getKey());

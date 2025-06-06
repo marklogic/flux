@@ -47,14 +47,23 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     private boolean ignoreNullFields;
 
     @CommandLine.Option(
-        names = "--tde-schema"
+        names = "--tde-schema",
+        description = "Schema name of the TDE template to generate. Has no effect unless --tde-view is also specified."
+
     )
     private String tdeSchema;
 
     @CommandLine.Option(
-        names = "--tde-view"
+        names = "--tde-view",
+        description = "View name of the TDE template to generate. Has no effect unless --tde-schema is also specified."
     )
     private String tdeView;
+
+    @CommandLine.Option(
+        names = "--tde-document-type",
+        description = "Type of document to generate in the TDE template; defaults to 'json', can be set to 'xml'."
+    )
+    private String tdeDocumentType = "json";
 
     @CommandLine.Option(
         names = "--tde-preview"
@@ -186,15 +195,16 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     public boolean generateTde(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeSchema != null && tdeView != null) {
             TdeInputs inputs = buildTdeInputs(sparkSchema);
+            TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeDocumentType) ? new XmlTdeBuilder() : new JsonTdeBuilder();
+            TdeTemplate tdeTemplate = tdeBuilder.buildTde(inputs);
             if (tdePreview) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
-                    TdeTemplate tdeTemplate = TdeBuilder.newTdeBuilder(inputs).buildTde(inputs);
                     Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
                 }
                 return true;
             } else {
                 try (DatabaseClient client = new ContextSupport(connectionParams.makeOptions()).connectToMarkLogic()) {
-                    new TdeLoader(client).loadTde(inputs);
+                    new TdeLoader(client).loadTde(tdeTemplate);
                 }
             }
         }
