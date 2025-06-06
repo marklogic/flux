@@ -70,12 +70,12 @@ class ImportArchiveFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailureByDefault() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-archive-files",
             "--path", "src/test/resources/archive-files",
             "--path", "src/test/resources/mlcp-archives",
             "--connection-string", makeConnectionString()
-        ));
+        );
 
         assertFalse(stderr.contains("Command failed"),
             "The command should log error by default; stderr: " + stderr);
@@ -85,12 +85,12 @@ class ImportArchiveFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-archive-files",
             "--path", "src/test/resources/archive-files/invalid-archive.zip",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString()
-        ));
+        );
 
         assertTrue(
             stderr.contains("Error: Could not find metadata entry for entry test/1.xml in file"),

@@ -118,14 +118,12 @@ class ImportAvroFilesTest extends AbstractTest {
 
     @Test
     void badConfigurationItem() {
-        String stderr = runAndReturnStderr(() ->
-            run(
-                "import-avro-files",
-                "--path", "src/test/resources/avro/*",
-                "--connection-string", makeConnectionString(),
-                "--permissions", DEFAULT_PERMISSIONS,
-                "-Cspark.sql.parquet.filterPushdown=invalid-value"
-            )
+        String stderr = runAndReturnStderr(
+            "import-avro-files",
+            "--path", "src/test/resources/avro/*",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "-Cspark.sql.parquet.filterPushdown=invalid-value"
         );
 
         assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
@@ -135,14 +133,14 @@ class ImportAvroFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-avro-files",
             "--path", "src/test/resources/avro/colors.avro",
             "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-data"
-        ));
+        );
 
         assertCollectionSize("The colors.avro file should have been processed correctly", "avro-data", 3);
         assertFalse(stderr.contains("Command failed"), "The command should default to ignoreCorruptFiles=true for " +
@@ -151,13 +149,13 @@ class ImportAvroFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-avro-files",
             "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ));
+        );
 
         System.out.println(stderr);
         assertTrue(stderr.contains("Error: Not an Avro data file"), "Actual stderr: " + stderr);

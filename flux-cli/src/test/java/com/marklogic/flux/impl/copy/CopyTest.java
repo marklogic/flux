@@ -72,56 +72,61 @@ class CopyTest extends AbstractTest {
 
     @Test
     void badConnectionString() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Invalid value for option '--output-connection-string': Invalid value for connection string; " +
+                "must be username:password@host:port/optionalDatabaseName",
             "copy",
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-connection-string", "not@valid"
-        ), "Invalid value for option '--output-connection-string': Invalid value for connection string; " +
-            "must be username:password@host:port/optionalDatabaseName");
+        );
     }
 
     @Test
     void missingHost() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Must specify a MarkLogic host via --output-host or --output-connection-string.",
             "copy",
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-port", "8000"
-        ), "Must specify a MarkLogic host via --output-host or --output-connection-string.");
+        );
     }
 
     @Test
     void missingPort() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Must specify a MarkLogic app server port via --output-port or --output-connection-string.",
             "copy",
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-host", "localhost"
-        ), "Must specify a MarkLogic app server port via --output-port or --output-connection-string.");
+        );
     }
 
     @Test
     void missingUsername() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Must specify a MarkLogic user via --output-username when using 'BASIC' or 'DIGEST' authentication.",
             "copy",
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-host", "localhost",
             "--output-port", "8000"
-        ), "Must specify a MarkLogic user via --output-username when using 'BASIC' or 'DIGEST' authentication.");
+        );
     }
 
     @Test
     void missingPassword() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Must specify a password via --output-password when using 'BASIC' or 'DIGEST' authentication.",
             "copy",
             "--collections", "author",
             "--connection-string", makeConnectionString(),
             "--output-host", "localhost",
             "--output-port", "8000",
             "--output-username", "someone"
-        ), "Must specify a password via --output-password when using 'BASIC' or 'DIGEST' authentication.");
+        );
     }
 
     private void assertDirectoryCount(String directoryPrefix, int expectedCount) {

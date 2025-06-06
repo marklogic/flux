@@ -197,14 +197,14 @@ class ImportDelimitedFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test"
-        ));
+        );
 
         // Must use this technique to get URIs, as the helper method in marklogic-junit fetches documents and the
         // documents have some encoding issues in them.
@@ -230,7 +230,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
             "--path", "src/test/resources/xml-file/single-xml.zip",
@@ -238,7 +238,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test"
-        ));
+        );
 
         assertCollectionSize("delimited-test", 0);
         assertTrue(stderr.contains("Error: [MALFORMED_RECORD_IN_PARSING"), "The command should " +

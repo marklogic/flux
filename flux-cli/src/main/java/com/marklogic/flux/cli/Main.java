@@ -76,6 +76,16 @@ public class Main {
     }
 
     public static int run(String[] args) {
+        return run(args, null);
+    }
+
+    /**
+     * @param args
+     * @param errWriter solely intended for usage in tests, allowing for stderr output to be captured
+     *                  and then verified.
+     * @return
+     */
+    public static int run(String[] args, PrintWriter errWriter) {
         if (args.length == 0 || args[0].trim().equals("")) {
             args = new String[]{"help"};
         } else if (args[0].equals("help") && args.length == 1) {
@@ -83,13 +93,20 @@ public class Main {
         }
 
         if (args[0].equals("help")) {
-            new CommandLine(new Main())
+            CommandLine commandLine = new CommandLine(new Main())
                 .setUsageHelpWidth(120)
-                .setAbbreviatedSubcommandsAllowed(true)
-                .execute(args);
+                .setAbbreviatedSubcommandsAllowed(true);
+            if (errWriter != null) {
+                commandLine.setErr(errWriter);
+            }
+            commandLine.execute(args);
             return CommandLine.ExitCode.USAGE;
         } else {
-            return new Main().newCommandLine().execute(args);
+            CommandLine commandLine = new Main().newCommandLine();
+            if (errWriter != null) {
+                commandLine.setErr(errWriter);
+            }
+            return commandLine.execute(args);
         }
     }
 

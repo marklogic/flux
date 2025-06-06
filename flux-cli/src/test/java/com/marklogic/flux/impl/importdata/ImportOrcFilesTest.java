@@ -112,14 +112,12 @@ class ImportOrcFilesTest extends AbstractTest {
 
     @Test
     void badConfigurationItem() {
-        String stderr = runAndReturnStderr(() ->
-            run(
-                "import-orc-files",
-                "--path", "src/test/resources/orc-files",
-                "--connection-string", makeConnectionString(),
-                "--permissions", DEFAULT_PERMISSIONS,
-                "-Cspark.sql.parquet.filterPushdown=invalid-value"
-            )
+        String stderr = runAndReturnStderr(
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "-Cspark.sql.parquet.filterPushdown=invalid-value"
         );
 
         assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
@@ -129,14 +127,14 @@ class ImportOrcFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-orc-files",
             "--path", "src/test/resources/orc-files/authors.orc",
             "--path", "src/test/resources/avro/colors.avro",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "orc-data"
-        ));
+        );
 
         assertCollectionSize("The authors.orc file should have been processed correctly", "orc-data", 15);
         assertFalse(stderr.contains("Command failed"), "The command should default to ignoreCorruptFiles=true for " +
@@ -145,13 +143,13 @@ class ImportOrcFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-parquet-files",
             "--path", "src/test/resources/avro/colors.avro",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
-        ));
+        );
 
         assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer for file"),
             "The command should have failed because Spark could not read the footer of the invalid Avro file; " +

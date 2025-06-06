@@ -103,13 +103,14 @@ class ImportFilesTest extends AbstractTest {
 
     @Test
     void invalidAuthType() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Invalid value for option '--auth-type': expected one of [BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, OAUTH, SAML] (case-insensitive) but was 'notvalid'",
             "import-files",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--auth-type", "notvalid"
-        ), "Invalid value for option '--auth-type': expected one of [BASIC, DIGEST, CLOUD, KERBEROS, CERTIFICATE, OAUTH, SAML] (case-insensitive) but was 'notvalid'");
+        );
     }
 
     @Test
@@ -264,7 +265,7 @@ class ImportFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             CommandLine.ExitCode.SOFTWARE,
             "import-files",
             "--path", "src/test/resources/json-files/aggregates/array-of-objects.json",
@@ -273,7 +274,7 @@ class ImportFilesTest extends AbstractTest {
             "--collections", "files",
             "--permissions", DEFAULT_PERMISSIONS,
             "--compression", "gzip"
-        ));
+        );
 
         assertTrue(stderr.contains("Error: Unable to read file at"), "With --abort-read-on-failure, " +
             "the command should fail when it encounters an invalid gzipped file.");

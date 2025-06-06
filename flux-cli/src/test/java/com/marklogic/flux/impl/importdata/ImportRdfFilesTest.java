@@ -128,13 +128,13 @@ class ImportRdfFilesTest extends AbstractTest {
 
     @Test
     void invalidFileAbort() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-rdf-files",
             "--path", "src/test/resources/mixed-files/hello2.txt.gz",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString(),
             "--collections", "my-triples"
-        ));
+        );
 
         assertTrue(stderr.contains("Error: Unable to read file at"),
             "Unexpected stderr: " + stderr);

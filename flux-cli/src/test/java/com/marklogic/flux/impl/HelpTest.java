@@ -35,8 +35,10 @@ class HelpTest extends AbstractTest {
 
     @Test
     void helpForInvalidCommand() {
-        assertStderrContains(() -> run("help", "not_a_real_command"),
-            "Unknown subcommand 'not_a_real_command'.");
+        assertStderrContains(
+            "Unknown subcommand 'not_a_real_command'.",
+            "help", "not_a_real_command"
+        );
     }
 
     @Test

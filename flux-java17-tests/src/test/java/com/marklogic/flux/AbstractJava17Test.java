@@ -5,10 +5,13 @@ package com.marklogic.flux;
 
 import com.marklogic.flux.cli.Main;
 
+import java.io.PrintWriter;
+
 public abstract class AbstractJava17Test extends AbstractFluxTest {
 
-    protected final int run(String... args) {
-        return Main.run(args);
+    @Override
+    protected int run(PrintWriter errWriter, String... args) {
+        return Main.run(args, errWriter);
     }
 
 }

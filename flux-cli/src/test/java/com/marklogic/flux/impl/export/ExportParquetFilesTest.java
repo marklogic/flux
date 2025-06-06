@@ -49,13 +49,13 @@ class ExportParquetFilesTest extends AbstractTest {
 
     @Test
     void saveMode(@TempDir Path tempDir) {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "export-parquet-files",
             "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--path", tempDir.toFile().getAbsolutePath(),
             "--mode", SaveMode.ERRORIFEXISTS.name()
-        ));
+        );
 
         assertTrue(stderr.contains("already exists"), "This test is just verifying that --mode is interpreted " +
             "correctly; unexpected stderr: " + stderr);
