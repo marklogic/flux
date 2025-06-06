@@ -1,8 +1,9 @@
 /*
  * Copyright © 2025 MarkLogic Corporation. All Rights Reserved.
  */
-package com.marklogic.flux.tde;
+package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.tde.TdeInputs;
 import org.apache.spark.sql.types.*;
 
 import java.util.Arrays;
