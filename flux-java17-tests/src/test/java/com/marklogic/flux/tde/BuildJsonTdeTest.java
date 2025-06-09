@@ -9,6 +9,7 @@ import com.marklogic.flux.impl.importdata.SparkColumnIterator;
 import marklogicspark.marklogic.client.io.JacksonHandle;
 import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
+import net.javacrumbs.jsonunit.core.Option;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * expected TDE template in the test.
  */
 class BuildJsonTdeTest extends AbstractTdeTest {
+
+    private static final StructType DEFAULT_SCHEMA = new StructType().add("myString", DataTypes.StringType);
 
     @Test
     void allTypes() {
@@ -145,7 +148,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .withDirectories("dir1/", "/dir2/")
                 .withJsonRootName("my-root")
                 .withViewLayout("identical"),
-            new StructType().add("myString", DataTypes.StringType)
+            DEFAULT_SCHEMA
         );
 
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
@@ -170,13 +173,11 @@ class BuildJsonTdeTest extends AbstractTdeTest {
               }
             }""";
 
-        StructType schema = new StructType().add("myString", DataTypes.StringType);
-
         ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
                 .withContext("/some-custom-context")
                 .withJsonRootName("my-root")
                 .withDisabled(true),
-            schema
+            DEFAULT_SCHEMA
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
 
@@ -184,7 +185,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .withJsonRootName("my-root")
                 .withContext("/some-custom-context")
                 .withDisabled(true),
-            schema
+            DEFAULT_SCHEMA
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
@@ -227,8 +228,20 @@ class BuildJsonTdeTest extends AbstractTdeTest {
             .withColumnPermissions(Map.of("myString", Set.of("rest-reader", "rest-writer")))
             .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
 
-        ObjectNode tde = buildTde(inputs, new StructType().add("myString", DataTypes.StringType));
-        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+        ObjectNode tde = buildTde(inputs, DEFAULT_SCHEMA);
+        JsonAssertions.assertThatJson(tde)
+            // The Set of permission role names is unordered, and order doesn't matter in the TDE template.
+            .withOptions(Option.IGNORING_ARRAY_ORDER)
+            .isEqualTo(expectedTemplate);
+    }
+
+    @Test
+    void customUri() {
+        TdeInputs inputs = new TdeInputs("myschema", "myview")
+            .withUri("/my/uri.json");
+
+        TdeTemplate template = new JsonTdeBuilder().buildTde(inputs, new SparkColumnIterator(DEFAULT_SCHEMA, inputs));
+        assertEquals("/my/uri.json", template.getUri());
     }
 
     private ObjectNode buildTde(TdeInputs inputs, StructType schema) {

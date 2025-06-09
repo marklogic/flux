@@ -52,7 +52,7 @@ public class XmlTdeBuilder implements TdeBuilder {
         }
 
         XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName(), tdeInputs.getViewLayout());
-        xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getNamespaces());
+        xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getPathNamespaces());
         xmlTemplate.setCollections(tdeInputs.getCollections());
         xmlTemplate.setDirectories(tdeInputs.getDirectories());
         while (columns.hasNext()) {

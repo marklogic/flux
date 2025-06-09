@@ -103,9 +103,11 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
 
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+        TdeHelper tdeHelper = new TdeHelper(writeParams.getTdeParams(), writeParams.getJsonRootName(), writeParams.getXmlRootName(), writeParams.getXmlNamespace());
+        if (tdeHelper.logTemplateIfNecessary(dataset.schema())) {
             return null;
         }
+        tdeHelper.loadTemplateIfNecessary(dataset.schema(), getConnectionParams());
 
         return dataset;
     }

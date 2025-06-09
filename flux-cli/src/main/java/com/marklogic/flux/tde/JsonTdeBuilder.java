@@ -22,6 +22,15 @@ public class JsonTdeBuilder implements TdeBuilder {
         ObjectNode template = tde.putObject("template");
         template.put("context", tdeInputs.getContext());
 
+        if (tdeInputs.getPathNamespaces() != null) {
+            ArrayNode array = template.putArray("pathNamespace");
+            tdeInputs.getPathNamespaces().entrySet().forEach(entry -> {
+                ObjectNode namespace = array.addObject();
+                namespace.put("prefix", entry.getKey());
+                namespace.put("namespaceUri", entry.getValue());
+            });
+        }
+
         if (tdeInputs.isDisabled()) {
             template.put("enabled", false);
         }

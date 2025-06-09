@@ -40,7 +40,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        TdeInputs inputs = params.buildTdeInputs();
+        TdeInputs inputs = params.getTdeParams();
         String[] directories = inputs.getDirectories();
         assertEquals(2, directories.length);
         assertEquals("/dir1", directories[0]);
@@ -75,7 +75,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        TdeInputs inputs = params.buildTdeInputs();
+        TdeInputs inputs = params.getTdeParams();
 
         Map<String, String> columnVals = inputs.getColumnVals();
         assertEquals("customVal1", columnVals.get("column1"));

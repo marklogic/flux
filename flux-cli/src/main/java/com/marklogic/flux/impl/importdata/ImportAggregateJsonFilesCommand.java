@@ -136,10 +136,12 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+        TdeHelper tdeHelper = new TdeHelper(writeParams.getTdeParams(), writeParams.getJsonRootName(), writeParams.getXmlRootName(), writeParams.getXmlNamespace());
+        if (tdeHelper.logTemplateIfNecessary(dataset.schema())) {
             return null;
         }
-
+        tdeHelper.loadTemplateIfNecessary(dataset.schema(), getConnectionParams());
+        
         // If jsonLinesRaw, the MarkLogic connector is used, in which case the Spark file path column will not be present.
         if (readParams.uriIncludeFilePath && !readParams.jsonLinesRaw) {
             dataset = SparkUtil.addFilePathColumn(dataset);

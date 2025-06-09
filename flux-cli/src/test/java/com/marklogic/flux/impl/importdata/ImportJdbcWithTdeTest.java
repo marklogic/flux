@@ -119,6 +119,20 @@ class ImportJdbcWithTdeTest extends AbstractTest {
     }
 
     @Test
+    void tdeWithCustomRootName() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--json-root-name", "customRootName"
+        );
+
+        JsonNode tdeTemplate = schemasDatabaseClient.newJSONDocumentManager()
+            .read(JSON_TDE_URI, new JacksonHandle()).get();
+        assertEquals("/customRootName", tdeTemplate.get("template").get("context").asText());
+    }
+
+    @Test
     void tdeWithCustomUri() {
         importJdbcWithArgs(
             "--tde-schema", "junit",
@@ -241,13 +255,19 @@ class ImportJdbcWithTdeTest extends AbstractTest {
             "--query", "select * from customer where customer_id < 11",
             "--connection-string", makeConnectionString(),
             "--collections", "customer",
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/customer/{customer_id}.json"
+            "--permissions", DEFAULT_PERMISSIONS
         );
+
         List<String> args = new ArrayList<>(defaultArgs);
         for (String option : options) {
             args.add(option);
         }
+
+        if (!args.contains("--uri-template")) {
+            args.add("--uri-template");
+            args.add("/customer/{customer_id}.json");
+        }
+
         run(args.toArray(new String[0]));
     }
 

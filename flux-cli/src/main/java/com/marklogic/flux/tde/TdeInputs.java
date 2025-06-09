@@ -10,27 +10,30 @@ import java.util.Set;
 
 public class TdeInputs {
 
-    private final String schemaName;
-    private final String viewName;
-    private final Map<String, String> namespaces = new HashMap<>();
+    protected String schemaName;
+    protected String viewName;
+    protected final Map<String, String> pathNamespaces = new HashMap<>();
 
-    private static final String DEFAULT_CONTEXT = "/";
+    protected static final String DEFAULT_CONTEXT = "/";
 
-    private String uri;
-    private String context = DEFAULT_CONTEXT;
-    private String[] collections;
-    private String[] directories;
-    private String permissions;
-    private boolean disabled;
-    private String viewLayout;
-    private Map<String, String> columnVals;
-    private Map<String, String> columnTypes;
-    private Map<String, String> columnDefaultValues;
-    private Map<String, String> columnInvalidValues;
-    private Map<String, String> columnReindexing;
-    private Map<String, Set<String>> columnPermissions;
-    private Map<String, String> columnCollations;
-    private List<String> nullableColumns;
+    protected String uri;
+    protected String context = DEFAULT_CONTEXT;
+    protected String[] collections;
+    protected String[] directories;
+    protected String permissions;
+    protected boolean disabled;
+    protected String viewLayout;
+    protected Map<String, String> columnVals;
+    protected Map<String, String> columnTypes;
+    protected Map<String, String> columnDefaultValues;
+    protected Map<String, String> columnInvalidValues;
+    protected Map<String, String> columnReindexing;
+    protected Map<String, Set<String>> columnPermissions;
+    protected Map<String, String> columnCollations;
+    protected List<String> nullableColumns;
+
+    public TdeInputs() {
+    }
 
     public TdeInputs(String schemaName, String viewName) {
         this.schemaName = schemaName;
@@ -65,7 +68,7 @@ public class TdeInputs {
             // Don't override the context if the user already specified one.
             && DEFAULT_CONTEXT.equals(this.context)) {
             if (namespace != null) {
-                this.namespaces.put("ns1", namespace);
+                this.pathNamespaces.put("ns1", namespace);
                 this.context = "/ns1:" + xmlRootName;
             } else {
                 this.context = "/" + xmlRootName;
@@ -159,8 +162,8 @@ public class TdeInputs {
         return directories;
     }
 
-    public Map<String, String> getNamespaces() {
-        return namespaces;
+    public Map<String, String> getPathNamespaces() {
+        return pathNamespaces;
     }
 
     public String getPermissions() {
