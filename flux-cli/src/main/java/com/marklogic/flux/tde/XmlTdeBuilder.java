@@ -14,7 +14,6 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 public class XmlTdeBuilder implements TdeBuilder {
@@ -52,11 +51,22 @@ public class XmlTdeBuilder implements TdeBuilder {
         }
 
         XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName(), tdeInputs.getViewLayout());
-        xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getNamespaces());
+
+        final boolean hasContextNamespaceWithPrefix = tdeInputs.hasContextNamespaceWithPrefix();
+        if (hasContextNamespaceWithPrefix) {
+            xmlTemplate.setContext(tdeInputs.getContext(), tdeInputs.getContextNamespaceUri(), tdeInputs.getContextNamespacePrefix());
+        } else {
+            xmlTemplate.setContext(tdeInputs.getContext(), null, null);
+        }
+
         xmlTemplate.setCollections(tdeInputs.getCollections());
         xmlTemplate.setDirectories(tdeInputs.getDirectories());
         while (columns.hasNext()) {
-            xmlTemplate.addColumn(columns.next());
+            if (hasContextNamespaceWithPrefix) {
+                xmlTemplate.addColumn(columns.next(), tdeInputs.getContextNamespacePrefix());
+            } else {
+                xmlTemplate.addColumn(columns.next(), null);
+            }
         }
         if (tdeInputs.isDisabled()) {
             xmlTemplate.setDisabled();
@@ -87,23 +97,26 @@ public class XmlTdeBuilder implements TdeBuilder {
             columns = addChild(row, "columns");
         }
 
-        void setContext(String context, Map<String, String> namespaces) {
+        void setContext(String context, String contextNamespaceUri, String contextNamespacePrefix) {
             addChildWithText(root, "context", context);
-            if (namespaces != null && !namespaces.isEmpty()) {
+            if (contextNamespaceUri != null) {
                 Element pathNamespaces = addChild(root, "path-namespaces");
-                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                    Element pathNamespace = addChild(pathNamespaces, "path-namespace");
-                    addChildWithText(pathNamespace, "prefix", entry.getKey());
-                    addChildWithText(pathNamespace, "namespace-uri", entry.getValue());
-                }
+                Element pathNamespace = addChild(pathNamespaces, "path-namespace");
+                addChildWithText(pathNamespace, "prefix", contextNamespacePrefix);
+                addChildWithText(pathNamespace, "namespace-uri", contextNamespaceUri);
             }
         }
 
-        void addColumn(Column column) {
+        void addColumn(Column column, String contextNamespacePrefix) {
             Element columnElement = addChild(columns, "column");
             addChildWithText(columnElement, "name", column.getName());
             addChildWithText(columnElement, "scalar-type", column.getScalarType());
-            addChildWithText(columnElement, "val", column.getVal());
+
+            String val = column.getVal();
+            if (contextNamespacePrefix != null) {
+                val = String.format("%s:%s", contextNamespacePrefix, val);
+            }
+            addChildWithText(columnElement, "val", val);
 
             if (column.isNullable()) {
                 addChildWithText(columnElement, "nullable", "true");

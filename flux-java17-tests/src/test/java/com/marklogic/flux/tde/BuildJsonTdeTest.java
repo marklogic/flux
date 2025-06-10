@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class BuildJsonTdeTest extends AbstractTdeTest {
 
+    private static final StructType DEFAULT_SCHEMA = new StructType().add("myString", DataTypes.StringType);
+
     @Test
     void allTypes() {
         final String expectedTemplate = """
@@ -145,7 +147,39 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .withDirectories("dir1/", "/dir2/")
                 .withJsonRootName("my-root")
                 .withViewLayout("identical"),
-            new StructType().add("myString", DataTypes.StringType)
+            DEFAULT_SCHEMA
+        );
+
+        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+    }
+
+    @Test
+    void xmlRootName() {
+        final String expectedTemplate = """
+            {
+              "template" : {
+                "context" : "/ns1:my-root",
+                "pathNamespace": [
+                    {
+                        "prefix": "ns1",
+                        "namespaceUri": "org:example"
+                    }
+                ],
+                "rows" : [ {
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
+                  "columns" : [ {
+                    "name" : "myString",
+                    "val" : "ns1:myString",
+                    "scalarType" : "string"
+                  } ]
+                } ]
+              }
+            }""";
+
+        ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
+                .withXmlRootName("my-root", "org:example"),
+            DEFAULT_SCHEMA
         );
 
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
@@ -170,13 +204,11 @@ class BuildJsonTdeTest extends AbstractTdeTest {
               }
             }""";
 
-        StructType schema = new StructType().add("myString", DataTypes.StringType);
-
         ObjectNode tde = buildTde(new TdeInputs("myschema", "myview")
                 .withContext("/some-custom-context")
                 .withJsonRootName("my-root")
                 .withDisabled(true),
-            schema
+            DEFAULT_SCHEMA
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
 
@@ -184,7 +216,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .withJsonRootName("my-root")
                 .withContext("/some-custom-context")
                 .withDisabled(true),
-            schema
+            DEFAULT_SCHEMA
         );
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
@@ -227,7 +259,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
             .withColumnPermissions(Map.of("myString", Set.of("rest-reader", "rest-writer")))
             .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
 
-        ObjectNode tde = buildTde(inputs, new StructType().add("myString", DataTypes.StringType));
+        ObjectNode tde = buildTde(inputs, DEFAULT_SCHEMA);
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
 

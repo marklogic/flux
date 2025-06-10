@@ -22,6 +22,13 @@ public class JsonTdeBuilder implements TdeBuilder {
         ObjectNode template = tde.putObject("template");
         template.put("context", tdeInputs.getContext());
 
+        if (tdeInputs.hasContextNamespaceWithPrefix()) {
+            ArrayNode array = template.putArray("pathNamespace");
+            ObjectNode namespace = array.addObject();
+            namespace.put("prefix", tdeInputs.getContextNamespacePrefix());
+            namespace.put("namespaceUri", tdeInputs.getContextNamespaceUri());
+        }
+
         if (tdeInputs.isDisabled()) {
             template.put("enabled", false);
         }
@@ -49,11 +56,16 @@ public class JsonTdeBuilder implements TdeBuilder {
             row.put("viewLayout", viewLayout);
         }
 
-        addColumns(row, columns);
+        if (tdeInputs.hasContextNamespaceWithPrefix()) {
+            addColumns(row, columns, tdeInputs.getContextNamespacePrefix());
+        } else {
+            addColumns(row, columns, null);
+        }
+
         return new JsonTemplate(tde, tdeInputs.getPermissions(), tdeInputs);
     }
 
-    private static void addColumns(ObjectNode row, Iterator<Column> columns) {
+    private static void addColumns(ObjectNode row, Iterator<Column> columns, String contextNamespacePrefix) {
         ArrayNode columnsArray = row.putArray("columns");
         while (columns.hasNext()) {
             final Column column = columns.next();
@@ -61,15 +73,20 @@ public class JsonTdeBuilder implements TdeBuilder {
             if (scalarType == null) {
                 continue;
             }
-            addColumn(columnsArray, column);
+            addColumn(columnsArray, column, contextNamespacePrefix);
         }
     }
 
-    private static void addColumn(ArrayNode columns, Column column) {
+    private static void addColumn(ArrayNode columns, Column column, String contextNamespacePrefix) {
         ObjectNode columnNode = columns.addObject();
         columnNode.put("name", column.getName());
         columnNode.put("scalarType", column.getScalarType());
-        columnNode.put("val", column.getVal());
+
+        String val = column.getVal();
+        if (contextNamespacePrefix != null) {
+            val = String.format("%s:%s", contextNamespacePrefix, val);
+        }
+        columnNode.put("val", val);
 
         if (column.isNullable()) {
             columnNode.put("nullable", true);

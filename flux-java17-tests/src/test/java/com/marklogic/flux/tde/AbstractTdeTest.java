@@ -14,15 +14,12 @@ abstract class AbstractTdeTest extends AbstractJava17Test {
     protected final void verifyTdeCanBeLoaded(TdeTemplate template) {
         Properties props = loadTestProperties();
         final String uri = template.getUri();
-        DatabaseClient client = null;
-        try {
-            client = DatabaseClientFactory.newClient(props::get);
+        try (DatabaseClient client = DatabaseClientFactory.newClient(props::get)) {
             // Verify that the TDE can be loaded without errors.
             new TdeLoader(client).loadTde(template);
         } finally {
-            if (client != null) {
-                client.newDocumentManager().delete(uri);
-                client.release();
+            try (com.marklogic.client.DatabaseClient schemasClient = newDatabaseClient("flux-test-schemas")) {
+                schemasClient.newDocumentManager().delete(uri);
             }
         }
     }
