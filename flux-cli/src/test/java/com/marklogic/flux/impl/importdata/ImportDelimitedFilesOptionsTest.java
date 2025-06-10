@@ -179,7 +179,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("http://marklogic.com/collation/", inputs.getColumnCollations().get("col1"));
 
         // Verify TdeParams-specific fields
-        assertEquals("xml", tdeParams.get().getTdeDocumentType());
-        assertTrue(tdeParams.get().isTdePreview());
+        assertEquals("xml", tdeParams.get().getDocumentType());
+        assertTrue(tdeParams.get().isPreview());
     }
 }

@@ -13,6 +13,7 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -246,6 +247,10 @@ class BuildJsonTdeTest extends AbstractTdeTest {
               }
             }""";
 
+        Set<String> roleNames = new LinkedHashSet<>();
+        roleNames.add("rest-reader");
+        roleNames.add("rest-writer");
+
         TdeInputs inputs = new TdeInputs("myschema", "myview")
             .withContext("/some-custom-context")
             .withJsonRootName("my-root")
@@ -256,7 +261,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
             .withColumnDefaultValues(Map.of("myString", "0"))
             .withColumnInvalidValues(Map.of("myString", "reject"))
             .withColumnReindexing(Map.of("myString", "visible"))
-            .withColumnPermissions(Map.of("myString", Set.of("rest-reader", "rest-writer")))
+            .withColumnPermissions(Map.of("myString", roleNames))
             .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
 
         ObjectNode tde = buildTde(inputs, DEFAULT_SCHEMA);
