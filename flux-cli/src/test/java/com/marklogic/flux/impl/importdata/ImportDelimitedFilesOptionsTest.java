@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.Flux;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.flux.tde.TdeInputs;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -110,5 +112,74 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         assertEquals(2, nullableColumns.size());
         assertTrue(nullableColumns.contains("column1"));
         assertTrue(nullableColumns.contains("column2"));
+    }
+
+    @Test
+    void tdeOptionsFromApi() {
+        AtomicReference<WriteStructuredDocumentParams> writeParams = new AtomicReference<>();
+        AtomicReference<TdeParams> tdeParams = new AtomicReference<>();
+
+        Flux.importDelimitedFiles()
+            .from("src/test/resources/delimited-files/three-rows.csv")
+            .to(options -> {
+                writeParams.set((WriteStructuredDocumentParams) options);
+                options.tdeOptions(tdeOptions -> {
+                    tdeParams.set((TdeParams) tdeOptions);
+                    tdeOptions
+                        .schemaName("api-schema")
+                        .viewName("api-view")
+                        .documentType("xml")
+                        .preview()
+                        .permissions("role1,read,role2,update")
+                        .collections("collection1,collection2")
+                        .directories(List.of("/dir1", "/dir2"))
+                        .context("/custom-context")
+                        .uri("/custom/uri.xml")
+                        .templateDisabled()
+                        .viewLayout("identical")
+                        .columnVals(Map.of("col1", "val1"))
+                        .columnTypes(Map.of("col1", "string"))
+                        .columnDefaultValues(Map.of("col1", "default"))
+                        .columnInvalidValues(Map.of("col1", "ignore"))
+                        .columnReindexing(Map.of("col1", "hidden"))
+                        .columnPermissions(Map.of("col1", "role1,role2"))
+                        .nullableColumns(List.of("col1"))
+                        .columnCollations(Map.of("col1", "http://marklogic.com/collation/"));
+                });
+            });
+
+        WriteStructuredDocumentParams params = writeParams.get();
+        TdeInputs inputs = params.buildTdeInputs();
+
+        // Verify all TdeOptions methods were applied correctly
+        assertEquals("api-schema", inputs.getSchemaName());
+        assertEquals("api-view", inputs.getViewName());
+        assertEquals("/custom-context", inputs.getContext());
+        assertEquals("/custom/uri.xml", inputs.getUri());
+        assertTrue(inputs.isDisabled());
+        assertEquals("identical", inputs.getViewLayout());
+        assertEquals("role1,read,role2,update", inputs.getPermissions());
+
+        assertEquals(2, inputs.getCollections().length);
+        assertEquals("collection1", inputs.getCollections()[0]);
+        assertEquals("collection2", inputs.getCollections()[1]);
+
+        assertEquals(2, inputs.getDirectories().length);
+        assertEquals("/dir1", inputs.getDirectories()[0]);
+        assertEquals("/dir2", inputs.getDirectories()[1]);
+
+        assertEquals("val1", inputs.getColumnVals().get("col1"));
+        assertEquals("string", inputs.getColumnTypes().get("col1"));
+        assertEquals("default", inputs.getColumnDefaultValues().get("col1"));
+        assertEquals("ignore", inputs.getColumnInvalidValues().get("col1"));
+        assertEquals("hidden", inputs.getColumnReindexing().get("col1"));
+        assertTrue(inputs.getColumnPermissions().get("col1").contains("role1"));
+        assertTrue(inputs.getColumnPermissions().get("col1").contains("role2"));
+        assertTrue(inputs.getNullableColumns().contains("col1"));
+        assertEquals("http://marklogic.com/collation/", inputs.getColumnCollations().get("col1"));
+
+        // Verify TdeParams-specific fields
+        assertEquals("xml", tdeParams.get().getTdeDocumentType());
+        assertTrue(tdeParams.get().isTdePreview());
     }
 }
