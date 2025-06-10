@@ -8,6 +8,7 @@ import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.flux.impl.importdata.WriteStructuredDocumentParams;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
@@ -37,9 +38,11 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
             return null;
         }
+
         return super.afterDatasetLoaded(dataset);
     }
 

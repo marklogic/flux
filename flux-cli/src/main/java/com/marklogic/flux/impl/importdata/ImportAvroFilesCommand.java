@@ -7,6 +7,7 @@ import com.marklogic.flux.api.AvroFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -103,7 +104,8 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
 
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
             return null;
         }
 

@@ -10,6 +10,7 @@ import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.JdbcParams;
 import com.marklogic.flux.impl.JdbcUtil;
 import com.marklogic.flux.impl.OptionsUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
@@ -53,9 +54,12 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
         dataset = readParams.aggregationParams.applyGroupBy(dataset);
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
             return null;
         }
+
         return dataset;
     }
 
