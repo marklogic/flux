@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.tde;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,12 +11,14 @@ public class TdeInputs {
 
     private final String schemaName;
     private final String viewName;
-    private final Map<String, String> namespaces = new HashMap<>();
 
     private static final String DEFAULT_CONTEXT = "/";
 
     private String uri;
     private String context = DEFAULT_CONTEXT;
+    private String contextNamespaceUri;
+    private String contextNamespacePrefix;
+
     private String[] collections;
     private String[] directories;
     private String permissions;
@@ -60,13 +61,18 @@ public class TdeInputs {
         return this;
     }
 
-    public TdeInputs withXmlRootName(String xmlRootName, String namespace) {
+    public TdeInputs withXmlRootName(String xmlRootName, String namespaceUri) {
+        return withXmlRootName(xmlRootName, namespaceUri, "ns1");
+    }
+
+    public TdeInputs withXmlRootName(String xmlRootName, String namespaceUri, String namespacePrefix) {
         if (xmlRootName != null && !xmlRootName.isEmpty()
             // Don't override the context if the user already specified one.
             && DEFAULT_CONTEXT.equals(this.context)) {
-            if (namespace != null) {
-                this.namespaces.put("ns1", namespace);
-                this.context = "/ns1:" + xmlRootName;
+            if (namespaceUri != null) {
+                this.contextNamespaceUri = namespaceUri;
+                this.contextNamespacePrefix = namespacePrefix;
+                this.context = String.format("/%s:%s", namespacePrefix, xmlRootName);
             } else {
                 this.context = "/" + xmlRootName;
             }
@@ -159,10 +165,6 @@ public class TdeInputs {
         return directories;
     }
 
-    public Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
     public String getPermissions() {
         return permissions;
     }
@@ -209,5 +211,18 @@ public class TdeInputs {
 
     public List<String> getNullableColumns() {
         return nullableColumns;
+    }
+
+    public boolean hasContextNamespaceWithPrefix() {
+        return contextNamespaceUri != null && contextNamespacePrefix != null
+            && !contextNamespaceUri.trim().isEmpty() && !contextNamespacePrefix.trim().isEmpty();
+    }
+
+    public String getContextNamespaceUri() {
+        return contextNamespaceUri;
+    }
+
+    public String getContextNamespacePrefix() {
+        return contextNamespacePrefix;
     }
 }

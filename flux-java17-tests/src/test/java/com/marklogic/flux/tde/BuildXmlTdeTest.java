@@ -69,15 +69,15 @@ class BuildXmlTdeTest extends AbstractTdeTest {
                     <column>
                       <name>myString</name>
                       <scalar-type>string</scalar-type>
-                      <val>myString</val>
+                      <val>ex:myString</val>
                     </column>
                   </columns>
                 </row>
               </rows>
-              <context>/ns1:my-root</context>
+              <context>/ex:my-root</context>
               <path-namespaces>
                 <path-namespace>
-                  <prefix>ns1</prefix>
+                  <prefix>ex</prefix>
                   <namespace-uri>org:example</namespace-uri>
                 </path-namespace>
               </path-namespaces>
@@ -96,7 +96,7 @@ class BuildXmlTdeTest extends AbstractTdeTest {
                 .withCollections("customer", "another-collection")
                 .withDirectories("/dir1/", "dir2/")
                 .withViewLayout("sparse")
-                .withXmlRootName("my-root", "org:example"));
+                .withXmlRootName("my-root", "org:example", "ex"));
 
         verifyTemplate(expectedXml, doc);
     }

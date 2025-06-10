@@ -4,14 +4,18 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.expression.PlanBuilder;
 import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
 import com.marklogic.client.row.RowManager;
 import com.marklogic.client.row.RowRecord;
 import com.marklogic.client.row.RowSet;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
+import com.marklogic.junit5.XmlNode;
+import org.jdom2.Namespace;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,6 +117,71 @@ class ImportJdbcWithTdeTest extends AbstractTest {
             // Including a second directory to ensure that it doesn't cause an error.
             "--tde-directory", "/doesnt-matter/"
         );
+
+        assertCollectionSize("customer", 10);
+        verifyOpticQueryUsingTdeViewReturnsCustomers();
+    }
+
+    @Test
+    void tdeWithJsonRootName() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--json-root-name", "customRootName"
+        );
+
+        JsonNode tdeTemplate = schemasDatabaseClient.newJSONDocumentManager()
+            .read(JSON_TDE_URI, new JacksonHandle()).get();
+        assertEquals("/customRootName", tdeTemplate.get("template").get("context").asText());
+    }
+
+    @Test
+    void tdeWithXmlRootNameAndNamespace() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--xml-root-name", "customRootName",
+            "--xml-namespace", "http://example.org",
+            "--uri-template", "/customer/{customer_id}.xml"
+        );
+
+        JsonNode tdeTemplate = schemasDatabaseClient.newJSONDocumentManager().read(JSON_TDE_URI, new JacksonHandle()).get();
+        assertEquals("/ns1:customRootName", tdeTemplate.get("template").get("context").asText());
+
+        ArrayNode namespaces = tdeTemplate.get("template").withArray("pathNamespace");
+        assertEquals(1, namespaces.size());
+
+        JsonNode namespace = namespaces.get(0);
+        assertEquals("http://example.org", namespace.get("namespaceUri").asText());
+        assertEquals("ns1", namespace.get("prefix").asText(),
+            "For now, we're just using a default namspace prefix of 'ns1', knowing that we only ever care about a " +
+                "single namespace, which is the one that a user can specify via --xml-namespace.");
+
+        assertCollectionSize("customer", 10);
+        verifyOpticQueryUsingTdeViewReturnsCustomers();
+    }
+
+    @Test
+    void xmlTdeWithXmlRootNameAndNamespace() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-document-type", "xml",
+            "--xml-root-name", "customRootName",
+            "--xml-namespace", "http://example.org",
+            "--uri-template", "/customer/{customer_id}.xml"
+        );
+
+        String xml = schemasDatabaseClient.newJSONDocumentManager().read(XML_TDE_URI, new StringHandle()).get();
+        XmlNode tdeTemplate = new XmlNode(xml, Namespace.getNamespace("tde", "http://marklogic.com/xdmp/tde"));
+        tdeTemplate.assertElementValue("/tde:template/tde:context", "/ns1:customRootName");
+        tdeTemplate.assertElementValue(
+            "When a user specifies an XML root name and namespace, the TDE should use the namespace prefix 'ns1' " +
+                "for the column values, which is the default prefix for a single namespace in a TDE.",
+            "/tde:template/tde:rows/tde:row/tde:columns/tde:column[1]/tde:val", "ns1:customer_id");
 
         assertCollectionSize("customer", 10);
         verifyOpticQueryUsingTdeViewReturnsCustomers();
@@ -241,13 +310,19 @@ class ImportJdbcWithTdeTest extends AbstractTest {
             "--query", "select * from customer where customer_id < 11",
             "--connection-string", makeConnectionString(),
             "--collections", "customer",
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/customer/{customer_id}.json"
+            "--permissions", DEFAULT_PERMISSIONS
         );
+
         List<String> args = new ArrayList<>(defaultArgs);
         for (String option : options) {
             args.add(option);
         }
+
+        if (!args.contains("--uri-template")) {
+            args.add("--uri-template");
+            args.add("/customer/{customer_id}.json");
+        }
+
         run(args.toArray(new String[0]));
     }
 
