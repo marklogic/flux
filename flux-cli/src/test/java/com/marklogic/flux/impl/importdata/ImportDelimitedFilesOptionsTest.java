@@ -42,7 +42,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        TdeInputs inputs = params.buildTdeInputs();
+        TdeInputs inputs = params.newTdeHelper().buildTdeInputs();
         String[] directories = inputs.getDirectories();
         assertEquals(2, directories.length);
         assertEquals("/dir1", directories[0]);
@@ -77,7 +77,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         );
 
         WriteStructuredDocumentParams params = (WriteStructuredDocumentParams) command.getWriteParams();
-        TdeInputs inputs = params.buildTdeInputs();
+        TdeInputs inputs = params.newTdeHelper().buildTdeInputs();
 
         Map<String, String> columnVals = inputs.getColumnVals();
         assertEquals("customVal1", columnVals.get("column1"));
@@ -149,7 +149,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
             });
 
         WriteStructuredDocumentParams params = writeParams.get();
-        TdeInputs inputs = params.buildTdeInputs();
+        TdeInputs inputs = params.newTdeHelper().buildTdeInputs();
 
         // Verify all TdeOptions methods were applied correctly
         assertEquals("api-schema", inputs.getSchemaName());

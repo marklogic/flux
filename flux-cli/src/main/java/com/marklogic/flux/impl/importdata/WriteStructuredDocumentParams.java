@@ -5,14 +5,9 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.TdeOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
-import com.marklogic.flux.impl.ConnectionParams;
 import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.tde.*;
-import com.marklogic.spark.ContextSupport;
+import com.marklogic.flux.impl.TdeHelper;
 import com.marklogic.spark.Options;
-import com.marklogic.spark.Util;
-import marklogicspark.marklogic.client.DatabaseClient;
-import org.apache.spark.sql.types.StructType;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -64,33 +59,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     }
 
     /**
-     * @param sparkSchema
-     * @param connectionParams
-     * @return true if TDE was generated and previewed, false otherwise. This will likely change once we
-     * support loading the TDE into MarkLogic
+     * Knows how to provide the necessary inputs to TdeHelper.
+     *
+     * @return
      */
-    public boolean generateTde(StructType sparkSchema, ConnectionParams connectionParams) {
-        if (tdeParams.getTdeSchema() != null && tdeParams.getTdeView() != null) {
-            TdeInputs inputs = tdeParams.buildTdeInputs(jsonRootName, xmlRootName, xmlNamespace);
-            TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getTdeDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
-            TdeTemplate tdeTemplate = tdeBuilder.buildTde(inputs, new SparkColumnIterator(sparkSchema, inputs));
-            if (tdeParams.isTdePreview()) {
-                if (Util.MAIN_LOGGER.isInfoEnabled()) {
-                    Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
-                }
-                return true;
-            } else {
-                try (DatabaseClient client = new ContextSupport(connectionParams.makeOptions()).connectToMarkLogic()) {
-                    new TdeLoader(client).loadTde(tdeTemplate);
-                }
-            }
-        }
-
-        return false;
-    }
-
-    protected TdeInputs buildTdeInputs() {
-        return tdeParams.buildTdeInputs(jsonRootName, xmlRootName, xmlNamespace);
+    public TdeHelper newTdeHelper() {
+        return new TdeHelper(tdeParams, jsonRootName, xmlRootName, xmlNamespace);
     }
 
     @Override

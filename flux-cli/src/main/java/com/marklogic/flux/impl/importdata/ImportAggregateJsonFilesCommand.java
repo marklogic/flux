@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.AggregateJsonFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -136,7 +137,8 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        if (writeParams.generateTde(dataset.schema(), getConnectionParams())) {
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
             return null;
         }
 
