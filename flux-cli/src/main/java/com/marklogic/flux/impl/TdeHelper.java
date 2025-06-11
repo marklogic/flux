@@ -40,10 +40,10 @@ public class TdeHelper {
     public Result logOrLoadTemplate(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeParams.hasSchemaAndView()) {
             TdeInputs tdeInputs = buildTdeInputs();
-            TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getTdeDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
+            TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
             TdeTemplate tdeTemplate = tdeBuilder.buildTde(tdeInputs, new SparkColumnIterator(sparkSchema, tdeInputs));
 
-            if (tdeParams.isTdePreview()) {
+            if (tdeParams.isPreview()) {
                 if (Util.MAIN_LOGGER.isInfoEnabled()) {
                     Util.MAIN_LOGGER.info("Generated TDE:\n{}", tdeTemplate.toPrettyString());
                 }
