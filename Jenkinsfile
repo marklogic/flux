@@ -1,3 +1,5 @@
+@Library('shared-libraries') _
+
 def runtests(){
   sh label:'mlsetup', script: '''#!/bin/bash
           cd $WORKSPACE/flux;
@@ -39,11 +41,9 @@ def runtests(){
 }
 
 def postCleanup(){
+  updateWorkspacePermissions()
   sh label:'mlcleanup', script: '''#!/bin/bash
     cd $WORKSPACE/flux;
-    sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
-    docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
-    docker exec -i --privileged --user root flux-sonarqube-1 /bin/sh -c "chmod -R 777 /opt/sonarqube" || true;
     docker-compose rm -fsv || true;
     echo "y" | docker volume prune --filter all=1 || true;
   '''
