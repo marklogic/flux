@@ -40,4 +40,10 @@ public interface EmbedderOptions {
     EmbedderOptions batchSize(int batchSize);
 
     EmbedderOptions embedderOptions(Map<String, String> options);
+
+    /**
+     * @param prompt Optional prompt to prepend to each chunk of text before embedding.
+     * @since 1.4.0
+     */
+    EmbedderOptions prompt(String prompt);
 }

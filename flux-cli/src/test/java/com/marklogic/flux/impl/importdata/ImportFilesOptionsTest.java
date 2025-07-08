@@ -144,6 +144,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--embedder", "azure",
             "-Ekey=value",
             "-EotherKey=otherValue",
+            "--embedder-prompt", "This is a prompt",
             "--embedder-chunks-json-pointer", "/some/chunks",
             "--embedder-text-json-pointer", "/my-text",
             "--embedder-chunks-xpath", "/xml/chunks",
@@ -155,6 +156,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
 
         assertOptions(command.getWriteParams().makeOptions(),
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "com.marklogic.flux.langchain4j.embedding.AzureOpenAiEmbeddingModelFunction",
+            Options.WRITE_EMBEDDER_PROMPT, "This is a prompt",
             Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER, "/some/chunks",
             Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/my-text",
             Options.WRITE_EMBEDDER_CHUNKS_XPATH, "/xml/chunks",

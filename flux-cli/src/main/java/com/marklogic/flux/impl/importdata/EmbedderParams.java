@@ -20,6 +20,12 @@ public class EmbedderParams implements EmbedderOptions {
     private String embedder;
 
     @CommandLine.Option(
+        names = "--embedder-prompt",
+        description = "A prompt to prepend to the text of each chunk before generating an embedding."
+    )
+    private String prompt;
+
+    @CommandLine.Option(
         names = {"-E"},
         description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
     )
@@ -76,6 +82,7 @@ public class EmbedderParams implements EmbedderOptions {
         Map<String, String> options = new HashMap<>();
         if (embedder != null) {
             OptionsUtil.addOptions(options,
+                Options.WRITE_EMBEDDER_PROMPT, prompt,
                 Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, determineClassName(embedder),
                 Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, textJsonPointer,
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
@@ -151,6 +158,12 @@ public class EmbedderParams implements EmbedderOptions {
     @Override
     public EmbedderOptions embedderOptions(Map<String, String> options) {
         this.embeddingModelOptions = options;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions prompt(String prompt) {
+        this.prompt = prompt;
         return this;
     }
 
