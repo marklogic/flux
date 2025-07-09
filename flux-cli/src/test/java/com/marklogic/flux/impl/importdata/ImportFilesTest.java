@@ -129,7 +129,8 @@ class ImportFilesTest extends AbstractTest {
         String kind = getDatabaseClient().newServerEval()
             .xquery("xdmp:node-kind(doc('/hello.xml.unknown')/node())")
             .evalAs(String.class);
-        assertEquals("element", kind);
+        assertEquals("element", kind, "The user of document-type should inform MarkLogic that the " +
+            "document should be treated as XML, even though the URI extension is not recognized by MarkLogic.");
     }
 
     @Test

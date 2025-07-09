@@ -116,7 +116,11 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
     public static class WriteGenericDocumentsParams extends WriteDocumentParams<WriteGenericDocumentsOptions> implements WriteGenericDocumentsOptions {
 
-        private DocumentType documentType;
+        @CommandLine.Option(
+            names = "--document-type",
+            description = "Forces a type for any document with an unrecognized URI extension. " + OptionsUtil.VALID_VALUES_DESCRIPTION
+        )
+        private com.marklogic.flux.api.DocumentType documentType;
 
         @CommandLine.Option(
             names = "--extract-text",
@@ -126,7 +130,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @CommandLine.Option(
             names = "--extracted-text-document-type",
-            description = "Specifies the type of document to create with the extracted text. Defaults to JSON."
+            description = "Specifies the type of document to create with the extracted text. Defaults to 'json'; can be 'json' or 'xml'."
         )
         private String extractedTextDocumentType;
 
@@ -150,12 +154,18 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         private boolean extractedTextDropSource;
 
         @Override
-        @CommandLine.Option(
-            names = "--document-type",
-            description = "Forces a type for any document with an unrecognized URI extension. " + OptionsUtil.VALID_VALUES_DESCRIPTION
-        )
-        public WriteGenericDocumentsOptions documentType(DocumentType documentType) {
+        public WriteGenericDocumentsOptions documentType(com.marklogic.flux.api.DocumentType documentType) {
             this.documentType = documentType;
+            return this;
+        }
+
+        /**
+         * @deprecated Use {@link #documentType(com.marklogic.flux.api.DocumentType)} instead
+         */
+        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
+        @Deprecated(since = "1.4.0", forRemoval = true)
+        public WriteGenericDocumentsOptions documentType(GenericFilesImporter.DocumentType documentType) {
+            this.documentType = documentType != null ? com.marklogic.flux.api.DocumentType.valueOf(documentType.name()) : null;
             return this;
         }
 
@@ -177,12 +187,20 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             return this;
         }
 
+        /**
+         * @deprecated Use {@link #extractedTextDocumentType(String)} instead
+         */
+        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
+        @Deprecated(since = "1.4.0", forRemoval = true)
         @Override
         public WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType) {
-            if (DocumentType.TEXT.equals(documentType)) {
-                documentType = DocumentType.JSON;
-            }
-            this.extractedTextDocumentType = documentType.name();
+            this.extractedTextDocumentType = documentType != null ? documentType.name() : null;
+            return this;
+        }
+
+        @Override
+        public WriteGenericDocumentsOptions extractedTextDocumentType(String documentType) {
+            this.extractedTextDocumentType = documentType;
             return this;
         }
 

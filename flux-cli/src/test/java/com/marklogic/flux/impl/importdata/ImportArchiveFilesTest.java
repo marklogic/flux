@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.PermissionsTester;
@@ -10,6 +11,7 @@ import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +21,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     void allMetadata() {
         run(
             "import-archive-files",
-            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/archive-files/archive.zip",
             "--uri-replace", ".*archive.zip,''",
             "--connection-string", makeConnectionString(),
 
@@ -48,7 +50,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     void subsetOfMetadata() {
         run(
             "import-archive-files",
-            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/archive-files/archive.zip",
             "--categories", "collections,permissions",
             "--uri-replace", ".*archive.zip,''",
             "--connection-string", makeConnectionString()
@@ -72,7 +74,7 @@ class ImportArchiveFilesTest extends AbstractTest {
     void dontAbortOnReadFailureByDefault() {
         String stderr = runAndReturnStderr(
             "import-archive-files",
-            "--path", "src/test/resources/archive-files",
+            "--path", "src/test/resources/archive-files/archive.zip",
             "--path", "src/test/resources/mlcp-archives",
             "--connection-string", makeConnectionString()
         );
@@ -80,7 +82,7 @@ class ImportArchiveFilesTest extends AbstractTest {
         assertFalse(stderr.contains("Command failed"),
             "The command should log error by default; stderr: " + stderr);
 
-        assertCollectionSize("The docs from the valid MLCP archive should still be imported", "collection1", 2);
+        assertCollectionSize("The docs from the valid archive should still be imported", "collection1", 2);
     }
 
     @Test
@@ -96,6 +98,31 @@ class ImportArchiveFilesTest extends AbstractTest {
             stderr.contains("Error: Could not find metadata entry for entry test/1.xml in file"),
             "Unexpected stderr: " + stderr
         );
+    }
+
+    @Test
+    void jsonDocsNoExtension() {
+        run(
+            "import-archive-files",
+            "--path", "src/test/resources/archive-files/json-docs-no-extension.zip",
+            "--connection-string", makeConnectionString(),
+            "--uri-replace", ".*json-docs-no-extension.zip,''",
+            "--document-type", "json"
+        );
+
+        JsonNode doc1 = readJsonDocument("test/doc1");
+        assertEquals(1, doc1.get("doc").asInt());
+        JsonNode doc2 = readJsonDocument("test/doc2");
+        assertEquals(2, doc2.get("doc").asInt());
+
+        Stream.of("test/doc1", "test/doc2").forEach(uri -> {
+            String nodeKind = getDatabaseClient().newServerEval()
+                .xquery(String.format("xdmp:node-kind(fn:doc('%s')/node())", uri))
+                .evalAs(String.class);
+            assertEquals("object", nodeKind, "The user of --document-type should cause the documents to be loaded " +
+                "as JSON objects instead of binaries. Without --document-type, MarkLogic will treat the documents as " +
+                "binaries since they don't have an extension.");
+        });
     }
 
     private void verifyCollections(DocumentMetadataHandle metadata) {
