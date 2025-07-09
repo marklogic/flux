@@ -344,3 +344,48 @@ You can configure Flux to include logging specific to the generation of embeddin
 
 1. Open the `./conf/log4j2.properties` file in an editor. 
 2. Adjust the `logger.marklogiclangchain.level` entry to have a value of `INFO` or `DEBUG`.
+
+## Configuring a prompt
+
+When generating embeddings for chunks of text with Flux 1.4.0 or higher, you can prepend a prompt to each chunk before 
+sending it to the embedding model. This can be useful for providing context or instructions to the embedding model that 
+may improve the quality and relevance of the generated embeddings for your specific use case.
+
+To configure a prompt, use the following option:
+
+    --embedder-prompt "Your prompt text here"
+
+The prompt will be prepended to the text of each chunk before the embedding is generated. For example, if you have a 
+chunk with the text "MarkLogic is a database" and specify a prompt of "Represent this text for retrieval:", the 
+embedding model will receive the combined text "Represent this text for retrieval: MarkLogic is a database".
+
+### When to use a prompt
+
+Consider using a prompt in the following scenarios:
+
+1. **Domain-specific context**: Provide context about the domain or subject matter of your text to help the embedding 
+   model generate more appropriate embeddings. For example: `--embedder-prompt "This is a medical document:"`
+
+2. **Retrieval optimization**: Some embedding models perform better when given explicit instructions about how the 
+   embeddings will be used. For example: `--embedder-prompt "Represent this document for semantic search:"`
+
+3. **Task-specific instructions**: Guide the embedding model to focus on specific aspects of the text that are 
+   important for your use case. For example: `--embedder-prompt "Focus on the technical concepts in this text:"`
+
+4. **Language or format hints**: Provide hints about the language or format of the content when processing mixed 
+   content. For example: `--embedder-prompt "This is legal text in English:"`
+
+### Important considerations
+
+- **Embedding model dependency**: The effectiveness of prompts varies significantly between different embedding models. 
+  Some models are specifically designed to work with prompts, while others may ignore them or produce unexpected results.
+
+- **Prompt consistency**: Use the same prompt for all documents that you intend to search together using vector queries. 
+  Inconsistent prompting across documents in the same collection may lead to reduced search quality.
+
+- **Testing recommended**: The impact of prompts on embedding quality depends on your specific data and use case. It's 
+  recommended to test different prompts with a small subset of your data to evaluate their effectiveness before 
+  processing large datasets.
+
+- **Token limits**: Be aware that the prompt will be added to each chunk, potentially increasing the total token count 
+  sent to the embedding model. This may affect performance and costs, especially for models with token-based pricing.

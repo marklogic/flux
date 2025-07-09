@@ -70,6 +70,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "--splitter-max-chunk-size", "500",
             "--splitter-sidecar-max-chunks", "2",
             "--embedder", "ollama",
+            "--embedder-prompt", "This is only included to ensure the option doesn't cause an error.",
             "-Ebase-url=http://localhost:8008",
             "-Emodel-name=all-minilm"
         );
