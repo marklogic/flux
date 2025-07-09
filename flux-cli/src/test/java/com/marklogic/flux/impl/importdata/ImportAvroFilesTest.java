@@ -157,7 +157,6 @@ class ImportAvroFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS
         );
 
-        System.out.println(stderr);
         assertTrue(stderr.contains("Error: Not an Avro data file"), "Actual stderr: " + stderr);
     }
 

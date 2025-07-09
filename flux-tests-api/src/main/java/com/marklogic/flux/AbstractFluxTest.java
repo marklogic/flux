@@ -21,8 +21,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,9 +83,7 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
 
     @Override
     protected String getJavascriptForDeletingDocumentsBeforeTestRuns() {
-        return "declareUpdate(); " +
-            "for (var uri of cts.uris(null, [], cts.notQuery(cts.collectionQuery('test-data')))) " +
-            "{xdmp.documentDelete(uri)}";
+        return "declareUpdate(); " + "for (var uri of cts.uris(null, [], cts.notQuery(cts.collectionQuery('test-data')))) " + "{xdmp.documentDelete(uri)}";
     }
 
     protected final String makeConnectionString() {
@@ -93,38 +92,12 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     }
 
     /**
-     * Handy method for running anything and returning everything written to stdout - except that this is
-     * proving to be very fragile, as sometimes nothing gets written to the byte stream. An individual test that uses
-     * this will work fine, but then it may fail when run in the entire suite. Not yet known why.
-     */
-    // Telling Sonar not to worry about System.out usage.
-    @SuppressWarnings("java:S106")
-    protected final String runAndReturnStdout(Runnable r) {
-        System.out.flush();
-        PrintStream original = System.out;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (PrintStream ps = new PrintStream(outputStream, true, Charset.defaultCharset())) {
-            System.setOut(ps);
-            r.run();
-        } finally {
-            System.out.flush();
-            System.setOut(original);
-        }
-        String stdout = new String(outputStream.toByteArray(), Charset.defaultCharset());
-        logger.info("Captured stdout:\n{}", stdout);
-        return stdout;
-    }
-
-    /**
      * Useful for when testing the results of a command can be easily done by using our Spark connector.
      *
      * @return
      */
     protected SparkSession newSparkSession() {
-        sparkSession = SparkSession.builder()
-            .master("local[*]")
-            .config("spark.sql.session.timeZone", "UTC")
-            .getOrCreate();
+        sparkSession = SparkSession.builder().master("local[*]").config("spark.sql.session.timeZone", "UTC").getOrCreate();
         return sparkSession;
     }
 
@@ -139,15 +112,11 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         Properties props = loadTestProperties();
         // Forcing usage of the deprecated Apache HttpClient to avoid classpath issues with the relocated OkHttp classes
         // in our connector jar.
-        ManageConfig config = new ManageConfig(props.getProperty("marklogic.client.host"), 8002,
-            props.getProperty("marklogic.client.username"),
-            props.getProperty("marklogic.client.password")
-        );
+        ManageConfig config = new ManageConfig(props.getProperty("marklogic.client.host"), 8002, props.getProperty("marklogic.client.username"), props.getProperty("marklogic.client.password"));
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         BasicCredentialsProvider provider = new BasicCredentialsProvider();
-        provider.setCredentials(new AuthScope(config.getHost(), config.getPort(), AuthScope.ANY_REALM),
-            new UsernamePasswordCredentials(config.getUsername(), config.getPassword()));
+        provider.setCredentials(new AuthScope(config.getHost(), config.getPort(), AuthScope.ANY_REALM), new UsernamePasswordCredentials(config.getUsername(), config.getPassword()));
         httpClientBuilder.setDefaultCredentialsProvider(provider);
 
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClientBuilder.build()));
@@ -160,17 +129,14 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     @Override
     protected XmlNode readXmlDocument(String uri) {
         // Registering commonly-used namespaces in tests.
-        return super.readXmlDocument(uri,
-            Namespace.getNamespace("model", "http://marklogic.com/appservices/model"),
-            Namespace.getNamespace("ex", "org:example")
-        );
+        return super.readXmlDocument(uri, Namespace.getNamespace("model", "http://marklogic.com/appservices/model"), Namespace.getNamespace("ex", "org:example"));
     }
 
     protected final int run(String... args) {
-        return run(null, args);
+        return run(null, null, args);
     }
 
-    protected abstract int run(PrintWriter errWriter, String... args);
+    protected abstract int run(PrintWriter outWriter, PrintWriter errWriter, String... args);
 
     // Sonar mistakenly thinks this is production code since it's in src/main/java and thus doesn't like the assert method.
     @SuppressWarnings("java:S5960")
@@ -180,6 +146,15 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         return code;
     }
 
+    protected final String runAndReturnStdout(String... args) {
+        StringWriter stdout = new StringWriter();
+        try (PrintWriter writer = new PrintWriter(stdout)) {
+            run(writer, null, args);
+            writer.flush();
+        }
+        return stdout.toString();
+    }
+
     protected final String runAndReturnStderr(String... args) {
         return runAndReturnStderr(null, args);
     }
@@ -187,12 +162,13 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     @SuppressWarnings("java:S5960")
     protected final String runAndReturnStderr(Integer expectedReturnCode, String... args) {
         StringWriter stderr = new StringWriter();
-        PrintWriter writer = new PrintWriter(stderr);
-        int actualReturnCode = run(writer, args);
-        if (expectedReturnCode != null) {
-            assertEquals(expectedReturnCode, actualReturnCode);
+        try (PrintWriter writer = new PrintWriter(stderr)) {
+            int actualReturnCode = run(null, writer, args);
+            if (expectedReturnCode != null) {
+                assertEquals(expectedReturnCode, actualReturnCode);
+            }
+            writer.flush();
         }
-        writer.flush();
         return stderr.toString();
     }
 
@@ -204,9 +180,6 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     protected final void assertStderrContains(String expectedContentInStderr, Integer expectedReturnCode, String... args) {
         final String stderr = runAndReturnStderr(expectedReturnCode, args);
         logger.info("Captured stderr:\n{}", stderr);
-        assertTrue(
-            stderr.contains(expectedContentInStderr),
-            String.format("Unexpected stderr; did not find '%s'; actual stderr: %s", expectedContentInStderr, stderr)
-        );
+        assertTrue(stderr.contains(expectedContentInStderr), String.format("Unexpected stderr; did not find '%s'; actual stderr: %s", expectedContentInStderr, stderr));
     }
 }
