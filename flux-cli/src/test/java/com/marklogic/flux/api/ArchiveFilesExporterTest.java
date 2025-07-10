@@ -31,7 +31,7 @@ class ArchiveFilesExporterTest extends AbstractTest {
         Flux.importArchiveFiles()
             .from(tempDir.toFile().getAbsolutePath())
             .connectionString(makeConnectionString())
-            .to(options -> options.collections("imported-author").uriPrefix("/imported"))
+            .toOptions(options -> options.collections("imported-author").uriPrefix("/imported"))
             .execute();
 
         assertCollectionSize("Being able to read these URIs verifies that the metadata was exported and imported " +

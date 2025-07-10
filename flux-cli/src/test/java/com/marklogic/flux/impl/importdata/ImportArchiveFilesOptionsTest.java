@@ -30,7 +30,8 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
         ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
             "import-archive-files",
             "--path", "src/test/resources/archive-files",
-            "--streaming"
+            "--streaming",
+            "--document-type", "xml"
         );
 
         assertOptions(command.getReadParams().makeOptions(),
@@ -39,7 +40,8 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
-            Options.STREAM_FILES, "true"
+            Options.STREAM_FILES, "true",
+            Options.WRITE_DOCUMENT_TYPE, "XML"
         );
     }
 }

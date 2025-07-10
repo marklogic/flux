@@ -58,7 +58,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriReplace(".*/mixed-files,''")
                 .uriSuffix(".unknown")
-                .documentType(GenericFilesImporter.DocumentType.JSON))
+                .documentType(DocumentType.JSON))
             .execute();
 
         String kind = getDatabaseClient().newServerEval()
@@ -105,6 +105,8 @@ class GenericFilesImporterTest extends AbstractTest {
     }
 
     @Test
+    // Sonar is confused about which extractedTextDocumentType is being used; it thinks the deprecated one is being used.
+    @SuppressWarnings("java:S5738")
     void extractText() {
         Flux.importGenericFiles()
             .connectionString(makeConnectionString())
@@ -115,7 +117,7 @@ class GenericFilesImporterTest extends AbstractTest {
                 .extractText()
                 .extractedTextPermissionsString(DEFAULT_PERMISSIONS)
                 .extractedTextCollections("extracted-text")
-                .extractedTextDocumentType(GenericFilesImporter.DocumentType.XML)
+                .extractedTextDocumentType("xml")
                 .extractedTextDropSource()
             )
             .execute();
