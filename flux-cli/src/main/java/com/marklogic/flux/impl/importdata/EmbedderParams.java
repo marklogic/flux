@@ -78,6 +78,13 @@ public class EmbedderParams implements EmbedderOptions {
     )
     private Integer batchSize;
 
+    @CommandLine.Option(
+        names = "--embedder-base64-encode",
+        description = "If specified, the embedding vector will be base64-encoded and stored as a single string value " +
+            "in the document. If not specified, the embedding vector will be stored as an array of numbers."
+    )
+    private boolean base64Encode;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (embedder != null) {
@@ -88,7 +95,8 @@ public class EmbedderParams implements EmbedderOptions {
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
                 Options.WRITE_EMBEDDER_CHUNKS_XPATH, chunksXpath,
                 Options.WRITE_EMBEDDER_TEXT_XPATH, textXpath,
-                Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
+                Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize),
+                Options.WRITE_EMBEDDER_BASE64_ENCODE, base64Encode ? "true" : null
             );
 
             // Empty string is a valid value.
@@ -164,6 +172,12 @@ public class EmbedderParams implements EmbedderOptions {
     @Override
     public EmbedderOptions prompt(String prompt) {
         this.prompt = prompt;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions base64Encode() {
+        this.base64Encode = true;
         return this;
     }
 

@@ -46,4 +46,11 @@ public interface EmbedderOptions {
      * @since 1.4.0
      */
     EmbedderOptions prompt(String prompt);
+
+    /**
+     * Enables base64-encoding of the embedding vector, resulting in a single string value in the document.
+     *
+     * @since 1.4.0
+     */
+    EmbedderOptions base64Encode();
 }

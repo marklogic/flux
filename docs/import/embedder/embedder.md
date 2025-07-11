@@ -6,7 +6,7 @@ has_children: true
 nav_order: 8
 ---
 
-Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding is 
+Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding, also referred to as a "vector", is 
 associated with a "chunk" of text that is usually, but not necessarily, produced via Flux's 
 [support for splitting text](../splitting.md). Flux can add embeddings during 
 any import operation and also when [copying documents](../../copy.md). Adding embeddings to documents is a critical 
@@ -338,12 +338,48 @@ a certain number of seconds. Flux will not be aware of what the embedding model 
 the embedding model to respond. It is therefore recommended to test various batch size values to find a setting
 that both improves performance and minimizes the chance of a rate limit being reached. 
 
-## Configuring logging
+## Encoding embeddings
 
-You can configure Flux to include logging specific to the generation of embeddings via the following process:
+By default, Flux stores embeddings as arrays of floating-point numbers in your documents. While this format is 
+straightforward and human-readable, it can result in large documents when embeddings contain many dimensions. 
+For example, a typical embedding with 1536 dimensions can add significant size to each document. 
 
-1. Open the `./conf/log4j2.properties` file in an editor. 
-2. Adjust the `logger.marklogiclangchain.level` entry to have a value of `INFO` or `DEBUG`.
+To reduce document size, typically resulting in a document that is faster to load and index and query, you can configure Flux to encode embeddings into string values using the following option:
+
+    --embedder-base64-encode
+
+When this option is enabled, instead of storing an embedding as an array like this (the values shown below are notional):
+
+```json
+{
+  "text": "MarkLogic is a database",
+  "embedding": [0.1234, -0.5678, 0.9012, ...]
+}
+```
+
+Flux will store the embedding as an encoded string:
+
+```json
+{
+  "text": "MarkLogic is a database", 
+  "embedding": "AAAAAAMAAADD9UhAH4XLP5qZKUA="
+}
+```
+
+The encoding used by this option matches the encoding used by the `vec:base64-encode` function in the MarkLogic server.
+
+### When to encode embeddings
+
+Encoding provides significant benefits for most embedding use cases:
+
+1. **Smaller documents**: Encoded embeddings result in smaller documents, reducing storage and indexing requirements in your MarkLogic database.
+
+2. **Faster transmission**: Smaller documents transmit more quickly over networks, improving performance when loading data or retrieving documents with embeddings.
+
+3. **More efficient indexing**: MarkLogic can index base64-encoded embeddings more efficiently than arrays of numbers, particularly for XML documents where the array is otherwise stored as a larger string.
+
+For most production use cases, encoding is recommended due to its storage and performance benefits.
+
 
 ## Configuring a prompt
 
@@ -389,3 +425,11 @@ Consider using a prompt in the following scenarios:
 
 - **Token limits**: Be aware that the prompt will be added to each chunk, potentially increasing the total token count 
   sent to the embedding model. This may affect performance and costs, especially for models with token-based pricing.
+
+## Configuring logging
+
+You can configure Flux to include logging specific to the generation of embeddings via the following process:
+
+1. Open the `./conf/log4j2.properties` file in an editor. 
+2. Adjust the `logger.marklogiclangchain.level` entry to have a value of `INFO` or `DEBUG`.
+
