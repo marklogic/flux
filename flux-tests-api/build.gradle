@@ -3,7 +3,7 @@
  * flux-java17-tests subprojects.
  */
 dependencies {
-  api "com.marklogic:marklogic-client-api:7.1.0"
+  api "com.marklogic:marklogic-client-api:7.2-SNAPSHOT"
 
   compileOnly "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 

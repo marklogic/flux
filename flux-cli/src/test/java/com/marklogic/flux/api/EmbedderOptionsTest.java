@@ -27,6 +27,7 @@ class EmbedderOptionsTest extends AbstractOptionsTest {
                     .embeddingName("my-embedding")
                     .embeddingNamespace("org:example")
                     .batchSize(5)
+                    .base64Encode()
                     .prompt("Just testing")
                     .textJsonPointer("/json/text")
                     .textXPath("/xml/text");
@@ -44,7 +45,8 @@ class EmbedderOptionsTest extends AbstractOptionsTest {
             Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, "/json/text",
             Options.WRITE_EMBEDDER_TEXT_XPATH, "/xml/text",
             Options.WRITE_EMBEDDER_BATCH_SIZE, "5",
-            Options.WRITE_EMBEDDER_PROMPT, "Just testing"
+            Options.WRITE_EMBEDDER_PROMPT, "Just testing",
+            Options.WRITE_EMBEDDER_BASE64_ENCODE, "true"
         );
     }
 }
