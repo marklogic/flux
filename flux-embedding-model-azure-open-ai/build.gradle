@@ -11,7 +11,7 @@ java {
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-azure-open-ai:1.0.0-beta4") {
+  implementation ("dev.langchain4j:langchain4j-azure-open-ai:1.0.0-beta5") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
     exclude group: "com.fasterxml.jackson.core"
@@ -19,7 +19,7 @@ dependencies {
   }
 
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
-  testImplementation "dev.langchain4j:langchain4j-azure-open-ai:1.0.0-beta4"
+  testImplementation "dev.langchain4j:langchain4j-azure-open-ai:1.0.0-beta5"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
   testImplementation "ch.qos.logback:logback-classic:1.5.18"
