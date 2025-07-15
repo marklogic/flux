@@ -1,6 +1,7 @@
 include "flux-embedding-model-ollama"
 include "flux-embedding-model-minilm"
 include "flux-embedding-model-azure-open-ai"
+include "flux-embedding-model-bedrock"
 include "flux-tests-api"
 include "flux-cli"
 include "flux-java17-tests"
