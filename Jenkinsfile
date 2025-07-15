@@ -6,7 +6,7 @@ def runtests(){
           sudo /usr/local/sbin/mladmin stop;
           sudo /usr/local/sbin/mladmin remove;
           mkdir -p $WORKSPACE/flux/docker/sonarqube;
-          docker-compose up -d --build;
+          MARKLOGIC_LOGS_VOLUME=/tmp docker-compose up -d --build;
           sleep 30s;
           curl "http://localhost:8008/api/pull" -d '{"model":"all-minilm"}'
         '''
