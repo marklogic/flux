@@ -41,8 +41,7 @@ class CopyrightTest {
                         String message = String.format("Does not start with copyright comment: %s", file.toFile().getAbsolutePath());
                         assertTrue(content.startsWith("/*"), message);
                         assertTrue(
-                            content.contains("Copyright © 2024 MarkLogic Corporation. All Rights Reserved.") ||
-                                content.contains("Copyright © 2025 MarkLogic Corporation. All Rights Reserved."),
+                            content.contains("Copyright (c) 2024-2025 Progress Software Corporation"),
                             message
                         );
                     }
