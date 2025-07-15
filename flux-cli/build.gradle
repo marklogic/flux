@@ -141,9 +141,11 @@ distZip.dependsOn deleteEmbeddingModelJars
 tasks.register("copyEmbeddingModelJarsIntoDistribution", Copy) {
   description = "Intended for internal usage when building the Flux zip with all the embedding model integrations included."
   dependsOn ":flux-embedding-model-azure-open-ai:shadowJar"
+  dependsOn ":flux-embedding-model-bedrock:shadowJar"
   dependsOn ":flux-embedding-model-minilm:shadowJar"
   dependsOn ":flux-embedding-model-ollama:shadowJar"
   from("../flux-embedding-model-azure-open-ai/build/libs")
+  from("../flux-embedding-model-bedrock/build/libs")
   from("../flux-embedding-model-minilm/build/libs")
   from("../flux-embedding-model-ollama/build/libs")
   into "src/dist/ext"

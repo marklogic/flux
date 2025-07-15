@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractFluxTest;
 import com.marklogic.flux.AbstractJava17Test;
 import com.marklogic.junit5.XmlNode;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -56,6 +57,28 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
 
         XmlNode doc = readXmlDocument("/java-client-intro.json-chunks-1.xml");
         doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/embedding");
+    }
+
+    @Disabled("For manual testing only for now.")
+    @Test
+    void bedrock() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--stacktrace",
+            "--embedder", "com.marklogic.flux.langchain4j.embedding.BedrockEmbeddingModelFunction",
+            "-Emodel=amazon.titan-embed-text-v1",
+            "-Etype=titan",
+            "-EinputType=clustering"
+        );
+
+        verifyChunksHaveEmbeddings();
     }
 
     @Test
