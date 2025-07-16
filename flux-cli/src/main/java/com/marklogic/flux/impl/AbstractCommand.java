@@ -156,6 +156,13 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
             throw new FluxException(ex.getCause());
         }
+
+        // Generally, the message for an IllegalArgumentException is user-friendly, so we don't need to include
+        // the class name in it like we do below.
+        if (ex instanceof IllegalArgumentException) {
+            throw new FluxException(ex.getMessage(), ex);
+        }
+
         // The exception class name is included in the hopes that it will provide some helpful context without having
         // to ask for the stacktrace to be shown.
         throw new FluxException(ex.getClass().getSimpleName() + ": " + ex.getMessage(), ex);

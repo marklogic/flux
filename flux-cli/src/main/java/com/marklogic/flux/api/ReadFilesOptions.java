@@ -20,4 +20,34 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
     T s3SecretAccessKey(String secretAccessKey);
 
     T s3Endpoint(String endpoint);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureStorageAccount(String storageAccount);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureStorageType(AzureStorageType storageType);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureAccessKey(String accessKey);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureSasToken(String sasToken);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureSharedKey(String sharedKey);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureContainerName(String containerName);
 }
