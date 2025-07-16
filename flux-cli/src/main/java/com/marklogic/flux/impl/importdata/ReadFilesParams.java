@@ -3,7 +3,9 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.AzureStorageType;
 import com.marklogic.flux.api.ReadFilesOptions;
+import com.marklogic.flux.impl.AzureStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
@@ -38,6 +40,9 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
 
     @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
+
+    @CommandLine.Mixin
+    private AzureStorageParams azureStorageParams = new AzureStorageParams();
 
     private boolean streaming;
 
@@ -103,6 +108,10 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
         return s3Params;
     }
 
+    public AzureStorageParams getAzureStorageParams() {
+        return azureStorageParams;
+    }
+
     @Override
     public T paths(String... paths) {
         this.path = Arrays.asList(paths);
@@ -148,6 +157,42 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     @Override
     public T s3Endpoint(String endpoint) {
         this.s3Params.setEndpoint(endpoint);
+        return (T) this;
+    }
+
+    @Override
+    public T azureStorageAccount(String storageAccount) {
+        this.azureStorageParams.setStorageAccount(storageAccount);
+        return (T) this;
+    }
+
+    @Override
+    public T azureStorageType(AzureStorageType storageType) {
+        this.azureStorageParams.setStorageType(storageType);
+        return (T) this;
+    }
+
+    @Override
+    public T azureAccessKey(String accessKey) {
+        this.azureStorageParams.setAccessKey(accessKey);
+        return (T) this;
+    }
+
+    @Override
+    public T azureSasToken(String sasToken) {
+        this.azureStorageParams.setSasToken(sasToken);
+        return (T) this;
+    }
+
+    @Override
+    public T azureSharedKey(String sharedKey) {
+        this.azureStorageParams.setSharedKey(sharedKey);
+        return (T) this;
+    }
+
+    @Override
+    public T azureContainerName(String containerName) {
+        this.azureStorageParams.setContainerName(containerName);
         return (T) this;
     }
 

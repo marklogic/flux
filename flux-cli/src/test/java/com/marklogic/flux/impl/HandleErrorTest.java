@@ -79,6 +79,23 @@ class HandleErrorTest extends AbstractTest {
         );
     }
 
+    /**
+     * Verifies that if an IAE is thrown, its class name is not logged because the error message is expected to be
+     * helpful enough without exposing the exception class name.
+     */
+    @Test
+    void illegalArgumentException() {
+        assertStderrContains(
+            "Error: Either access key or SAS token must be provided for Azure Blob Storage.",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "src/test/resources/mixed-files/hello*",
+            "--connection-string", makeConnectionString(),
+            "--azure-storage-account", "something",
+            "--azure-container-name", "something"
+        );
+    }
+
     @Test
     void abortOnWriteFailure() {
         assertStderrContains(

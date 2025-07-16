@@ -23,6 +23,36 @@ public interface CustomImporter extends Executor<CustomImporter> {
         CustomReadOptions s3SecretAccessKey(String secretAccessKey);
 
         CustomReadOptions s3Endpoint(String endpoint);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureStorageAccount(String storageAccount);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureStorageType(AzureStorageType storageType);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureAccessKey(String accessKey);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureSasToken(String sasToken);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureSharedKey(String sharedKey);
+
+        /**
+         * @since 1.4.0
+         */
+        CustomReadOptions azureContainerName(String containerName);
     }
 
     CustomImporter from(Consumer<CustomReadOptions> consumer);

@@ -12,6 +12,12 @@ public abstract class OptionsUtil {
 
     public static final String VALID_VALUES_DESCRIPTION = "Valid values: ${COMPLETION-CANDIDATES} .";
 
+    public static boolean hasText(String str) {
+        // Not relying on a thirdparty implementation in case it's via a Spark dependency that is not guaranteed
+        // to be present in all Spark environments.
+        return str != null && !str.trim().isEmpty();
+    }
+
     /**
      * Avoids adding options with a null value, which can cause errors with some Spark data sources.
      *
