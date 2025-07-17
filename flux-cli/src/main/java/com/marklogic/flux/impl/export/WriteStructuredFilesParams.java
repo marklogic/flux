@@ -27,4 +27,6 @@ public abstract class WriteStructuredFilesParams<T extends WriteFilesOptions> ex
     public SaveMode getSaveMode() {
         return saveMode;
     }
+
+
 }

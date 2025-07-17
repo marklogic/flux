@@ -3,7 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.api.AzureStorageType;
+import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.ReadFilesOptions;
 import com.marklogic.flux.impl.AzureStorageParams;
 import com.marklogic.flux.impl.S3Params;
@@ -11,6 +11,7 @@ import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Defines common parameters for any import command that reads from files.
@@ -161,38 +162,8 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     @Override
-    public T azureStorageAccount(String storageAccount) {
-        this.azureStorageParams.setStorageAccount(storageAccount);
-        return (T) this;
-    }
-
-    @Override
-    public T azureStorageType(AzureStorageType storageType) {
-        this.azureStorageParams.setStorageType(storageType);
-        return (T) this;
-    }
-
-    @Override
-    public T azureAccessKey(String accessKey) {
-        this.azureStorageParams.setAccessKey(accessKey);
-        return (T) this;
-    }
-
-    @Override
-    public T azureSasToken(String sasToken) {
-        this.azureStorageParams.setSasToken(sasToken);
-        return (T) this;
-    }
-
-    @Override
-    public T azureSharedKey(String sharedKey) {
-        this.azureStorageParams.setSharedKey(sharedKey);
-        return (T) this;
-    }
-
-    @Override
-    public T azureContainerName(String containerName) {
-        this.azureStorageParams.setContainerName(containerName);
+    public T azureStorage(Consumer<AzureStorageOptions> consumer) {
+        consumer.accept(this.azureStorageParams);
         return (T) this;
     }
 

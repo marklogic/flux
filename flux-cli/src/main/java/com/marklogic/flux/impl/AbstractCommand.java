@@ -5,13 +5,16 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.impl.export.CloudStorageWriteOptions;
 import com.marklogic.spark.ConnectorException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
@@ -227,5 +230,15 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     public T repartition(int partitionCount) {
         commonParams.setRepartition(partitionCount);
         return (T) this;
+    }
+
+    /**
+     * Configures the Hadoop configuration with the necessary parameters for accessing cloud storage and optionally
+     * transforms the output path when using Azure Storage with a relative path.
+     */
+    protected final String configureCloudStorageAccess(Configuration conf, CloudStorageWriteOptions options) {
+        options.getS3Params().addToHadoopConfiguration(conf);
+        options.getAzureStorageParams().addToHadoopConfiguration(conf);
+        return options.getAzureStorageParams().transformPathsIfNecessary(Arrays.asList(options.getPath())).get(0);
     }
 }

@@ -31,9 +31,10 @@ class AzureStorageParamsTest {
 
     @Test
     void blobStorageWithAccessKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure
+            .storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -43,10 +44,11 @@ class AzureStorageParamsTest {
 
     @Test
     void blobStorageWithSasToken() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureSasToken("test-sas-token")
-            .azureContainerName("testcontainer");
+        options.azureStorage(azure -> azure
+            .storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .sasToken("test-sas-token")
+            .containerName("testcontainer"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -56,9 +58,9 @@ class AzureStorageParamsTest {
 
     @Test
     void blobStorageWithSasTokenMissingContainerName() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureSasToken("test-sas-token");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .sasToken("test-sas-token"));
         // Missing container name
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -69,8 +71,8 @@ class AzureStorageParamsTest {
 
     @Test
     void blobStorageWithoutAccessKeyOrSasToken() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB);
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB));
         // Missing both access key and SAS token
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -81,9 +83,9 @@ class AzureStorageParamsTest {
 
     @Test
     void dataLakeStorageWithSharedKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureSharedKey("test-shared-key");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .sharedKey("test-shared-key"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -95,8 +97,8 @@ class AzureStorageParamsTest {
 
     @Test
     void dataLakeStorageWithoutSharedKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.DATA_LAKE);
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.DATA_LAKE));
         // Missing shared key
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -107,8 +109,8 @@ class AzureStorageParamsTest {
 
     @Test
     void noStorageAccountProvided() {
-        options.azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
         // Missing storage account
 
         params.addToHadoopConfiguration(conf);
@@ -119,9 +121,9 @@ class AzureStorageParamsTest {
 
     @Test
     void emptyStorageAccount() {
-        options.azureStorageAccount("")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageAccount("")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -131,9 +133,9 @@ class AzureStorageParamsTest {
 
     @Test
     void nullStorageAccount() {
-        options.azureStorageAccount(null)
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageAccount(null)
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -143,11 +145,11 @@ class AzureStorageParamsTest {
 
     @Test
     void blobStorageWithBothAccessKeyAndSasToken() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key")
-            .azureSasToken("test-sas-token")
-            .azureContainerName("testcontainer");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key")
+            .sasToken("test-sas-token")
+            .containerName("testcontainer"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -159,9 +161,9 @@ class AzureStorageParamsTest {
 
     @Test
     void dataLakeStorageWithAccessKeyInsteadOfSharedKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .accessKey("test-access-key"));
         // Using access key instead of shared key
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -173,16 +175,16 @@ class AzureStorageParamsTest {
     @Test
     void multipleStorageAccountsConfiguration() {
         // Test first storage account
-        options.azureStorageAccount("storage1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("key1");
+        options.azureStorage(azure -> azure.storageAccount("storage1")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("key1"));
         params.addToHadoopConfiguration(conf);
 
         // Test second storage account with different params
         AzureStorageParams secondParams = new AzureStorageParams();
-        secondParams.setStorageAccount("storage2");
-        secondParams.setStorageType(AzureStorageType.DATA_LAKE);
-        secondParams.setSharedKey("key2");
+        secondParams.storageAccount("storage2");
+        secondParams.storageType(AzureStorageType.DATA_LAKE);
+        secondParams.sharedKey("key2");
         secondParams.addToHadoopConfiguration(conf);
 
         // Both configurations should be present
@@ -193,9 +195,9 @@ class AzureStorageParamsTest {
 
     @Test
     void specialCharactersInStorageAccount() {
-        options.azureStorageAccount("test-storage_123")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageAccount("test-storage_123")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -205,10 +207,10 @@ class AzureStorageParamsTest {
 
     @Test
     void specialCharactersInContainerName() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureSasToken("test-sas-token")
-            .azureContainerName("test-container_123");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .sasToken("test-sas-token")
+            .containerName("test-container_123"));
 
         params.addToHadoopConfiguration(conf);
 
@@ -218,8 +220,8 @@ class AzureStorageParamsTest {
 
     @Test
     void defaultStorageTypeIsBLOB() {
-        options.azureStorageAccount("teststorage")
-            .azureAccessKey("test-access-key");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .accessKey("test-access-key"));
         // Not explicitly setting storage type - should default to BLOB
 
         params.addToHadoopConfiguration(conf);
@@ -235,9 +237,9 @@ class AzureStorageParamsTest {
         conf.set(configKey, "old-value");
 
         // Add new configuration
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("new-value");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("new-value"));
         params.addToHadoopConfiguration(conf);
 
         // Should overwrite the old value
@@ -246,9 +248,9 @@ class AzureStorageParamsTest {
 
     @Test
     void emptyAccessKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureAccessKey("");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey(""));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> params.addToHadoopConfiguration(conf));
@@ -258,9 +260,9 @@ class AzureStorageParamsTest {
 
     @Test
     void emptySasToken() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureSasToken("");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .sasToken(""));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> params.addToHadoopConfiguration(conf));
@@ -270,9 +272,9 @@ class AzureStorageParamsTest {
 
     @Test
     void emptySharedKey() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureSharedKey("");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .sharedKey(""));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> params.addToHadoopConfiguration(conf));
@@ -282,10 +284,10 @@ class AzureStorageParamsTest {
 
     @Test
     void emptyContainerName() {
-        options.azureStorageAccount("teststorage")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureSasToken("test-sas-token")
-            .azureContainerName("");
+        options.azureStorage(azure -> azure.storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .sasToken("test-sas-token")
+            .containerName(""));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> params.addToHadoopConfiguration(conf));
@@ -297,7 +299,7 @@ class AzureStorageParamsTest {
     void transformPathsNoAzureConfig() {
         // No Azure storage configured
         List<String> paths = Arrays.asList("Hogwarts.csv", "Dumbledore.json");
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Should return unchanged
         assertEquals(paths, result);
@@ -305,12 +307,12 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsBlobStorage() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList("Hogwarts.csv", "spells/Expelliarmus.txt");
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
         assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
@@ -319,12 +321,12 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsDataLakeStorage() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureContainerName("filesystem1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .containerName("filesystem1"));
 
         List<String> paths = Arrays.asList("Hogwarts.csv", "potions/Felix_Felicis.json");
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
         assertEquals("abfss://filesystem1@realgenius1.dfs.core.windows.net/Hogwarts.csv", result.get(0));
@@ -333,12 +335,12 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsWithLeadingSlash() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList("/Hogwarts.csv", "Dumbledore.json");
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
         assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
@@ -347,9 +349,9 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsLeavesFullUrlsUnchangedInMixedMode() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "Hogwarts.csv",
@@ -357,7 +359,7 @@ class AzureStorageParamsTest {
             "https://example.com/web.csv",
             "file:///local/path.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // In mixed mode (any path has ://), ALL paths should be left unchanged
         assertEquals(4, result.size());
@@ -369,10 +371,10 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsWithoutContainerName() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB);
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB));
 
-        List<String> result = params.transformPaths(Arrays.asList("Hogwarts.csv"));
+        List<String> result = params.transformPathsIfNecessary(Arrays.asList("Hogwarts.csv"));
 
         assertEquals(1, result.size());
         assertEquals("Hogwarts.csv", result.get(0), "If no container name is set, paths should not be transformed");
@@ -380,24 +382,24 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsEmptyList() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList();
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(0, result.size());
     }
 
     @Test
     void transformPathsSpecialCharacters() {
-        options.azureStorageAccount("real-genius_123")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container-name_test");
+        options.azureStorage(azure -> azure.storageAccount("real-genius_123")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container-name_test"));
 
         List<String> paths = Arrays.asList("folder/file-name_test.csv", "special chars & symbols.json");
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
         assertEquals("wasbs://container-name_test@real-genius_123.blob.core.windows.net/folder/file-name_test.csv", result.get(0));
@@ -406,16 +408,16 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsMixedModeWithOneFullUrl() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "Hogwarts.csv",
             "https://example.com/web.csv",
             "simple-file.txt"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Mixed mode: ANY path with :// means NO transformation
         assertEquals(3, result.size());
@@ -426,15 +428,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsMixedModeWithS3Path() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "azure-file.csv",
             "s3://bucket/file.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Mixed mode: S3 path triggers no transformation
         assertEquals(2, result.size());
@@ -444,15 +446,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsMixedModeWithLocalPath() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "azure-file.csv",
             "file:///tmp/local.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Mixed mode: Local file path triggers no transformation
         assertEquals(2, result.size());
@@ -462,15 +464,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsMixedModeWithExistingAzurePath() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "simple-file.csv",
             "wasbs://other@different.blob.core.windows.net/existing.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Mixed mode: Existing Azure path triggers no transformation
         assertEquals(2, result.size());
@@ -480,16 +482,16 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsSimpleModeAllRelativePaths() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "Hogwarts.csv",
             "spells/Expelliarmus.txt",
             "potions/Felix_Felicis.json"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Simple mode: ALL relative paths get transformed
         assertEquals(3, result.size());
@@ -500,16 +502,16 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsSimpleModeWithLeadingSlashes() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB)
-            .azureContainerName("container1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB)
+            .containerName("container1"));
 
         List<String> paths = Arrays.asList(
             "/Hogwarts.csv",
             "/spells/Expelliarmus.txt",
             "no-slash.json"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Simple mode: ALL relative paths get transformed (leading slashes removed)
         assertEquals(3, result.size());
@@ -520,15 +522,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsMixedModeNoContainerValidation() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.BLOB);
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.BLOB));
         // No container name set
 
         List<String> paths = Arrays.asList(
             "simple-file.csv",
             "https://example.com/web.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
         assertEquals("simple-file.csv", result.get(0));
@@ -537,15 +539,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsDataLakeSimpleMode() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureContainerName("filesystem1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .containerName("filesystem1"));
 
         List<String> paths = Arrays.asList(
             "data/big-file.parquet",
             "analytics/results.csv"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Simple mode for Data Lake: All paths transformed with abfss://
         assertEquals(2, result.size());
@@ -555,15 +557,15 @@ class AzureStorageParamsTest {
 
     @Test
     void transformPathsDataLakeMixedMode() {
-        options.azureStorageAccount("realgenius1")
-            .azureStorageType(AzureStorageType.DATA_LAKE)
-            .azureContainerName("filesystem1");
+        options.azureStorage(azure -> azure.storageAccount("realgenius1")
+            .storageType(AzureStorageType.DATA_LAKE)
+            .containerName("filesystem1"));
 
         List<String> paths = Arrays.asList(
             "data/big-file.parquet",
             "abfss://other@different.dfs.core.windows.net/existing.parquet"
         );
-        List<String> result = params.transformPaths(paths);
+        List<String> result = params.transformPathsIfNecessary(paths);
 
         // Mixed mode for Data Lake: No transformation when any path has ://
         assertEquals(2, result.size());

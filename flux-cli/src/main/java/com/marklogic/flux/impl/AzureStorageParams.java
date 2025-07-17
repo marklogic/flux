@@ -3,13 +3,14 @@
  */
 package com.marklogic.flux.impl;
 
+import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.AzureStorageType;
 import org.apache.hadoop.conf.Configuration;
 import picocli.CommandLine;
 
 import java.util.List;
 
-public class AzureStorageParams {
+public class AzureStorageParams implements AzureStorageOptions {
 
     @CommandLine.Option(
         names = "--azure-storage-account",
@@ -93,13 +94,8 @@ public class AzureStorageParams {
      * @param paths List of file paths to transform
      * @return List of transformed paths (full URLs for Azure, unchanged for non-Azure or mixed scenarios)
      */
-    public List<String> transformPaths(List<String> paths) {
-        if (!OptionsUtil.hasText(storageAccount) || !OptionsUtil.hasText(containerName)) {
-            return paths;
-        }
-
-        boolean atLeastOnePathHasProtocol = paths.stream().anyMatch(path -> path.contains("://"));
-        if (atLeastOnePathHasProtocol) {
+    public List<String> transformPathsIfNecessary(List<String> paths) {
+        if (!OptionsUtil.hasText(storageAccount) || !OptionsUtil.hasText(containerName) || atLeastOnePathHasProtocol(paths)) {
             return paths;
         }
 
@@ -108,39 +104,53 @@ public class AzureStorageParams {
             .collect(java.util.stream.Collectors.toList());
     }
 
+    private boolean atLeastOnePathHasProtocol(List<String> paths) {
+        return paths.stream().anyMatch(path -> path.contains("://"));
+    }
+
     private String transformSinglePath(String path) {
         // Remove leading slash if present for consistency
         final String cleanPath = path.startsWith("/") ? path.substring(1) : path;
 
-        if (AzureStorageType.DATA_LAKE.equals(storageType)) {
-            return String.format("abfss://%s@%s.dfs.core.windows.net/%s", containerName, storageAccount, cleanPath);
-        } else {
-            return String.format("wasbs://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
-        }
+        return AzureStorageType.DATA_LAKE.equals(storageType) ?
+            String.format("abfss://%s@%s.dfs.core.windows.net/%s", containerName, storageAccount, cleanPath) :
+            String.format("wasbs://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
     }
 
-    public void setStorageType(AzureStorageType storageType) {
-        this.storageType = storageType;
-    }
-
-    public void setStorageAccount(String storageAccount) {
+    @Override
+    public AzureStorageOptions storageAccount(String storageAccount) {
         this.storageAccount = storageAccount;
+        return this;
     }
 
-    public void setAccessKey(String accessKey) {
+    @Override
+    public AzureStorageOptions storageType(AzureStorageType storageType) {
+        this.storageType = storageType;
+        return this;
+    }
+
+    @Override
+    public AzureStorageOptions accessKey(String accessKey) {
         this.accessKey = accessKey;
+        return this;
     }
 
-    public void setSasToken(String sasToken) {
+    @Override
+    public AzureStorageOptions sasToken(String sasToken) {
         this.sasToken = sasToken;
+        return this;
     }
 
-    public void setSharedKey(String sharedKey) {
+    @Override
+    public AzureStorageOptions sharedKey(String sharedKey) {
         this.sharedKey = sharedKey;
+        return this;
     }
 
-    public void setContainerName(String containerName) {
+    @Override
+    public AzureStorageOptions containerName(String containerName) {
         this.containerName = containerName;
+        return this;
     }
 }
 

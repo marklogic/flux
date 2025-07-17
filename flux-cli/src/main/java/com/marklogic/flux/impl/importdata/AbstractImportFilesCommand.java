@@ -42,7 +42,7 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
         final List<String> originalPaths = readFilesParams.getPaths();
 
         // Transform paths for Azure Storage if configured
-        final List<String> transformedPaths = readFilesParams.getAzureStorageParams().transformPaths(originalPaths);
+        final List<String> transformedPaths = readFilesParams.getAzureStorageParams().transformPathsIfNecessary(originalPaths);
 
         if (logger.isInfoEnabled()) {
             logger.info("Importing files from: {}", transformedPaths);

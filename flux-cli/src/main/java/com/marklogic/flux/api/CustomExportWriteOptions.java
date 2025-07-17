@@ -4,6 +4,7 @@
 package com.marklogic.flux.api;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface CustomExportWriteOptions {
 
@@ -20,4 +21,9 @@ public interface CustomExportWriteOptions {
     CustomExportWriteOptions s3SecretAccessKey(String secretAccessKey);
 
     CustomExportWriteOptions s3Endpoint(String endpoint);
+
+    /**
+     * @since 1.4.0
+     */
+    CustomExportWriteOptions azureStorage(Consumer<AzureStorageOptions> consumer);
 }
