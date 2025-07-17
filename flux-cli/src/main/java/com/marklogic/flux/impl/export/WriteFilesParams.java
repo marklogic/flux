@@ -3,15 +3,18 @@
  */
 package com.marklogic.flux.impl.export;
 
+import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.WriteFilesOptions;
+import com.marklogic.flux.impl.AzureStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import picocli.CommandLine;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T> {
+public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T>, CloudStorageWriteOptions {
 
     @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
     private String path;
@@ -19,15 +22,25 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @CommandLine.Mixin
     private S3Params s3Params = new S3Params();
 
+    @CommandLine.Mixin
+    private AzureStorageParams azureStorageParams = new AzureStorageParams();
+
     @CommandLine.Option(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
     protected int fileCount;
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public S3Params getS3Params() {
         return s3Params;
+    }
+
+    @Override
+    public AzureStorageParams getAzureStorageParams() {
+        return azureStorageParams;
     }
 
     public int getFileCount() {
@@ -78,6 +91,12 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @Override
     public T fileCount(int fileCount) {
         this.fileCount = fileCount;
+        return (T) this;
+    }
+
+    @Override
+    public T azureStorage(Consumer<AzureStorageOptions> consumer) {
+        consumer.accept(azureStorageParams);
         return (T) this;
     }
 }

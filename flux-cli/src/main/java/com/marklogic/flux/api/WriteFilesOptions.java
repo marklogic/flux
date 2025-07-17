@@ -3,7 +3,9 @@
  */
 package com.marklogic.flux.api;
 
-public interface WriteFilesOptions<T extends WriteFilesOptions> {
+import java.util.function.Consumer;
+
+public interface WriteFilesOptions<T extends WriteFilesOptions>  {
 
     T path(String path);
 
@@ -16,4 +18,9 @@ public interface WriteFilesOptions<T extends WriteFilesOptions> {
     T s3AccessKeyId(String accessKeyId);
 
     T s3SecretAccessKey(String secretAccessKey);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureStorage(Consumer<AzureStorageOptions> consumer);
 }

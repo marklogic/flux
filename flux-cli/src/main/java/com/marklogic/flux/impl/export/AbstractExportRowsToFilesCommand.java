@@ -55,16 +55,16 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
-
         Configuration hadoopConf = session.sparkContext().hadoopConfiguration();
-        writeParams.getS3Params().addToHadoopConfiguration(hadoopConf);
         disableWriteChecksum(hadoopConf);
+
+        WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
+        String outputPath = configureCloudStorageAccess(hadoopConf, writeParams);
 
         writer.format(getWriteFormat())
             .options(writeParams.get())
             .mode(SparkUtil.toSparkSaveMode(writeParams.getSaveMode()))
-            .save(writeParams.getPath());
+            .save(outputPath);
     }
 
     /**

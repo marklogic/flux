@@ -51,11 +51,11 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        String outputPath = configureCloudStorageAccess(session.sparkContext().hadoopConfiguration(), writeParams);
         writer.format(MARKLOGIC_CONNECTOR)
             .options(writeParams.get())
             .mode(SaveMode.Append)
-            .save(writeParams.getPath());
+            .save(outputPath);
     }
 
     public static class ReadTriplesParams implements Supplier<Map<String, String>>, RdfFilesExporter.ReadTriplesDocumentsOptions {

@@ -121,37 +121,37 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
         @Override
         public CustomReadOptions azureStorageAccount(String storageAccount) {
-            this.azureStorageParams.setStorageAccount(storageAccount);
+            this.azureStorageParams.storageAccount(storageAccount);
             return this;
         }
 
         @Override
         public CustomReadOptions azureStorageType(com.marklogic.flux.api.AzureStorageType storageType) {
-            this.azureStorageParams.setStorageType(storageType);
+            this.azureStorageParams.storageType(storageType);
             return this;
         }
 
         @Override
         public CustomReadOptions azureAccessKey(String accessKey) {
-            this.azureStorageParams.setAccessKey(accessKey);
+            this.azureStorageParams.accessKey(accessKey);
             return this;
         }
 
         @Override
         public CustomReadOptions azureSasToken(String sasToken) {
-            this.azureStorageParams.setSasToken(sasToken);
+            this.azureStorageParams.sasToken(sasToken);
             return this;
         }
 
         @Override
         public CustomReadOptions azureSharedKey(String sharedKey) {
-            this.azureStorageParams.setSharedKey(sharedKey);
+            this.azureStorageParams.sharedKey(sharedKey);
             return this;
         }
 
         @Override
         public CustomReadOptions azureContainerName(String containerName) {
-            this.azureStorageParams.setContainerName(containerName);
+            this.azureStorageParams.containerName(containerName);
             return this;
         }
     }

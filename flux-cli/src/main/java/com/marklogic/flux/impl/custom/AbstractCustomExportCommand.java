@@ -3,10 +3,12 @@
  */
 package com.marklogic.flux.impl.custom;
 
+import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.SaveMode;
 import com.marklogic.flux.impl.AbstractCommand;
+import com.marklogic.flux.impl.AzureStorageParams;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.flux.impl.SparkUtil;
@@ -17,6 +19,7 @@ import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
 
@@ -27,6 +30,9 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
+
+        @CommandLine.Mixin
+        private AzureStorageParams azureStorageParams = new AzureStorageParams();
 
         @CommandLine.Option(
             names = "--target",
@@ -87,11 +93,18 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
             this.s3Params.setEndpoint(endpoint);
             return this;
         }
+
+        @Override
+        public CustomExportWriteOptions azureStorage(Consumer<AzureStorageOptions> consumer) {
+            consumer.accept(this.azureStorageParams);
+            return this;
+        }
     }
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
         writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        writeParams.azureStorageParams.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
         writer.format(writeParams.target)
             .options(writeParams.additionalOptions)
             .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))

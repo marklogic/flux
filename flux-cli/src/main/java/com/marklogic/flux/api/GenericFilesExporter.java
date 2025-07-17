@@ -28,6 +28,11 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         WriteGenericFilesOptions s3SecretAccessKey(String secretAccessKey);
 
         WriteGenericFilesOptions s3Endpoint(String endpoint);
+
+        /**
+         * @since 1.4.0
+         */
+        WriteGenericFilesOptions azureStorage(Consumer<AzureStorageOptions> consumer);
     }
 
     GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);

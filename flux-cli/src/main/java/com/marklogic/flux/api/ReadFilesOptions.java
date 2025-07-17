@@ -3,6 +3,8 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.function.Consumer;
+
 public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T paths(String... paths);
@@ -24,30 +26,5 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
     /**
      * @since 1.4.0
      */
-    T azureStorageAccount(String storageAccount);
-
-    /**
-     * @since 1.4.0
-     */
-    T azureStorageType(AzureStorageType storageType);
-
-    /**
-     * @since 1.4.0
-     */
-    T azureAccessKey(String accessKey);
-
-    /**
-     * @since 1.4.0
-     */
-    T azureSasToken(String sasToken);
-
-    /**
-     * @since 1.4.0
-     */
-    T azureSharedKey(String sharedKey);
-
-    /**
-     * @since 1.4.0
-     */
-    T azureContainerName(String containerName);
+    T azureStorage(Consumer<AzureStorageOptions> consumer);
 }
