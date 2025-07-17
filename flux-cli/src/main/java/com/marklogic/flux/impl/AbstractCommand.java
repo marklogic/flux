@@ -239,6 +239,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     protected final String configureCloudStorageAccess(Configuration conf, CloudStorageWriteOptions options) {
         options.getS3Params().addToHadoopConfiguration(conf);
         options.getAzureStorageParams().addToHadoopConfiguration(conf);
-        return options.getAzureStorageParams().transformPathsIfNecessary(Arrays.asList(options.getPath())).get(0);
+        String outputPath = options.getAzureStorageParams().transformPathsIfNecessary(Arrays.asList(options.getPath())).get(0);
+        logger.info("Will write files to: {}", outputPath);
+        return outputPath;
     }
 }
