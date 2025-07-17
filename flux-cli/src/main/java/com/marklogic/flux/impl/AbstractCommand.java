@@ -5,7 +5,6 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
-import com.marklogic.flux.impl.export.CloudStorageWriteOptions;
 import com.marklogic.spark.ConnectorException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkException;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
@@ -232,15 +232,27 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         return (T) this;
     }
 
+    protected final void applyCloudStorageParams(Configuration conf, CloudStorageParams params) {
+        params.getS3Params().addToHadoopConfiguration(conf);
+        params.getAzureStorageParams().addToHadoopConfiguration(conf);
+    }
+
+    protected final String applyCloudStorageParams(Configuration conf, CloudStorageParams params, String outputPath) {
+        return applyCloudStorageParams(conf, params, Arrays.asList(outputPath)).get(0);
+    }
+
     /**
-     * Configures the Hadoop configuration with the necessary parameters for accessing cloud storage and optionally
-     * transforms the output path when using Azure Storage with a relative path.
+     * Configures the Hadoop configuration with the necessary parameters for accessing cloud storage and transforms
+     * each path if necessary based on the Azure Storage parameters.
      */
-    protected final String configureCloudStorageAccess(Configuration conf, CloudStorageWriteOptions options) {
-        options.getS3Params().addToHadoopConfiguration(conf);
-        options.getAzureStorageParams().addToHadoopConfiguration(conf);
-        String outputPath = options.getAzureStorageParams().transformPathsIfNecessary(Arrays.asList(options.getPath())).get(0);
-        logger.info("Will write files to: {}", outputPath);
-        return outputPath;
+    protected final List<String> applyCloudStorageParams(Configuration conf, CloudStorageParams params, List<String> paths) {
+        applyCloudStorageParams(conf, params);
+        List<String> transformedPaths = params.getAzureStorageParams().transformPathsIfNecessary(paths);
+        if (transformedPaths.size() == 1) {
+            logger.info("Using path: {}", transformedPaths.get(0));
+        } else {
+            logger.info("Using paths: {}", transformedPaths);
+        }
+        return transformedPaths;
     }
 }

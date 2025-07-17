@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.ReadFilesOptions;
 import com.marklogic.flux.impl.AzureStorageParams;
+import com.marklogic.flux.impl.CloudStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 /**
  * Defines common parameters for any import command that reads from files.
  */
-public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T> {
+public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T>, CloudStorageParams {
 
     // "path" is the name so that picocli shows "--path <path>" instead of "--path <paths>".
     @CommandLine.Option(
@@ -105,10 +106,12 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
         return path;
     }
 
+    @Override
     public S3Params getS3Params() {
         return s3Params;
     }
 
+    @Override
     public AzureStorageParams getAzureStorageParams() {
         return azureStorageParams;
     }

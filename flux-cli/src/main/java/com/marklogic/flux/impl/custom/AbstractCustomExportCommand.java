@@ -7,11 +7,7 @@ import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.SaveMode;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.AzureStorageParams;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.S3Params;
-import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -26,7 +22,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
     @CommandLine.Mixin
     protected final CustomWriteParams writeParams = new CustomWriteParams();
 
-    public static class CustomWriteParams implements CustomExportWriteOptions {
+    public static class CustomWriteParams implements CustomExportWriteOptions, CloudStorageParams {
 
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
@@ -52,6 +48,16 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
                 "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
                 + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private SaveMode saveMode = SaveMode.APPEND;
+
+        @Override
+        public S3Params getS3Params() {
+            return s3Params;
+        }
+
+        @Override
+        public AzureStorageParams getAzureStorageParams() {
+            return azureStorageParams;
+        }
 
         @Override
         public CustomExportWriteOptions target(String target) {
@@ -103,8 +109,7 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
-        writeParams.azureStorageParams.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams);
         writer.format(writeParams.target)
             .options(writeParams.additionalOptions)
             .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))

@@ -7,6 +7,7 @@ import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.WriteFilesOptions;
 import com.marklogic.flux.impl.AzureStorageParams;
+import com.marklogic.flux.impl.CloudStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import picocli.CommandLine;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T>, CloudStorageWriteOptions {
+public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T>, CloudStorageParams {
 
     @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
     private String path;
@@ -28,7 +29,6 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @CommandLine.Option(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
     protected int fileCount;
 
-    @Override
     public String getPath() {
         return path;
     }
@@ -68,13 +68,13 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @Override
     public T s3AccessKeyId(String accessKeyId) {
         s3Params.setAccessKeyId(accessKeyId);
-        return (T)this;
+        return (T) this;
     }
 
     @Override
     public T s3SecretAccessKey(String secretAccessKey) {
         s3Params.setSecretAccessKey(secretAccessKey);
-        return (T)this;
+        return (T) this;
     }
 
     @Override

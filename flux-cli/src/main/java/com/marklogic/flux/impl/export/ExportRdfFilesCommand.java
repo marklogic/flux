@@ -51,7 +51,7 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        String outputPath = configureCloudStorageAccess(session.sparkContext().hadoopConfiguration(), writeParams);
+        String outputPath = applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams, writeParams.getPath());
         writer.format(MARKLOGIC_CONNECTOR)
             .options(writeParams.get())
             .mode(SaveMode.Append)

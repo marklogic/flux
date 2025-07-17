@@ -4,10 +4,7 @@
 package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.api.*;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.AzureStorageParams;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.S3Params;
+import com.marklogic.flux.impl.*;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.SaveMode;
@@ -55,7 +52,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        String outputPath = configureCloudStorageAccess(session.sparkContext().hadoopConfiguration(), writeParams);
+        String outputPath = applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams, writeParams.getPath());
         writer.format(MARKLOGIC_CONNECTOR)
             .options(buildWriteOptions())
             .mode(SaveMode.Append)
@@ -80,7 +77,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         return options;
     }
 
-    public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions, CloudStorageWriteOptions {
+    public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions, CloudStorageParams {
 
         @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
         private String path;
@@ -104,6 +101,7 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @CommandLine.Option(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
         private int zipFileCount;
 
+        @Override
         public AzureStorageParams getAzureStorageParams() {
             return azureStorageParams;
         }
@@ -113,7 +111,6 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
             return s3Params;
         }
 
-        @Override
         public String getPath() {
             return path;
         }
