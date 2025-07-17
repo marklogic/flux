@@ -11,10 +11,9 @@ import com.marklogic.flux.impl.S3Params;
  * This allows export commands to access cloud storage parameters in a consistent way.
  */
 public interface CloudStorageWriteOptions {
-    
     S3Params getS3Params();
-    
+
     AzureStorageParams getAzureStorageParams();
-    
+
     String getPath();
 }
