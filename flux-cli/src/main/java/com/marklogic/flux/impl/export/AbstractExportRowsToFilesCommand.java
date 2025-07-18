@@ -58,8 +58,8 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
         Configuration hadoopConf = session.sparkContext().hadoopConfiguration();
         disableWriteChecksum(hadoopConf);
 
-        WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
-        String outputPath = configureCloudStorageAccess(hadoopConf, writeParams);
+        final WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
+        String outputPath = applyCloudStorageParams(hadoopConf, writeParams, writeParams.getPath());
 
         writer.format(getWriteFormat())
             .options(writeParams.get())
