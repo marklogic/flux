@@ -241,18 +241,21 @@ are specified and the path is relative - i.e. it does not contain a protocol lik
 construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides 
 the underlying Azure protocols from you.
 
-See these examples for how this path transformation works:
+For example:
 
 - `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
 - `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
 
-If the above conditions are not met, then you must provide the full Azure Storage URL yourself. For example:
+If you instead need to mix Azure Storage paths with other types of paths (such as S3 or local file paths), you must 
+provide the complete Azure Storage URLs yourself. In this case, Flux will not perform any path transformation:
 
 {% tabs log %}
 {% tab log Unix %}
 ```
 ./bin/flux import-files \
     --path "wasbs://mycontainer@mystorage.blob.core.windows.net/data/" \
+    --path "s3a://my-bucket/other-data/" \
+    --path "/local/file/path" \
     --azure-storage-account "mystorage" \
     --azure-access-key "your-access-key" \
     --connection-string etc... 
@@ -262,9 +265,18 @@ If the above conditions are not met, then you must provide the full Azure Storag
 ```
 bin\flux import-files ^
     --path "wasbs://mycontainer@mystorage.blob.core.windows.net/data/" ^
+    --path "s3a://my-bucket/other-data/" ^
+    --path "C:\local\file\path" ^
     --azure-storage-account "mystorage" ^
     --azure-access-key "your-access-key" ^
     --connection-string etc... 
 ```
 {% endtab %}
 {% endtabs %}
+
+Flux thus uses an "all-or-nothing" approach for path transformation:
+
+- **If all paths are simple relative paths** (no `://` protocol in any path), Flux automatically transforms them to full Azure Storage URLs.
+- **If any path contains a protocol** (`://`), Flux assumes you're providing full URLs and performs no transformation.
+
+This allows you to either use all relative paths or mix Azure Storage with other storage types by providing full URLs.

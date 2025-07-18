@@ -160,22 +160,17 @@ bin\flux export-files ^
 
 ### Path Handling
 
-Flux provides two ways to specify the export path:
+Flux provides two ways to specify an export path. First, when both `--azure-storage-account` and `--azure-container-name`
+are specified and the path is relative - i.e. it does not contain a protocol like `wasbs://` or `abfss://` - Flux will
+construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides
+the underlying Azure protocols from you.
 
-**Relative Paths**
-
-When you provide both `--azure-storage-account` and `--azure-container-name`, Flux automatically transforms
-relative paths into full Azure Storage URLs. This is the most convenient way to work with Azure Storage
-and hides the underlying Azure protocols from you.
-
-See these examples for how this path transformation works:
+For example:
 
 - `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
 - `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
 
-#### Full Azure Storage URLs
-
-If you need to use a full Azure Storage URL for any reason, you can provide the complete URL yourself:
+Alternatively, you can provide the complete storage URL yourself:
 
 {% tabs log %}
 {% tab log Unix %}
