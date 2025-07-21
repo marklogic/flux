@@ -344,7 +344,8 @@ By default, Flux stores embeddings as arrays of floating-point numbers in your d
 straightforward and human-readable, it can result in large documents when embeddings contain many dimensions. 
 For example, a typical embedding with 1536 dimensions can add significant size to each document. 
 
-To reduce document size, typically resulting in a document that is faster to load and index and query, you can configure Flux to encode embeddings into string values using the following option:
+To reduce document size, typically resulting in a document that is faster to load and index and query, 
+you can configure Flux to encode embeddings into string values using the following option:
 
     --embedder-base64-encode
 
@@ -366,7 +367,15 @@ Flux will store the embedding as an encoded string:
 }
 ```
 
-The encoding used by this option matches the encoding used by the `vec:base64-encode` function in the MarkLogic server.
+For XML, the embedding will be stored as a string with an XML attribute used to 
+[disable stemming](https://docs.progress.com/bundle/marklogic-server-use-search-11/page/topics/languages.html) on the value:
+
+```
+<embedding xml:lang="zxx">AAAAAAMAAADD9UhAH4XLP5qZKUA=</embedding>
+```
+
+The encoding used by this option matches the encoding used by the `vec:base64-encode` function in MarkLogic 
+server version 12 or higher.
 
 ### When to encode embeddings
 
