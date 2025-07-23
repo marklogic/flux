@@ -1,6 +1,7 @@
 @Library('shared-libraries') _
 
 def runtests(){
+  cleanupDocker()
   sh label:'mlsetup', script: '''#!/bin/bash
           cd $WORKSPACE/flux;
           sudo /usr/local/sbin/mladmin stop;
@@ -47,6 +48,7 @@ def postCleanup(){
     docker-compose rm -fsv || true;
     echo "y" | docker volume prune --filter all=1 || true;
   '''
+  cleanupDocker()
 }
 
 def runSonarScan(String javaVersion){
