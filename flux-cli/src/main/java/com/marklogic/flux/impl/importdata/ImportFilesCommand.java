@@ -44,13 +44,13 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadGenericFilesParams getReadParams() {
         readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteGenericDocumentsParams getWriteParams() {
         writeParams.setStreaming(this.streaming);
         return writeParams;
     }
@@ -162,7 +162,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         /**
          * @deprecated Use {@link #documentType(com.marklogic.flux.api.DocumentType)} instead
          */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
+        @SuppressWarnings({"java:S1133", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
         @Deprecated(since = "1.4.0", forRemoval = true)
         public WriteGenericDocumentsOptions documentType(GenericFilesImporter.DocumentType documentType) {
             this.documentType = documentType != null ? com.marklogic.flux.api.DocumentType.valueOf(documentType.name()) : null;
@@ -190,7 +190,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         /**
          * @deprecated Use {@link #extractedTextDocumentType(String)} instead
          */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
+        @SuppressWarnings({"java:S1133", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
         @Deprecated(since = "1.4.0", forRemoval = true)
         @Override
         public WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType) {

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 public abstract class WriteFilesParams<T extends WriteFilesOptions> implements Supplier<Map<String, String>>, WriteFilesOptions<T>, CloudStorageParams {
 
     @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")

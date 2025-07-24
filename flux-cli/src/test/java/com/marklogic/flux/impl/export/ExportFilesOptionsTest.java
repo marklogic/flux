@@ -9,6 +9,7 @@ import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -128,6 +129,10 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
 
     @Test
     void setOptionsViaExporterApi() {
+        Map<String, String> vars = new HashMap<>();
+        vars.put("var1", "value1");
+        vars.put("var2", "value2");
+
         GenericFilesExporter exporter = Flux.exportGenericFiles()
             .connectionString("admin:admin@localhost:8002")
             .from(options ->
@@ -137,7 +142,7 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
                     .secondaryUrisXQuery("myXQueryFunction()")
                     .secondaryUrisJavaScriptFile("myJavascriptFile.js")
                     .secondaryUrisXQueryFile("myXQueryFile.xqy")
-                    .secondaryUrisVars(Map.of("var1", "value1", "var2", "value2"))
+                    .secondaryUrisVars(vars)
             )
             .to(options -> options.path("/some/path"));
 

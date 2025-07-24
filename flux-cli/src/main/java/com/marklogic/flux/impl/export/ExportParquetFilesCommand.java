@@ -28,7 +28,7 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
     }
 
     @Override
-    protected WriteStructuredFilesParams getWriteFilesParams() {
+    protected WriteParquetFilesParams getWriteFilesParams() {
         return writeParams;
     }
 

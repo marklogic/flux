@@ -32,7 +32,7 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         return readParams;
     }
 

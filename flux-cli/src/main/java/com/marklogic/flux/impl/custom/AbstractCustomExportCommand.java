@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
+abstract class AbstractCustomExportCommand<T extends Executor<T>> extends AbstractCommand<T> {
 
     @CommandLine.Mixin
     protected final CustomWriteParams writeParams = new CustomWriteParams();

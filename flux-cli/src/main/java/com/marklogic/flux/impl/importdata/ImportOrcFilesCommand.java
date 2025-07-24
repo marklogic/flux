@@ -36,12 +36,12 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 

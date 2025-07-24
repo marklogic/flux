@@ -37,12 +37,12 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadJsonFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 
@@ -98,7 +98,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @Override
         // Sonar complains about this method existing, but it has to exist since it's implementing a required
         // method in the interface.
-        @SuppressWarnings("java:S5738")
+        @SuppressWarnings({"java:S5738", "removal"})
         public ReadJsonFilesOptions jsonLines(boolean value) {
             this.jsonLines = value;
             return this;

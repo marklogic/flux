@@ -27,12 +27,12 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
     private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteDocumentParamsImpl getWriteParams() {
         return writeParams;
     }
 
@@ -96,8 +96,9 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
     }
 
     @Override
-    public MlcpArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
-        consumer.accept(writeParams);
+    @SuppressWarnings("unchecked")
+    public <T extends WriteDocumentsOptions<T>> MlcpArchiveFilesImporter to(Consumer<T> consumer) {
+        consumer.accept((T) writeParams);
         return this;
     }
 }

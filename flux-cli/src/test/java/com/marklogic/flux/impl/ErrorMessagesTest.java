@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ErrorMessagesTest {
 
     // Don't need Sonar to complain about WRITE_FILE_ROWS_DOCUMENT_TYPE being deprecated, we are aware of that.
-    @SuppressWarnings("java:S5738")
+    @SuppressWarnings({"java:S5738", "removal"})
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");

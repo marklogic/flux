@@ -22,6 +22,7 @@ import java.util.stream.Stream;
  * Defines all basic params for writing documents. Does not include support for a URI template, as that is not always
  * relevant nor possible depending on what kind of data is being imported.
  */
+@SuppressWarnings("unchecked")
 public class WriteDocumentParams<T extends WriteDocumentsOptions> implements WriteDocumentsOptions<T>, Supplier<Map<String, String>> {
 
     @CommandLine.Option(

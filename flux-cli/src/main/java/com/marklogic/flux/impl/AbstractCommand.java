@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
@@ -248,10 +249,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     protected final List<String> applyCloudStorageParams(Configuration conf, CloudStorageParams params, List<String> paths) {
         applyCloudStorageParams(conf, params);
         List<String> transformedPaths = params.getAzureStorageParams().transformPathsIfNecessary(paths);
-        if (transformedPaths.size() == 1) {
-            logger.info("Using path: {}", transformedPaths.get(0));
-        } else {
-            logger.info("Using paths: {}", transformedPaths);
+        if (logger.isInfoEnabled()) {
+            if (transformedPaths.size() == 1) {
+                logger.info("Using path: {}", transformedPaths.get(0));
+            } else {
+                logger.info("Using paths: {}", transformedPaths);
+            }
         }
         return transformedPaths;
     }

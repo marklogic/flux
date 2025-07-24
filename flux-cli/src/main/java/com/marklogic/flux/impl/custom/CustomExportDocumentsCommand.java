@@ -33,8 +33,9 @@ public class CustomExportDocumentsCommand extends AbstractCustomExportCommand<Cu
     }
 
     @Override
-    public CustomDocumentsExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
-        consumer.accept(readParams);
+    @SuppressWarnings("unchecked")
+    public <T extends ReadDocumentsOptions<T>> CustomDocumentsExporter from(Consumer<T> consumer) {
+        consumer.accept((T) readParams);
         return this;
     }
 

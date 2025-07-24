@@ -37,13 +37,13 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     private boolean streaming;
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteArchiveDocumentParams getWriteParams() {
         writeParams.setStreaming(this.streaming);
         return writeParams;
     }
@@ -139,10 +139,10 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
      * @deprecated Use {@link #toOptions(Consumer)} instead
      */
     @Override
-    @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
+    @SuppressWarnings({"java:S1133", "unchecked", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
     @Deprecated(since = "1.4.0", forRemoval = true)
-    public ArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
-        consumer.accept(writeParams);
+    public <T extends WriteDocumentsOptions<T>> ArchiveFilesImporter to(Consumer<T> consumer) {
+        consumer.accept((T) writeParams);
         return this;
     }
 

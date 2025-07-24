@@ -20,5 +20,5 @@ public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImpor
 
     MlcpArchiveFilesImporter from(String... paths);
 
-    MlcpArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    <T extends WriteDocumentsOptions<T>> MlcpArchiveFilesImporter to(Consumer<T> consumer);
 }

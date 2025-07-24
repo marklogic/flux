@@ -33,7 +33,7 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadXmlFilesParams getReadParams() {
         return readParams;
     }
 
@@ -153,8 +153,9 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
     }
 
     @Override
-    public AggregateXmlFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
-        consumer.accept(writeParams);
+    @SuppressWarnings("unchecked")
+    public <T extends WriteDocumentsOptions<T>> AggregateXmlFilesImporter to(Consumer<T> consumer) {
+        consumer.accept((T) writeParams);
         return this;
     }
 }

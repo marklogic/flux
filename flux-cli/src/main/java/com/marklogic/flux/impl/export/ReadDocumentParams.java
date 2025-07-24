@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 /**
  * For commands that export documents and must therefore read "document rows" first.
  */
+@SuppressWarnings("unchecked")
 public class ReadDocumentParams<T extends ReadDocumentsOptions> implements ReadDocumentsOptions<T> {
 
     @CommandLine.Option(names = "--string-query", description = "A query utilizing the MarkLogic search grammar; " +
