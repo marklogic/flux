@@ -273,7 +273,7 @@ Consider the following requirements for splitting and adding embeddings to files
 
 1. The input file is a zip of JSON documents. 
 2. Each JSON document has text to be split in a top-level key named "description". 
-3. Chunks should be stored in sidecar documents with a maximum chunk size of 500 and a maximum of 5 chunks per sidecar document. 
+3. Chunks should be stored in sidecar documents with a maximum chunk size of 500 and a maximum of 1 chunk per sidecar document. 
 4. Chunk documents should be in a collection named "chunks" and should have the same permissions as the source documents.
 5. The Azure OpenAI embedding model will be used to generate embeddings. 
 6. To avoid having the Azure OpenAI API key on the command line, it will be read from an options file named `azure-api-key.txt`.
@@ -295,7 +295,7 @@ connection string are notional):
     --permissions flux-example-role,read,flux-example-role,update \
     --splitter-json-pointer "/description" \
     --splitter-max-chunk-size 500 \
-    --splitter-sidecar-max-chunks 5 \
+    --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections chunks \
     --embedder azure \
     @azure-api-key.txt \
@@ -312,7 +312,7 @@ bin\flux import-files ^
     --permissions flux-example-role,read,flux-example-role,update ^
     --splitter-json-pointer "/description" ^
     --splitter-max-chunk-size 500 ^
-    --splitter-sidecar-max-chunks 5 ^
+    --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections chunks ^
     --embedder azure ^
     @azure-api-key.txt ^
@@ -321,6 +321,35 @@ bin\flux import-files ^
 ```
 {% endtab %}
 {% endtabs %}
+
+The above command will produce JSON sidecar documents with the following structure:
+
+```
+{
+  "source-uri": "the URI of the source document",
+  "chunks": [
+    {
+      "text": "This is a chunk of text that was split from the original document.",
+      "embedding": [0.1234, -0.5678, 0.9012, ...]
+    }
+  ]
+}
+```
+
+If `--splitter-sidecar-document-type xml` is included as an option, Flux will produce XML sidecar documents with the
+following structure:
+
+```
+<root xmlns="http://marklogic.com/appservices/model">
+  <source-uri>the URI of the source document</source-uri>
+  <chunks>
+    <chunk>
+      <text>This is a chunk of text that was split from the original document.</text>
+      <embedding xml:lang="zxx">[0.1234, -0.5678, 0.9012, ...]</embedding>
+    </chunk>
+  </chunks>
+</root>
+```
 
 ## Configuring embedder batch size
 
