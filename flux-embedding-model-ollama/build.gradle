@@ -8,17 +8,20 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(17)
   }
+
+  withJavadocJar()
+  withSourcesJar()
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-ollama:1.0.0-beta5") {
+  implementation ("dev.langchain4j:langchain4j-ollama:1.1.0-rc1") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
     exclude group: "com.fasterxml.jackson.core"
   }
 
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
-  testImplementation "dev.langchain4j:langchain4j-ollama:1.0.0-beta5"
+  testImplementation "dev.langchain4j:langchain4j-ollama:1.1.0-rc1"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
   testImplementation "ch.qos.logback:logback-classic:1.5.18"
@@ -35,11 +38,6 @@ shadowJar {
       it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
     }
   }
-}
-
-java {
-  withJavadocJar()
-  withSourcesJar()
 }
 
 publishing {
