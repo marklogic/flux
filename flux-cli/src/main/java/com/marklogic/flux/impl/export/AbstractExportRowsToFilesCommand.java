@@ -17,7 +17,7 @@ import picocli.CommandLine;
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
  * more files. Each subclass is expected to make use of a Spark data source for writing rows to a tabular data source.
  */
-abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
+abstract class AbstractExportRowsToFilesCommand<T extends Executor<T>> extends AbstractCommand<T> {
 
     @CommandLine.Mixin
     protected final ReadRowsParams readParams = new ReadRowsParams();

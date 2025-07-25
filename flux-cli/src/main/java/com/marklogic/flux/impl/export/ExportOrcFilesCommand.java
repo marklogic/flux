@@ -28,7 +28,7 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
     }
 
     @Override
-    protected WriteStructuredFilesParams getWriteFilesParams() {
+    protected WriteOrcFilesParams getWriteFilesParams() {
         return writeParams;
     }
 

@@ -6,7 +6,6 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.ReadFilesOptions;
 import com.marklogic.flux.impl.AzureStorageParams;
-import com.marklogic.flux.impl.CloudStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
@@ -17,7 +16,8 @@ import java.util.function.Consumer;
 /**
  * Defines common parameters for any import command that reads from files.
  */
-public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T>, CloudStorageParams {
+@SuppressWarnings("unchecked")
+public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOptions<T>, IReadFilesParams {
 
     // "path" is the name so that picocli shows "--path <path>" instead of "--path <paths>".
     @CommandLine.Option(
@@ -48,10 +48,7 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
 
     private boolean streaming;
 
-    public boolean hasAtLeastOnePath() {
-        return path != null && !path.isEmpty();
-    }
-
+    @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (abortOnReadFailure) {

@@ -30,5 +30,5 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
 
     AggregateXmlFilesImporter from(String... paths);
 
-    AggregateXmlFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer);
+    <T extends WriteDocumentsOptions<T>> AggregateXmlFilesImporter to(Consumer<T> consumer);
 }

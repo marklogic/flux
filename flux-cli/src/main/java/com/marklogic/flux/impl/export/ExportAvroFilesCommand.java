@@ -28,7 +28,7 @@ public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<Avr
     }
 
     @Override
-    protected WriteStructuredFilesParams getWriteFilesParams() {
+    protected WriteAvroFilesParams getWriteFilesParams() {
         return writeParams;
     }
 

@@ -9,6 +9,7 @@ import picocli.CommandLine;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
 
     @CommandLine.Option(names = "--jdbc-url", required = true, description = "The JDBC URL to connect to.")

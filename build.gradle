@@ -27,8 +27,9 @@ subprojects {
 
   // Allows for quickly identifying compiler warnings.
   tasks.withType(JavaCompile) {
-    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
     options.deprecation = true
+    options.warnings = true
   }
 
   javadoc.failOnError = false

@@ -35,7 +35,7 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         WriteGenericFilesOptions azureStorage(Consumer<AzureStorageOptions> consumer);
     }
 
-    GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
+    <T extends ReadDocumentsOptions<T>> GenericFilesExporter from(Consumer<T> consumer);
 
     /**
      * @since 1.1.0

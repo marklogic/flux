@@ -192,8 +192,9 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
     }
 
     @Override
-    public GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
-        consumer.accept(readParams);
+    @SuppressWarnings("unchecked")
+    public <T extends ReadDocumentsOptions<T>> GenericFilesExporter from(Consumer<T> consumer) {
+        consumer.accept((T) readParams);
         return this;
     }
 

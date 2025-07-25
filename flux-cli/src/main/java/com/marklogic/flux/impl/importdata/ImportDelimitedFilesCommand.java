@@ -35,12 +35,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadDelimitedFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 

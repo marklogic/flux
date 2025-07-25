@@ -28,7 +28,7 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
     }
 
     @Override
-    protected WriteStructuredFilesParams getWriteFilesParams() {
+    protected WriteDelimitedFilesParams getWriteFilesParams() {
         return writeParams;
     }
 
