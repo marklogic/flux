@@ -177,7 +177,12 @@ application {
 
     // Allows a reflective access by org.apache.spark.serializer.SerializationDebugger$ObjectStreamClassReflection .
     // This warning otherwise shows on Java 11 but not Java 17.
-    "--add-opens", "java.base/java.io=ALL-UNNAMED"
+    "--add-opens", "java.base/java.io=ALL-UNNAMED",
+
+    // Disable Netty's native SSL support to avoid tcnative loading errors when using Azure OpenAI embedding model.
+    // Netty will fall back to pure Java SSL implementation, which works fine for our use case.
+    // Advanced users can remove this property from the startup script to enable native SSL for potential performance gains.
+    "-Dio.netty.handler.ssl.noOpenSsl=true"
   ]
 }
 
