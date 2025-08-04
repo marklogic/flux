@@ -19,6 +19,8 @@ public interface TdeBuilder {
 
         boolean isNullable();
 
+        boolean isVirtual();
+
         String getDefaultValue();
 
         String getInvalidValues();
@@ -33,5 +35,13 @@ public interface TdeBuilder {
         Set<String> getPermissions();
 
         String getCollation();
+
+        Integer getDimension();
+
+        Float getAnnCompression();
+
+        String getAnnDistance();
+
+        Boolean isAnnIndexed();
     }
 }

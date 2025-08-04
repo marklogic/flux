@@ -78,6 +78,12 @@ public class TdeParams implements TdeOptions {
     private boolean templateDisabled;
 
     @CommandLine.Option(
+        names = "--tde-view-virtual",
+        description = "If set, the TDE template will extract content at query time instead of when data is indexed."
+    )
+    private boolean viewVirtual;
+
+    @CommandLine.Option(
         names = "--tde-view-layout",
         description = "View layout for the TDE template; defaults to 'sparse', can instead be set to 'identical'."
     )
@@ -140,6 +146,41 @@ public class TdeParams implements TdeOptions {
     )
     private Map<String, String> columnCollation;
 
+    @CommandLine.Option(
+        names = "--tde-column-virtual",
+        description = "Name of a column that should be marked as virtual in the generated TDE template. " +
+            "This option can be specified multiple times."
+    )
+    private List<String> virtualColumns;
+
+    @CommandLine.Option(
+        names = "--tde-column-dimension",
+        description = "Vector dimension for a column in the generated TDE template; e.g. --tde-column-dimension myVectorColumn=384 . " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, Integer> columnDimensions;
+
+    @CommandLine.Option(
+        names = "--tde-column-ann-compression",
+        description = "ANN compression ratio for a vector column in the generated TDE template; e.g. --tde-column-ann-compression myVectorColumn=0.5 . " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, Float> columnAnnCompressions;
+
+    @CommandLine.Option(
+        names = "--tde-column-ann-distance",
+        description = "ANN distance metric for a vector column in the generated TDE template; e.g. --tde-column-ann-distance myVectorColumn=cosine . " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, String> columnAnnDistances;
+
+    @CommandLine.Option(
+        names = "--tde-column-ann-indexed",
+        description = "Controls the indexing of a vector column; e.g. --tde-column-ann-indexed myVectorColumn=true. " +
+            "This option can be specified multiple times."
+    )
+    private Map<String, Boolean> columnAnnIndexed;
+
     public boolean hasSchemaAndView() {
         return schema != null && view != null && !schema.isEmpty() && !view.isEmpty();
     }
@@ -165,6 +206,7 @@ public class TdeParams implements TdeOptions {
             .withContext(context)
             .withJsonRootName(jsonRootName)
             .withXmlRootName(xmlRootName, xmlNamespace)
+            .withViewVirtual(viewVirtual)
             .withViewLayout(viewLayout)
             .withColumnVals(columnVals)
             .withColumnTypes(columnTypes)
@@ -173,7 +215,12 @@ public class TdeParams implements TdeOptions {
             .withColumnReindexing(columnReindexing)
             .withColumnPermissions(permissionsMap)
             .withColumnCollations(columnCollation)
-            .withNullableColumns(nullableColumns);
+            .withNullableColumns(nullableColumns)
+            .withVirtualColumns(virtualColumns)
+            .withColumnDimensions(columnDimensions)
+            .withColumnAnnCompressions(columnAnnCompressions)
+            .withColumnAnnDistances(columnAnnDistances)
+            .withColumnAnnIndexed(columnAnnIndexed);
     }
 
     public String getDocumentType() {
@@ -245,6 +292,12 @@ public class TdeParams implements TdeOptions {
     }
 
     @Override
+    public TdeOptions viewVirtual() {
+        this.viewVirtual = true;
+        return this;
+    }
+
+    @Override
     public TdeOptions viewLayout(String viewLayout) {
         this.viewLayout = viewLayout;
         return this;
@@ -295,6 +348,36 @@ public class TdeParams implements TdeOptions {
     @Override
     public TdeOptions columnCollations(Map<String, String> columnCollations) {
         this.columnCollation = columnCollations;
+        return this;
+    }
+
+    @Override
+    public TdeOptions virtualColumns(List<String> virtualColumns) {
+        this.virtualColumns = virtualColumns;
+        return this;
+    }
+
+    @Override
+    public TdeOptions columnDimensions(Map<String, Integer> columnDimensions) {
+        this.columnDimensions = columnDimensions;
+        return this;
+    }
+
+    @Override
+    public TdeOptions columnAnnCompressions(Map<String, Float> columnAnnCompressions) {
+        this.columnAnnCompressions = columnAnnCompressions;
+        return this;
+    }
+
+    @Override
+    public TdeOptions columnAnnDistances(Map<String, String> columnAnnDistances) {
+        this.columnAnnDistances = columnAnnDistances;
+        return this;
+    }
+
+    @Override
+    public TdeOptions columnAnnIndexed(Map<String, Boolean> columnAnnIndexed) {
+        this.columnAnnIndexed = columnAnnIndexed;
         return this;
     }
 }

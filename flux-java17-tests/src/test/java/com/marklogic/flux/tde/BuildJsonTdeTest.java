@@ -123,7 +123,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
     }
 
     @Test
-    void jsonRootNameWithViewLayout() {
+    void jsonRootNameWithCustomView() {
         final String expectedTemplate = """
             {
               "template" : {
@@ -133,6 +133,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 "rows" : [ {
                   "schemaName" : "myschema",
                   "viewName" : "myview",
+                  "viewVirtual": true,
                   "viewLayout": "identical",
                   "columns" : [ {
                     "name" : "myString",
@@ -147,6 +148,7 @@ class BuildJsonTdeTest extends AbstractTdeTest {
                 .withCollections("customer", "customer2")
                 .withDirectories("dir1/", "/dir2/")
                 .withJsonRootName("my-root")
+                .withViewVirtual(true)
                 .withViewLayout("identical"),
             DEFAULT_SCHEMA
         );
@@ -265,6 +267,43 @@ class BuildJsonTdeTest extends AbstractTdeTest {
             .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"));
 
         ObjectNode tde = buildTde(inputs, DEFAULT_SCHEMA);
+        JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
+    }
+
+    @Test
+    void vectorColumns() {
+        final String expectedTemplate = """
+            {
+              "template" : {
+                "context" : "/some-custom-context",
+                "rows" : [ {
+                  "schemaName" : "myschema",
+                  "viewName" : "myview",
+                  "columns" : [ {
+                    "name" : "myVector",
+                    "val" : "myVectorValue",
+                    "scalarType" : "vector",
+                    "virtual": true,
+                    "dimension": 384,
+                    "annCompression": 0.5,
+                    "annDistance": "cosine",
+                    "annIndexed": true
+                  } ]
+                } ]
+              }
+            }""";
+
+        TdeInputs inputs = new TdeInputs("myschema", "myview")
+            .withContext("/some-custom-context")
+            .withColumnVals(Map.of("myVector", "myVectorValue"))
+            .withColumnTypes(Map.of("myVector", "vector"))
+            .withVirtualColumns(List.of("myVector"))
+            .withColumnDimensions(Map.of("myVector", 384))
+            .withColumnAnnCompressions(Map.of("myVector", 0.5f))
+            .withColumnAnnDistances(Map.of("myVector", "cosine"))
+            .withColumnAnnIndexed(Map.of("myVector", true));
+
+        ObjectNode tde = buildTde(inputs, new StructType().add("myVector", DataTypes.StringType));
         JsonAssertions.assertThatJson(tde).isEqualTo(expectedTemplate);
     }
 

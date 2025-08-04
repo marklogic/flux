@@ -51,6 +51,10 @@ public class JsonTdeBuilder implements TdeBuilder {
         row.put("schemaName", tdeInputs.getSchemaName());
         row.put("viewName", tdeInputs.getViewName());
 
+        if (tdeInputs.isViewVirtual()) {
+            row.put("viewVirtual", true);
+        }
+
         final String viewLayout = tdeInputs.getViewLayout();
         if (viewLayout != null && !viewLayout.isEmpty()) {
             row.put("viewLayout", viewLayout);
@@ -88,6 +92,10 @@ public class JsonTdeBuilder implements TdeBuilder {
         }
         columnNode.put("val", val);
 
+        if (column.isVirtual()) {
+            columnNode.put("virtual", true);
+        }
+
         if (column.isNullable()) {
             columnNode.put("nullable", true);
         }
@@ -118,6 +126,26 @@ public class JsonTdeBuilder implements TdeBuilder {
         String collation = column.getCollation();
         if (collation != null) {
             columnNode.put("collation", collation);
+        }
+
+        Integer dimension = column.getDimension();
+        if (dimension != null) {
+            columnNode.put("dimension", dimension);
+        }
+
+        Float annCompression = column.getAnnCompression();
+        if (annCompression != null) {
+            columnNode.put("annCompression", annCompression);
+        }
+
+        String annDistance = column.getAnnDistance();
+        if (annDistance != null) {
+            columnNode.put("annDistance", annDistance);
+        }
+
+        Boolean annIndexed = column.isAnnIndexed();
+        if (annIndexed != null) {
+            columnNode.put("annIndexed", annIndexed);
         }
     }
 

@@ -182,11 +182,22 @@ in the table below are examples only and should be altered based on your own col
 | `--tde-column-val customer_id=customerId` | Override the `val` value for a column. |
 | `--tde-column-type customer_id=string` | Override the `scalarType` value for a column. |
 | `--tde-column-default customer_id=123` | Provide a default value for the column if null for a given row. |
+| `--tde-column-virtual customer_id` | If set for a column, the TDE template will extract content at query time instead of when data is indexed. |
 | `--tde-column-nullable customer_id` | Allow null values for a column. |
 | `--tde-column-invalid-values customer_id=ignore` | Configure whether invalid values are ignored or rejected. |
 | `--tde-column-reindexing customer_id=visible` | Configure the visibility of a column during reindexing. |
 | `--tde-column-permissions customer_id=role1,role2` | Comma-delimited list of role names required for read access to column values. |
 | `--tde-column-collation customer_id=http://marklogic.com/collation/codepoint` | Override the collation for a column of type `string`. |
+
+For a column of type `vector` in MarkLogic 12.0 or higher, the following options can also be configured:
+
+| Option | Description |
+| --- | --- |
+| `--tde-column-dimension vector_col=384` | Defines the size of valid vectors for the column. |
+| `--tde-column-ann-compression vector_col=0.5` | Floating point value between 0.0 and 1.0 that determines the size of indexed vectors. |
+| `--tde-column-ann-distance vector_col=cosine` | As of MarkLogic 12.0, only "cosine" is supported as a value, but future versions may support additional values. |
+| `--tde-column-ann-indexed vector_col=true` | Controls the indexing of the vector column. |
+
 
 ## Integration with document structure options
 

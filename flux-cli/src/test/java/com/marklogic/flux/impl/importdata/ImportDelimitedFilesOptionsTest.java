@@ -136,6 +136,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
                         .context("/custom-context")
                         .uri("/custom/uri.xml")
                         .templateDisabled()
+                        .viewVirtual()
                         .viewLayout("identical")
                         .columnVals(Map.of("col1", "val1"))
                         .columnTypes(Map.of("col1", "string"))
@@ -157,6 +158,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("/custom-context", inputs.getContext());
         assertEquals("/custom/uri.xml", inputs.getUri());
         assertTrue(inputs.isDisabled());
+        assertTrue(inputs.isViewVirtual());
         assertEquals("identical", inputs.getViewLayout());
         assertEquals("role1,read,role2,update", inputs.getPermissions());
 
@@ -181,5 +183,48 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
         // Verify TdeParams-specific fields
         assertEquals("xml", tdeParams.get().getDocumentType());
         assertTrue(tdeParams.get().isPreview());
+    }
+
+    @Test
+    void tdeOptionsFromApiForVectorColumn() {
+        AtomicReference<WriteStructuredDocumentParams> writeParams = new AtomicReference<>();
+        AtomicReference<TdeParams> tdeParams = new AtomicReference<>();
+
+        Flux.importDelimitedFiles()
+            .from("src/test/resources/delimited-files/three-rows.csv")
+            .to(options -> {
+                writeParams.set((WriteStructuredDocumentParams) options);
+                options.tdeOptions(tdeOptions -> {
+                    tdeParams.set((TdeParams) tdeOptions);
+                    tdeOptions
+                        .schemaName("api-schema")
+                        .viewName("api-view")
+                        .preview()
+                        .context("/custom-context")
+                        .virtualColumns(List.of("col1"))
+                        .columnTypes(Map.of("col1", "vector"))
+                        .columnDimensions(Map.of("col1", 384))
+                        .columnAnnCompressions(Map.of("col1", 0.5f))
+                        .columnAnnDistances(Map.of("col1", "cosine"))
+                        .columnAnnIndexed(Map.of("col1", true));
+                });
+            });
+
+        WriteStructuredDocumentParams params = writeParams.get();
+        TdeInputs inputs = params.newTdeHelper().buildTdeInputs();
+
+        // Verify all TdeOptions methods were applied correctly
+        assertEquals("api-schema", inputs.getSchemaName());
+        assertEquals("api-view", inputs.getViewName());
+        assertEquals("/custom-context", inputs.getContext());
+        assertEquals("vector", inputs.getColumnTypes().get("col1"));
+
+        assertEquals("col1", inputs.getVirtualColumns().get(0));
+        assertEquals(1, inputs.getVirtualColumns().size());
+        
+        assertEquals(384, inputs.getColumnDimensions().get("col1").intValue());
+        assertEquals(0.5f, inputs.getColumnAnnCompressions().get("col1").floatValue());
+        assertEquals("cosine", inputs.getColumnAnnDistances().get("col1"));
+        assertTrue(inputs.getColumnAnnIndexed().get("col1"));
     }
 }

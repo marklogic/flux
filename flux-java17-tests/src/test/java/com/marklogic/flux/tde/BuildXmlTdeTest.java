@@ -57,13 +57,14 @@ class BuildXmlTdeTest extends AbstractTdeTest {
     }
 
     @Test
-    void withNamespaceAndRootNameAndViewLayout() {
+    void withNamespaceAndRootNameAndCustomView() {
         final String expectedXml = """
             <template xmlns="http://marklogic.com/xdmp/tde">
               <rows>
                 <row>
                   <schema-name>my_schema</schema-name>
                   <view-name>my_view</view-name>
+                  <view-virtual>true</view-virtual>
                   <view-layout>sparse</view-layout>
                   <columns>
                     <column>
@@ -96,6 +97,7 @@ class BuildXmlTdeTest extends AbstractTdeTest {
                 .withCollections("customer", "another-collection")
                 .withDirectories("/dir1/", "dir2/")
                 .withViewLayout("sparse")
+                .withViewVirtual(true)
                 .withXmlRootName("my-root", "org:example", "ex"));
 
         verifyTemplate(expectedXml, doc);
@@ -158,7 +160,6 @@ class BuildXmlTdeTest extends AbstractTdeTest {
                       <reindexing>visible</reindexing>
                       <permissions>
                         <role-name>rest-reader</role-name>
-                        <role-name>rest-writer</role-name>
                       </permissions>
                       <collation>http://marklogic.com/collation/codepoint</collation>
                     </column>
@@ -177,10 +178,49 @@ class BuildXmlTdeTest extends AbstractTdeTest {
                 .withColumnDefaultValues(Map.of("myString", "0"))
                 .withColumnInvalidValues(Map.of("myString", "reject"))
                 .withColumnReindexing(Map.of("myString", "visible"))
-                .withColumnPermissions(Map.of("myString", Set.of("rest-reader", "rest-writer")))
+                .withColumnPermissions(Map.of("myString", Set.of("rest-reader")))
                 .withColumnCollations(Map.of("myString", "http://marklogic.com/collation/codepoint"))
         );
 
+        verifyTemplate(expectedXml, doc);
+    }
+
+    @Test
+    void vectorColumns() {
+        final String expectedXml = """
+            <template xmlns="http://marklogic.com/xdmp/tde">
+              <rows>
+                <row>
+                  <schema-name>my_schema</schema-name>
+                  <view-name>my_view</view-name>
+                  <columns>
+                    <column>
+                      <name>myString</name>
+                      <scalar-type>vector</scalar-type>
+                      <val>myVectorValue</val>
+                      <virtual>true</virtual>
+                      <dimension>384</dimension>
+                      <ann-compression>0.5</ann-compression>
+                      <ann-distance>cosine</ann-distance>
+                      <ann-indexed>true</ann-indexed>
+                    </column>
+                  </columns>
+                </row>
+              </rows>
+              <context>/my-root</context>
+            </template>""";
+
+        TdeInputs inputs = new TdeInputs("my_schema", "my_view")
+            .withXmlRootName("my-root", null)
+            .withColumnVals(Map.of("myString", "myVectorValue"))
+            .withColumnTypes(Map.of("myString", "vector"))
+            .withVirtualColumns(List.of("myString"))
+            .withColumnDimensions(Map.of("myString", 384))
+            .withColumnAnnCompressions(Map.of("myString", 0.5f))
+            .withColumnAnnDistances(Map.of("myString", "cosine"))
+            .withColumnAnnIndexed(Map.of("myString", true));
+
+        Document doc = buildTde(inputs);
         verifyTemplate(expectedXml, doc);
     }
 
