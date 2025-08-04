@@ -7,13 +7,13 @@ nav_order: 5
 
 When importing from tabular data sources, Flux provides support for aggregating rows together to produce hierarchical
 JSON or XML documents that often better resemble the logical entities associated with the documents. Flux supports
-this capability for each of the following data sources:
+this capability for the following commands:
 
-- [Avro](import-files/avro.md)
-- [Delimited text](import-files/delimited-text.md)
-- [JDBC](import-jdbc.md)
-- [ORC](import-files/orc.md)
-- [Parquet](import-files/parquet.md)
+- [`import-avro-files`](import-files/avro.md)
+- [`import-delimited-files`](import-files/delimited-text.md)
+- [`import-jdbc`](import-jdbc.md)
+- [`import-orc-files`](import-files/orc.md)
+- [`import-parquet-files`](import-files/parquet.md)
 
 As an example, consider a scenario where you are importing customer data from a relational database via JDBC. Each 
 customer record can have one or more related address records, which are stored in a separate table. You could simply

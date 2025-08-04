@@ -2,7 +2,7 @@
 layout: default
 title: Classifying text
 parent: Importing Data
-nav_order: 6
+nav_order: 7
 ---
 
 Flux 1.3 introduces support for [classifying text via Progress Semaphore](https://www.progress.com/semaphore). Classifying
