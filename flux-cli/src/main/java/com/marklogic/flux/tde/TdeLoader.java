@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.spark.Util;
 import marklogicspark.marklogic.client.DatabaseClient;
 import marklogicspark.marklogic.client.io.DocumentMetadataHandle;
 import marklogicspark.marklogic.client.io.JacksonHandle;
@@ -32,6 +33,13 @@ public class TdeLoader {
     public void loadTde(final TdeTemplate tdeTemplate) {
         final ObjectNode permissionsMap = buildPermissionsMap(tdeTemplate.getPermissions());
         final String uri = tdeTemplate.getUri();
+
+        if (Util.MAIN_LOGGER.isDebugEnabled()) {
+            Util.MAIN_LOGGER.debug("Loading TDE template with URI: {}; template: {}",
+                uri, tdeTemplate.toPrettyString());
+        } else if (Util.MAIN_LOGGER.isInfoEnabled()) {
+            Util.MAIN_LOGGER.info("Loading TDE template with URI: {}", uri);
+        }
 
         try {
             databaseClient.newServerEval().javascript(SCRIPT)

@@ -2,7 +2,7 @@
 layout: default
 title: Splitting text
 parent: Importing Data
-nav_order: 7
+nav_order: 8
 ---
 
 Flux supports splitting the text in documents into chunks of configurable size, either written to the source document

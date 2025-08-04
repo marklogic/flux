@@ -115,6 +115,11 @@ it may be important to query for documents that have a particular field with a v
 The `import-avro-files` command supports aggregating related rows together to produce hierarchical documents. See
 [Aggregating rows](../aggregating-rows.md) for more information.
 
+## Generating a TDE template
+
+The `import-avro-files` command supports generating TDE templates to make imported data immediately available for relational
+queries. See [TDE template generation](../tde-generation.md) for more information.
+
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to

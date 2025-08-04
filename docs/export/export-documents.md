@@ -104,7 +104,7 @@ A combined query, with options included:
 
 In some scenarios, it may not be possible to express all the URIs you wish to export via a single query. In such cases, 
 starting with Flux 1.4.0, you can use a "secondary query" to include additional URIs. The secondary query is defined via 
-custom code that you define. The custom code is invoked for each batch of URIs retrieved via the primary query defined 
+custom code that you define via one of the options below. The custom code is invoked for each batch of URIs retrieved via the primary query defined 
 by the options listed above. The custom code will be passed a variable named `URIs` that is a JSON array containing the 
 URIs in the batch. The custom code must then return a sequence of zero to many additional URIs that will also be exported. 
 

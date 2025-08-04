@@ -138,12 +138,10 @@ it may be important to query for documents that have a particular field with a v
 The `import-jdbc` command supports aggregating related rows together to produce hierarchical documents. See
 [Aggregating rows](aggregating-rows.md) for more information.
 
-## Generating a TDE
+## Generating a TDE template
 
-Will have a lot more here before release. 
-
-Need to document that user needs the "xdmp-eval" and "xdmp-eval-in" privileges in order to insert a TDE.
-And "any-collection"!
+The `import-jdbc` command supports generating TDE templates to make imported data immediately available for relational
+queries. See [TDE template generation](tde-generation.md) for more information.
 
 ## Advanced options
 
