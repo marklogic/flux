@@ -14,7 +14,7 @@ java {
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.1.0-beta7") {
+  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.2.0-beta8") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
     exclude group: "com.fasterxml.jackson.core"
