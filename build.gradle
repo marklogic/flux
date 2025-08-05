@@ -74,6 +74,9 @@ subprojects {
       // version that tika-parser-microsoft-module wants.
       // Avoids another classpath conflict between Spark and tika-parser-microsoft-module.
       force "org.apache.commons:commons-compress:1.27.1"
+
+      // Forcing 3.18.0 to resolve CVEs on earlier versions of commons-lang3.
+      force "org.apache.commons:commons-lang3:3.18.0"
     }
 
     // Without this exclusion, we have multiple slf4j providers, leading to an ugly warning at the start

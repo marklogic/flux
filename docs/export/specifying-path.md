@@ -19,6 +19,10 @@ This guide describes the different types of paths supported by Flux.
 Commands that export data to files require a single path specified via the `--path` option. 
 The value of the `--path` option can be any valid directory, S3 bucket, or Azure Storage container. 
 
+> Note - MarkLogic allows for characters in document URIs that may not be supported in filenames for the target 
+> filesystem. For example, Azure Storage will not allow colons in a filename. If you run into issues with characters 
+> in the filename, consider exporting a zip file containing documents instead of exporting individual documents as files.
+
 ## Exporting to S3
 
 Flux can export files to S3 via a path expression of the form `s3a://bucket-name/optional/path`.
