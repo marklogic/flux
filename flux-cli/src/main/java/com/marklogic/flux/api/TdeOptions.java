@@ -31,6 +31,8 @@ public interface TdeOptions {
 
     TdeOptions templateDisabled();
 
+    TdeOptions viewVirtual();
+
     TdeOptions viewLayout(String viewLayout);
 
     TdeOptions columnVals(Map<String, String> columnVals);
@@ -48,4 +50,14 @@ public interface TdeOptions {
     TdeOptions nullableColumns(List<String> nullableColumns);
 
     TdeOptions columnCollations(Map<String, String> columnCollations);
+
+    TdeOptions virtualColumns(List<String> virtualColumns);
+
+    TdeOptions columnDimensions(Map<String, Integer> columnDimensions);
+
+    TdeOptions columnAnnCompressions(Map<String, Float> columnAnnCompressions);
+
+    TdeOptions columnAnnDistances(Map<String, String> columnAnnDistances);
+
+    TdeOptions columnAnnIndexed(Map<String, Boolean> columnAnnIndexed);
 }

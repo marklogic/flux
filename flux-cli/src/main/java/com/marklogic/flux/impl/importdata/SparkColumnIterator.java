@@ -53,7 +53,7 @@ public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
         public String getVal() {
             String name = getName();
             return tdeInputs.getColumnVals() != null && tdeInputs.getColumnVals().containsKey(name) ?
-                    tdeInputs.getColumnVals().get(name) : getName();
+                tdeInputs.getColumnVals().get(name) : getName();
         }
 
         @Override
@@ -93,6 +93,31 @@ public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
         @Override
         public String getCollation() {
             return tdeInputs.getColumnCollations() != null ? tdeInputs.getColumnCollations().get(getName()) : null;
+        }
+
+        @Override
+        public boolean isVirtual() {
+            return tdeInputs.getVirtualColumns() != null && tdeInputs.getVirtualColumns().contains(getName());
+        }
+
+        @Override
+        public Integer getDimension() {
+            return tdeInputs.getColumnDimensions() != null ? tdeInputs.getColumnDimensions().get(getName()) : null;
+        }
+
+        @Override
+        public Float getAnnCompression() {
+            return tdeInputs.getColumnAnnCompressions() != null ? tdeInputs.getColumnAnnCompressions().get(getName()) : null;
+        }
+
+        @Override
+        public String getAnnDistance() {
+            return tdeInputs.getColumnAnnDistances() != null ? tdeInputs.getColumnAnnDistances().get(getName()) : null;
+        }
+
+        @Override
+        public Boolean isAnnIndexed() {
+            return tdeInputs.getColumnAnnIndexed() != null ? tdeInputs.getColumnAnnIndexed().get(getName()) : null;
         }
 
         private String convertSparkTypeToTdeType(DataType sparkType) {

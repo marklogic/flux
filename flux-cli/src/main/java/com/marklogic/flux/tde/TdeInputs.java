@@ -23,6 +23,7 @@ public class TdeInputs {
     private String[] directories;
     private String permissions;
     private boolean disabled;
+    private boolean viewVirtual;
     private String viewLayout;
     private Map<String, String> columnVals;
     private Map<String, String> columnTypes;
@@ -32,6 +33,11 @@ public class TdeInputs {
     private Map<String, Set<String>> columnPermissions;
     private Map<String, String> columnCollations;
     private List<String> nullableColumns;
+    private List<String> virtualColumns;
+    private Map<String, Integer> columnDimensions;
+    private Map<String, Float> columnAnnCompressions;
+    private Map<String, String> columnAnnDistances;
+    private Map<String, Boolean> columnAnnIndexed;
 
     public TdeInputs(String schemaName, String viewName) {
         this.schemaName = schemaName;
@@ -100,6 +106,11 @@ public class TdeInputs {
         return this;
     }
 
+    public TdeInputs withViewVirtual(boolean viewVirtual) {
+        this.viewVirtual = viewVirtual;
+        return this;
+    }
+
     public TdeInputs withViewLayout(String viewLayout) {
         this.viewLayout = viewLayout;
         return this;
@@ -145,6 +156,31 @@ public class TdeInputs {
         return this;
     }
 
+    public TdeInputs withVirtualColumns(List<String> virtualColumns) {
+        this.virtualColumns = virtualColumns;
+        return this;
+    }
+
+    public TdeInputs withColumnDimensions(Map<String, Integer> columnDimensions) {
+        this.columnDimensions = columnDimensions;
+        return this;
+    }
+
+    public TdeInputs withColumnAnnCompressions(Map<String, Float> columnAnnCompressions) {
+        this.columnAnnCompressions = columnAnnCompressions;
+        return this;
+    }
+
+    public TdeInputs withColumnAnnDistances(Map<String, String> columnAnnDistances) {
+        this.columnAnnDistances = columnAnnDistances;
+        return this;
+    }
+
+    public TdeInputs withColumnAnnIndexed(Map<String, Boolean> columnAnnIndexed) {
+        this.columnAnnIndexed = columnAnnIndexed;
+        return this;
+    }
+
     public String getSchemaName() {
         return schemaName;
     }
@@ -175,6 +211,10 @@ public class TdeInputs {
 
     public boolean isDisabled() {
         return disabled;
+    }
+
+    public boolean isViewVirtual() {
+        return viewVirtual;
     }
 
     public String getViewLayout() {
@@ -211,6 +251,26 @@ public class TdeInputs {
 
     public List<String> getNullableColumns() {
         return nullableColumns;
+    }
+
+    public List<String> getVirtualColumns() {
+        return virtualColumns;
+    }
+
+    public Map<String, Integer> getColumnDimensions() {
+        return columnDimensions;
+    }
+
+    public Map<String, Float> getColumnAnnCompressions() {
+        return columnAnnCompressions;
+    }
+
+    public Map<String, String> getColumnAnnDistances() {
+        return columnAnnDistances;
+    }
+
+    public Map<String, Boolean> getColumnAnnIndexed() {
+        return columnAnnIndexed;
     }
 
     public boolean hasContextNamespaceWithPrefix() {

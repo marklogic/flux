@@ -50,7 +50,7 @@ public class XmlTdeBuilder implements TdeBuilder {
             throw new FluxException("Failed to create XML DocumentBuilder", e);
         }
 
-        XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName(), tdeInputs.getViewLayout());
+        XmlTemplate xmlTemplate = new XmlTemplate(doc, tdeInputs.getSchemaName(), tdeInputs.getViewName(), tdeInputs.isViewVirtual(), tdeInputs.getViewLayout());
 
         final boolean hasContextNamespaceWithPrefix = tdeInputs.hasContextNamespaceWithPrefix();
         if (hasContextNamespaceWithPrefix) {
@@ -82,7 +82,7 @@ public class XmlTdeBuilder implements TdeBuilder {
         private final Element row;
         private final Element columns;
 
-        XmlTemplate(Document doc, String schemaName, String viewName, String viewLayout) {
+        XmlTemplate(Document doc, String schemaName, String viewName, boolean viewVirtual, String viewLayout) {
             this.doc = doc;
             this.root = doc.createElementNS(NAMESPACE, "template");
             doc.appendChild(root);
@@ -91,6 +91,9 @@ public class XmlTdeBuilder implements TdeBuilder {
             row = addChild(rows, "row");
             addChildWithText(row, "schema-name", schemaName);
             addChildWithText(row, "view-name", viewName);
+            if (viewVirtual) {
+                addChildWithText(row, "view-virtual", "true");
+            }
             if (viewLayout != null && !viewLayout.isEmpty()) {
                 addChildWithText(row, "view-layout", viewLayout);
             }
@@ -117,6 +120,10 @@ public class XmlTdeBuilder implements TdeBuilder {
                 val = String.format("%s:%s", contextNamespacePrefix, val);
             }
             addChildWithText(columnElement, "val", val);
+
+            if (column.isVirtual()) {
+                addChildWithText(columnElement, "virtual", "true");
+            }
 
             if (column.isNullable()) {
                 addChildWithText(columnElement, "nullable", "true");
@@ -148,6 +155,26 @@ public class XmlTdeBuilder implements TdeBuilder {
             String collation = column.getCollation();
             if (collation != null) {
                 addChildWithText(columnElement, "collation", collation);
+            }
+
+            Integer dimension = column.getDimension();
+            if (dimension != null) {
+                addChildWithText(columnElement, "dimension", String.valueOf(dimension));
+            }
+
+            Float annCompression = column.getAnnCompression();
+            if (annCompression != null) {
+                addChildWithText(columnElement, "ann-compression", String.valueOf(annCompression));
+            }
+
+            String annDistance = column.getAnnDistance();
+            if (annDistance != null) {
+                addChildWithText(columnElement, "ann-distance", annDistance);
+            }
+
+            Boolean annIndexed = column.isAnnIndexed();
+            if (annIndexed != null) {
+                addChildWithText(columnElement, "ann-indexed", Boolean.toString(annIndexed));
             }
         }
 
