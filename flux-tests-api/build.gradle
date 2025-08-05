@@ -19,5 +19,5 @@ dependencies {
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   api "org.springframework:spring-jdbc:5.3.39"
-  implementation "org.postgresql:postgresql:42.7.4"
+  implementation "org.postgresql:postgresql:42.7.7"
 }
