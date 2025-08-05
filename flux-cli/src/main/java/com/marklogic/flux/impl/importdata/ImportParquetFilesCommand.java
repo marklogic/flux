@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-parquet-files",
-    description = "Read Parquet files from local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html, and write JSON or XML " +
+    description = "Read Parquet files from supported file locations using Spark's support " +
+        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html, and write JSON or XML " +
         "documents to MarkLogic."
 )
 public class ImportParquetFilesCommand extends AbstractImportFilesCommand<ParquetFilesImporter> implements ParquetFilesImporter {
@@ -56,7 +56,7 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark Parquet data source option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
                 "Spark configuration options must be defined via '-C'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();

@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-parquet-files",
     description = "Read rows via Optic from MarkLogic and write them to Parquet files on a local filesystem, HDFS, or S3 " +
-        "using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html ."
+        "using Spark's support defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html ."
 )
 public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<ParquetFilesExporter> implements ParquetFilesExporter {
 
@@ -37,7 +37,7 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark Parquet option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. -Pcompression=gzip."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -Pcompression=gzip."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

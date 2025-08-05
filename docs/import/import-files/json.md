@@ -110,7 +110,7 @@ The JSON Lines format is often useful for exporting data from MarkLogic as well.
 ### Importing JSON Lines files as is
 
 When importing JSON Lines files, Flux uses the 
-[Spark JSON data source](https://spark.apache.org/docs/latest/sql-data-sources-json.html) to read each line and conform
+[Spark JSON data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) to read each line and conform
 the JSON objects to a common schema across the entire set of lines. As noted in the Advanced Options section below, 
 Spark JSON provides a number of configuration options for controlling how the lines are read. These features can result
 in changes to the JSON objects, such as the keys being reordered and fields being added to match the common schema. 
@@ -131,7 +131,7 @@ effects on the `import-aggregate-json-files` command:
 Flux defaults to reading JSON lines with a mode of "permissive". With this mode, any malformed lines will be dropped 
 and Flux will continue processing lines. 
 
-You can configure the underlying [Spark JSON data source](https://spark.apache.org/docs/latest/sql-data-sources-json.html) to 
+You can configure the underlying [Spark JSON data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) to 
 instead fail fast when it encounters a malformed line by including `-Pmode=failfast` as an option. When Flux encounters
 a malformed line, it will immediately fail with an error message describing the problem with the line. 
 
@@ -213,7 +213,7 @@ that the use of `-Pcompression=` is only supported if the `--json-lines-raw` opt
 ## Advanced options
 
 The `import-aggregate-json-files` command reuses Spark's support for reading JSON files. You can include any of
-the [Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option
+the [Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `-P` option
 to control how JSON content is read. These options are expressed as `-PoptionName=optionValue`.
 
 For example, if your files use a format other than `yyyy-MM-dd` values, you can specify that format via the following:

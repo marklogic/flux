@@ -374,7 +374,7 @@ straightforward and human-readable, it can result in large documents when embedd
 For example, a typical embedding with 1536 dimensions can add significant size to each document. 
 
 To reduce document size, typically resulting in a document that is faster to load and index and query, 
-you can configure Flux to encode embeddings into string values using the following option:
+you can configure Flux 1.4.0 or higher to encode embeddings into string values using the following option:
 
     --embedder-base64-encode
 

@@ -186,7 +186,7 @@ Flux once and processing each file separately.
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
-the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` option
+the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `-P` option
 to control how delimited text is read. These options are expressed as `-PoptionName=optionValue`.
 
 A common option to include is `-PmultiLine=true` for when your files have rows with values that include newline 

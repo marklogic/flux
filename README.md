@@ -5,7 +5,7 @@ Flux can also be easily embedded in your own application to support any flow of 
 With Flux, you can automate common data movement use cases including:
 
 - Importing rows from an RDBMS.
-- Importing JSON, XML, CSV, Parquet and other file types from a local filesystem or S3.
+- Importing JSON, XML, CSV, Parquet and other file types from a local filesystem, Amazon S3, or Azure Storage.
 - Extract text from binary documents and classify it using [Progress Semaphore](https://www.progress.com/semaphore).
 - Implementing a data pipeline for a [RAG solution with MarkLogic](https://www.progress.com/marklogic/solutions/generative-ai).
 - Copying data from one MarkLogic database to another database.

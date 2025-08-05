@@ -22,7 +22,7 @@ YARN cluster manager and the YARN cluster "is accepting work from remote (authen
 
 For normal Flux CLI usage, this CVE is a false positive as Flux does not use a YARN cluster manager. Flux uses 
 Spark's standalone cluster manager by default - see the 
-[Spark documentation](https://spark.apache.org/docs/latest/cluster-overview.html) for further information on Spark
+[Spark documentation](https://spark.apache.org/docs/3.5.6/cluster-overview.html) for further information on Spark
 cluster managers. 
 
 If you use Flux with the Apache Spark `spark-submit` program as described below, you should consider the above CVE if
@@ -31,7 +31,7 @@ Spark cluster, as Flux does not include any Spark or Hadoop packages when it is 
 
 ## Submitting Flux commands
 
-Flux integrates with [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) to allow you to 
+Flux integrates with [spark-submit](https://spark.apache.org/docs/3.5.6/submitting-applications.html) to allow you to 
 submit a Flux command invocation to a remote Spark cluster. Every Flux command is a Spark application, and thus every
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
@@ -76,7 +76,7 @@ Key points on the above example:
 1. You must provide a value of `com.marklogic.flux.spark.Submit` for the required `--class` option. This class 
 provides the entry point that allows for a Flux command to be run.
 2. Set the value of `--master` to the master URL of your Spark cluster.
-3. As noted in the [Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html), the path
+3. As noted in the [Spark documentation](https://spark.apache.org/docs/3.5.6/submitting-applications.html), the path
 to the Flux jar - the "application jar" - must be globally visible inside your cluster.
 4. The "application arguments" consist of the name of the Flux command and the options you provide to that command. 
 
@@ -92,7 +92,7 @@ The above packages are not included in the Flux jar file, as the version require
 
 ### Using Avro data with spark-submit
 
-Per the [Spark Avro documentation](https://spark.apache.org/docs/latest/sql-data-sources-avro.html), the `spark-avro`
+Per the [Spark Avro documentation](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html), the `spark-avro`
 dependency is not included in Spark by default. If you wish to run either `import-avro-files` or `export-avro-files`
 with Flux and `spark-submit`, you must include the following line in your `spark-submit` invocation:
 

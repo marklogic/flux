@@ -125,7 +125,7 @@ bin\flux export-avro-files ^
 {% endtabs %}
 
 You can include any of the 
-[Spark Avro data source options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `-P` option to
+[Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `-P` option to
 control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
 
 For configuration options listed in the above Spark Avro guide, use the `-C` option instead. For example,
@@ -156,7 +156,7 @@ bin\flux export-delimited-files ^
 {% endtabs %}
 
 This command reuses Spark's support for writing delimited text files. You can include
-any of the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` 
+any of the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `-P` 
 option to control how delimited text is written. These options are expressed as `-PoptionName=optionValue`. 
 
 The command defaults to setting the Spark CSV `header` option to `true` so that column
@@ -217,7 +217,7 @@ bin\flux export-json-lines-files ^
 
 
 This command reuses Spark's support for writing JSON files. You can include any of the
-[Spark JSON options](https://spark.apache.org/docs/latest/sql-data-sources-json.html) via the `-P` option to control
+[Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `-P` option to control
 how JSON Lines files are written. These options are expressed as `-PoptionName=optionValue`.
 
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the
@@ -269,7 +269,7 @@ bin\flux export-orc-files ^
 
 
 This command reuses Spark's support for writing ORC files. You can include any of the
-[Spark ORC data source options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `-P` option to
+[Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `-P` option to
 control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
 
 For configuration options listed in the above Spark ORC guide, use the `-C` option instead. For example,
@@ -299,7 +299,7 @@ bin\flux export-parquet-files ^
 {% endtabs %}
 
 This command reuses Spark's support for writing Parquet files. You can include any of the
-[Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `-P` option to
+[Spark Parquet data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html) via the `-P` option to
 control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
 
 For configuration options listed in the above Spark Parquet guide, use the `-C` option instead. For example, 
@@ -322,7 +322,7 @@ release, these commands defaulted to `Overwrite`. The `export-jdbc` command defa
 an existing table in any way.
 
 For further information on each mode, please see 
-[the Spark documentation](https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes).
+[the Spark documentation](https://spark.apache.org/docs/3.5.6/sql-data-sources-load-save-functions.html#save-modes).
 
 ## Tuning query performance
 

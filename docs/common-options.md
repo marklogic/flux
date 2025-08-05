@@ -504,7 +504,7 @@ configuring the underlying Spark runtime environment used by Flux.
 By default, Flux creates a Spark runtime with a master URL of `local[*]`, which runs Spark with as many worker 
 threads as logical cores on the machine running Flux. The number of worker threads affects how many partitions can be
 processed in parallel. You can change this setting via the`--spark-master-url` option; please see 
-[the Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls) for examples
+[the Spark documentation](https://spark.apache.org/docs/3.5.6/submitting-applications.html#master-urls) for examples
 of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
 [Spark Integration guide](spark-integration.md) for details on integrating Flux with `spark-submit`.
 
@@ -542,9 +542,9 @@ to it. You can still override `--spark-master-url` if you wish.
 
 ### Configuring Spark Session creation
 
-Many [Spark configuration options](https://spark.apache.org/docs/latest/configuration.html) must be specified before
+Many [Spark configuration options](https://spark.apache.org/docs/3.5.6/configuration.html) must be specified before
 the Spark Session is built. For example, if you wish to 
-[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/latest/security.html#local-storage-encryption), 
+[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/3.5.6/security.html#local-storage-encryption), 
 the `spark.io.encryption.enabled=true` option must be set before the Spark session is built. 
 
 To specify options that control how the Spark Session is built, use the `-B` option as many times as need. For example, 
@@ -555,12 +555,12 @@ to enable encryption with a custom value for the key size in bits, include the f
 
 ### Configuring the Spark Session at runtime
 
-Some Flux commands reuse [Spark data sources](https://spark.apache.org/docs/latest/sql-data-sources.html) that 
+Some Flux commands reuse [Spark data sources](https://spark.apache.org/docs/3.5.6/sql-data-sources.html) that 
 accept configuration items via the Spark runtime. You can provide these configuration items via the `-C` option. 
-For example, the [Spark Avro data source](https://spark.apache.org/docs/latest/sql-data-sources-avro.html#configuration)
+For example, the [Spark Avro data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html#configuration)
 identifies several configuration items, such as `spark.sql.avro.compression.codec`. You can set this value by 
 including `-Cspark.sql.avro.compression.codec=snappy` as a command line option. 
 
-Note that the majority of [Spark cluster configuration properties](https://spark.apache.org/docs/latest/configuration.html)
+Note that the majority of [Spark cluster configuration properties](https://spark.apache.org/docs/3.5.6/configuration.html)
 cannot be set via the `-C` option as those options must be set before a Spark session is built. Please see the section
 above on using the `-B` option for options that control how a Spark session is built.
