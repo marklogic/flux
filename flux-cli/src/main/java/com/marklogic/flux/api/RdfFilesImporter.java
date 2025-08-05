@@ -6,7 +6,7 @@ package com.marklogic.flux.api;
 import java.util.function.Consumer;
 
 /**
- * Read RDF data from local, HDFS, and S3 files and write the data as managed triples documents in MarkLogic.
+ * Read RDF data from supported file locations and write the data as managed triples documents in MarkLogic.
  */
 public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
 

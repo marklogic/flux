@@ -87,7 +87,7 @@ bin\flux import-jdbc ^
 {% endtabs %}
 
 The `--table` option maps to the `dbtable` option for 
-[the Spark JDBC data source](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html). Per the Spark documentation, 
+[the Spark JDBC data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html). Per the Spark documentation, 
 in addition to a table name, you can also specify "anything that is valid in the `FROM` clause of a SQL query... 
 such as a subquery in parentheses".
 
@@ -146,5 +146,5 @@ queries. See [TDE template generation](tde-generation.md) for more information.
 ## Advanced options
 
 The `import-jdbc` command reuses Spark's support for reading via a JDBC driver. You can include any of
-the [Spark JDBC options](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html) via the `-P` option
+the [Spark JDBC options](https://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html) via the `-P` option
 to control how JDBC is used. These options are expressed as `-PoptionName=optionValue`.

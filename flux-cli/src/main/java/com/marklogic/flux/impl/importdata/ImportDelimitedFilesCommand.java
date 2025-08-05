@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-delimited-files",
-    description = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html, and write JSON or XML documents " +
+    description = "Read delimited text files from supported file locations using Spark's support " +
+        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html, and write JSON or XML documents " +
         "to MarkLogic."
 )
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
@@ -61,7 +61,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark CSV option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html; e.g. -PquoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
