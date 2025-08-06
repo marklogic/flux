@@ -3,13 +3,11 @@
  */
 package com.marklogic.flux.impl.custom;
 
+import com.marklogic.flux.api.AzureStorageOptions;
 import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.SaveMode;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.S3Params;
-import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.DataFrameWriter;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -17,16 +15,20 @@ import picocli.CommandLine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
-abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractCommand<T> {
+abstract class AbstractCustomExportCommand<T extends Executor<T>> extends AbstractCommand<T> {
 
     @CommandLine.Mixin
     protected final CustomWriteParams writeParams = new CustomWriteParams();
 
-    public static class CustomWriteParams implements CustomExportWriteOptions {
+    public static class CustomWriteParams implements CustomExportWriteOptions, CloudStorageParams {
 
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
+
+        @CommandLine.Mixin
+        private AzureStorageParams azureStorageParams = new AzureStorageParams();
 
         @CommandLine.Option(
             names = "--target",
@@ -43,9 +45,19 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
-                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
+                "See %nhttps://spark.apache.org/docs/3.5.6/api/java/org/apache/spark/sql/SaveMode.html for more information. "
                 + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private SaveMode saveMode = SaveMode.APPEND;
+
+        @Override
+        public S3Params getS3Params() {
+            return s3Params;
+        }
+
+        @Override
+        public AzureStorageParams getAzureStorageParams() {
+            return azureStorageParams;
+        }
 
         @Override
         public CustomExportWriteOptions target(String target) {
@@ -87,11 +99,17 @@ abstract class AbstractCustomExportCommand<T extends Executor> extends AbstractC
             this.s3Params.setEndpoint(endpoint);
             return this;
         }
+
+        @Override
+        public CustomExportWriteOptions azureStorage(Consumer<AzureStorageOptions> consumer) {
+            consumer.accept(this.azureStorageParams);
+            return this;
+        }
     }
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams);
         writer.format(writeParams.target)
             .options(writeParams.additionalOptions)
             .mode(SparkUtil.toSparkSaveMode(writeParams.saveMode))

@@ -20,6 +20,12 @@ public class EmbedderParams implements EmbedderOptions {
     private String embedder;
 
     @CommandLine.Option(
+        names = "--embedder-prompt",
+        description = "A prompt to prepend to the text of each chunk before generating an embedding."
+    )
+    private String prompt;
+
+    @CommandLine.Option(
         names = {"-E"},
         description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
     )
@@ -72,16 +78,25 @@ public class EmbedderParams implements EmbedderOptions {
     )
     private Integer batchSize;
 
+    @CommandLine.Option(
+        names = "--embedder-base64-encode",
+        description = "If specified, the embedding vector will be base64-encoded and stored as a single string value " +
+            "in the document. If not specified, the embedding vector will be stored as an array of numbers."
+    )
+    private boolean base64Encode;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (embedder != null) {
             OptionsUtil.addOptions(options,
+                Options.WRITE_EMBEDDER_PROMPT, prompt,
                 Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, determineClassName(embedder),
                 Options.WRITE_EMBEDDER_TEXT_JSON_POINTER, textJsonPointer,
                 Options.WRITE_EMBEDDER_EMBEDDING_NAME, embeddingName,
                 Options.WRITE_EMBEDDER_CHUNKS_XPATH, chunksXpath,
                 Options.WRITE_EMBEDDER_TEXT_XPATH, textXpath,
-                Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
+                Options.WRITE_EMBEDDER_BATCH_SIZE, OptionsUtil.integerOption(batchSize),
+                Options.WRITE_EMBEDDER_BASE64_ENCODE, base64Encode ? "true" : null
             );
 
             // Empty string is a valid value.
@@ -151,6 +166,18 @@ public class EmbedderParams implements EmbedderOptions {
     @Override
     public EmbedderOptions embedderOptions(Map<String, String> options) {
         this.embeddingModelOptions = options;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions prompt(String prompt) {
+        this.prompt = prompt;
+        return this;
+    }
+
+    @Override
+    public EmbedderOptions base64Encode() {
+        this.base64Encode = true;
         return this;
     }
 

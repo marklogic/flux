@@ -3,15 +3,11 @@
  */
 package com.marklogic.flux.impl.export;
 
-import com.marklogic.flux.api.CompressionType;
-import com.marklogic.flux.api.FluxException;
-import com.marklogic.flux.api.GenericFilesExporter;
-import com.marklogic.flux.api.ReadDocumentsOptions;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.S3Params;
+import com.marklogic.flux.api.*;
+import com.marklogic.flux.impl.*;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.SaveMode;
 import picocli.CommandLine;
 
 import java.util.Map;
@@ -25,10 +21,10 @@ import java.util.function.Supplier;
 public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> implements GenericFilesExporter {
 
     @CommandLine.Mixin
-    private ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
+    protected final ReadDocumentParamsImpl readParams = new ReadDocumentParamsImpl();
 
     @CommandLine.Mixin
-    protected WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
+    protected final WriteGenericFilesParams writeParams = new WriteGenericFilesParams();
 
     @CommandLine.Option(
         names = "--streaming",
@@ -56,12 +52,11 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writeParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        String outputPath = applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams, writeParams.getPath());
         writer.format(MARKLOGIC_CONNECTOR)
             .options(buildWriteOptions())
-            // The connector only supports "Append" in terms of how Spark defines it, but it will always overwrite files.
             .mode(SaveMode.Append)
-            .save(writeParams.path);
+            .save(outputPath);
     }
 
     protected final Map<String, String> buildReadOptions() {
@@ -82,13 +77,16 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         return options;
     }
 
-    public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions {
+    public static class WriteGenericFilesParams implements Supplier<Map<String, String>>, WriteGenericFilesOptions, CloudStorageParams {
 
         @CommandLine.Option(required = true, names = "--path", description = "Path expression for where files should be written.")
         private String path;
 
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
+
+        @CommandLine.Mixin
+        private AzureStorageParams azureStorageParams = new AzureStorageParams();
 
         @CommandLine.Option(names = "--compression", description = "Set to 'ZIP' to write one ZIP file per partition, " +
             "or to 'GZIP' to gzip each document file. " + OptionsUtil.VALID_VALUES_DESCRIPTION)
@@ -102,6 +100,20 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
 
         @CommandLine.Option(names = "--zip-file-count", description = "Specifies how many ZIP files should be written when --compression is set to 'ZIP'; also an alias for '--repartition'.")
         private int zipFileCount;
+
+        @Override
+        public AzureStorageParams getAzureStorageParams() {
+            return azureStorageParams;
+        }
+
+        @Override
+        public S3Params getS3Params() {
+            return s3Params;
+        }
+
+        public String getPath() {
+            return path;
+        }
 
         @Override
         public Map<String, String> get() {
@@ -171,11 +183,18 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
             s3Params.setEndpoint(endpoint);
             return this;
         }
+
+        @Override
+        public WriteGenericFilesOptions azureStorage(Consumer<AzureStorageOptions> consumer) {
+            consumer.accept(azureStorageParams);
+            return this;
+        }
     }
 
     @Override
-    public GenericFilesExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer) {
-        consumer.accept(readParams);
+    @SuppressWarnings("unchecked")
+    public <T extends ReadDocumentsOptions<T>> GenericFilesExporter from(Consumer<T> consumer) {
+        consumer.accept((T) readParams);
         return this;
     }
 

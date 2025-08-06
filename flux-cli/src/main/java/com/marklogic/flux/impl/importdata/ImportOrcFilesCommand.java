@@ -7,6 +7,7 @@ import com.marklogic.flux.api.OrcFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -17,8 +18,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-orc-files",
-    description = "Read ORC files from local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html, and write JSON or " +
+    description = "Read ORC files from supported file locations using Spark's support " +
+        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html, and write JSON or " +
         "XML documents to MarkLogic."
 )
 public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesImporter> implements OrcFilesImporter {
@@ -35,12 +36,12 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 
@@ -55,7 +56,7 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark ORC data source option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. -PmergeSchema=true. " +
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html; e.g. -PmergeSchema=true. " +
                 "Spark configuration options must be defined via '-C'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
@@ -100,7 +101,15 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        return readParams.aggregationParams.applyGroupBy(dataset);
+
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override

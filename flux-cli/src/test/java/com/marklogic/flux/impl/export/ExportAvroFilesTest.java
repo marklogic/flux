@@ -50,14 +50,14 @@ class ExportAvroFilesTest extends AbstractTest {
      */
     @Test
     void dynamicParameter(@TempDir Path tempDir) {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "export-avro-files",
             "--connection-string", makeConnectionString(),
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",
             "--path", tempDir.toFile().getAbsolutePath(),
             "-PavroSchema=intentionally-invalid"
-        ));
+        );
 
         assertTrue(stderr.contains("Error: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
             "This test is verifying that -P params are passed to the Avro data source. Since an invalid " +

@@ -7,13 +7,22 @@ import java.util.function.Consumer;
 
 /**
  * Read rows using
- * <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html">Spark's JDBC support</a>
+ * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html">Spark's JDBC support</a>
  * and write JSON or XML documents to MarkLogic.
  */
 public interface JdbcImporter extends Executor<JdbcImporter> {
 
     interface ReadJdbcOptions extends JdbcOptions<ReadJdbcOptions> {
+        /**
+         * Either this or {@link #table(String)} must be invoked.
+         */
         ReadJdbcOptions query(String query);
+
+        /**
+         * Either this or {@link #query(String)} must be invoked.
+         * @since 1.4.0
+         */
+        ReadJdbcOptions table(String table);
 
         ReadJdbcOptions groupBy(String groupBy);
 

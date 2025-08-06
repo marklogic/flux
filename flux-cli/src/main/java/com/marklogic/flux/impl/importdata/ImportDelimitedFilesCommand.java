@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.DelimitedFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -16,8 +17,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-delimited-files",
-    description = "Read delimited text files from local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html, and write JSON or XML documents " +
+    description = "Read delimited text files from supported file locations using Spark's support " +
+        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html, and write JSON or XML documents " +
         "to MarkLogic."
 )
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
@@ -34,12 +35,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadDelimitedFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 
@@ -60,7 +61,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark CSV option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. -PquoteAll=true."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html; e.g. -PquoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -124,7 +125,15 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        return readParams.aggregationParams.applyGroupBy(dataset);
+
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override

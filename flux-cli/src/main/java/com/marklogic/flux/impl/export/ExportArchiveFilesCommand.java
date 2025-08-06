@@ -53,11 +53,11 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        writeParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        String outputPath = applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), writeParams, writeParams.getPath());
         writer.format(MARKLOGIC_CONNECTOR)
             .options(makeWriteOptions())
             .mode(SaveMode.Append)
-            .save(writeParams.getPath());
+            .save(outputPath);
     }
 
     // Extracted for unit-testing.

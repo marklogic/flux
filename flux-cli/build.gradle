@@ -22,14 +22,14 @@ configurations {
 
 dependencies {
   implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-  implementation "com.marklogic:marklogic-spark-connector:2.6.0"
+  implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:4.7.6"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
   // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
-  shadowDependencies "com.marklogic:marklogic-spark-connector:2.6.0"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   shadowDependencies "info.picocli:picocli:4.7.6"
 
   // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
@@ -52,6 +52,15 @@ dependencies {
 
   // With version 262 of the AWS SDK, we get a NoClassDefFoundError if this dynamodb module is not included.
   implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
+
+  // Adds support for Azure Storage. We may want these to be expressed using variants instead so that at least a
+  // Gradle user of the API can ask for e.g. S3 or Azure Storage support without those dependencies being included
+  // by default.
+  implementation "org.apache.hadoop:hadoop-azure:3.3.4"
+  // For Blob Storage
+  implementation "com.microsoft.azure:azure-storage:8.6.6"
+  // For Data Lake Storage Gen2
+  implementation "com.azure:azure-storage-file-datalake:12.23.1"
 
   implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
@@ -168,7 +177,12 @@ application {
 
     // Allows a reflective access by org.apache.spark.serializer.SerializationDebugger$ObjectStreamClassReflection .
     // This warning otherwise shows on Java 11 but not Java 17.
-    "--add-opens", "java.base/java.io=ALL-UNNAMED"
+    "--add-opens", "java.base/java.io=ALL-UNNAMED",
+
+    // Disable Netty's native SSL support to avoid tcnative loading errors when using Azure OpenAI embedding model.
+    // Netty will fall back to pure Java SSL implementation, which works fine for our use case.
+    // Advanced users can remove this property from the startup script to enable native SSL for potential performance gains.
+    "-Dio.netty.handler.ssl.noOpenSsl=true"
   ]
 }
 

@@ -6,14 +6,18 @@ package com.marklogic.flux.impl;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractCommand<T extends Executor> implements Command, Executor<T> {
 
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
@@ -60,15 +64,17 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             }
             long start = System.currentTimeMillis();
             Dataset<Row> dataset = readDataset(session);
-            if (commonParams.isCount()) {
-                logger.info("Count: {}", dataset.count());
-            } else if (commonParams.getPreview().isPreviewRequested()) {
-                commonParams.getPreview().showPreview(dataset);
-            } else {
-                applyWriter(session, dataset.write());
-            }
-            if (logger.isInfoEnabled()) {
-                logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+            if (dataset != null) {
+                if (commonParams.isCount()) {
+                    logger.info("Count: {}", dataset.count());
+                } else if (commonParams.getPreview().isPreviewRequested()) {
+                    commonParams.getPreview().showPreview(dataset);
+                } else {
+                    applyWriter(session, dataset.write());
+                }
+                if (logger.isInfoEnabled()) {
+                    logger.info("Execution time: {}s", (System.currentTimeMillis() - start) / 1000);
+                }
             }
         } catch (ConnectorException ex) {
             throw ex;
@@ -90,7 +96,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     public long count() {
         try {
             SparkSession session = prepareApiExecution();
-            return readDataset(session).count();
+            Dataset<Row> dataset = readDataset(session);
+            return dataset != null ? dataset.count() : 0;
         } catch (ConnectorException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -123,14 +130,14 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     private Dataset<Row> readDataset(SparkSession session) throws Exception {
         Dataset<Row> dataset = loadDataset(session, session.read());
         dataset = afterDatasetLoaded(dataset);
-        return commonParams.applyParams(dataset);
+        return dataset != null ? commonParams.applyParams(dataset) : null;
     }
 
     /**
      * Allows a subclass to modify the dataset after "load()" has been called but before "write()" is called.
      *
      * @param dataset
-     * @return
+     * @return the same or modified dataset, or null if the dataset should not be written
      */
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
         return dataset;
@@ -153,6 +160,13 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
             throw new FluxException(ex.getCause());
         }
+
+        // Generally, the message for an IllegalArgumentException is user-friendly, so we don't need to include
+        // the class name in it like we do below.
+        if (ex instanceof IllegalArgumentException) {
+            throw new FluxException(ex.getMessage(), ex);
+        }
+
         // The exception class name is included in the hopes that it will provide some helpful context without having
         // to ask for the stacktrace to be shown.
         throw new FluxException(ex.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
@@ -217,5 +231,31 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     public T repartition(int partitionCount) {
         commonParams.setRepartition(partitionCount);
         return (T) this;
+    }
+
+    protected final void applyCloudStorageParams(Configuration conf, CloudStorageParams params) {
+        params.getS3Params().addToHadoopConfiguration(conf);
+        params.getAzureStorageParams().addToHadoopConfiguration(conf);
+    }
+
+    protected final String applyCloudStorageParams(Configuration conf, CloudStorageParams params, String outputPath) {
+        return applyCloudStorageParams(conf, params, Arrays.asList(outputPath)).get(0);
+    }
+
+    /**
+     * Configures the Hadoop configuration with the necessary parameters for accessing cloud storage and transforms
+     * each path if necessary based on the Azure Storage parameters.
+     */
+    protected final List<String> applyCloudStorageParams(Configuration conf, CloudStorageParams params, List<String> paths) {
+        applyCloudStorageParams(conf, params);
+        List<String> transformedPaths = params.getAzureStorageParams().transformPathsIfNecessary(paths);
+        if (logger.isInfoEnabled()) {
+            if (transformedPaths.size() == 1) {
+                logger.info("Using path: {}", transformedPaths.get(0));
+            } else {
+                logger.info("Using paths: {}", transformedPaths);
+            }
+        }
+        return transformedPaths;
     }
 }

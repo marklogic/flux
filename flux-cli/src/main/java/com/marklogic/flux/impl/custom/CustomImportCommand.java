@@ -5,8 +5,7 @@ package com.marklogic.flux.impl.custom;
 
 import com.marklogic.flux.api.CustomImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.S3Params;
+import com.marklogic.flux.impl.*;
 import com.marklogic.flux.impl.importdata.WriteStructuredDocumentParams;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
@@ -29,10 +28,20 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        readParams.s3Params.addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        applyCloudStorageParams(session.sparkContext().hadoopConfiguration(), readParams);
         return reader.format(readParams.source)
             .options(readParams.additionalOptions)
             .load();
+    }
+
+    @Override
+    protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
+        return super.afterDatasetLoaded(dataset);
     }
 
     @Override
@@ -44,7 +53,7 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
             .save();
     }
 
-    public static class CustomReadParams implements CustomReadOptions {
+    public static class CustomReadParams implements CustomReadOptions, CloudStorageParams {
 
         @CommandLine.Option(
             names = "--source",
@@ -61,6 +70,19 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
 
         @CommandLine.Mixin
         private S3Params s3Params = new S3Params();
+
+        @CommandLine.Mixin
+        private AzureStorageParams azureStorageParams = new AzureStorageParams();
+
+        @Override
+        public S3Params getS3Params() {
+            return s3Params;
+        }
+
+        @Override
+        public AzureStorageParams getAzureStorageParams() {
+            return azureStorageParams;
+        }
 
         @Override
         public CustomReadOptions source(String source) {
@@ -94,6 +116,42 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         @Override
         public CustomReadOptions s3Endpoint(String endpoint) {
             this.s3Params.setEndpoint(endpoint);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureStorageAccount(String storageAccount) {
+            this.azureStorageParams.storageAccount(storageAccount);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureStorageType(com.marklogic.flux.api.AzureStorageType storageType) {
+            this.azureStorageParams.storageType(storageType);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureAccessKey(String accessKey) {
+            this.azureStorageParams.accessKey(accessKey);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureSasToken(String sasToken) {
+            this.azureStorageParams.sasToken(sasToken);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureSharedKey(String sharedKey) {
+            this.azureStorageParams.sharedKey(sharedKey);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions azureContainerName(String containerName) {
+            this.azureStorageParams.containerName(containerName);
             return this;
         }
     }

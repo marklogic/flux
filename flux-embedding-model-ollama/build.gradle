@@ -8,6 +8,9 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(17)
   }
+
+  withJavadocJar()
+  withSourcesJar()
 }
 
 dependencies {
@@ -17,7 +20,7 @@ dependencies {
     exclude group: "com.fasterxml.jackson.core"
   }
 
-// Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
+  // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
@@ -35,11 +38,6 @@ shadowJar {
       it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
     }
   }
-}
-
-java {
-  withJavadocJar()
-  withSourcesJar()
 }
 
 publishing {

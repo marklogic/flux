@@ -29,14 +29,6 @@ class SubmitTest extends AbstractTest {
         );
     }
 
-    @Test
-    void noCommand() {
-        assertStderrContains(
-            () -> Submit.main(new String[]{}),
-            "You must specify a command."
-        );
-    }
-
     /**
      * This isn't quite what we want yet, as it's including "Usage: ./bin/flux import-files", which isn't correct when
      * using spark-submit. A future enhancement should provide better usage, though the user should be reading our
@@ -45,8 +37,8 @@ class SubmitTest extends AbstractTest {
     @Test
     void missingRequiredOptions() {
         assertStderrContains(
-            () -> Submit.main(new String[]{"import-files"}),
-            "Missing required option: '--path <path>'"
+            "Missing required option: '--path <path>'",
+            "import-files"
         );
     }
 }

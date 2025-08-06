@@ -1,10 +1,13 @@
+@Library('shared-libraries') _
+
 def runtests(){
+  cleanupDocker()
   sh label:'mlsetup', script: '''#!/bin/bash
           cd $WORKSPACE/flux;
           sudo /usr/local/sbin/mladmin stop;
           sudo /usr/local/sbin/mladmin remove;
           mkdir -p $WORKSPACE/flux/docker/sonarqube;
-          docker-compose up -d --build;
+          MARKLOGIC_LOGS_VOLUME=/tmp docker-compose up -d --build;
           sleep 30s;
           curl "http://localhost:8008/api/pull" -d '{"model":"all-minilm"}'
         '''
@@ -20,7 +23,9 @@ def runtests(){
       }
     }
   }
+  // 'set -e' causes the script to fail if any command fails.
   sh label:'runtests', script: '''#!/bin/bash
+    set -e
     export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
     export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
     export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
@@ -37,14 +42,13 @@ def runtests(){
 }
 
 def postCleanup(){
+  updateWorkspacePermissions()
   sh label:'mlcleanup', script: '''#!/bin/bash
     cd $WORKSPACE/flux;
-    sudo /usr/local/sbin/mladmin delete $WORKSPACE/flux/docker/marklogic/logs/;
-    docker exec -i --privileged --user root flux-caddy-load-balancer-1 /bin/sh -c "chmod -R 777 /data" || true;
-    docker exec -i --privileged --user root flux-sonarqube-1 /bin/sh -c "chmod -R 777 /opt/sonarqube" || true;
     docker-compose rm -fsv || true;
     echo "y" | docker volume prune --filter all=1 || true;
   '''
+  cleanupDocker()
 }
 
 def runSonarScan(String javaVersion){

@@ -6,7 +6,7 @@ has_children: true
 nav_order: 8
 ---
 
-Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding is 
+Flux supports adding embeddings - numerical representations of data - to JSON and XML documents. An embedding, also referred to as a "vector", is 
 associated with a "chunk" of text that is usually, but not necessarily, produced via Flux's 
 [support for splitting text](../splitting.md). Flux can add embeddings during 
 any import operation and also when [copying documents](../../copy.md). Adding embeddings to documents is a critical 
@@ -46,9 +46,9 @@ refers to the Flux support for generating and adding embeddings. The value of th
 
 As of the 1.2.0 release, Flux recognizes the following abbreviations as a matter of convenience to avoid typing the full class name:
 
-- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-1.3.0.jar` file.
-- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-1.3.0.jar` file.
-- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-1.3.0.jar` file. 
+- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-1.4.0.jar` file.
+- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-1.4.0.jar` file.
+- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-1.4.0.jar` file. 
 
 The JAR files associated with each of the above abbreviations can be downloaded from the 
 [Flux releases site](https://github.com/marklogic/flux/releases) and added to the `./ext` directory in a Flux 
@@ -73,7 +73,7 @@ file in your Flux installation and change the `logger.langchain4j.level` logger 
 
 ### Azure OpenAI options
 
-The `flux-embedding-model-azure-open-ai-1.3.0.jar` file uses 
+The `flux-embedding-model-azure-open-ai-1.4.0.jar` file uses 
 [LangChain4's support](https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai) for 
 [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) and
 supports the following options:
@@ -119,7 +119,7 @@ require any setup or configuration.
 
 ### Ollama options
 
-The `flux-embedding-model-ollama-1.3.0.jar` file uses 
+The `flux-embedding-model-ollama-1.4.0.jar` file uses 
 [LangChain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
 [Ollama](https://ollama.com/) and supports the following options:
 
@@ -273,7 +273,7 @@ Consider the following requirements for splitting and adding embeddings to files
 
 1. The input file is a zip of JSON documents. 
 2. Each JSON document has text to be split in a top-level key named "description". 
-3. Chunks should be stored in sidecar documents with a maximum chunk size of 500 and a maximum of 5 chunks per sidecar document. 
+3. Chunks should be stored in sidecar documents with a maximum chunk size of 500 and a maximum of 1 chunk per sidecar document. 
 4. Chunk documents should be in a collection named "chunks" and should have the same permissions as the source documents.
 5. The Azure OpenAI embedding model will be used to generate embeddings. 
 6. To avoid having the Azure OpenAI API key on the command line, it will be read from an options file named `azure-api-key.txt`.
@@ -295,7 +295,7 @@ connection string are notional):
     --permissions flux-example-role,read,flux-example-role,update \
     --splitter-json-pointer "/description" \
     --splitter-max-chunk-size 500 \
-    --splitter-sidecar-max-chunks 5 \
+    --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections chunks \
     --embedder azure \
     @azure-api-key.txt \
@@ -312,7 +312,7 @@ bin\flux import-files ^
     --permissions flux-example-role,read,flux-example-role,update ^
     --splitter-json-pointer "/description" ^
     --splitter-max-chunk-size 500 ^
-    --splitter-sidecar-max-chunks 5 ^
+    --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections chunks ^
     --embedder azure ^
     @azure-api-key.txt ^
@@ -321,6 +321,35 @@ bin\flux import-files ^
 ```
 {% endtab %}
 {% endtabs %}
+
+The above command will produce JSON sidecar documents with the following structure:
+
+```
+{
+  "source-uri": "the URI of the source document",
+  "chunks": [
+    {
+      "text": "This is a chunk of text that was split from the original document.",
+      "embedding": [0.1234, -0.5678, 0.9012, ...]
+    }
+  ]
+}
+```
+
+If `--splitter-sidecar-document-type xml` is included as an option, Flux will produce XML sidecar documents with the
+following structure:
+
+```
+<root xmlns="http://marklogic.com/appservices/model">
+  <source-uri>the URI of the source document</source-uri>
+  <chunks>
+    <chunk>
+      <text>This is a chunk of text that was split from the original document.</text>
+      <embedding xml:lang="zxx">[0.1234, -0.5678, 0.9012, ...]</embedding>
+    </chunk>
+  </chunks>
+</root>
+```
 
 ## Configuring embedder batch size
 
@@ -338,9 +367,107 @@ a certain number of seconds. Flux will not be aware of what the embedding model 
 the embedding model to respond. It is therefore recommended to test various batch size values to find a setting
 that both improves performance and minimizes the chance of a rate limit being reached. 
 
+## Encoding embeddings
+
+By default, Flux stores embeddings as arrays of floating-point numbers in your documents. While this format is 
+straightforward and human-readable, it can result in large documents when embeddings contain many dimensions. 
+For example, a typical embedding with 1536 dimensions can add significant size to each document. 
+
+To reduce document size, typically resulting in a document that is faster to load and index and query, 
+you can configure Flux 1.4.0 or higher to encode embeddings into string values using the following option:
+
+    --embedder-base64-encode
+
+When this option is enabled, instead of storing an embedding as an array like this (the values shown below are notional):
+
+```json
+{
+  "text": "MarkLogic is a database",
+  "embedding": [0.1234, -0.5678, 0.9012, ...]
+}
+```
+
+Flux will store the embedding as an encoded string:
+
+```json
+{
+  "text": "MarkLogic is a database", 
+  "embedding": "AAAAAAMAAADD9UhAH4XLP5qZKUA="
+}
+```
+
+For XML, the embedding will be stored as a string with an XML attribute used to 
+[disable stemming](https://docs.progress.com/bundle/marklogic-server-use-search-11/page/topics/languages.html) on the value:
+
+```
+<embedding xml:lang="zxx">AAAAAAMAAADD9UhAH4XLP5qZKUA=</embedding>
+```
+
+The encoding used by this option matches the encoding used by the `vec:base64-encode` function in MarkLogic 
+server version 12 or higher.
+
+### When to encode embeddings
+
+Encoding provides significant benefits for most embedding use cases:
+
+1. **Smaller documents**: Encoded embeddings result in smaller documents, reducing storage and indexing requirements in your MarkLogic database.
+
+2. **Faster transmission**: Smaller documents transmit more quickly over networks, improving performance when loading data or retrieving documents with embeddings.
+
+3. **More efficient indexing**: MarkLogic can index base64-encoded embeddings more efficiently than arrays of numbers, particularly for XML documents where the array is otherwise stored as a larger string.
+
+For most production use cases, encoding is recommended due to its storage and performance benefits.
+
+
+## Configuring a prompt
+
+When generating embeddings for chunks of text with Flux 1.4.0 or higher, you can prepend a prompt to each chunk before 
+sending it to the embedding model. This can be useful for providing context or instructions to the embedding model that 
+may improve the quality and relevance of the generated embeddings for your specific use case.
+
+To configure a prompt, use the following option:
+
+    --embedder-prompt "Your prompt text here"
+
+The prompt will be prepended to the text of each chunk before the embedding is generated. For example, if you have a 
+chunk with the text "MarkLogic is a database" and specify a prompt of "Represent this text for retrieval:", the 
+embedding model will receive the combined text "Represent this text for retrieval: MarkLogic is a database".
+
+### When to use a prompt
+
+Consider using a prompt in the following scenarios:
+
+1. **Domain-specific context**: Provide context about the domain or subject matter of your text to help the embedding 
+   model generate more appropriate embeddings. For example: `--embedder-prompt "This is a medical document:"`
+
+2. **Retrieval optimization**: Some embedding models perform better when given explicit instructions about how the 
+   embeddings will be used. For example: `--embedder-prompt "Represent this document for semantic search:"`
+
+3. **Task-specific instructions**: Guide the embedding model to focus on specific aspects of the text that are 
+   important for your use case. For example: `--embedder-prompt "Focus on the technical concepts in this text:"`
+
+4. **Language or format hints**: Provide hints about the language or format of the content when processing mixed 
+   content. For example: `--embedder-prompt "This is legal text in English:"`
+
+### Important considerations
+
+- **Embedding model dependency**: The effectiveness of prompts varies significantly between different embedding models. 
+  Some models are specifically designed to work with prompts, while others may ignore them or produce unexpected results.
+
+- **Prompt consistency**: Use the same prompt for all documents that you intend to search together using vector queries. 
+  Inconsistent prompting across documents in the same collection may lead to reduced search quality.
+
+- **Testing recommended**: The impact of prompts on embedding quality depends on your specific data and use case. It's 
+  recommended to test different prompts with a small subset of your data to evaluate their effectiveness before 
+  processing large datasets.
+
+- **Token limits**: Be aware that the prompt will be added to each chunk, potentially increasing the total token count 
+  sent to the embedding model. This may affect performance and costs, especially for models with token-based pricing.
+
 ## Configuring logging
 
 You can configure Flux to include logging specific to the generation of embeddings via the following process:
 
 1. Open the `./conf/log4j2.properties` file in an editor. 
 2. Adjust the `logger.marklogiclangchain.level` entry to have a value of `INFO` or `DEBUG`.
+

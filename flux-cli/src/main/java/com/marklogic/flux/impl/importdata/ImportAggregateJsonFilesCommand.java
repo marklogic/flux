@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.AggregateJsonFilesImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
     name = "import-aggregate-json-files",
     description = "Read either JSON Lines files or files containing arrays of JSON objects from " +
         "local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
+        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html, with each object being written " +
         "as a JSON document to MarkLogic."
 )
 public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<AggregateJsonFilesImporter> implements AggregateJsonFilesImporter {
@@ -36,12 +37,12 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected ReadJsonFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteStructuredDocumentParams getWriteParams() {
         return writeParams;
     }
 
@@ -50,7 +51,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @CommandLine.Option(
             names = "--json-lines",
             description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ , " +
-                "using the Spark JSON data source defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html."
+                "using the Spark JSON data source defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html."
         )
         private boolean jsonLines;
 
@@ -73,7 +74,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark JSON option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. -PallowComments=true."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. -PallowComments=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -97,7 +98,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @Override
         // Sonar complains about this method existing, but it has to exist since it's implementing a required
         // method in the interface.
-        @SuppressWarnings("java:S5738")
+        @SuppressWarnings({"java:S5738", "removal"})
         public ReadJsonFilesOptions jsonLines(boolean value) {
             this.jsonLines = value;
             return this;
@@ -136,6 +137,11 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
         // If jsonLinesRaw, the MarkLogic connector is used, in which case the Spark file path column will not be present.
         if (readParams.uriIncludeFilePath && !readParams.jsonLinesRaw) {
             dataset = SparkUtil.addFilePathColumn(dataset);

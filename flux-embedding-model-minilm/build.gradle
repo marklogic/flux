@@ -8,19 +8,17 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(17)
   }
+
+  withJavadocJar()
+  withSourcesJar()
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:${langchain4jVersion}") {
+  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.2.0-beta8") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
     exclude group: "com.fasterxml.jackson.core"
   }
-}
-
-java {
-  withJavadocJar()
-  withSourcesJar()
 }
 
 publishing {

@@ -40,4 +40,17 @@ public interface EmbedderOptions {
     EmbedderOptions batchSize(int batchSize);
 
     EmbedderOptions embedderOptions(Map<String, String> options);
+
+    /**
+     * @param prompt Optional prompt to prepend to each chunk of text before embedding.
+     * @since 1.4.0
+     */
+    EmbedderOptions prompt(String prompt);
+
+    /**
+     * Enables base64-encoding of the embedding vector, resulting in a single string value in the document.
+     *
+     * @since 1.4.0
+     */
+    EmbedderOptions base64Encode();
 }

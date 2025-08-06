@@ -100,6 +100,48 @@ A combined query, with options included:
 <qtext>c1:hello</qtext></search>
 ```
 
+### Including additional URIs
+
+In some scenarios, it may not be possible to express all the URIs you wish to export via a single query. In such cases, 
+starting with Flux 1.4.0, you can use a "secondary query" to include additional URIs. The secondary query is defined via 
+custom code that you define via one of the options below. The custom code is invoked for each batch of URIs retrieved via the primary query defined 
+by the options listed above. The custom code will be passed a variable named `URIs` that is a JSON array containing the 
+URIs in the batch. The custom code must then return a sequence of zero to many additional URIs that will also be exported. 
+
+A secondary query is specified via one of the following options:
+
+| Option | Description | 
+| --- |---|
+| `--secondary-uris-javascript` | JavaScript code for retrieving additional URIs.|
+| `--secondary-uris-javascript-file` | Path to file containing JavaScript code for retrieving additional URIs. | 
+| `--secondary-uris-xquery` | XQuery code for retrieving additional URIs. |
+| `--secondary-uris-xquery-file` | Path to file containing XQuery code for retrieving additional URIs. |
+| `--secondary-uris-invoke` | Path of a MarkLogic server module to invoke for retrieving additional URIs. |
+
+You may also specify one or more variables to pass to your custom code via the `--secondary-uris-var` option. 
+You may specify this option multiple times, with each option specifying both the variable name and value, 
+separated by an equals symbol:
+
+    --secondary-uris-var name1=value1 --secondary-uris-var name2=value2
+
+For custom JavaScript code, you must return a sequence. If your code builds an array, you can easily wrap that as 
+a sequence via the following code:
+
+```
+const myArray = ... your code for building an array of URIs...
+Sequence.from(myArray)
+```
+
+For custom XQuery code, you will receive an item of type `json:array`. To obtain the values in this array, you can 
+use the following code:
+
+```
+declare namespace json = "http://marklogic.com/xdmp/json";
+declare variable $URIs external;
+let $values := json:array-values($URIs)
+(: Do whatever you would like with the URIs :)
+```
+
 ### Specifying a query in an options file
 
 Serialized queries can be very lengthy, and thus it is often easier to put the `--query` option and its value in an 

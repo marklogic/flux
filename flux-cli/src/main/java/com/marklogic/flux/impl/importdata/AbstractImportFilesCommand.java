@@ -8,13 +8,14 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractCommand;
 import org.apache.spark.sql.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * Base class for commands that import files and write to MarkLogic.
  */
-public abstract class AbstractImportFilesCommand<T extends Executor> extends AbstractCommand<T> {
+public abstract class AbstractImportFilesCommand<T extends Executor<T>> extends AbstractCommand<T> {
 
     /**
      * Subclass must define the format used for reading - e.g. "csv", "marklogic", etc.
@@ -23,28 +24,31 @@ public abstract class AbstractImportFilesCommand<T extends Executor> extends Abs
      */
     protected abstract String getReadFormat();
 
-    protected abstract <P extends ReadFilesParams> P getReadParams();
+    protected abstract IReadFilesParams getReadParams();
 
     protected abstract Supplier<Map<String, String>> getWriteParams();
 
     @Override
     protected void validateDuringApiUsage() {
-        if (!getReadParams().hasAtLeastOnePath()) {
+        List<String> paths = getReadParams().getPaths();
+        if (paths == null || paths.isEmpty()) {
             throw new FluxException("Must specify one or more file paths");
         }
     }
 
     @Override
     protected final Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
-        ReadFilesParams<?> readFilesParams = getReadParams();
-        if (logger.isInfoEnabled()) {
-            logger.info("Importing files from: {}", readFilesParams.getPaths());
-        }
-        readFilesParams.getS3Params().addToHadoopConfiguration(session.sparkContext().hadoopConfiguration());
+        IReadFilesParams readFilesParams = getReadParams();
+
+        final List<String> transformedPaths = applyCloudStorageParams(
+            session.sparkContext().hadoopConfiguration(),
+            readFilesParams, readFilesParams.getPaths()
+        );
+
         return reader
             .format(getReadFormat())
             .options(readFilesParams.makeOptions())
-            .load(readFilesParams.getPaths().toArray(new String[]{}));
+            .load(transformedPaths.toArray(new String[]{}));
     }
 
     @Override

@@ -216,7 +216,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
@@ -224,7 +224,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
-        ));
+        );
 
         assertCollectionSize(
             "The 3 valid lines in line-delimited-json.txt should be processed, with the data in single-xml.zip " +
@@ -238,7 +238,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/line-delimited-json.txt",
             "--path", "src/test/resources/xml-file/single-xml.zip",
@@ -247,7 +247,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-json-test"
-        ));
+        );
 
         assertCollectionSize("delimited-json-test", 0);
         assertTrue(stderr.contains("Error: Invalid UTF-8 start"), "The command should have failed " +

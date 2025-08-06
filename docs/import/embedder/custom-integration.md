@@ -37,8 +37,8 @@ plugins {
 dependencies {
   // Change this to match the embedding model you wish to use. 
   // For example, if you wish to use Hugging Face, you would change it to:
-  // implementation "dev:langchain4j:langchain4j-hugging-face:0.35.0".  
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0"
+  // implementation "dev:langchain4j:langchain4j-hugging-face:1.2.0-beta8".  
+  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.2.0-beta8"
 }
 ```
 

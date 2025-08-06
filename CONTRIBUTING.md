@@ -139,56 +139,6 @@ files after changing any of the classes in the `com.marklogic.flux.api` package,
 
     ./gradlew updateJavadoc
 
-## Examining error reports
-
-The following commands show examples of how the tool reports errors. One gap is that when a batch fails, the contents
-of the batch are not yet logged. This is an area of research as while the URIs can easily be included in the error
-reporting, they are not necessarily helpful. Support for trying each document individually may be added in the future.
-
-You can test an invalid command name:
-
-    ./flux/bin/flux not_a_real_command
-
-You can forget a required argument:
-
-    ./flux/bin/flux import-files
-
-You can cause an error from Spark:
-
-    ./flux/bin/flux import-files --path invalid-path
-
-You can cause a failure with MarkLogic that caused the command to stop:
-
-```
-./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-test-user:password@localhost:8000" \
-  --repartition 1 \
-  --abort-on-write-failure \
-  --permissions "invalid-role,read,flux-test-role,update" \
-  --uri-replace ".*/mixed-files,'/test'"
-```
-
-You can cause a failure and ask to see the full stacktrace (often noisy and not helpful):
-
-```
-./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-test-user:password@localhost:8000" \
-  --repartition 1 \
-  --permissions "invalid-role,read,flux-test-role,update" \
-  --uri-replace ".*/mixed-files,'/test'" \
-  --abort-on-write-failure \
-  --stacktrace
-```
-
-You can cause a failure and tell the command to keep executing by not including `--abort-on-write-failure`:
-
-```
-./flux/bin/flux import-files --path "flux-cli/src/test/resources/mixed-files/*" \
-  --connection-string "flux-test-user:password@localhost:8000" \
-  --permissions "invalid-role,read,flux-test-role,update" \
-  --uri-replace ".*/mixed-files,'/test'"
-```
-
 ## Testing with a load balancer
 
 The `docker-compose.yml` file includes an instance of a 
@@ -241,7 +191,7 @@ along with a link to the worker that you started. You are now able to run tests 
 
 ### Testing with spark-submit
 
-Spark's [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) program allows for a Spark
+Spark's [spark-submit](https://spark.apache.org/docs/3.5.6/submitting-applications.html) program allows for a Spark
 program to be run on a separate (and possibly remote) Spark cluster. Now that you have a separate Spark cluster running
 per the above instructions, you can test each CLI command by running it via spark-submit.
 
@@ -251,7 +201,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.2-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.4-SNAPSHOT-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -259,7 +209,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.2-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.4-SNAPSHOT-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content

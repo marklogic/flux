@@ -22,14 +22,14 @@ class ImportFromS3Test extends AbstractTest {
 
     @Test
     void test() {
-        String stdout = runAndReturnStdout(() -> run(
+        String stdout = runAndReturnStdout(
             "import-files",
             "--path", PATH,
             "--preview", "10",
             "--preview-drop", "content", "modificationTime",
             "--connection-string", makeConnectionString(),
             "--s3-add-credentials"
-        ));
+        );
 
         assertNotNull(stdout);
         logger.info("Results: {}", stdout);
@@ -37,14 +37,14 @@ class ImportFromS3Test extends AbstractTest {
 
     @Test
     void exportTest() {
-        String stdout = runAndReturnStdout(() -> run(
+        String stdout = runAndReturnStdout(
             "export-files",
             "--path", PATH,
             "--connection-string", makeConnectionString(),
             "--collections", "author",
             "--limit", "1",
             "--s3-add-credentials"
-        ));
+        );
 
         assertNotNull(stdout);
         logger.info("Results: {}", stdout);

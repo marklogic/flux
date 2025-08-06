@@ -65,6 +65,12 @@ bin\flux copy ^
 {% endtab %}
 {% endtabs %}
 
+## Including additional URIs
+
+In some scenarios, it may not be possible to express all the URIs you wish to copy via a single query. Please see
+the [guide for exporting documents](export/export-documents.md) and the section titled "Including additional URIs" for
+information on the options that allow you to copy additional URIs via a secondary query.
+
 ## Controlling what metadata is read
 
 The `--categories` option controls what metadata is read from the source database. The option defaults to a value of 

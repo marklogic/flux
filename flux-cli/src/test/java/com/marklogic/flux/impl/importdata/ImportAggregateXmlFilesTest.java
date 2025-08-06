@@ -20,19 +20,21 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
 
     @Test
     void elementIsRequired() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Missing required option: '--element <element>'",
             "import-aggregate-xml-files",
             "--path", "src/test/resources/xml-file/people.xml",
             "--connection-string", makeConnectionString()
-        ), "Missing required option: '--element <element>'");
+        );
     }
 
     @Test
     void elementAndPathAreRequired() {
-        assertStderrContains(() -> run(
+        assertStderrContains(
+            "Missing required options: '--element <element>', '--path <path>'",
             "import-aggregate-xml-files",
             "--connection-string", makeConnectionString()
-        ), "Missing required options: '--element <element>', '--path <path>'");
+        );
     }
 
     @Test
@@ -168,7 +170,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
 
     @Test
     void dontAbortOnReadFailureByDefault() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--path", "src/test/resources/xml-file/people.xml",
@@ -176,7 +178,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
-        ));
+        );
 
         assertFalse(stderr.contains("Command failed"),
             "The command should default to logging read failures and not having the command fail; actual stderr: " + stderr);
@@ -185,7 +187,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
 
     @Test
     void abortOnReadFailure() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-aggregate-xml-files",
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--abort-on-read-failure",
@@ -193,7 +195,7 @@ class ImportAggregateXmlFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "agg-xml"
-        ));
+        );
 
         assertTrue(stderr.contains("Error: Unable to read XML from file"),
             "With --abort-on-read-failure included, the command should fail if it cannot read a file; stderr: " + stderr);

@@ -17,7 +17,7 @@ import picocli.CommandLine;
  * Support class for concrete commands that want to run an Optic DSL query to read rows and then write them to one or
  * more files. Each subclass is expected to make use of a Spark data source for writing rows to a tabular data source.
  */
-abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends AbstractCommand<T> {
+abstract class AbstractExportRowsToFilesCommand<T extends Executor<T>> extends AbstractCommand<T> {
 
     @CommandLine.Mixin
     protected final ReadRowsParams readParams = new ReadRowsParams();
@@ -55,16 +55,16 @@ abstract class AbstractExportRowsToFilesCommand<T extends Executor> extends Abst
 
     @Override
     protected void applyWriter(SparkSession session, DataFrameWriter<Row> writer) {
-        WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
-
         Configuration hadoopConf = session.sparkContext().hadoopConfiguration();
-        writeParams.getS3Params().addToHadoopConfiguration(hadoopConf);
         disableWriteChecksum(hadoopConf);
+
+        final WriteStructuredFilesParams<? extends WriteFilesOptions> writeParams = getWriteFilesParams();
+        String outputPath = applyCloudStorageParams(hadoopConf, writeParams, writeParams.getPath());
 
         writer.format(getWriteFormat())
             .options(writeParams.get())
             .mode(SparkUtil.toSparkSaveMode(writeParams.getSaveMode()))
-            .save(writeParams.getPath());
+            .save(outputPath);
     }
 
     /**

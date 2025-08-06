@@ -3,12 +3,15 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.TdeOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * For import commands that can write "structured" rows with an arbitrary schema, either as JSON or XML documents.
@@ -39,6 +42,9 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     )
     private boolean ignoreNullFields;
 
+    @CommandLine.Mixin
+    private final TdeParams tdeParams = new TdeParams();
+
     @Override
     public Map<String, String> makeOptions() {
         Map<String, String> options = super.makeOptions();
@@ -50,6 +56,15 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
             Options.WRITE_XML_ROOT_NAME, xmlRootName,
             Options.WRITE_XML_NAMESPACE, xmlNamespace
         );
+    }
+
+    /**
+     * Knows how to provide the necessary inputs to TdeHelper.
+     *
+     * @return
+     */
+    public TdeHelper newTdeHelper() {
+        return new TdeHelper(tdeParams, jsonRootName, xmlRootName, xmlNamespace);
     }
 
     @Override
@@ -73,6 +88,12 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
     @Override
     public WriteStructuredDocumentsOptions ignoreNullFields(boolean value) {
         this.ignoreNullFields = value;
+        return this;
+    }
+
+    @Override
+    public WriteStructuredDocumentsOptions tdeOptions(Consumer<TdeOptions> tdeOptions) {
+        tdeOptions.accept(tdeParams);
         return this;
     }
 }

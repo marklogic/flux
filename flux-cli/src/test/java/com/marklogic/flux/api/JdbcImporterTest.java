@@ -39,6 +39,22 @@ class JdbcImporterTest extends AbstractTest {
     }
 
     @Test
+    void withTable() {
+        Flux.importJdbc()
+            .from(options -> options
+                .url(PostgresUtil.URL_WITH_AUTH)
+                .driver(PostgresUtil.DRIVER)
+                .table("customer"))
+            .connectionString(makeConnectionString())
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("customer"))
+            .execute();
+
+        assertCollectionSize("customer", 599);
+    }
+
+    @Test
     void withoutDriver() {
         Flux.importJdbc()
             .from(options -> options
@@ -67,12 +83,12 @@ class JdbcImporterTest extends AbstractTest {
     }
 
     @Test
-    void missingQuery() {
+    void missingQueryAndTable() {
         JdbcImporter importer = Flux.importJdbc()
             .from(options -> options.url(PostgresUtil.URL))
             .connectionString(makeConnectionString());
 
         FluxException ex = assertThrowsFluxException(importer::execute);
-        assertEquals("Must specify a query", ex.getMessage());
+        assertEquals("Must specify either a query or a table to read from", ex.getMessage());
     }
 }

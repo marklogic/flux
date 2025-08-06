@@ -3,7 +3,7 @@
  * flux-java17-tests subprojects.
  */
 dependencies {
-  api "com.marklogic:marklogic-client-api:7.1.0"
+  api "com.marklogic:marklogic-client-api:7.2.0"
 
   compileOnly "org.apache.spark:spark-sql_2.12:${sparkVersion}"
 
@@ -19,5 +19,5 @@ dependencies {
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   api "org.springframework:spring-jdbc:5.3.39"
-  implementation "org.postgresql:postgresql:42.7.4"
+  implementation "org.postgresql:postgresql:42.7.7"
 }

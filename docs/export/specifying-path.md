@@ -5,10 +5,23 @@ parent: Exporting Data
 nav_order: 1
 ---
 
+Each command for exporting data to files requires a path that defines the location of the exported data. 
+This guide describes the different types of paths supported by Flux.
+
+## Table of contents
+{: .no_toc .text-delta }
+
+- TOC
+{:toc}
+
 ## Specifying a path
 
-Every command for exporting data to files must specify a path to which files should be written via the `--path` option. 
-The value of the `--path` option can be any valid directory or S3 bucket, and it must already exist.
+Commands that export data to files require a single path specified via the `--path` option. 
+The value of the `--path` option can be any valid directory, S3 bucket, or Azure Storage container. 
+
+> Note - MarkLogic allows for characters in document URIs that may not be supported in filenames for the target 
+> filesystem. For example, Azure Storage will not allow colons in a filename. If you run into issues with characters 
+> in the filename, consider exporting a zip file containing documents instead of exporting individual documents as files.
 
 ## Exporting to S3
 
@@ -43,4 +56,143 @@ typing these in plaintext, you may want to store these in a file and reference t
 the documentation on [Common Options](../common-options.md) for more information.
 
 You can also specify an S3 endpoint via `--s3-endpoint`. This may be required when running Flux in AWS in one region
-while trying to access S3 in a separate region. 
+while trying to access S3 in a separate region.
+
+## Exporting to Azure Storage
+
+Flux can export files to [Azure Storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-introduction) using either [Azure Blob Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction) or [Azure Data Lake Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction). 
+
+The examples below use notional values for options that contain credentials. To avoid typing credentials in plaintext,
+consider storing them in [an options file](../../common-options.md).
+
+> When exporting to Azure Blob Storage, you may notice that folders appear as both a folder structure and 
+> a blob with the same name. This is normal behavior - Azure Blob Storage uses special marker blobs to represent 
+> folder structures, and these are automatically created by the underlying storage libraries.
+
+### Azure Blob Storage Authentication
+
+Azure Blob Storage supports two authentication methods:
+
+**Access Key Authentication**
+
+If you are using [access key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage),
+you can define a key via the `--azure-access-key` option:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux export-files \
+    --path "reports" \
+    --azure-storage-account "mystorage" \
+    --azure-container-name "exports" \
+    --azure-access-key "your-access-key" \
+    --connection-string etc... 
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --path "reports" ^
+    --azure-storage-account "mystorage" ^
+    --azure-container-name "exports" ^
+    --azure-access-key "your-access-key" ^
+    --connection-string etc... 
+```
+{% endtab %}
+{% endtabs %}
+
+**SAS Token Authentication**
+
+If you are using [SAS (Shared Access Signature) tokens](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview),
+you can define a token via the `--azure-sas-token` option:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux export-files \
+    --path "reports" \
+    --azure-storage-account "mystorage" \
+    --azure-container-name "exports" \
+    --azure-sas-token "your-sas-token" \
+    --connection-string etc... 
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --path "reports" ^
+    --azure-storage-account "mystorage" ^
+    --azure-container-name "exports" ^
+    --azure-sas-token "your-sas-token" ^
+    --connection-string etc... 
+```
+{% endtab %}
+{% endtabs %}
+
+> Note that `--azure-container-name` is required when using SAS token authentication.
+
+### Azure Data Lake Storage Authentication
+
+Azure Data Lake Storage uses [shared key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage).
+You can define a shared key via the `--azure-shared-key` option. You must also include `--azure-storage-type DATA_LAKE`
+to indicate that you are using Data Lake Storage instead of Blob Storage:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux export-files \
+    --path "analytics" \
+    --azure-storage-account "mydatalake" \
+    --azure-container-name "exports" \
+    --azure-storage-type "DATA_LAKE" \
+    --azure-shared-key "your-shared-key" \
+    --connection-string etc... 
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --path "analytics" ^
+    --azure-storage-account "mydatalake" ^
+    --azure-container-name "exports" ^
+    --azure-storage-type "DATA_LAKE" ^
+    --azure-shared-key "your-shared-key" ^
+    --connection-string etc... 
+```
+{% endtab %}
+{% endtabs %}
+
+### Path Handling
+
+Flux provides two ways to specify an export path. First, when both `--azure-storage-account` and `--azure-container-name`
+are specified and the path is relative - i.e. it does not contain a protocol like `wasbs://` or `abfss://` - Flux will
+construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides
+the underlying Azure protocols from you.
+
+For example:
+
+- `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
+- `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
+
+Alternatively, you can provide the complete storage URL yourself:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux export-files \
+    --path "wasbs://exports@mystorage.blob.core.windows.net/reports/" \
+    --azure-storage-account "mystorage" \
+    --azure-access-key "your-access-key" \
+    --connection-string etc... 
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux export-files ^
+    --path "wasbs://exports@mystorage.blob.core.windows.net/reports/" ^
+    --azure-storage-account "mystorage" ^
+    --azure-access-key "your-access-key" ^
+    --connection-string etc... 
+```
+{% endtab %}
+{% endtabs %}

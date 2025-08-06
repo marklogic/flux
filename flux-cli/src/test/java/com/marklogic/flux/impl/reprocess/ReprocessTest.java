@@ -53,12 +53,12 @@ class ReprocessTest extends AbstractTest {
     @Test
     @EnabledOnJre({JRE.JAVA_11})
     void badJavascript() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "reprocess",
             "--connection-string", makeConnectionString(),
             "--read-javascript", "throw Error('Boom!')",
             "--write-invoke", "/writeDocument.sjs"
-        ));
+        );
 
         assertTrue(stderr.contains("Internal Server Error. Server Message: JS-JAVASCRIPT: throw Error('Boom!')"),
             "Unexpected stderr: " + stderr);
@@ -109,10 +109,10 @@ class ReprocessTest extends AbstractTest {
 
     @Test
     void missingReadParam() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "reprocess",
             "--connection-string", makeConnectionString()
-        ));
+        );
 
         assertTrue(
             stderr.contains("Must specify one of --read-invoke, --read-javascript, --read-xquery, --read-javascript-file, or --read-xquery-file."),
@@ -122,11 +122,11 @@ class ReprocessTest extends AbstractTest {
 
     @Test
     void missingWriteParam() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "reprocess",
             "--connection-string", makeConnectionString(),
             "--read-javascript", "fn.currentDate()"
-        ));
+        );
 
         assertTrue(
             stderr.contains("Must specify one of --write-invoke, --write-javascript, --write-xquery, --write-javascript-file, or --write-xquery-file."),
@@ -136,14 +136,14 @@ class ReprocessTest extends AbstractTest {
 
     @Test
     void moreThanOnePartitionParam() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "reprocess",
             "--connection-string", makeConnectionString(),
             "--read-javascript", "doesn't matter",
             "--write-javascript", "doesn't matter",
             "--read-partitions-javascript", "doesn't matter",
             "--read-partitions-javascript-file", "doesn't matter"
-        ));
+        );
 
         assertTrue(
             stderr.contains("Can only specify one of --read-partitions-invoke, --read-partitions-javascript, " +

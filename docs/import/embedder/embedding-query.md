@@ -31,7 +31,7 @@ instructions in the [Getting Started guide](../../getting-started.md).
 
 This example uses the ["minilm" embedding model](https://docs.langchain4j.dev/integrations/embedding-models/in-process). 
 This embedding model is useful for testing vector queries with MarkLogic as it has no external dependencies and requires
-no setup or configuration. To use this embedding model, you must include the `flux-embedding-model-minilm-1.3.0.jar`
+no setup or configuration. To use this embedding model, you must include the `flux-embedding-model-minilm-1.4.0.jar`
 in the `./ext` directory of your Flux installation. Please see the [embedder guide](embedder.md) for more information 
 on embedding models. 
 

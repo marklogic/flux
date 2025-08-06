@@ -3,6 +3,8 @@
  */
 package com.marklogic.flux.api;
 
+import java.util.function.Consumer;
+
 public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T paths(String... paths);
@@ -20,4 +22,9 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
     T s3SecretAccessKey(String secretAccessKey);
 
     T s3Endpoint(String endpoint);
+
+    /**
+     * @since 1.4.0
+     */
+    T azureStorage(Consumer<AzureStorageOptions> consumer);
 }

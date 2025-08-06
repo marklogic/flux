@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public interface CustomDocumentsExporter extends Executor<CustomDocumentsExporter> {
 
-    CustomDocumentsExporter from(Consumer<ReadDocumentsOptions<? extends ReadDocumentsOptions>> consumer);
+    <T extends ReadDocumentsOptions<T>> CustomDocumentsExporter from(Consumer<T> consumer);
 
     CustomDocumentsExporter to(Consumer<CustomExportWriteOptions> consumer);
 }

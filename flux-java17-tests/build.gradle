@@ -22,4 +22,16 @@ dependencies {
   testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
   testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
   testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+
+  // This will be brought in transitively, but we need it here so we can compile some tests against Spark APIs.
+  testImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+
+  // Need this to compile against the shadowed Java Client classes.
+  testImplementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
+
+  // For deep equals on JSON with diff.
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+
+  // For deep equals on XML with diff.
+  testImplementation "org.xmlunit:xmlunit-core:2.10.0"
 }

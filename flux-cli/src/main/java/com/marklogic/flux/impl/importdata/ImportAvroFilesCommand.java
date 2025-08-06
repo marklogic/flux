@@ -7,6 +7,7 @@ import com.marklogic.flux.api.AvroFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import picocli.CommandLine;
@@ -17,8 +18,8 @@ import java.util.function.Consumer;
 
 @CommandLine.Command(
     name = "import-avro-files",
-    description = "Read Avro files from local, HDFS, and S3 locations using Spark's support defined at" +
-        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html, and write JSON or XML documents " +
+    description = "Read Avro files from supported file locations using Spark's support defined at" +
+        "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html, and write JSON or XML documents " +
         "to MarkLogic."
 )
 public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFilesImporter> implements AvroFilesImporter {
@@ -27,7 +28,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     private ReadAvroFilesParams readParams = new ReadAvroFilesParams();
 
     @CommandLine.Mixin
-    private WriteStructuredDocumentParams writeDocumentParams = new WriteStructuredDocumentParams();
+    private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
 
     @Override
     protected String getReadFormat() {
@@ -35,13 +36,13 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     }
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
-        return writeDocumentParams;
+    protected WriteStructuredDocumentParams getWriteParams() {
+        return writeParams;
     }
 
     public static class ReadAvroFilesParams extends ReadFilesParams<ReadTabularFilesOptions> implements ReadTabularFilesOptions {
@@ -55,7 +56,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         @CommandLine.Option(
             names = "-P",
             description = "Specify any Spark Avro data source option defined at " +
-                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
                 "Spark configuration options must be defined via '-C'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
@@ -100,7 +101,15 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         if (readParams.uriIncludeFilePath) {
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
-        return readParams.aggregationParams.applyGroupBy(dataset);
+
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override
@@ -117,7 +126,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
     @Override
     public AvroFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
-        consumer.accept(writeDocumentParams);
+        consumer.accept(writeParams);
         return this;
     }
 }

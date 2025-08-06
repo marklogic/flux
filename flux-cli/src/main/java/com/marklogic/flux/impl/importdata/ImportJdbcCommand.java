@@ -3,12 +3,14 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.JdbcImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.JdbcParams;
 import com.marklogic.flux.impl.JdbcUtil;
 import com.marklogic.flux.impl.OptionsUtil;
+import com.marklogic.flux.impl.TdeHelper;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
@@ -18,7 +20,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "import-jdbc",
     description = "Read rows via JDBC using Spark's support defined at " +
-        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html, and write JSON or XML documents " +
+        "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html, and write JSON or XML documents " +
         "to MarkLogic."
 )
 public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements JdbcImporter {
@@ -31,10 +33,12 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     protected void validateDuringApiUsage() {
-        OptionsUtil.validateRequiredOptions(readParams.makeOptions(),
-            "url", "Must specify a JDBC URL",
-            "query", "Must specify a query"
-        );
+        Map<String, String> options = readParams.makeOptions();
+        OptionsUtil.validateRequiredOptions(options, "url", "Must specify a JDBC URL");
+
+        if (options.get("query") == null && options.get("dbtable") == null) {
+            throw new FluxException("Must specify either a query or a table to read from");
+        }
     }
 
     @Override
@@ -49,7 +53,14 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        return readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+
+        TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
+        if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
+            return null;
+        }
+
+        return dataset;
     }
 
     @Override
@@ -75,9 +86,18 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
-        @CommandLine.Option(names = "--query", required = true,
-            description = "The SQL query to execute to read data from the JDBC data source.")
-        private String query;
+        static class QueryOptions {
+            @CommandLine.Option(names = "--query", required = true,
+                description = "The SQL query to execute to read data via the JDBC data source.")
+            private String query;
+
+            @CommandLine.Option(names = "--table", required = true,
+                description = "The table to read data from via the JDBC data source.")
+            private String table;
+        }
+
+        @CommandLine.ArgGroup(exclusive = true, multiplicity = "1")
+        private QueryOptions queryOptions = new QueryOptions();
 
         @CommandLine.Mixin
         private AggregationParams aggregationParams = new AggregationParams();
@@ -85,13 +105,20 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                "query", query
+                "query", queryOptions.query,
+                "dbtable", queryOptions.table
             );
         }
 
         @Override
         public JdbcImporter.ReadJdbcOptions query(String query) {
-            this.query = query;
+            this.queryOptions.query = query;
+            return this;
+        }
+
+        @Override
+        public ReadJdbcOptions table(String table) {
+            this.queryOptions.table = table;
             return this;
         }
 

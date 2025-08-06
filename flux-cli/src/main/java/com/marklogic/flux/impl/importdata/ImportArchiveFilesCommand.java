@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.ArchiveFilesImporter;
+import com.marklogic.flux.api.DocumentType;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -25,7 +26,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     private ReadArchiveFilesParams readParams = new ReadArchiveFilesParams();
 
     @CommandLine.Mixin
-    private WriteDocumentParamsImpl writeParams = new WriteDocumentParamsImpl();
+    private WriteArchiveDocumentParams writeParams = new WriteArchiveDocumentParams();
 
     @CommandLine.Option(
         names = "--streaming",
@@ -36,13 +37,13 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     private boolean streaming;
 
     @Override
-    protected ReadFilesParams getReadParams() {
+    protected IReadFilesParams getReadParams() {
         readParams.setStreaming(this.streaming);
         return readParams;
     }
 
     @Override
-    protected WriteDocumentParams getWriteParams() {
+    protected WriteArchiveDocumentParams getWriteParams() {
         writeParams.setStreaming(this.streaming);
         return writeParams;
     }
@@ -50,6 +51,28 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     @Override
     protected String getReadFormat() {
         return AbstractCommand.MARKLOGIC_CONNECTOR;
+    }
+
+    public static class WriteArchiveDocumentParams extends WriteDocumentParams<WriteArchiveDocumentsOptions> implements WriteArchiveDocumentsOptions {
+
+        @CommandLine.Option(
+            names = "--document-type",
+            description = "Forces a type for any document with an unrecognized URI extension. " + OptionsUtil.VALID_VALUES_DESCRIPTION
+        )
+        private DocumentType documentType;
+
+        @Override
+        public Map<String, String> makeOptions() {
+            return OptionsUtil.addOptions(super.makeOptions(),
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+            );
+        }
+
+        @Override
+        public WriteArchiveDocumentsOptions documentType(DocumentType documentType) {
+            this.documentType = documentType;
+            return this;
+        }
     }
 
     public static class ReadArchiveFilesParams extends ReadFilesParams<ReadArchiveFilesOptions> implements ReadArchiveFilesOptions {
@@ -112,8 +135,19 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         return this;
     }
 
+    /**
+     * @deprecated Use {@link #toOptions(Consumer)} instead
+     */
     @Override
-    public ArchiveFilesImporter to(Consumer<WriteDocumentsOptions<? extends WriteDocumentsOptions>> consumer) {
+    @SuppressWarnings({"java:S1133", "unchecked", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
+    @Deprecated(since = "1.4.0", forRemoval = true)
+    public <T extends WriteDocumentsOptions<T>> ArchiveFilesImporter to(Consumer<T> consumer) {
+        consumer.accept((T) writeParams);
+        return this;
+    }
+
+    @Override
+    public ArchiveFilesImporter toOptions(Consumer<WriteArchiveDocumentsOptions> consumer) {
         consumer.accept(writeParams);
         return this;
     }

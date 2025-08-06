@@ -70,6 +70,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "--splitter-max-chunk-size", "500",
             "--splitter-sidecar-max-chunks", "2",
             "--embedder", "ollama",
+            "--embedder-prompt", "This is only included to ensure the option doesn't cause an error.",
             "-Ebase-url=http://localhost:8008",
             "-Emodel-name=all-minilm"
         );
@@ -101,33 +102,33 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
      */
     @Test
     void azure() {
-        assertStderrContains(() -> run(
-                "import-files",
-                "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
-                "--connection-string", makeConnectionString(),
-                "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
-                "--uri-replace", ".*/json-files,''",
-                "--splitter-json-pointer", "/text",
-                "--embedder", "azure",
-                "-Eapi-key=doesnt-matter"
-            ),
-            "endpoint cannot be null or blank"
+        assertStderrContains(
+            "endpoint cannot be null or blank",
+
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--embedder", "azure",
+            "-Eapi-key=doesnt-matter"
         );
     }
 
     @Test
     void invalidClass() {
-        assertStderrContains(() -> run(
-                "import-files",
-                "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
-                "--connection-string", makeConnectionString(),
-                "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
-                "--uri-replace", ".*/json-files,''",
-                "--splitter-json-pointer", "/text",
-                "--embedder", "not.valid.class"
-            ),
+        assertStderrContains(
             "Unable to instantiate class for creating an embedding model; class name: not.valid.class; " +
-                "cause: Could not load class not.valid.class"
+                "cause: Could not load class not.valid.class",
+
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--embedder", "not.valid.class"
         );
     }
 

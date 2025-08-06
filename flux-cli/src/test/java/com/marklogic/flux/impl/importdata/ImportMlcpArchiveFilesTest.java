@@ -83,12 +83,12 @@ class ImportMlcpArchiveFilesTest extends AbstractTest {
 
     @Test
     void invalidFileAbort() {
-        String stderr = runAndReturnStderr(() -> run(
+        String stderr = runAndReturnStderr(
             "import-mlcp-archive-files",
             "--path", "src/test/resources/mixed-files/goodbye.zip",
             "--abort-on-read-failure",
             "--connection-string", makeConnectionString()
-        ));
+        );
 
         assertTrue(stderr.contains("Error: Unable to read metadata for entry: goodbye.json"),
             "Unexpected stderr: " + stderr);

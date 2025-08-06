@@ -164,6 +164,12 @@ bin\flux import-delimited-text-files ^
 The `import-delimited-files` command supports aggregating related rows together to produce hierarchical documents. See
 [Aggregating rows](../aggregating-rows.md) for more information.
 
+## Generating a TDE template
+
+The `import-delimited-files` command supports generating TDE templates to make imported data immediately available for relational
+queries. See [TDE template generation](../tde-generation.md) for more information.
+
+
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
@@ -180,7 +186,7 @@ Flux once and processing each file separately.
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
-the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `-P` option
+the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `-P` option
 to control how delimited text is read. These options are expressed as `-PoptionName=optionValue`.
 
 A common option to include is `-PmultiLine=true` for when your files have rows with values that include newline 
