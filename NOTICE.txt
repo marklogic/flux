@@ -22,7 +22,7 @@ Apache License 2.0 (Apache-2.0)
 
 Third-Party Components
 
-The following is a list of the third-party components used by MarkLogic® Flux™ 1.3.0 (last updated May 1, 2025):
+The following is a list of the third-party components used by MarkLogic® Flux™ 1.4.0 (last updated Aug 6, 2025):
 
 aws-java-sdk-s3 1.12.262 (Apache-2.0)
 https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3
@@ -62,7 +62,7 @@ For the full text of the Apache-2.0 license, see Apache License 2.0 (Apache-2.0)
 
 Common Licenses
 
-This section shows the text of common third-party licenses used by MarkLogic® Flux™ 1.3.0 (last updated January 7, 2025):
+This section shows the text of common third-party licenses used by MarkLogic® Flux™ 1.4.0 (last updated August 6, 2025):
 
 Apache License 2.0 (Apache-2.0)
 https://spdx.org/licenses/Apache-2.0.html
