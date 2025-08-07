@@ -22,7 +22,7 @@ To add Flux as a dependency to your application, add the following to your Maven
 <dependency>
   <groupId>com.marklogic</groupId>
   <artifactId>flux-api</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
@@ -30,8 +30,49 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:1.3.0"
+  implementation "com.marklogic:flux-api:1.4.0"
 }
+```
+
+**Important** - a bug in the declaration of dependencies for Flux 1.4.0 means that you must also add the following to your 
+`build.gradle` file to ensure that its dependencies are resolved correctly:
+```groovy
+configurations.all {
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+      details.useVersion '2.15.2'
+      details.because 'Must use the version of Jackson required by Spark.'
+    }
+  }
+}
+```
+
+If you are using Maven, you must add the following to your `pom.xml` file:
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
 ```
 
 ## Javadocs
@@ -99,7 +140,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.3.0"
+    classpath "com.marklogic:flux-api:1.4.0"
   }
 }
 ```
@@ -153,7 +194,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.3.0"
+    classpath "com.marklogic:flux-api:1.4.0"
   }
   configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

@@ -46,9 +46,9 @@ refers to the Flux support for generating and adding embeddings. The value of th
 
 As of the 1.2.0 release, Flux recognizes the following abbreviations as a matter of convenience to avoid typing the full class name:
 
-- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-1.3.0.jar` file.
-- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-1.3.0.jar` file.
-- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-1.3.0.jar` file. 
+- `--embedder azure` refers to the embedding model provided by the `flux-embedding-model-azure-open-ai-1.4.0.jar` file.
+- `--embedder minilm` refers to the embedding model provided by the `flux-embedding-model-minilm-1.4.0.jar` file.
+- `--embedder ollama` refers to the embedding model provided by the `flux-embedding-model-ollama-1.4.0.jar` file. 
 
 The JAR files associated with each of the above abbreviations can be downloaded from the 
 [Flux releases site](https://github.com/marklogic/flux/releases) and added to the `./ext` directory in a Flux 
@@ -73,7 +73,7 @@ file in your Flux installation and change the `logger.langchain4j.level` logger 
 
 ### Azure OpenAI options
 
-The `flux-embedding-model-azure-open-ai-1.3.0.jar` file uses 
+The `flux-embedding-model-azure-open-ai-1.4.0.jar` file uses 
 [LangChain4's support](https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai) for 
 [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) and
 supports the following options:
@@ -119,7 +119,7 @@ require any setup or configuration.
 
 ### Ollama options
 
-The `flux-embedding-model-ollama-1.3.0.jar` file uses 
+The `flux-embedding-model-ollama-1.4.0.jar` file uses 
 [LangChain4j's support](https://docs.langchain4j.dev/integrations/embedding-models/ollama) for 
 [Ollama](https://ollama.com/) and supports the following options:
 
