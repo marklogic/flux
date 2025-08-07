@@ -34,6 +34,47 @@ dependencies {
 }
 ```
 
+**Important** - a bug in the declaration of dependencies for Flux 1.4.0 means that you must also add the following to your 
+`build.gradle` file to ensure that its dependencies are resolved correctly:
+```groovy
+configurations.all {
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+      details.useVersion '2.15.2'
+      details.because 'Must use the version of Jackson required by Spark.'
+    }
+  }
+}
+```
+
+If you are using Maven, you must add the following to your `pom.xml` file:
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.15.2</version>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
 ## Javadocs
 
 Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
