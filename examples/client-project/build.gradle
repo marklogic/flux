@@ -41,6 +41,15 @@ repositories {
   mavenLocal()
 }
 
+configurations.all {
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+      details.useVersion '2.15.2'
+      details.because 'Must use the version of Jackson required by Spark.'
+    }
+  }
+}
+
 dependencies {
   implementation "com.marklogic:flux-api:1.4.0"
   implementation "com.marklogic:flux-embedding-model-minilm:1.4.0"
