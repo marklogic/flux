@@ -5,19 +5,17 @@
 dependencies {
   api "com.marklogic:marklogic-client-api:7.2.0"
 
-  compileOnly "org.apache.spark:spark-sql_2.12:${sparkVersion}"
-
-  api "com.marklogic:marklogic-junit5:1.5.0"
+  compileOnly "org.apache.spark:spark-sql_2.13:${sparkVersion}"
 
   // For configuring two-way SSL in tests.
-  api "com.marklogic:ml-app-deployer:5.0.0"
+  api "com.marklogic:ml-app-deployer:6.0.1"
 
-  // Using Apache HttpClient for connecting to the MarkLogic Manage API.
-  api 'org.apache.httpcomponents:httpclient:4.5.14'
-  // Forcing HttpClient to use this to address https://snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 .
-  api 'commons-codec:commons-codec:1.17.1'
+  api ("com.marklogic:marklogic-junit5:1.5.0") {
+    // Prefer the one from ml-app-deployer
+    exclude module: "ml-javaclient-util"
+  }
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
-  api "org.springframework:spring-jdbc:5.3.39"
-  implementation "org.postgresql:postgresql:42.7.7"
+  api "org.springframework:spring-jdbc:6.2.11"
+  implementation "org.postgresql:postgresql:42.7.8"
 }

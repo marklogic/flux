@@ -6,6 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.cli.Main;
 import com.marklogic.junit5.XmlNode;
+import org.apache.commons.io.IOUtils;
 import org.apache.spark.scheduler.SparkListener;
 import org.apache.spark.scheduler.SparkListenerJobEnd;
 import org.junit.jupiter.api.Test;
@@ -366,7 +367,7 @@ class ImportFilesTest extends AbstractTest {
 
             verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
         } finally {
-            commandContext.sparkSession.close();
+            IOUtils.closeQuietly(commandContext.sparkSession);
         }
     }
 

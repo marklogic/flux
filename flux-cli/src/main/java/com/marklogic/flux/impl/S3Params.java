@@ -3,8 +3,8 @@
  */
 package com.marklogic.flux.impl;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import org.apache.hadoop.conf.Configuration;
 import picocli.CommandLine;
 
@@ -50,11 +50,11 @@ public class S3Params {
         // See https://sparkbyexamples.com/amazon-aws/write-read-csv-file-from-s3-into-dataframe/ for more
         // information on the keys used below.
         if (addCredentials) {
-            AWSCredentials credentials = new DefaultAWSCredentialsProviderChain().getCredentials();
-            config.set(S3A_ACCESS_KEY, credentials.getAWSAccessKeyId());
-            config.set(S3A_SECRET_KEY, credentials.getAWSSecretKey());
-            config.set(S3N_ACCESS_KEY, credentials.getAWSAccessKeyId());
-            config.set(S3N_SECRET_KEY, credentials.getAWSSecretKey());
+            AwsCredentials credentials = DefaultCredentialsProvider.create().resolveCredentials();
+            config.set(S3A_ACCESS_KEY, credentials.accessKeyId());
+            config.set(S3A_SECRET_KEY, credentials.secretAccessKey());
+            config.set(S3N_ACCESS_KEY, credentials.accessKeyId());
+            config.set(S3N_SECRET_KEY, credentials.secretAccessKey());
         }
         if (accessKeyId != null && !accessKeyId.trim().isEmpty()) {
             config.set(S3A_ACCESS_KEY, accessKeyId);

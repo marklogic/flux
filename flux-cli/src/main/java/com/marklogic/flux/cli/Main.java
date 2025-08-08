@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
@@ -221,7 +220,7 @@ public class Main {
         return SparkUtil.buildSparkSession(masterUrl, sparkConf, sparkSessionBuilderParams);
     }
 
-    private void printException(@NotNull CommandLine.ParseResult parseResult, Exception ex) {
+    private void printException(CommandLine.ParseResult parseResult, Exception ex) {
         CommandLine.ParseResult subcommand = parseResult.subcommand();
         Objects.requireNonNull(subcommand);
         final boolean includeStacktrace = subcommand.hasMatchedOption("--stacktrace");

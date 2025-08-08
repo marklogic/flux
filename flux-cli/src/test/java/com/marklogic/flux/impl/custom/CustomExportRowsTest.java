@@ -5,6 +5,7 @@ package com.marklogic.flux.impl.custom;
 
 import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 
 class CustomExportRowsTest extends AbstractTest {
 
+    @Disabled("Need a different data source since xml is part of Spark 4")
     @Test
     void sparkXml(@TempDir Path tempDir) throws IOException {
         run(

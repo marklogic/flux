@@ -70,8 +70,7 @@ pipeline{
   }
 
   environment{
-    JAVA_HOME_DIR="/home/builder/java/jdk-11.0.2"
-    JAVA17_HOME_DIR="/home/builder/java/jdk-17.0.2"
+    JAVA_HOME_DIR="/home/builder/java/jdk-17.0.2"
     GRADLE_DIR   =".gradle"
     DMC_USER     = credentials('MLBUILD_USER')
     DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
@@ -87,7 +86,7 @@ pipeline{
       steps{
         runtests()
         withSonarQubeEnv('SONAR_Progress') {
-          runSonarScan('JAVA17_HOME_DIR')
+          runSonarScan('JAVA_HOME_DIR')
         }
       }
       post{

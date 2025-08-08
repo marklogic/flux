@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.cli.Main;
+import org.apache.commons.io.IOUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,7 +29,7 @@ public abstract class AbstractOptionsTest {
 
     protected final Object getCommand(String... args) {
         Main.CommandContext context = new Main().buildCommandContext(null, null, args);
-        context.sparkSession.close();
+        IOUtils.closeQuietly(context.sparkSession);
         return context.command;
     }
 
@@ -37,7 +38,7 @@ public abstract class AbstractOptionsTest {
         PrintWriter pw = new PrintWriter(sw);
         Main.CommandContext context = new Main().buildCommandContext(null, pw, args);
         if (context != null && context.sparkSession != null) {
-            context.sparkSession.close();
+            IOUtils.closeQuietly(context.sparkSession);
         }
         return sw.toString();
     }
