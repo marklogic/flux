@@ -1,10 +1,3 @@
-java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
-}
-
 dependencies {
   // Required for compile-time references in the tests to langchain4j classes.
   testImplementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
@@ -24,7 +17,7 @@ dependencies {
   testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
 
   // This will be brought in transitively, but we need it here so we can compile some tests against Spark APIs.
-  testImplementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+  testImplementation "org.apache.spark:spark-sql_2.13:${sparkVersion}"
 
   // Need this to compile against the shadowed Java Client classes.
   testImplementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"

@@ -5,7 +5,7 @@
 dependencies {
   api "com.marklogic:marklogic-client-api:7.2.0"
 
-  compileOnly "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+  compileOnly "org.apache.spark:spark-sql_2.13:${sparkVersion}"
 
   api "com.marklogic:marklogic-junit5:1.5.0"
 

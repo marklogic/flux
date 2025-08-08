@@ -2,12 +2,6 @@ plugins {
   id 'com.gradleup.shadow' version '8.3.3'
 }
 
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
-}
-
 dependencies {
   implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
 }

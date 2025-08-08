@@ -4,11 +4,6 @@ plugins {
 }
 
 java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
-
   withJavadocJar()
   withSourcesJar()
 }
