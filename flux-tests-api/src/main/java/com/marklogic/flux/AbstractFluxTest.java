@@ -9,17 +9,11 @@ import com.marklogic.junit5.AbstractMarkLogicTest;
 import com.marklogic.junit5.XmlNode;
 import com.marklogic.mgmt.ManageClient;
 import com.marklogic.mgmt.ManageConfig;
-import com.marklogic.rest.util.MgmtResponseErrorHandler;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.commons.io.IOUtils;
 import org.apache.spark.sql.SparkSession;
 import org.jdom2.Namespace;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,10 +42,10 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     @AfterEach
     public void closeSparkSession() {
         if (sparkSession != null) {
-            sparkSession.close();
+            IOUtils.closeQuietly(sparkSession);
         }
         if (!SparkSession.getActiveSession().isEmpty()) {
-            SparkSession.getActiveSession().get().close();
+            IOUtils.closeQuietly(SparkSession.getActiveSession().get());
         }
     }
 
@@ -101,29 +95,10 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
         return sparkSession;
     }
 
-    /**
-     * Constructs a ManageClient using the "old" Apache HttpClient approach. This avoids classpath issues due to the
-     * relocated OkHttp classes in the connector jar. This code was copied from ml-gradle before its 5.0.0 release;
-     * it was removed from the 5.0.0 release as it had been deprecated for a while.
-     *
-     * @return
-     */
     protected final ManageClient newManageClient() {
         Properties props = loadTestProperties();
-        // Forcing usage of the deprecated Apache HttpClient to avoid classpath issues with the relocated OkHttp classes
-        // in our connector jar.
         ManageConfig config = new ManageConfig(props.getProperty("marklogic.client.host"), 8002, props.getProperty("marklogic.client.username"), props.getProperty("marklogic.client.password"));
-
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        BasicCredentialsProvider provider = new BasicCredentialsProvider();
-        provider.setCredentials(new AuthScope(config.getHost(), config.getPort(), AuthScope.ANY_REALM), new UsernamePasswordCredentials(config.getUsername(), config.getPassword()));
-        httpClientBuilder.setDefaultCredentialsProvider(provider);
-
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClientBuilder.build()));
-        restTemplate.setErrorHandler(new MgmtResponseErrorHandler());
-        ManageClient manageClient = new ManageClient(restTemplate);
-        manageClient.setManageConfig(config);
-        return manageClient;
+        return new ManageClient(config);
     }
 
     @Override
