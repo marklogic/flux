@@ -21,7 +21,7 @@ configurations {
 }
 
 dependencies {
-  implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+  implementation "org.apache.spark:spark-sql_2.13:${sparkVersion}"
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:4.7.6"
 
@@ -41,7 +41,7 @@ dependencies {
   // Flux does not create a YARN cluster. It uses a local standalone Spark cluster. A user may choose to use Flux with
   // spark-submit against a Spark cluster using YARN, but at that point, the user is 100% responsible for how they
   // configure their own Spark cluster.
-  implementation("org.apache.hadoop:hadoop-aws:3.3.4") {
+  implementation("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
     // We don't include the entire aws-java-sdk-bundle, as that clocks in as a single 380mb jar. We only need the S3
     // portion of the AWS SDK.
     exclude module: "aws-java-sdk-bundle"
@@ -51,12 +51,12 @@ dependencies {
   implementation "com.amazonaws:aws-java-sdk-s3:1.12.262"
 
   // With version 262 of the AWS SDK, we get a NoClassDefFoundError if this dynamodb module is not included.
-  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
+//  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
 
   // Adds support for Azure Storage. We may want these to be expressed using variants instead so that at least a
   // Gradle user of the API can ask for e.g. S3 or Azure Storage support without those dependencies being included
   // by default.
-  implementation "org.apache.hadoop:hadoop-azure:3.3.4"
+  implementation "org.apache.hadoop:hadoop-azure:${hadoopVersion}"
   // For Blob Storage
   implementation "com.microsoft.azure:azure-storage:8.6.6"
   // For Data Lake Storage Gen2
@@ -68,10 +68,10 @@ dependencies {
     exclude group: "com.fasterxml.jackson.datatype"
   }
 
-  implementation "org.apache.hadoop:hadoop-client:3.3.4"
+  implementation "org.apache.hadoop:hadoop-client:${hadoopVersion}"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.12:${sparkVersion}"
+  implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
 
   distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
   distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
@@ -79,7 +79,7 @@ dependencies {
   testImplementation project(":flux-tests-api")
 
   // For testing custom commands with a 3rd party connector.
-  testImplementation "com.databricks:spark-xml_2.12:0.18.0"
+//  testImplementation "com.databricks:spark-xml_2.12:0.18.0"
 }
 
 javadoc {

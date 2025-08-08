@@ -10,6 +10,7 @@ import com.marklogic.junit5.XmlNode;
 import com.marklogic.mgmt.ManageClient;
 import com.marklogic.mgmt.ManageConfig;
 import com.marklogic.rest.util.MgmtResponseErrorHandler;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -48,10 +49,10 @@ public abstract class AbstractFluxTest extends AbstractMarkLogicTest {
     @AfterEach
     public void closeSparkSession() {
         if (sparkSession != null) {
-            sparkSession.close();
+            IOUtils.closeQuietly(sparkSession);
         }
         if (!SparkSession.getActiveSession().isEmpty()) {
-            SparkSession.getActiveSession().get().close();
+            IOUtils.closeQuietly(SparkSession.getActiveSession().get());
         }
     }
 
