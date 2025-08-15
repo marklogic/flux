@@ -7,7 +7,82 @@ import com.marklogic.flux.impl.importdata.ImportFilesCommand;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class ConnectionParamsTest extends AbstractOptionsTest {
+
+    /**
+     * Verifies that system properties are used to provide default values to connection options.
+     * This makes Flux much easier to configure via e.g. a Spring Boot application.
+     */
+    @Test
+    void systemProperties() {
+        Map<String, String> systemProps = new HashMap<>();
+        systemProps.put("marklogic.client.connectionString", "user:password@host:8000");
+        systemProps.put("marklogic.client.host", "localhost");
+        systemProps.put("marklogic.client.port", "8123");
+        systemProps.put("marklogic.client.basePath", "/path");
+        systemProps.put("marklogic.client.database", "somedb");
+        systemProps.put("marklogic.client.connectionType", "direct");
+        systemProps.put("marklogic.client.disableGzippedResponses", "true");
+        systemProps.put("marklogic.client.authType", "basic");
+        systemProps.put("marklogic.client.username", "jane");
+        systemProps.put("marklogic.client.password", "secret");
+        systemProps.put("marklogic.client.certificate.file", "/cert/file");
+        systemProps.put("marklogic.client.certificate.password", "certword");
+        systemProps.put("marklogic.client.cloud.apiKey", "key123");
+        systemProps.put("marklogic.client.kerberos.principal", "kerb123");
+        systemProps.put("marklogic.client.saml.token", "saml123");
+        systemProps.put("marklogic.client.oauth.token", "oauth123");
+        systemProps.put("marklogic.client.sslProtocol", "TLSv1.3");
+        systemProps.put("marklogic.client.sslHostnameVerifier", "STRICT");
+        systemProps.put("marklogic.client.ssl.keystore.path", "key.jks");
+        systemProps.put("marklogic.client.ssl.keystore.password", "keypass");
+        systemProps.put("marklogic.client.ssl.keystore.type", "SOMEJKS");
+        systemProps.put("marklogic.client.ssl.keystore.algorithm", "SomeX509");
+        systemProps.put("marklogic.client.ssl.truststore.path", "trust.jks");
+        systemProps.put("marklogic.client.ssl.truststore.password", "trustpass");
+        systemProps.put("marklogic.client.ssl.truststore.type", "SOMETRUST");
+        systemProps.put("marklogic.client.ssl.truststore.algorithm", "SomeX510");
+
+        try {
+            systemProps.forEach(System::setProperty);
+            ImportFilesCommand command = (ImportFilesCommand) getCommand(
+                "import-files",
+                "--path", "/doesnt/matter/for-this-test");
+            assertOptions(command.getConnectionParams().makeOptions(),
+                Options.CLIENT_URI, "user:password@host:8000",
+                Options.CLIENT_HOST, "localhost",
+                Options.CLIENT_PORT, "8123",
+                "spark.marklogic.client.basePath", "/path",
+                Options.CLIENT_DATABASE, "somedb",
+                Options.CLIENT_CONNECTION_TYPE, "DIRECT",
+                "spark.marklogic.client.disableGzippedResponses", "true",
+                Options.CLIENT_AUTH_TYPE, "basic",
+                Options.CLIENT_USERNAME, "jane",
+                Options.CLIENT_PASSWORD, "secret",
+                "spark.marklogic.client.certificate.file", "/cert/file",
+                "spark.marklogic.client.certificate.password", "certword",
+                "spark.marklogic.client.cloud.apiKey", "key123",
+                "spark.marklogic.client.kerberos.principal", "kerb123",
+                "spark.marklogic.client.saml.token", "saml123",
+                "spark.marklogic.client.oauth.token", "oauth123",
+                "spark.marklogic.client.sslProtocol", "TLSv1.3",
+                "spark.marklogic.client.sslHostnameVerifier", "STRICT",
+                "spark.marklogic.client.ssl.keystore.path", "key.jks",
+                "spark.marklogic.client.ssl.keystore.password", "keypass",
+                "spark.marklogic.client.ssl.keystore.type", "SOMEJKS",
+                "spark.marklogic.client.ssl.keystore.algorithm", "SomeX509",
+                "spark.marklogic.client.ssl.truststore.path", "trust.jks",
+                "spark.marklogic.client.ssl.truststore.password", "trustpass",
+                "spark.marklogic.client.ssl.truststore.type", "SOMETRUST",
+                "spark.marklogic.client.ssl.truststore.algorithm", "SomeX510"
+            );
+        } finally {
+            systemProps.keySet().forEach(System::clearProperty);
+        }
+    }
 
     @Test
     void allConnectionParams() {

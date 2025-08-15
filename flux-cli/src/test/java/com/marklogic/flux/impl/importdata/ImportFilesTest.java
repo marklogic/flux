@@ -24,6 +24,25 @@ class ImportFilesTest extends AbstractTest {
     private static final String[] MIXED_FILES_URIS = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
 
     @Test
+    void connectionStringViaSysProperty() {
+        final String property = "marklogic.client.connectionString";
+        try {
+            System.setProperty(property, makeConnectionString());
+            run(
+                "import-files",
+                "--path", "src/test/resources/mixed-files/hello*",
+                "--permissions", DEFAULT_PERMISSIONS,
+                "--collections", "files",
+                "--uri-replace", ".*/mixed-files,''"
+            );
+
+            verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
+        } finally {
+            System.clearProperty(property);
+        }
+    }
+
+    @Test
     void multiplePaths() {
         run(
             CommandLine.ExitCode.OK,
