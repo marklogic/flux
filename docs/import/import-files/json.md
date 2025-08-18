@@ -71,6 +71,11 @@ If your files conform to the [JSON Lines format](https://jsonlines.org/),
 include the `--json-lines` option with no value. Flux will then read each line in each file as a separate JSON object 
 and write it to MarkLogic as a JSON document.
 
+> **Important** - by default, Flux will attempt to conform all JSON objects in a JSON Lines file to a common schema.
+> This process may result in changes to the JSON objects and may also add a significant amount of time to the import process.
+> If you do not need a common schema enforced, use the `--json-lines-raw` option instead. 
+> Please see the next section for more information on this option.
+
 For example, consider a file with the following content:
 
 ```
@@ -101,7 +106,6 @@ bin\flux import-aggregate-json-files ^
 {% endtab %}
 {% endtabs %}
 
-
 Flux will write two separate JSON documents, each with a completely different schema. 
 
 The JSON Lines format is often useful for exporting data from MarkLogic as well. Please see 
@@ -125,6 +129,9 @@ effects on the `import-aggregate-json-files` command:
 3. The following options also have no effect as each JSON document is intentionally left as is: `--json-root-name`, `--xml-root-name`, 
 `--xml-namespace`, and `--ignore-null-fields`.
 4. You can still read a gzipped file if its filename ends in `.gz`.
+
+In addition, because the `--json-lines-raw` option avoids the need to conform the JSON objects to a common schema, 
+the import process will typically be faster by avoiding the need to determine a common schema.
 
 ### Failing fast on malformed JSON
 
