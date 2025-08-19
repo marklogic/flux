@@ -60,7 +60,13 @@ dependencies {
   // For Blob Storage
   implementation "com.microsoft.azure:azure-storage:8.6.6"
   // For Data Lake Storage Gen2
-  implementation "com.azure:azure-storage-file-datalake:12.23.1"
+  implementation ("com.azure:azure-storage-file-datalake:12.23.1") {
+    // Exclude the Jackson dependencies that Spark already provides, and we need the version required by Spark.
+    // This exclusion can be tested by publishing flux-api locally and running the test programs in
+    // examples/client-project.
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.datatype"
+  }
 
   implementation "org.apache.hadoop:hadoop-client:3.3.4"
 
