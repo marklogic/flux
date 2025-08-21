@@ -14,6 +14,7 @@ class CustomExportRowsOptionsTest extends AbstractOptionsTest {
     void test() {
         CustomExportRowsCommand command = (CustomExportRowsCommand) getCommand(
             "custom-export-rows",
+            "--connection-string", makeConnectionString(),
             "--query", "anything",
             "--target", "xml",
             "--partitions", "4"

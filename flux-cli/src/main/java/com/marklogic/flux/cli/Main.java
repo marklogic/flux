@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -114,7 +115,48 @@ public class Main {
         return commandLine.execute(args);
     }
 
-    public CommandLine newCommandLine() {
+    /**
+     * @since 1.5.0
+     */
+    public static class CommandContext {
+        public final Command command;
+        public final SparkSession sparkSession;
+
+        public CommandContext(Command command, SparkSession sparkSession) {
+            this.command = command;
+            this.sparkSession = sparkSession;
+        }
+    }
+
+    /**
+     * Parse the args and return a command that can be executed with a user-provided Spark session.
+     *
+     * @param outWriter optional, can be null
+     * @param errWriter optional, can be null
+     * @param args
+     * @return
+     * @since 1.5.0
+     * <p>
+     */
+    public CommandContext buildCommandContext(PrintWriter outWriter, PrintWriter errWriter, String... args) {
+        CommandLine commandLine = new Main().newCommandLine();
+        if (outWriter != null) {
+            commandLine.setOut(outWriter);
+        }
+        if (errWriter != null) {
+            commandLine.setErr(errWriter);
+        }
+        AtomicReference<CommandContext> commandRef = new AtomicReference<>();
+        commandLine.setExecutionStrategy(parseResult -> {
+            CommandContext context = parseAndReturnCommand(parseResult);
+            commandRef.set(context);
+            return 0;
+        });
+        commandLine.execute(args);
+        return commandRef.get();
+    }
+
+    protected CommandLine newCommandLine() {
         return new CommandLine(this)
             .setAbbreviatedOptionsAllowed(true)
             .setAbbreviatedSubcommandsAllowed(true)
@@ -127,20 +169,25 @@ public class Main {
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
-        final Command command = PicoliUtil.getCommandInstance(parseResult);
         try {
-            Objects.requireNonNull(command);
-            command.validateCommandLineOptions(parseResult);
-            SparkSession session = buildSparkSession(command);
+            final CommandContext commandContext = parseAndReturnCommand(parseResult);
             if (logger.isDebugEnabled()) {
-                logger.debug("Spark master URL: {}", session.sparkContext().master());
+                logger.debug("Spark master URL: {}", commandContext.sparkSession.sparkContext().master());
             }
-            command.execute(session);
+            commandContext.command.execute(commandContext.sparkSession);
         } catch (Exception ex) {
             printException(parseResult, ex);
             return CommandLine.ExitCode.SOFTWARE;
         }
         return CommandLine.ExitCode.OK;
+    }
+
+    private CommandContext parseAndReturnCommand(CommandLine.ParseResult parseResult) {
+        Objects.requireNonNull(parseResult);
+        final Command command = PicoliUtil.getCommandInstance(parseResult);
+        Objects.requireNonNull(command);
+        command.validateCommandLineOptions(parseResult);
+        return new CommandContext(command, buildSparkSession(command));
     }
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
