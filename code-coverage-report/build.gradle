@@ -13,11 +13,3 @@ dependencies {
   jacocoAggregation project(':flux-cli')
   jacocoAggregation project(':flux-java17-tests')
 }
-
-reporting {
-  reports {
-    testCodeCoverageReport(JacocoCoverageReport) {
-      testType = TestSuiteType.UNIT_TEST
-    }
-  }
-}
