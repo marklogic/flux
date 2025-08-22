@@ -13,6 +13,7 @@ class ExportJdbcOptionsTest extends AbstractOptionsTest {
     @Test
     void test() {
         ExportJdbcCommand command = (ExportJdbcCommand) getCommand("export-jdbc",
+            "--connection-string", makeConnectionString(),
             "--query", "anything",
             "--partitions", "12",
             "--jdbc-url", "some-jdbc-url",
@@ -25,6 +26,7 @@ class ExportJdbcOptionsTest extends AbstractOptionsTest {
     @Test
     void userDefinedSparkMasterUrl() {
         ExportJdbcCommand command = (ExportJdbcCommand) getCommand("export-jdbc",
+            "--connection-string", makeConnectionString(),
             "--query", "anything",
             "--partitions", "12",
             "--spark-master-url", "local[6]",

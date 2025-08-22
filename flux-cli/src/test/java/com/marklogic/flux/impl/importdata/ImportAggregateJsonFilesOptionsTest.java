@@ -16,6 +16,7 @@ class ImportAggregateJsonFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ImportAggregateJsonFilesCommand command = (ImportAggregateJsonFilesCommand) getCommand(
             "import-aggregate-json-files",
+            "--connection-string", makeConnectionString(),
             "--path", "anywhere",
             "--encoding", "UTF-16"
         );

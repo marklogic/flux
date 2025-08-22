@@ -8,7 +8,6 @@ import com.marklogic.flux.cli.Main;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,29 +27,22 @@ public abstract class AbstractOptionsTest {
     }
 
     protected final Object getCommand(String... args) {
-        AtomicReference<Command> selectedCommand = new AtomicReference<>();
-        new Main().newCommandLine()
-            .setExecutionStrategy(parseResult -> {
-                selectedCommand.set((Command) parseResult.subcommand().commandSpec().userObject());
-                return 0;
-            })
-            .execute(args);
-        return selectedCommand.get();
+        Main.CommandContext context = new Main().buildCommandContext(null, null, args);
+        context.sparkSession.close();
+        return context.command;
     }
 
     protected final String applyOptionsAndReturnStderr(String... args) {
-        AtomicReference<Command> selectedCommand = new AtomicReference<>();
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        new Main().newCommandLine()
-            .setErr(pw)
-            .setExecutionStrategy(parseResult -> {
-                selectedCommand.set((Command) parseResult.subcommand().commandSpec().userObject());
-                return 0;
-            })
-            .execute(args);
-        pw.flush();
+        Main.CommandContext context = new Main().buildCommandContext(null, pw, args);
+        if (context != null && context.sparkSession != null) {
+            context.sparkSession.close();
+        }
         return sw.toString();
     }
 
+    protected final String makeConnectionString() {
+        return "user:doesntmatter@localhost:8000";
+    }
 }
