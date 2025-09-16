@@ -43,6 +43,13 @@ public class S3Params {
     )
     private String endpoint;
 
+    @CommandLine.Option(
+        names = "--s3-path-style-access",
+        description = "Undocumented option for allowing testing with S3-compatible services like MinIO.",
+        hidden = true
+    )
+    private Boolean pathStyleAccess;
+
     /**
      * @param config the Spark runtime configuration object
      */
@@ -67,6 +74,9 @@ public class S3Params {
         if (endpoint != null && !endpoint.trim().isEmpty()) {
             config.set("fs.s3a.endpoint", endpoint);
             config.set("fs.s3n.endpoint", endpoint);
+        }
+        if (pathStyleAccess != null && pathStyleAccess) {
+            config.set("fs.s3a.path.style.access", "true");
         }
     }
 

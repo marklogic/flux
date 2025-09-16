@@ -8,53 +8,59 @@ import com.marklogic.flux.api.Flux;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.UUID;
 
-/**
- * Intended solely for manual testing of importing files from S3. You'll need to provide your own S3 address and
- * ensure that your AWS credentials are set up locally and correctly. This is not an actual test as we don't yet have a
- * way for Jenkins to authenticate with an S3 bucket.
- */
-@Disabled("Only intended for ad hoc testing by using explicit S3 auth values.")
 class ImportFromS3Test extends AbstractTest {
 
-    private static final String PATH = "s3a://changeme/";
-
+    /**
+     * This test uses the MinIO instance that is part of the Docker cluster defined in docker-compose.yml. The MinIO
+     * instance emulates the S3 API and thus allows for test coverage of most S3 options.
+     * <p>
+     * This test will keep creating new folders on the MinIO instance hosted by Docker. That's fine - you can easily
+     * reset the minio instance by deleting the service and rebuilding the Docker cluster. No teardown method is needed,
+     * which would require some AWS SDK code.
+     */
     @Test
-    void test() {
-        String stdout = runAndReturnStdout(
-            "import-files",
-            "--path", PATH,
-            "--preview", "10",
-            "--preview-drop", "content", "modificationTime",
-            "--connection-string", makeConnectionString(),
-            "--s3-add-credentials"
-        );
+    void exportThenImport() {
+        final String minioPath = "s3a://flux-test-bucket/" + UUID.randomUUID();
 
-        assertNotNull(stdout);
-        logger.info("Results: {}", stdout);
-    }
+        final String minioUser = "minioadmin";
+        final String minioPassword = "minioadmin";
+        final String minioEndpoint = "http://localhost:8009";
 
-    @Test
-    void exportTest() {
-        String stdout = runAndReturnStdout(
+        run(
             "export-files",
-            "--path", PATH,
+            "--path", minioPath,
             "--connection-string", makeConnectionString(),
             "--collections", "author",
-            "--limit", "1",
-            "--s3-add-credentials"
+            "--partitions-per-forest", "1",
+            "--s3-secret-access-key", minioUser,
+            "--s3-access-key-id", minioPassword,
+            "--s3-endpoint", minioEndpoint,
+            "--s3-path-style-access"
         );
 
-        assertNotNull(stdout);
-        logger.info("Results: {}", stdout);
+        run(
+            "import-files",
+            "--path", minioPath,
+            "--collections", "from-minio",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--s3-secret-access-key", minioUser,
+            "--s3-access-key-id", minioPassword,
+            "--s3-endpoint", minioEndpoint,
+            "--s3-path-style-access"
+        );
+
+        assertCollectionSize("from-minio", 15);
     }
 
     @Test
+    @Disabled("Intended for manual testing of a real S3 bucket")
     void api() {
         Flux.importGenericFiles()
             .from(options -> options
-                .paths(PATH)
+                .paths("s3a://changeme/changeme") // Change as needed.
                 .s3AccessKeyId("changeme")
                 .s3SecretAccessKey("changeme"))
             .connectionString(makeConnectionString())

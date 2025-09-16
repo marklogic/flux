@@ -5,14 +5,14 @@ services:
   # See https://caddyserver.com/docs/quick-starts/reverse-proxy for more information on using Caddy as a reverse proxy
   # and load balancer.
   # This is commented out by default to avoid intermittent issues on Jenkins. You can uncomment it to test locally.
-#  caddy-load-balancer:
-#    image: caddy:2-alpine
-#    volumes:
-#      - ./test-app/caddy/config/Caddyfile:/etc/caddy/Caddyfile
-#    ports:
-#      # Expand this range as needed. See Caddyfile for which ports are used for reverse proxies.
-#      - 8006:8006
-#      - 8007:8007
+  #  caddy-load-balancer:
+  #    image: caddy:2-alpine
+  #    volumes:
+  #      - ./test-app/caddy/config/Caddyfile:/etc/caddy/Caddyfile
+  #    ports:
+  #      # Expand this range as needed. See Caddyfile for which ports are used for reverse proxies.
+  #      - 8006:8006
+  #      - 8007:8007
 
   marklogic:
     image: "${MARKLOGIC_IMAGE}"
@@ -67,6 +67,30 @@ services:
       - NET_RAW
     ports:
       - 8008:11434
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "8009:9000"   # Emulates the S3 API
+      - "8010:9001"   # Can browse minio storage via http://localhost:8010
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+
+  # "Sidecar" container to initialize MinIO with a bucket to be used with JUnit tests.
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        sleep 5;
+        mc alias set local http://minio:9000 minioadmin minioadmin;
+        mc mb local/flux-test-bucket;
+        echo 'Bucket created';
+      "
 
 volumes:
   postgresql:
