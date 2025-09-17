@@ -78,7 +78,9 @@ public class Main {
     }
 
     /**
-     * Allows for providing a SparkConf that will be used when creating a SparkSession.
+     * Allows for providing a SparkConf that will be used when creating a SparkSession. The options for configuring
+     * Spark can still be used, but this allows for programmatically providing a shared SparkConf in an environment
+     * where this class is being invoked multiple times in the same JVM.
      *
      * @since 1.5.0
      */
