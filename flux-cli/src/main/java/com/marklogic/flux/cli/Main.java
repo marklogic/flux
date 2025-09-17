@@ -14,6 +14,7 @@ import com.marklogic.flux.impl.custom.CustomImportCommand;
 import com.marklogic.flux.impl.export.*;
 import com.marklogic.flux.impl.importdata.*;
 import com.marklogic.flux.impl.reprocess.ReprocessCommand;
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,21 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
+
+    private final SparkConf sparkConf;
+
+    public Main() {
+        this(null);
+    }
+
+    /**
+     * Allows for providing a SparkConf that will be used when creating a SparkSession.
+     *
+     * @since 1.5.0
+     */
+    public Main(SparkConf sparkConf) {
+        this.sparkConf = sparkConf;
+    }
 
     // Intended to be invoked solely by the application script. Tests should invoke "run" instead to avoid the
     // System.exit call.
@@ -200,7 +216,7 @@ public class Main {
                 sparkSessionBuilderParams = abstractCommand.getCommonParams().getSparkSessionBuilderParams();
             }
         }
-        return SparkUtil.buildSparkSession(masterUrl, sparkSessionBuilderParams);
+        return SparkUtil.buildSparkSession(masterUrl, sparkConf, sparkSessionBuilderParams);
     }
 
     private void printException(@NotNull CommandLine.ParseResult parseResult, Exception ex) {

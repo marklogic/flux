@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.SaveMode;
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -19,10 +20,10 @@ public interface SparkUtil {
     }
 
     static SparkSession buildSparkSession() {
-        return buildSparkSession(null, new HashMap<>());
+        return buildSparkSession(null, null, new HashMap<>());
     }
 
-    static SparkSession buildSparkSession(String masterUrl, Map<String, String> sparkConfigParams) {
+    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkConfigParams) {
         if (masterUrl == null || masterUrl.trim().isEmpty()) {
             masterUrl = "local[*]";
         }
@@ -40,6 +41,10 @@ public interface SparkUtil {
             // handles constructing a SparkSession. We may eventually provide a feature though for providing options
             // at this point for local users that want more control over the SparkSession itself.
             .config("spark.sql.session.timeZone", "UTC");
+
+        if (sparkConf != null) {
+            builder = builder.config(sparkConf);
+        }
 
         if (sparkConfigParams != null) {
             for (Map.Entry<String, String> entry : sparkConfigParams.entrySet()) {
