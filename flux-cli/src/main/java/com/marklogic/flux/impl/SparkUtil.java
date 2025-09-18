@@ -4,6 +4,7 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.SaveMode;
+import com.marklogic.spark.Util;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
@@ -23,36 +24,36 @@ public interface SparkUtil {
         return buildSparkSession(null, null, new HashMap<>());
     }
 
-    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkConfigParams) {
-        if (masterUrl == null || masterUrl.trim().isEmpty()) {
-            masterUrl = "local[*]";
+    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkSessionBuilderParams) {
+        if (sparkConf == null) {
+            if (masterUrl == null || masterUrl.trim().isEmpty()) {
+                masterUrl = "local[*]";
+            }
+            if (Util.MAIN_LOGGER.isDebugEnabled()) {
+                Util.MAIN_LOGGER.debug("Creating new SparkConf; master URL: {}", masterUrl);
+            }
+            sparkConf = new SparkConf().setMaster(masterUrl);
         }
 
-        SparkSession.Builder builder = SparkSession.builder()
-            .master(masterUrl)
-            // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
-            // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
-            // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
-            // user has control over this.
-            .config("spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
+        // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
+        // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
+        // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
+        // user has control over this.
+        sparkConf.set("spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
 
-            // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
-            // options now that are defined by the user is that they won't work when used with spark-submit, which
-            // handles constructing a SparkSession. We may eventually provide a feature though for providing options
-            // at this point for local users that want more control over the SparkSession itself.
-            .config("spark.sql.session.timeZone", "UTC");
+        // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
+        // options now that are defined by the user is that they won't work when used with spark-submit, which
+        // handles constructing a SparkSession. We may eventually provide a feature though for providing options
+        // at this point for local users that want more control over the SparkSession itself.
+        sparkConf.set("spark.sql.session.timeZone", "UTC");
 
-        if (sparkConf != null) {
-            builder = builder.config(sparkConf);
-        }
-
-        if (sparkConfigParams != null) {
-            for (Map.Entry<String, String> entry : sparkConfigParams.entrySet()) {
-                builder = builder.config(entry.getKey(), entry.getValue());
+        if (sparkSessionBuilderParams != null) {
+            for (Map.Entry<String, String> entry : sparkSessionBuilderParams.entrySet()) {
+                sparkConf.set(entry.getKey(), entry.getValue());
             }
         }
 
-        return builder.getOrCreate();
+        return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
     /**
