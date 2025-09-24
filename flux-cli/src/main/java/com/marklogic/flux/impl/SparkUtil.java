@@ -47,6 +47,12 @@ public interface SparkUtil {
         // at this point for local users that want more control over the SparkSession itself.
         sparkConf.set("spark.sql.session.timeZone", "UTC");
 
+        // To avoid the need for Jetty on the classpath, which brings in a number of medium CVEs (as Spark 4 is using
+        // Jetty 9), the Spark UI is explicitly disabled. Curiously, this doesn't seem to be required - i.e. when
+        // excluding org.eclipse.jetty libraries from the classpath, no failures occur. But this is being done to
+        // ensure Jetty isn't used to start the Spark UI, as there's currently no use case for that when using Flux.
+        sparkConf.set("spark.ui.enabled", "false");
+
         if (sparkSessionBuilderParams != null) {
             for (Map.Entry<String, String> entry : sparkSessionBuilderParams.entrySet()) {
                 sparkConf.set(entry.getKey(), entry.getValue());
