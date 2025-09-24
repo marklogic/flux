@@ -38,7 +38,8 @@ dependencies {
   }
 
   // Based on testing so far, this appears to suffice for allowing hadoop-aws to read from and write to S3.
-  implementation "software.amazon.awssdk:s3-transfer-manager:2.24.6"
+  // Using 2.29.52, which is what Hadoop 3.4.2 depends on.
+  implementation "software.amazon.awssdk:s3-transfer-manager:2.29.52"
 
   // Adds support for Azure Storage. We may want these to be expressed using variants instead so that at least a
   // Gradle user of the API can ask for e.g. S3 or Azure Storage support without those dependencies being included

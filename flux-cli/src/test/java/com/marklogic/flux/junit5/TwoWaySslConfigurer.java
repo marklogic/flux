@@ -182,8 +182,8 @@ public class TwoWaySslConfigurer {
     private void deleteCertificateAuthority(String certificateAuthorityName) {
         String xquery = """
             xquery version "1.0-ml";
-            import module namespace pki = "http://marklogic.com/xdmp/pki" at "/MarkLogic/pki.xqy
-            pki:delete-authority("%s")", certificateAuthorityName)""".formatted(certificateAuthorityName);
+            import module namespace pki = 'http://marklogic.com/xdmp/pki' at '/MarkLogic/pki.xqy';
+            pki:delete-authority('%s')""".formatted(certificateAuthorityName);
 
         securityClient.newServerEval().xquery(xquery).evalAs(String.class);
     }
