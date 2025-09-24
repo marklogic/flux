@@ -53,6 +53,14 @@ subprojects {
         details.because "Ensures that slf4j-api 1.x does not appear on the Flux classpath in particular, which can " +
           "lead to this issue - https://www.slf4j.org/codes.html#StaticLoggerBinder."
       }
+      if (details.requested.group.equals("org.codehaus.janino")) {
+        details.useVersion "3.1.12"
+        details.because "Bumping from 3.1.9 (what Spark SQL 4.0.1 depends on) to 3.1.12 to minimize CVEs."
+      }
+      if (details.requested.group.equals("io.netty") and details.requested.version.startsWith("4.1.1")) {
+        details.useVersion "4.1.127.Final"
+        details.because "Bumping from 4.1.118 (what Spark SQL 4.0.1 depends on) to 4.1.127 to minimize CVEs."
+      }
     }
 
     resolutionStrategy {

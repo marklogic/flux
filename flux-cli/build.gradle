@@ -63,7 +63,39 @@ dependencies {
   distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
   distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
 
-  testImplementation project(":flux-tests-api")
+  // For configuring two-way SSL in tests.
+  testImplementation "com.marklogic:ml-app-deployer:6.0.1"
+
+  testImplementation ("com.marklogic:marklogic-junit5:1.5.0") {
+    // Prefer the one from ml-app-deployer
+    exclude module: "ml-javaclient-util"
+
+    // Use the Spring dependencies from ml-app-deployer 6 to avoid vulnerabilities in Spring 5.
+    exclude group: "org.springframework"
+  }
+
+  // marklogic-junit5 still needs spring-test, but we want the 6 version to minimize vulnerabilities.
+  testImplementation "org.springframework:spring-test:6.2.11"
+
+  // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
+  testImplementation "org.springframework:spring-jdbc:6.2.11"
+  testImplementation "org.postgresql:postgresql:42.7.8"
+
+  // Required for compile-time references in the tests to langchain4j classes.
+  testImplementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+
+  // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
+  // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
+  // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
+  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+
+  // For deep equals on JSON with diff.
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+
+  // For deep equals on XML with diff.
+  testImplementation "org.xmlunit:xmlunit-core:2.10.0"
 }
 
 javadoc {

@@ -16,13 +16,14 @@ public class TdeLoader {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final String SCRIPT = "declareUpdate(); const tde = require('/MarkLogic/tde.xqy');\n" +
-        "var URI, TEMPLATE, PERMISSIONS;\n" +
-        "const permissions = [];\n" +
-        "Object.keys(PERMISSIONS).forEach(roleName => {\n" +
-        "  PERMISSIONS[roleName].forEach(capability => permissions.push(xdmp.permission(roleName, capability)));\n" +
-        "});\n" +
-        "tde.templateBatchInsert(tde.templateInfo(URI, TEMPLATE, permissions))";
+    private static final String SCRIPT = """
+        declareUpdate(); const tde = require('/MarkLogic/tde.xqy');
+        var URI, TEMPLATE, PERMISSIONS;
+        const permissions = [];
+        Object.keys(PERMISSIONS).forEach(roleName => {
+           PERMISSIONS[roleName].forEach(capability => permissions.push(xdmp.permission(roleName, capability)));
+        });
+        tde.templateBatchInsert(tde.templateInfo(URI, TEMPLATE, permissions))""";
 
     private final DatabaseClient databaseClient;
 

@@ -95,26 +95,26 @@ public class TwoWaySslConfigurer {
      * CA in MarkLogic and a new "secure credential".
      */
     private String createCertificateAuthority(String certificateAuthorityName) {
-        String xquery = String.format("xquery version \"1.0-ml\";\n" +
-                "import module namespace pki = \"http://marklogic.com/xdmp/pki\" at \"/MarkLogic/pki.xqy\";\n" +
-                "declare namespace x509 = \"http://marklogic.com/xdmp/x509\";\n" +
-                "\n" +
-                "pki:create-authority(\n" +
-                "  \"%s\", \"%s\",\n" +
-                "  element x509:subject {\n" +
-                "    element x509:countryName            {\"US\"},\n" +
-                "    element x509:stateOrProvinceName    {\"California\"},\n" +
-                "    element x509:localityName           {\"San Carlos\"},\n" +
-                "    element x509:organizationName       {\"%s\"},\n" +
-                "    element x509:organizationalUnitName {\"Engineering\"},\n" +
-                "    element x509:commonName             {\"marklogic-test-ca\"},\n" +
-                "    element x509:emailAddress           {\"marklogic-test-ca@example.org\"}\n" +
-                "  },\n" +
-                "  fn:current-dateTime(),\n" +
-                "  fn:current-dateTime() + xs:dayTimeDuration(\"P365D\"),\n" +
-                "  (xdmp:permission(\"admin\",\"read\")))",
-            certificateAuthorityName, certificateAuthorityName, certificateAuthorityName
-        );
+        String xquery = """
+            xquery version "1.0-ml";
+            import module namespace pki = "http://marklogic.com/xdmp/pki" at "/MarkLogic/pki.xqy";
+            declare namespace x509 = "http://marklogic.com/xdmp/x509";
+
+            pki:create-authority(
+              "%s", "%s",
+              element x509:subject {
+                element x509:countryName            {"US"},
+                element x509:stateOrProvinceName    {"California"},
+                element x509:localityName           {"San Carlos"},
+                element x509:organizationName       {"%s"},
+                element x509:organizationalUnitName {"Engineering"},
+                element x509:commonName             {"marklogic-test-ca"},
+                element x509:emailAddress           {"marklogic-test-ca@example.org"}
+              },
+              fn:current-dateTime(),
+              fn:current-dateTime() + xs:dayTimeDuration("P365D"),
+              (xdmp:permission("admin","read")))
+            """.formatted(certificateAuthorityName, certificateAuthorityName, certificateAuthorityName);
         return securityClient.newServerEval().xquery(xquery).evalAs(String.class);
     }
 
@@ -123,24 +123,26 @@ public class TwoWaySslConfigurer {
      * The commonName matches that of a known test user so that certificate authentication can be tested too.
      */
     private ClientCertificate createClientCertificate(String certificateAuthorityName) {
-        String xquery = String.format("xquery version \"1.0-ml\";\n" +
-            "import module namespace sec = \"http://marklogic.com/xdmp/security\" at \"/MarkLogic/security.xqy\"; \n" +
-            "import module namespace pki = \"http://marklogic.com/xdmp/pki\" at \"/MarkLogic/pki.xqy\";\n" +
-            "declare namespace x509 = \"http://marklogic.com/xdmp/x509\";\n" +
-            "\n" +
-            "pki:authority-create-client-certificate(\n" +
-            "  xdmp:credential-id(\"%s\"),\n" +
-            "  element x509:subject {\n" +
-            "    element x509:countryName            {\"US\"},\n" +
-            "    element x509:stateOrProvinceName    {\"California\"},\n" +
-            "    element x509:localityName           {\"San Carlos\"},\n" +
-            "    element x509:organizationName       {\"ProgressMarkLogic\"},\n" +
-            "    element x509:organizationalUnitName {\"Engineering\"},\n" +
-            "    element x509:commonName             {\"JavaClientCertificateUser\"},\n" +
-            "    element x509:emailAddress           {\"java.client@example.org\"}\n" +
-            "  },\n" +
-            "  fn:current-dateTime(),\n" +
-            "  fn:current-dateTime() + xs:dayTimeDuration(\"P365D\"))\n", certificateAuthorityName);
+        String xquery = """
+            xquery version "1.0-ml";
+            import module namespace sec = "http://marklogic.com/xdmp/security" at "/MarkLogic/security.xqy";
+            import module namespace pki = "http://marklogic.com/xdmp/pki" at "/MarkLogic/pki.xqy";
+            declare namespace x509 = "http://marklogic.com/xdmp/x509";
+
+            pki:authority-create-client-certificate(
+              xdmp:credential-id("%s"),
+              element x509:subject {
+                element x509:countryName            {"US"},
+                element x509:stateOrProvinceName    {"California"},
+                element x509:localityName           {"San Carlos"},
+                element x509:organizationName       {"ProgressMarkLogic"},
+                element x509:organizationalUnitName {"Engineering"},
+                element x509:commonName             {"JavaClientCertificateUser"},
+                element x509:emailAddress           {"java.client@example.org"}
+              },
+              fn:current-dateTime(),
+              fn:current-dateTime() + xs:dayTimeDuration("P365D"))
+            """.formatted(certificateAuthorityName);
 
         EvalResultIterator iter = securityClient.newServerEval().xquery(xquery).eval();
         String cert = null;
@@ -178,10 +180,10 @@ public class TwoWaySslConfigurer {
     }
 
     private void deleteCertificateAuthority(String certificateAuthorityName) {
-        String xquery = String.format("xquery version \"1.0-ml\";\n" +
-            "import module namespace pki = \"http://marklogic.com/xdmp/pki\" at \"/MarkLogic/pki.xqy\";\n" +
-            "\n" +
-            "pki:delete-authority(\"%s\")", certificateAuthorityName);
+        String xquery = """
+            xquery version "1.0-ml";
+            import module namespace pki = "http://marklogic.com/xdmp/pki" at "/MarkLogic/pki.xqy
+            pki:delete-authority("%s")", certificateAuthorityName)""".formatted(certificateAuthorityName);
 
         securityClient.newServerEval().xquery(xquery).evalAs(String.class);
     }
@@ -197,23 +199,25 @@ public class TwoWaySslConfigurer {
     }
 
     private String makeCertificateTemplate(String templateName) {
-        return String.format("<certificate-template-properties xmlns=\"http://marklogic.com/manage\">\n" +
-            "  <template-name>%s</template-name>\n" +
-            "  <template-description>Sample description</template-description>\n" +
-            "  <key-type>rsa</key-type>\n" +
-            "  <key-options />\n" +
-            "  <req>\n" +
-            "    <version>0</version>\n" +
-            "    <subject>\n" +
-            "      <countryName>US</countryName>\n" +
-            "      <stateOrProvinceName>CA</stateOrProvinceName>\n" +
-            "      <localityName>San Carlos</localityName>\n" +
-            "      <organizationName>MarkLogic</organizationName>\n" +
-            "      <organizationalUnitName>Engineering</organizationalUnitName>\n" +
-            "      <emailAddress>ssl-test@marklogic.com</emailAddress>\n" +
-            "    </subject>\n" +
-            "  </req>\n" +
-            "</certificate-template-properties>", templateName);
+        return """
+            <certificate-template-properties xmlns="http://marklogic.com/manage">
+              <template-name>%s</template-name>
+              <template-description>Sample description</template-description>
+              <key-type>rsa</key-type>
+              <key-options />
+              <req>
+                <version>0</version>
+                <subject>
+                  <countryName>US</countryName>
+                  <stateOrProvinceName>CA</stateOrProvinceName>
+                  <localityName>San Carlos</localityName>
+                  <organizationName>MarkLogic</organizationName>
+                  <organizationalUnitName>Engineering</organizationalUnitName>
+                  <emailAddress>ssl-test@marklogic.com</emailAddress>
+                </subject>
+              </req>
+            </certificate-template-properties>
+            """.formatted(templateName);
     }
 
     private ObjectNode newServerPayload(String serverName) {
