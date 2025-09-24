@@ -83,6 +83,12 @@ subprojects {
 
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
+
+    // Excluding Jetty, as Spark 4 depends on Jetty 9 which brings in several medium CVEs. Testing has shown that Spark
+    // must be modular enough to run fine without Jetty on the classpath, as no failures are occurring without Jetty
+    // bring present. Note that org.eclipse.jetty.websocket libraries are still on the classpath, but those are fine as
+    // they do not have any CVEs.
+    exclude group: "org.eclipse.jetty"
   }
 
   test {

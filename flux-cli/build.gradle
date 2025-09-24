@@ -93,10 +93,10 @@ dependencies {
   testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
 
   // For deep equals on JSON with diff.
-  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.1"
 
   // For deep equals on XML with diff.
-  testImplementation "org.xmlunit:xmlunit-core:2.10.0"
+  testImplementation "org.xmlunit:xmlunit-core:2.10.4"
 }
 
 javadoc {
