@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.Util;
-import marklogicspark.marklogic.client.DatabaseClient;
-import marklogicspark.marklogic.client.io.DocumentMetadataHandle;
-import marklogicspark.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.JacksonHandle;
 
 public class TdeLoader {
 

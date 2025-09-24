@@ -5,8 +5,8 @@ package com.marklogic.flux.tde;
 
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.dom.DOMHelper;
-import marklogicspark.marklogic.client.io.DOMHandle;
-import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

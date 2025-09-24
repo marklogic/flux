@@ -3,9 +3,9 @@
  */
 package com.marklogic.flux.tde;
 
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.flux.AbstractJava17Test;
-import marklogicspark.marklogic.client.DatabaseClient;
-import marklogicspark.marklogic.client.DatabaseClientFactory;
 
 import java.util.Properties;
 
@@ -18,7 +18,7 @@ abstract class AbstractTdeTest extends AbstractJava17Test {
             // Verify that the TDE can be loaded without errors.
             new TdeLoader(client).loadTde(template);
         } finally {
-            try (com.marklogic.client.DatabaseClient schemasClient = newDatabaseClient("flux-test-schemas")) {
+            try (DatabaseClient schemasClient = newDatabaseClient("flux-test-schemas")) {
                 schemasClient.newDocumentManager().delete(uri);
             }
         }
