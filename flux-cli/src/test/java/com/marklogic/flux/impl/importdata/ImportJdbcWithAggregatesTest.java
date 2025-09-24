@@ -20,10 +20,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
      */
     @Test
     void customerWithArrayOfRentals() {
-        String query = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
-            "        from customer c\n" +
-            "        inner join public.payment p on c.customer_id = p.customer_id\n" +
-            "        where c.customer_id = 1";
+        String query = """
+            select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date
+            from customer c
+            inner join public.payment p on c.customer_id = p.customer_id
+            where c.customer_id = 1""";
 
         run(
             "import-jdbc",
@@ -65,14 +66,15 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
      */
     @Test
     void customerWithArrayOfRentalsAndArrayOfPayments() {
-        String query = "select " +
-            "c.customer_id, c.first_name, " +
-            "r.rental_id, r.inventory_id, " +
-            "p.payment_id, p.amount\n" +
-            "from customer c\n" +
-            "inner join public.rental r on c.customer_id = r.customer_id\n" +
-            "inner join public.payment p on p.customer_id = p.customer_id\n" +
-            "where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506";
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join public.rental r on c.customer_id = r.customer_id
+            inner join public.payment p on p.customer_id = p.customer_id
+            where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506""";
 
         run(
             "import-jdbc",
@@ -114,10 +116,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
      */
     @Test
     void joinThatProducesArrayWithAtomicValues() {
-        String query = "select f.film_id, f.title, fa.actor_id\n" +
-            "from film f\n" +
-            "inner join film_actor fa on f.film_id = fa.film_id\n" +
-            "where f.film_id = 1";
+        String query = """
+            select f.film_id, f.title, fa.actor_id
+            from film f
+            inner join film_actor fa on f.film_id = fa.film_id
+            where f.film_id = 1""";
 
         run(
             "import-jdbc",
@@ -155,10 +158,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     @Test
     void badColumnName() {
-        String query = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
-            "        from customer c\n" +
-            "        inner join public.payment p on c.customer_id = p.customer_id\n" +
-            "        where c.customer_id < 10";
+        String query = """
+            select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date
+            from customer c
+            inner join public.payment p on c.customer_id = p.customer_id
+            where c.customer_id < 10""";
 
         assertStderrContains(
             "Unable to aggregate columns: [payment_id, notfound], [payment_date]; please ensure that each column name " +

@@ -144,12 +144,12 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     private void handleException(Exception ex) {
-        if (ex.getCause() instanceof ConnectorException) {
+        if (ex.getCause() instanceof ConnectorException connectorException) {
             // Our connector exceptions are expected to be helpful and friendly to the user.
-            throw (ConnectorException) ex.getCause();
+            throw connectorException;
         }
-        if (ex instanceof FluxException) {
-            throw (FluxException) ex;
+        if (ex instanceof FluxException fluxException) {
+            throw fluxException;
         }
         if (ex instanceof SparkException && ex.getCause() != null) {
             if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {

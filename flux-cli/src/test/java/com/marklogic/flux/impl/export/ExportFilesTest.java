@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,7 +128,7 @@ class ExportFilesTest extends AbstractTest {
         List<String> filenames = rows.stream().map(row -> {
             String path = row.getString(0);
             return path.substring(path.lastIndexOf("/") + 1);
-        }).collect(Collectors.toList());
+        }).toList();
 
         for (int i = 1; i <= 15; i++) {
             String expectedFilename = "author" + i + ".json";
