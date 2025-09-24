@@ -10,7 +10,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.5-SNAPSHOT"
+    classpath "com.marklogic:flux-api:2.0-SNAPSHOT"
   }
 
   // This is required when a plugin, such as ml-gradle, is on the classpath that brings along a version of Jackson
@@ -42,8 +42,8 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:1.5-SNAPSHOT"
-  implementation "com.marklogic:flux-embedding-model-minilm:1.5-SNAPSHOT"
+  implementation "com.marklogic:flux-api:2.0-SNAPSHOT"
+  implementation "com.marklogic:flux-embedding-model-minilm:2.0-SNAPSHOT"
 }
 
 /**
