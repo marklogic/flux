@@ -42,63 +42,6 @@ subprojects {
     }
   }
 
-  configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-      if (details.requested.group.equals("org.apache.hadoop") and details.requested.version.equals("3.4.1")) {
-        details.useVersion "3.4.2"
-        details.because "Bumping to 3.4.2 to minimize CVEs."
-      }
-      if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        details.useVersion '2.18.2'
-        details.because 'Need to match the version used by Spark 4.0.1.'
-      }
-      if (details.requested.group.equals("org.slf4j")) {
-        details.useVersion "2.0.17"
-        details.because "Ensures that slf4j-api 1.x does not appear on the Flux classpath in particular, which can " +
-          "lead to this issue - https://www.slf4j.org/codes.html#StaticLoggerBinder."
-      }
-      if (details.requested.group.equals("org.codehaus.janino")) {
-        details.useVersion "3.1.12"
-        details.because "Bumping from 3.1.9 (what Spark SQL 4.0.1 depends on) to 3.1.12 to minimize CVEs."
-      }
-      if (details.requested.group.equals("io.netty") and details.requested.version.startsWith("4.1.1")) {
-        details.useVersion "4.1.127.Final"
-        details.because "Bumping from 4.1.118 (what Spark SQL 4.0.1 depends on) to 4.1.127 to minimize CVEs."
-      }
-    }
-
-    resolutionStrategy {
-      // Avoids a classpath conflict between Spark and tika-parser-microsoft-module. Forces Spark to use the
-      // version that tika-parser-microsoft-module wants.
-      // Avoids another classpath conflict between Spark and tika-parser-microsoft-module.
-      force "org.apache.commons:commons-compress:1.27.1"
-
-      // Forcing 3.18.0 to resolve CVEs on earlier versions of commons-lang3.
-      force "org.apache.commons:commons-lang3:3.18.0"
-
-      // Resolves a medium CVE that comes from json-unit-assertj .
-      force "net.minidev:json-smart:2.5.2"
-    }
-
-    // Excluding the nimbus-jose-jwt dependency that comes in via hadoop-auth. Hadoop 3.4.2 depends on 9.x, which has a
-    // medium CVE that is addressed in 10.x. But it is only used for JWT auth with Hadoop, which Flux will never expose
-    // to a user.
-    exclude group: "com.nimbusds", module: "nimbus-jose-jwt"
-
-    // Without this exclusion, we have multiple slf4j providers, leading to an ugly warning at the start
-    // of each Flux execution.
-    exclude group: "org.slf4j", module: "slf4j-reload4j"
-
-    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
-    exclude module: "rocksdbjni"
-
-    // Excluding Jetty, as Spark 4 depends on Jetty 9 which brings in several medium CVEs. Testing has shown that Spark
-    // must be modular enough to run fine without Jetty on the classpath, as no failures are occurring without Jetty
-    // bring present. Note that org.eclipse.jetty.websocket libraries are still on the classpath, but those are fine as
-    // they do not have any CVEs.
-    exclude group: "org.eclipse.jetty"
-  }
-
   test {
     useJUnitPlatform()
     testLogging {

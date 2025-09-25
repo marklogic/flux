@@ -10,20 +10,38 @@ configurations {
   // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
   shadowDependencies
 
-  // Defines dependencies to be included in the Flux distribution (in addition to all normal runtime dependencies),
-  // but should not be transitive dependencies of the Flux API. Typically, a Flux API user can easily choose to include
-  // those transitive dependencies if desired.
-  distributionDependencies
-
-  // Since the distribution dependencies are included in Flux, we want to test them. So the test runtime includes all
-  // distribution dependencies.
-  testImplementation.extendsFrom(distributionDependencies)
+  all {
+    resolutionStrategy {
+      // Resolves a medium CVE that comes from json-unit-assertj .
+      force "net.minidev:json-smart:2.5.2"
+    }
+  }
 }
 
 dependencies {
-  implementation "org.apache.spark:spark-sql_2.13:${sparkVersion}"
+  constraints {
+    // Ensures the two top-level Hadoop dependencies of Spark will be 3.4.2, which fixes several CVEs found in 3.4.1.
+    implementation("org.apache.hadoop:hadoop-client-api:${hadoopVersion}") {
+      because "Force Spark's Hadoop dependencies from 3.4.1 to ${hadoopVersion}"
+    }
+    implementation("org.apache.hadoop:hadoop-client-runtime:${hadoopVersion}") {
+      because "Force Spark's Hadoop dependencies from 3.4.1 to ${hadoopVersion}"
+    }
+    implementation("org.codehaus.janino:janino:3.1.12") {
+      because "Bumping from 3.1.9 (what Spark SQL 4.0.1 depends on) to 3.1.12 to minimize CVEs."
+    }
+  }
+
+  implementation ("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
+    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
+    exclude module: "rocksdbjni"
+  }
+
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:${picocliVersion}"
+
+  // Need this for compilation as it's not an API dependency of the Spark connector.
+  compileOnly "com.marklogic:marklogic-client-api:7.2.0"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
@@ -56,16 +74,23 @@ dependencies {
     exclude group: "com.fasterxml.jackson.datatype"
   }
 
-  implementation "org.apache.hadoop:hadoop-client:${hadoopVersion}"
-
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
 
-  distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
-  distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
+  // Optional dependencies - included in distribution but marked as optional in POM
+  implementation("org.apache.tika:tika-parser-microsoft-module:${tikaVersion}") {
+    // Will be marked as optional in the POM
+  }
+  implementation("org.apache.tika:tika-parser-pdf-module:${tikaVersion}") {
+    // Will be marked as optional in the POM
+  }
 
   // For configuring two-way SSL in tests.
-  testImplementation "com.marklogic:ml-app-deployer:6.0.1"
+  testImplementation ("com.marklogic:ml-app-deployer:6.0.1") {
+    // Prefer Spark's versions of Jackson.
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.dataformat"
+  }
 
   testImplementation ("com.marklogic:marklogic-junit5:1.5.0") {
     // Prefer the one from ml-app-deployer
@@ -83,7 +108,10 @@ dependencies {
   testImplementation "org.postgresql:postgresql:42.7.8"
 
   // Required for compile-time references in the tests to langchain4j classes.
-  testImplementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+  testImplementation ("dev.langchain4j:langchain4j:${langchain4jVersion}") {
+    // Prefer Spark's versions of Jackson.
+    exclude group: "com.fasterxml.jackson.core"
+  }
 
   // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
   // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
@@ -127,14 +155,6 @@ distributions {
       from("..") {
         include "LICENSE"
         include "NOTICE.txt"
-      }
-      // The distributionDependencies configuration allows us to include dependencies that should be part of the Flux
-      // distribution, but not part of the default Flux API set of dependencies.
-      into("lib") {
-        from configurations.distributionDependencies
-        // It's expected to run into duplicates with dependencies already on the runtime classpath, so any duplicates
-        // can safely be excluded.
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
       }
     }
   }
@@ -266,6 +286,7 @@ publishing {
       artifactId = "flux-api"
       version = version
       from components.java
+
       pom {
         name = "${group}:flux-api"
         description = "Flux API for data movement with MarkLogic"
@@ -290,6 +311,18 @@ publishing {
           url = "git@github.com:marklogic/flux.git"
           connection = "scm:git@github.com:marklogic/flux.git"
           developerConnection = "scm:git@github.com:marklogic/flux.git"
+        }
+
+        // Mark some dependencies as optional.
+        // May eventually do this for Azure and AWS dependencies as well.
+        withXml {
+          def dependenciesNode = asNode().dependencies[0]
+          dependenciesNode.dependency.each { dep ->
+            var artifactId = dep.artifactId.text()
+            if (artifactId.startsWith('tika-parser-') || artifactId.equals('spark-avro_2.13')) {
+              dep.appendNode('optional', 'true')
+            }
+          }
         }
       }
     }
