@@ -128,17 +128,6 @@ distributions {
         include "LICENSE"
         include "NOTICE.txt"
       }
-      from("hadoop") {
-        include "hadoop.dll"
-        include "winutils.exe"
-        include "msvcr100.dll"
-        include "msvcr120.dll"
-        into "bin"
-      }
-      from("hadoop") {
-        include "libhadoop.so"
-        into "lib/native"
-      }
       // The distributionDependencies configuration allows us to include dependencies that should be part of the Flux
       // distribution, but not part of the default Flux API set of dependencies.
       into("lib") {
