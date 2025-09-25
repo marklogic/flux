@@ -49,8 +49,8 @@ subprojects {
         details.because "Bumping to 3.4.2 to minimize CVEs."
       }
       if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        details.useVersion '2.17.2'
-        details.because 'Need to match the version used by Spark.'
+        details.useVersion '2.18.2'
+        details.because 'Need to match the version used by Spark 4.0.1.'
       }
       if (details.requested.group.equals("org.slf4j")) {
         details.useVersion "2.0.17"
@@ -75,6 +75,13 @@ subprojects {
 
       // Forcing 3.18.0 to resolve CVEs on earlier versions of commons-lang3.
       force "org.apache.commons:commons-lang3:3.18.0"
+
+      // Forcing Hadoop 3.4.2 to use this to address a medium CVE. This is the latest 9.x version.
+      // It may be possible to exclude this as well as Flux does not use Java web tokens in any way with Hadoop.
+      force "com.nimbusds:nimbus-jose-jwt:9.48"
+
+      // Resolves a medium CVE that comes from json-unit-assertj .
+      force "net.minidev:json-smart:2.5.2"
     }
 
     // Without this exclusion, we have multiple slf4j providers, leading to an ugly warning at the start
