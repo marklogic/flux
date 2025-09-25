@@ -18,7 +18,7 @@ buildscript {
   configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
       if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        details.useVersion '2.17.2'
+        details.useVersion '2.18.2'
         details.because 'Must ensure the Jackson version preferred by Spark is used to avoid classpath conflicts.'
       }
     }
@@ -31,9 +31,8 @@ plugins {
   // Include ml-gradle to verify that it can be used on the buildscript classpath along with flux-api without any
   // class conflicts pertaining to OkHttp or Jackson.
   // Can run "./gradlew mlTestConnections -PmlUsername=admin -PmlPassword=admin -PmlRestPort=8000" to verify that
-  // ml-gradle is able to connect to MarkLogic. This works as of Flux 1.3.0, but had classpath issues with Flux 1.2.x
-  // and earlier.
-  id "com.marklogic.ml-gradle" version "5.0.0"
+  // ml-gradle is able to connect to MarkLogic.
+  id "com.marklogic.ml-gradle" version "6.0.1"
 }
 
 repositories {
@@ -48,7 +47,7 @@ dependencies {
 
 /**
  * Demonstrates how a custom program can be written that depends on the "flux-api" and "flux-embedding-model-minilm"
- * dependencies. Requires Java 17 and use of the Gradle "java" plugin.
+ * dependencies. Requires use of the Gradle "java" plugin.
  */
 tasks.register("runCustomProgram", JavaExec) {
   mainClass = "org.example.CustomProgram"
@@ -60,8 +59,8 @@ tasks.register("runCustomProgram", JavaExec) {
 
 /**
  * Demonstrates how Flux can be invoked via its public "Main" class, passing in command line options. This depends
- * on the "flux-api" dependency but uses the "Main" class instead of the Flux API interface. Requires Java 17
- * and use of the Gradle "java" plugin.
+ * on the "flux-api" dependency but uses the "Main" class instead of the Flux API interface. Requires use of the Gradle
+ * "java" plugin.
  */
 tasks.register("runFluxMain", JavaExec) {
   description = "Demonstrates invoking Flux via its main class, allowing for CLI options to be passed to it."
@@ -84,7 +83,6 @@ tasks.register("runFluxMain", JavaExec) {
  * depends on the "flux-api" dependency being added to the Gradle buildscript classpath, as shown at the top of this
  * file. It also depends on the "org.gradle.jvmargs" option in this project's "gradle.properties" file which sets the
  * required "add-exports" options. The benefit of this approach is avoiding the need to create a separate Java class.
- * Requires Java 11 or 17 to run.
  */
 tasks.register("runCustomTask") {
   doLast {
