@@ -24,7 +24,7 @@ class OverrideSparkConfTest extends AbstractTest {
             "--preview", "1"
         );
 
-        assertTrue(stderr.contains("The value of spark.sql.orc.impl"),
+        assertTrue(stderr.contains("INVALID_CONF_VALUE.OUT_OF_RANGE_OF_OPTIONS"),
             "This test confirms that the -C option works by passing in an invalid configuration value and " +
                 "verifying that the command fails with an error message from the Spark ORC data source; " +
                 "actual stderr: " + stderr);
