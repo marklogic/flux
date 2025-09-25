@@ -76,13 +76,14 @@ subprojects {
       // Forcing 3.18.0 to resolve CVEs on earlier versions of commons-lang3.
       force "org.apache.commons:commons-lang3:3.18.0"
 
-      // Forcing Hadoop 3.4.2 to use this to address a medium CVE. This is the latest 9.x version.
-      // It may be possible to exclude this as well as Flux does not use Java web tokens in any way with Hadoop.
-      force "com.nimbusds:nimbus-jose-jwt:9.48"
-
       // Resolves a medium CVE that comes from json-unit-assertj .
       force "net.minidev:json-smart:2.5.2"
     }
+
+    // Excluding the nimbus-jose-jwt dependency that comes in via hadoop-auth. Hadoop 3.4.2 depends on 9.x, which has a
+    // medium CVE that is addressed in 10.x. But it is only used for JWT auth with Hadoop, which Flux will never expose
+    // to a user.
+    exclude group: "com.nimbusds", module: "nimbus-jose-jwt"
 
     // Without this exclusion, we have multiple slf4j providers, leading to an ugly warning at the start
     // of each Flux execution.
