@@ -6,7 +6,7 @@ package com.marklogic.flux.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import org.jdom2.Namespace;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SplitWithApiTest extends AbstractJava17Test {
+class SplitWithApiTest extends AbstractTest {
 
     @Test
     void splitXml() {

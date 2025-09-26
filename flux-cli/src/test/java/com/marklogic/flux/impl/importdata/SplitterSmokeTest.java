@@ -4,14 +4,14 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SplitterSmokeTest extends AbstractJava17Test {
+class SplitterSmokeTest extends AbstractTest {
 
     @Test
     void aggregateJsonFiles() {
