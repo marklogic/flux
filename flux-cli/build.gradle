@@ -30,6 +30,9 @@ dependencies {
     implementation("org.codehaus.janino:janino:3.1.12") {
       because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview1 depends on) to 3.1.12 to eliminate CVEs."
     }
+    implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
+      because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
+    }
     // Not yet defining constraints for io.netty, as doing so would require several separate modules to be defined
     // here. The hope is that the 4.1.0 final release will use the latest patch version of io.netty and thus no
     // constraints or top-level resolution strategies will be needed.
