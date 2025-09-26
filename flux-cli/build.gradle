@@ -28,8 +28,11 @@ dependencies {
       because "Force Spark's Hadoop dependencies from 3.4.1 to ${hadoopVersion}"
     }
     implementation("org.codehaus.janino:janino:3.1.12") {
-      because "Bumping from 3.1.9 (what Spark SQL 4.0.1 depends on) to 3.1.12 to minimize CVEs."
+      because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview1 depends on) to 3.1.12 to eliminate CVEs."
     }
+    // Not yet defining constraints for io.netty, as doing so would require several separate modules to be defined
+    // here. The hope is that the 4.1.0 final release will use the latest patch version of io.netty and thus no
+    // constraints or top-level resolution strategies will be needed.
   }
 
   implementation ("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
