@@ -5,11 +5,11 @@ package com.marklogic.flux.tde;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 
 import java.util.Properties;
 
-abstract class AbstractTdeTest extends AbstractJava17Test {
+abstract class AbstractTdeTest extends AbstractTest {
 
     protected final void verifyTdeCanBeLoaded(TdeTemplate template) {
         Properties props = loadTestProperties();

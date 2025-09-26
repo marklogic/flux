@@ -6,8 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.marklogic.flux.AbstractFluxTest;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ImportFilesWithEmbedderTest extends AbstractJava17Test {
+class ImportFilesWithEmbedderTest extends AbstractTest {
 
     @Test
     void minilm() {
@@ -24,7 +23,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
@@ -44,7 +43,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
@@ -64,7 +63,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
@@ -84,7 +83,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-template", "/top-chunks-test.json",
             "--embedder", "minilm",
             "--embedder-chunks-json-pointer", "",
@@ -108,7 +107,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "azure",
@@ -125,7 +124,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "not.valid.class"
