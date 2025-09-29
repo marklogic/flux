@@ -148,17 +148,21 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // Our connector exceptions are expected to be helpful and friendly to the user.
             throw connectorException;
         }
+        
         if (ex instanceof FluxException fluxException) {
             throw fluxException;
         }
-        if (ex instanceof SparkException && ex.getCause() != null) {
-            if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
+
+        final Throwable cause = ex.getCause();
+        if (ex instanceof SparkException && cause != null) {
+            final Throwable nestedCause = cause.getCause();
+            if (cause instanceof SparkException && nestedCause != null) {
                 // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
                 // wrapped SparkException that has a more useful error
-                throw new FluxException(ex.getCause().getCause());
+                throw new FluxException(nestedCause);
             }
             // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
-            throw new FluxException(ex.getCause());
+            throw new FluxException(cause);
         }
 
         // Generally, the message for an IllegalArgumentException is user-friendly, so we don't need to include
