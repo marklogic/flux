@@ -54,7 +54,7 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
         );
 
         XmlNode doc = readXmlDocument("/java-client-intro.json-chunks-1.xml");
-        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/embedding");
+        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/vec:embedding");
     }
 
     @Test

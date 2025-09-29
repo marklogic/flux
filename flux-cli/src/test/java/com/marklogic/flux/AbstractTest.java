@@ -105,7 +105,11 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
     @Override
     protected XmlNode readXmlDocument(String uri) {
         // Registering commonly-used namespaces in tests.
-        return super.readXmlDocument(uri, Namespace.getNamespace("model", "http://marklogic.com/appservices/model"), Namespace.getNamespace("ex", "org:example"));
+        return super.readXmlDocument(uri,
+            Namespace.getNamespace("model", "http://marklogic.com/appservices/model"),
+            Namespace.getNamespace("ex", "org:example"),
+            Namespace.getNamespace("vec", "http://marklogic.com/vector")
+        );
     }
 
     protected final int run(String... args) {
