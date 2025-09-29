@@ -33,6 +33,9 @@ dependencies {
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
     }
+    implementation("org.apache.zookeeper:zookeeper:3.9.4") {
+      because "Addresses CVE-2025-58457; Spark depends on 3.9.3, and the CVE is fixed in 3.9.4."
+    }
     // Not yet defining constraints for io.netty, as doing so would require several separate modules to be defined
     // here. The hope is that the 4.1.0 final release will use the latest patch version of io.netty and thus no
     // constraints or top-level resolution strategies will be needed.
