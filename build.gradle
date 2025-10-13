@@ -24,7 +24,7 @@ subprojects {
   }
 
   // Allows for quickly identifying compiler warnings.
-  tasks.withType(JavaCompile) {
+  tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
     options.deprecation = true
     options.warnings = true
@@ -42,7 +42,7 @@ subprojects {
     }
   }
 
-  configurations.all {
+  configurations.configureEach {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
       // Defining this rule for io.netty here so that it affects both flux-cli and flux-embedding-model-azure-open-ai.
       if (details.requested.group.equals("io.netty") and details.requested.version.startsWith("4.1.")) {
