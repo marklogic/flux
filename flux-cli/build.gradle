@@ -50,7 +50,7 @@ dependencies {
   implementation "info.picocli:picocli:${picocliVersion}"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
-  compileOnly "com.marklogic:marklogic-client-api:8.0-SNAPSHOT"
+  compileOnly "com.marklogic:marklogic-client-api:8.0.0"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
@@ -94,9 +94,9 @@ dependencies {
     // Will be marked as optional in the POM
   }
 
-  // Ensuring 8.0-SNAPSHOT is used on the test classpath.
+  // Ensuring 8.0.0 is used on the test classpath.
   // Can remove this once marklogic-junit5 is upgraded to use Java Client 8.0.
-  testImplementation ("com.marklogic:marklogic-client-api:8.0-SNAPSHOT") {
+  testImplementation ("com.marklogic:marklogic-client-api:8.0.0") {
     // Need to use the versions of Jackson preferred by Spark.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"

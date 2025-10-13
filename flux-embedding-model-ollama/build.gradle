@@ -19,14 +19,10 @@ dependencies {
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
   testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.5.18"
+  testImplementation "ch.qos.logback:logback-classic:1.5.19"
 }
 
 shadowJar {
-  // Avoids conflict with Spark's OkHttp.
-  relocate "okhttp3", "com.marklogic.flux.okhttp3"
-  relocate "okio", "com.marklogic.flux.okio"
-
   // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
   dependencies {
     exclude {
