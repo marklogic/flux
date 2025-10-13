@@ -144,7 +144,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     private void handleException(Exception ex) {
-        if (ex.getCause() instanceof ConnectorException connectorException) {
+        final Throwable cause = ex.getCause();
+        if (cause instanceof ConnectorException connectorException) {
             // Our connector exceptions are expected to be helpful and friendly to the user.
             throw connectorException;
         }
@@ -153,7 +154,6 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             throw fluxException;
         }
 
-        final Throwable cause = ex.getCause();
         if (ex instanceof SparkException && cause != null) {
             final Throwable nestedCause = cause.getCause();
             if (cause instanceof SparkException && nestedCause != null) {
