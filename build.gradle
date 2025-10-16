@@ -36,7 +36,11 @@ subprojects {
 
   repositories {
     mavenCentral()
+
+    // For ease of development when modifying the Spark connector.
     mavenLocal()
+
+    // For temporary dependencies on internal snapshots.
     maven {
       url = "https://bed-artifactory.bedford.progress.com:443/artifactory/ml-maven-snapshots/"
     }
