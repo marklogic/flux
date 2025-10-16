@@ -103,25 +103,19 @@ dependencies {
   }
 
   // For configuring two-way SSL in tests.
-  testImplementation ("com.marklogic:ml-app-deployer:6.0.1") {
+  testImplementation ("com.marklogic:ml-app-deployer:6.1.0") {
     // Prefer Spark's versions of Jackson.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
-
-    // Use the one from the Spark connector
-    exclude module: "marklogic-client-api"
   }
 
-  testImplementation ("com.marklogic:marklogic-junit5:1.5.0") {
-    // Prefer the one from ml-app-deployer
-    exclude module: "ml-javaclient-util"
+  // Automatic loading of test framework implementation dependencies is deprecated.
+  // https://docs.gradle.org/current/userguide/upgrading_version_8.html#test_framework_implementation_dependencies
+  // Without this, once using JUnit 5.12 or higher, Gradle will not find any tests and report an error of:
+  // org.junit.platform.commons.JUnitException: TestEngine with ID 'junit-jupiter' failed to discover tests
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.0"
 
-    // Use the Spring dependencies from ml-app-deployer 6 to avoid vulnerabilities in Spring 5.
-    exclude group: "org.springframework"
-  }
-
-  // marklogic-junit5 still needs spring-test, but we want the 6 version to minimize vulnerabilities.
-  testImplementation "org.springframework:spring-test:6.2.11"
+  testImplementation "com.marklogic:marklogic-junit5:2.0-SNAPSHOT"
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:6.2.11"
