@@ -10,6 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Note for future reference - picocli supports env vars - see https://picocli.info/#_custom_variables - but when
+ * using an expression like this: ${env:MARKLOGIC_CLIENT_HOST:-${sys:marklogic.client.host:}}, and neither is populated,
+ * picocli will return the literal string "null", which seems like a picocli bug.
+ */
 class ConnectionParamsTest extends AbstractOptionsTest {
 
     /**
