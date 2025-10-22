@@ -20,15 +20,8 @@ configurations {
 
 dependencies {
   constraints {
-    // Ensures the two top-level Hadoop dependencies of Spark will be 3.4.2, which fixes several CVEs found in 3.4.1.
-    implementation("org.apache.hadoop:hadoop-client-api:${hadoopVersion}") {
-      because "Force Spark's Hadoop dependencies from 3.4.1 to ${hadoopVersion}"
-    }
-    implementation("org.apache.hadoop:hadoop-client-runtime:${hadoopVersion}") {
-      because "Force Spark's Hadoop dependencies from 3.4.1 to ${hadoopVersion}"
-    }
     implementation("org.codehaus.janino:janino:3.1.12") {
-      because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview1 depends on) to 3.1.12 to eliminate CVEs."
+      because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview2 depends on) to 3.1.12 to eliminate CVEs."
     }
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
@@ -94,16 +87,8 @@ dependencies {
     // Will be marked as optional in the POM
   }
 
-  // Ensuring 8.0.0 is used on the test classpath.
-  // Can remove this once marklogic-junit5 is upgraded to use Java Client 8.0.
-  testImplementation ("com.marklogic:marklogic-client-api:8.0.0") {
-    // Need to use the versions of Jackson preferred by Spark.
-    exclude group: "com.fasterxml.jackson.core"
-    exclude group: "com.fasterxml.jackson.dataformat"
-  }
-
   // For configuring two-way SSL in tests.
-  testImplementation ("com.marklogic:ml-app-deployer:6.1.0") {
+  testImplementation ("com.marklogic:ml-app-deployer:6.2-SNAPSHOT") {
     // Prefer Spark's versions of Jackson.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -118,7 +103,7 @@ dependencies {
   testImplementation "com.marklogic:marklogic-junit5:2.0-SNAPSHOT"
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
-  testImplementation "org.springframework:spring-jdbc:6.2.11"
+  testImplementation "org.springframework:spring-jdbc:6.2.12"
   testImplementation "org.postgresql:postgresql:42.7.8"
 
   // Required for compile-time references in the tests to langchain4j classes.

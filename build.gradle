@@ -49,9 +49,9 @@ subprojects {
   configurations.configureEach {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
       // Defining this rule for io.netty here so that it affects both flux-cli and flux-embedding-model-azure-open-ai.
-      if (details.requested.group.equals("io.netty") and details.requested.version.startsWith("4.1.")) {
-        details.useVersion "4.1.127.Final"
-        details.because "Bumping from 4.1.122 (what Spark SQL 4.1.0-preview1 depends on) to 4.1.127 to eliminate CVEs."
+      if (details.requested.group.equals("io.netty") and details.requested.version.startsWith("4.1.1")) {
+        details.useVersion "4.1.128.Final"
+        details.because "Bumping from 4.1.127 (what Spark SQL 4.1.0-preview2 depends on) to eliminate CVEs."
       }
     }
   }
