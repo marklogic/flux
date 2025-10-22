@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.copy;
 
+import com.marklogic.flux.cli.Main;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.flux.impl.importdata.WriteDocumentParams;
 import com.marklogic.spark.Options;
@@ -10,8 +11,12 @@ import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CopyOptionsTest extends AbstractOptionsTest {
 
@@ -206,5 +211,52 @@ class CopyOptionsTest extends AbstractOptionsTest {
             }
         }
         return count;
+    }
+
+    @Test
+    void getOptionNames() {
+        List<String> expectedOptions = List.of(
+            "--output-connection-string", "--output-host", "--output-port", "--output-base-path",
+            "--output-database", "--output-connection-type", "--output-auth-type", "--output-username",
+            "--output-password", "--output-certificate-file", "--output-certificate-password",
+            "--output-cloud-api-key", "--output-kerberos-principal", "--output-saml-token",
+            "--output-oauth-token", "--output-ssl-protocol", "--output-ssl-hostname-verifier",
+            "--output-keystore-path", "--output-keystore-password", "--output-keystore-type",
+            "--output-keystore-algorithm", "--output-truststore-path", "--output-truststore-password",
+            "--output-truststore-type", "--output-truststore-algorithm"
+        );
+
+        List<String> actualOptions = Main.getOutputConnectionOptionNames();
+
+        assertEquals(expectedOptions.size(), actualOptions.size(),
+            "Expected " + expectedOptions.size() + " output connection option names");
+        
+        assertTrue(actualOptions.containsAll(expectedOptions),
+            "Missing options: " + expectedOptions.stream()
+                .filter(opt -> !actualOptions.contains(opt))
+                .toList());
+    }
+
+    @Test
+    void systemProperties() {
+        Map<String, String> systemProps = new HashMap<>();
+
+        // For a flux-box prototype, only supporting this for now. May add all the output options later.
+        systemProps.put("marklogic.client.output.connectionString", "user:password@output:8000");
+
+        try {
+            systemProps.forEach(System::setProperty);
+
+            CopyCommand command = (CopyCommand) getCommand("copy",
+                "--connection-string", "test:test@host:8000"
+            );
+
+            assertOptions(
+                command.makeOutputConnectionOptions(),
+                Options.CLIENT_URI, "user:password@output:8000"
+            );
+        } finally {
+            systemProps.keySet().forEach(System::clearProperty);
+        }
     }
 }

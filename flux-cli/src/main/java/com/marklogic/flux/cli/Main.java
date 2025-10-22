@@ -3,11 +3,9 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.Command;
-import com.marklogic.flux.impl.SparkUtil;
-import com.marklogic.flux.impl.VersionCommand;
+import com.marklogic.flux.impl.*;
 import com.marklogic.flux.impl.copy.CopyCommand;
+import com.marklogic.flux.impl.copy.OutputConnectionParams;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
 import com.marklogic.flux.impl.custom.CustomImportCommand;
@@ -22,6 +20,7 @@ import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
@@ -284,5 +283,21 @@ public class Main {
         stderr.println(String.format("To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option " +
             "or consult the Flux documentation at https://marklogic.github.io/flux/ for " +
             "information on configuring your database to support point-in-time queries."));
+    }
+
+    /**
+     * @return list of connection option names like "--host", "--port", etc.
+     * @since 2.0.0
+     */
+    public static List<String> getConnectionOptionNames() {
+        return ConnectionParams.getOptionNames();
+    }
+
+    /**
+     * @return list of output connection option names like "--output-host", "--output-port", etc.
+     * @since 2.0.0
+     */
+    public static List<String> getOutputConnectionOptionNames() {
+        return OutputConnectionParams.getOptionNames();
     }
 }

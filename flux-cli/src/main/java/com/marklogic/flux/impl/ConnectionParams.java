@@ -8,6 +8,9 @@ import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
 import picocli.CommandLine;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     @Override
@@ -308,5 +311,15 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;
         return this;
+    }
+
+    /**
+     * Returns all option names defined by @Option annotations in this class.
+     */
+    public static List<String> getOptionNames() {
+        return Arrays.stream(ConnectionParams.class.getDeclaredMethods())
+            .filter(method -> method.isAnnotationPresent(CommandLine.Option.class))
+            .map(method -> method.getAnnotation(CommandLine.Option.class).names()[0])
+            .toList();
     }
 }
