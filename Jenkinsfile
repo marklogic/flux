@@ -3,39 +3,37 @@
 def runtests(){
   cleanupDocker()
   sh label:'mlsetup', script: '''#!/bin/bash
-          cd $WORKSPACE/flux;
-          sudo /usr/local/sbin/mladmin stop;
-          sudo /usr/local/sbin/mladmin remove;
-          mkdir -p $WORKSPACE/flux/docker/sonarqube;
-          MARKLOGIC_LOGS_VOLUME=/tmp docker-compose up -d --build;
-          sleep 30s;
-          curl "http://localhost:8008/api/pull" -d '{"model":"all-minilm"}'
-        '''
-  script{
-    timeout(time: 60, unit: 'SECONDS') {
-      waitUntil(initialRecurrencePeriod: 20000) {
-        try{
-          sh 'curl  --anyauth --user admin:admin -X GET http://localhost:8000/v1/ping'
-            return true
-        }catch(exception){
-             return false
-        }
-      }
-    }
-  }
+    cd $WORKSPACE/flux;
+    sudo /usr/local/sbin/mladmin stop;
+    sudo /usr/local/sbin/mladmin remove;
+    mkdir -p $WORKSPACE/flux/docker/sonarqube;
+    MARKLOGIC_LOGS_VOLUME=/tmp docker-compose up -d --build;
+  '''
+
   // 'set -e' causes the script to fail if any command fails.
-  sh label:'runtests', script: '''#!/bin/bash
+  sh label:'deploy-test-app', script: '''#!/bin/bash
     set -e
     export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
     export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
-    export PATH=$JAVA_HOME/bin:$GRADLE_USER_HOME:$PATH;
+    export PATH=$JAVA_HOME/bin:$PATH;
+
     cd $WORKSPACE/flux;
+    ./gradlew -i mlWaitTillReady
+    ./gradlew mlTestConnections
     ./gradlew -i  mlDeploy;
+
     wget https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip;
     unzip dvdrental.zip -d docker/postgres/ ;
     docker exec -i docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABASE dvdrental";
     docker exec -i docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar;
-    cd $WORKSPACE/flux/;
+    curl "http://localhost:8008/api/pull" -d '{"model":"all-minilm"}'
+  '''
+
+  sh label:'runtests', script: '''#!/bin/bash
+    export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
+    export GRADLE_USER_HOME=$WORKSPACE$GRADLE_DIR;
+    export PATH=$JAVA_HOME/bin:$PATH;
+    cd $WORKSPACE/flux;
     ./gradlew --refresh-dependencies clean testCodeCoverageReport || true;
   '''
   junit '**/*.xml'
