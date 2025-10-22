@@ -3,12 +3,17 @@
  */
 package com.marklogic.flux.impl;
 
+import com.marklogic.flux.cli.Main;
 import com.marklogic.flux.impl.importdata.ImportFilesCommand;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Note for future reference - picocli supports env vars - see https://picocli.info/#_custom_variables - but when
@@ -152,5 +157,26 @@ class ConnectionParamsTest extends AbstractOptionsTest {
             "spark.marklogic.client.ssl.truststore.type", "PKCS",
             "spark.marklogic.client.ssl.truststore.algorithm", "SunX510"
         );
+    }
+
+    @Test
+    void getOptionNames() {
+        List<String> expectedOptions = List.of(
+            "--connection-string", "--host", "--port", "--base-path", "--database",
+            "--connection-type", "--disable-gzipped-responses", "--auth-type", "--username", "--password",
+            "--certificate-file", "--certificate-password", "--cloud-api-key", "--kerberos-principal",
+            "--saml-token", "--oauth-token", "--ssl-protocol", "--ssl-hostname-verifier",
+            "--keystore-path", "--keystore-password", "--keystore-type", "--keystore-algorithm",
+            "--truststore-path", "--truststore-password", "--truststore-type", "--truststore-algorithm"
+        );
+
+        List<String> actualOptions = Main.getConnectionOptionNames();
+
+        assertEquals(expectedOptions.size(), actualOptions.size(),
+            "Expected " + expectedOptions.size() + " connection option names");
+        assertTrue(actualOptions.containsAll(expectedOptions),
+            "Missing options: " + expectedOptions.stream()
+                .filter(opt -> !actualOptions.contains(opt))
+                .toList());
     }
 }
