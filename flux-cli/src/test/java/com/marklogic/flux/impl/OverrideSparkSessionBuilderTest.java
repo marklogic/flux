@@ -10,6 +10,19 @@ import picocli.CommandLine;
 class OverrideSparkSessionBuilderTest extends AbstractTest {
 
     @Test
+    void hello() {
+        run(
+            "export-files",
+            "--host", "changeme",
+            "--path", "temp",
+            "--base-path", "/ml/ml12/default/ragplus",
+            "--auth-type", "cloud",
+            "--cloud-api-key", "-Bsomething",
+            "--count"
+        );
+    }
+
+    @Test
     void validBuilderOption() {
         run(
             "import-files",
@@ -22,7 +35,7 @@ class OverrideSparkSessionBuilderTest extends AbstractTest {
 
         assertCollectionSize("files", 4);
     }
-    
+
     @Test
     void invalidBuilderOption() {
         run(
