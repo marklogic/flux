@@ -112,7 +112,7 @@ The following shows an example of each option:
 --permissions my-reader-role,read,my-writer-role,update \
 --temporal-collection my-temporal-data \
 -Mmeta1=value1 -Mmeta2=value2 \
--Rprop1=value1 -Rprop2-value 
+-Rprop1=value1 -Rprop2=value 
 ```
 
 ## Building a RAG data pipeline
