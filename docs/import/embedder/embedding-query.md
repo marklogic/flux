@@ -23,8 +23,8 @@ on the embeddings.
 ## Setup
 
 If you would like to try these examples yourself, you'll need access to an instance of
-[MarkLogic 12.0 EA1](https://docs.marklogic.com/12.0/guide/release-notes/en/release-notes.html) or later. Version 
-12.0 EA1 is the first version of MarkLogic to support vector queries. 
+[MarkLogic 12.0](https://docs.progress.com/bundle/marklogic-server-whats-new-12/page/topics/release-notes.html) or later. Version 
+12.0 is the first version of MarkLogic to support vector queries. 
 
 Additionally, you'll need to deploy the Getting Started example application to the MarkLogic instance per the 
 instructions in the [Getting Started guide](../../getting-started.md).
@@ -128,7 +128,7 @@ op.fromSearchDocs(cts.andQuery([
   .orderBy("score")
   .limit(20)
   .bind(op.as("chunkEmbedding", op.vec.vector(op.xpath("doc", "/chunks/embedding"))))
-  .bind(op.as("similarity", op.vec.cosineSimilarity(op.col("chunkEmbedding"), op.vec.vector(vector))))
+  .bind(op.as("similarity", op.vec.cosine(op.col("chunkEmbedding"), op.vec.vector(vector))))
   .orderBy(op.desc("similarity"))
   .limit(10)
   .bind(op.as("chunkText", op.xpath("doc", "/chunks/text")))
@@ -167,7 +167,7 @@ can greatly increase the quality of responses.
 
 ## Querying with a view
 
-As shown in the [MarkLogic documentation for vector queries](https://docs.marklogic.com/12.0/guide/release-notes/en/new-features-in-marklogic-12-0-ea1/native-vector-support.html), 
+As shown in the [MarkLogic documentation for vector queries](https://docs.progress.com/bundle/marklogic-server-get-started-optic-12/page/topics/building-vector-queries.html), 
 you may instead wish to project chunks as rows via a [MarkLogic TDE template](https://docs.marklogic.com/guide/app-dev/TDE).
 You can then use an Optic query to first select documents via a search, and then join chunk rows to access their embeddings. 
 
@@ -290,7 +290,7 @@ op.fromSearchDocs(cts.andQuery([
     op.fromView("example", "chunks", "", op.fragmentIdCol("chunkFragmentId")),
     op.on(op.fragmentIdCol("fragmentId"), op.fragmentIdCol("chunkFragmentId"))
   )
-  .bind(op.as("similarity", op.vec.cosineSimilarity(op.col("embedding"), op.vec.vector(vector))))
+  .bind(op.as("similarity", op.vec.cosine(op.col("embedding"), op.vec.vector(vector))))
   .orderBy(op.desc("similarity"))
   .limit(10)
   .select(["uri", "text"])
