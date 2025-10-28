@@ -191,7 +191,8 @@ To connect to Progress Data Cloud (PDC), you must set at least the following opt
 --host your-pdc-host-name \
 --port 443 \
 --auth-type cloud \
---cloud-api-key your-key-goes-here
+--cloud-api-key your-key-goes-here \
+--base-path your-integration-endpoint
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -199,16 +200,31 @@ To connect to Progress Data Cloud (PDC), you must set at least the following opt
 --host your-pdc-host-name ^
 --port 443 ^
 --auth-type cloud ^
---cloud-api-key your-key-goes-here
+--cloud-api-key your-key-goes-here ^
+--base-path your-integration-endpoint
 ```
 {% endtab %}
 {% endtabs %}
 
-You will most likely need to configure the `--base-path` option with the name of a path that proxies to a REST API
-app server in your PDC instance - e.g. `--base-path /ml/dev/ml/app-services`. 
-Please check your PDC portal page for more information. 
+The value of `--cloud-api-key` is an API key that you have generated in your PDC tenancy. Please see the 
+[PDC documentation on API keys](https://docs.progress.com/bundle/progress-data-cloud-use/page/topics/account-settings/manage-api-key.html)
+for more information.
 
-By default, Flux will use your JVM's default keystore and truststore for establishing an SSL connection to PDC. See 
+The value of `--base-path` is an "integration endpoint" that you have configured in your PDC tenancy. The integration endpoint 
+must map to a MarkLogic REST API app server. While you can 
+[manually create a REST API app server](https://docs.progress.com/bundle/marklogic-server-develop-rest-api-12/page/topics/service.html#id_12021), 
+it is recommended to [use ml-gradle](https://github.com/marklogic/ml-gradle/wiki) 
+to deploy a complete application to PDC instead, which will include a REST API app server. 
+
+Once you have a REST API app server in your PDC tenancy, please see the 
+[PDC documentation on integration endpoints](https://docs.progress.com/bundle/progress-data-cloud-use/page/topics/access-your-services/marklogic/expose-an-app-server.html) 
+for instructions on configuring an integration endpoint that will proxy requests to your REST API app server. The integration 
+endpoint you configure will then be the value of the `--base-path` option. For example, if your integration endpoint is 
+"/ml/ml12/default/my-server", you would include the following option:
+
+    --base-path /ml/ml12/default/my-server
+
+By default, Flux will use your JVM's default keystore and truststore for establishing a secure connection to PDC. See 
 the following sections for options on how to configure the SSL connection.
 
 ### Configuring one-way SSL
