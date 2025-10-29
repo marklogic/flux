@@ -42,9 +42,9 @@ public class CommonParams {
     private String sparkMasterUrl;
 
     @CommandLine.Option(
-        names = "-C",
+        names = {"--spark-conf"},
         description = "Specify any key and value to be added to the Spark runtime configuration before a Spark session is built" +
-            "; %ne.g. -Cspark.logConf=true or -Cspark.io.encryption.enabled=true . "
+            "; %ne.g. --spark-conf spark.logConf=true or --spark-conf spark.io.encryption.enabled=true . "
     )
     private Map<String, String> sparkConfigurationProperties = new HashMap<>();
 

@@ -57,7 +57,7 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
             names = "-P",
             description = "Specify any Spark Parquet data source option defined at " +
                 "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
-                "Spark configuration options must be defined via '-C'."
+                "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

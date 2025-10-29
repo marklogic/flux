@@ -132,5 +132,5 @@ The `import-orc-files` command reuses Spark's support for reading ORC files. You
 the [Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `-P` option
 to control how ORC content is read. These options are expressed as `-PoptionName=optionValue`.
 
-For the configuration options listed in the above Spark ORC guide, use the `-C` option instead. For example, 
-`-Cspark.sql.orc.filterPushdown=false` would configure Spark ORC to not push down filters.
+For the configuration options listed in the above Spark ORC guide, use the `--spark-conf` option instead. For example, 
+`--spark-conf spark.sql.orc.filterPushdown=false` would configure Spark ORC to not push down filters.

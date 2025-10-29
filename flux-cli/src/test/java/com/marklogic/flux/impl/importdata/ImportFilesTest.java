@@ -179,6 +179,20 @@ class ImportFilesTest extends AbstractTest {
     }
 
     @Test
+    void zipTestWithOtherOption() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "-vfiles",
+            "--compression", "zip"
+        );
+
+        assertCollectionSize("-vfiles", 3);
+    }
+
+    @Test
     void zipTest() {
         run(
             "import-files",
