@@ -26,8 +26,8 @@ class ImportOrcFilesTest extends AbstractTest {
             "--batch-size", "5",
             "--log-progress", "5",
 
-            // Including this to ensure a valid -C option doesn't cause an error.
-            "-Cspark.sql.orc.filterPushdown=false"
+            // Including this to ensure a valid --spark-conf option doesn't cause an error.
+            "--spark-conf", "spark.sql.orc.filterPushdown=false"
         );
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);
@@ -116,7 +116,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--path", "src/test/resources/orc-files",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "-Cspark.sql.parquet.filterPushdown=invalid-value"
+            "--spark-conf", "spark.sql.parquet.filterPushdown=invalid-value"
         );
 
         assertTrue(stderr.contains("INVALID_CONF_VALUE.TYPE_MISMATCH"),

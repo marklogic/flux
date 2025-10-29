@@ -128,8 +128,8 @@ You can include any of the
 [Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `-P` option to
 control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
 
-For configuration options listed in the above Spark Avro guide, use the `-C` option instead. For example,
-`-Cspark.sql.avro.compression.codec=deflate` would change the type of compression used for writing Avro files.
+For configuration options listed in the above Spark Avro guide, use the `--spark-conf` option instead. For example,
+`--spark-conf spark.sql.avro.compression.codec=deflate` would change the type of compression used for writing Avro files.
 
 ### Delimited text
 
@@ -272,8 +272,8 @@ This command reuses Spark's support for writing ORC files. You can include any o
 [Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `-P` option to
 control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
 
-For configuration options listed in the above Spark ORC guide, use the `-C` option instead. For example,
-`-Cspark.sql.orc.impl=hive` would change the type of ORC implementation.
+For configuration options listed in the above Spark ORC guide, use the `--spark-conf` option instead. For example,
+`--spark-conf spark.sql.orc.impl=hive` would change the type of ORC implementation.
 
 ### Parquet
 
@@ -302,8 +302,8 @@ This command reuses Spark's support for writing Parquet files. You can include a
 [Spark Parquet data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html) via the `-P` option to
 control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
 
-For configuration options listed in the above Spark Parquet guide, use the `-C` option instead. For example, 
-`-Cspark.sql.parquet.compression.codec=gzip` would change the compressed used for writing Parquet files.
+For configuration options listed in the above Spark Parquet guide, use the `--spark-conf` option instead. For example, 
+`--spark-conf spark.sql.parquet.compression.codec=gzip` would change the compressed used for writing Parquet files.
 
 ## Controlling the save mode
 

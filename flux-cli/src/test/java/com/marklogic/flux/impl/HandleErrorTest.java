@@ -46,8 +46,8 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void badDynamicOption() {
         assertStderrContains(
-            "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue",
-            CommandLine.ExitCode.USAGE, "import-files", "-CnoValue"
+            "Value for option '--spark-conf' (<String=String>) should be in KEY=VALUE format but was noValue",
+            CommandLine.ExitCode.USAGE, "import-files", "--spark-conf", "noValue"
         );
     }
 

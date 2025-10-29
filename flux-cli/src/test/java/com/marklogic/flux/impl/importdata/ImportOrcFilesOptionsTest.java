@@ -19,7 +19,7 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", makeConnectionString(),
             "--path", "/doesnt/matter",
             "-PmergeSchema=true",
-            "-Cspark.sql.parquet.filterPushdown=false",
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 

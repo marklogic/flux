@@ -15,7 +15,7 @@ class SetSparkConfigurationPropertiesTest extends AbstractTest {
     void validSparkConfProperty() {
         run(
             "import-files",
-            "-Cspark.io.encryption.enabled=true",
+            "--spark-conf", "spark.io.encryption.enabled=true",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
@@ -23,7 +23,7 @@ class SetSparkConfigurationPropertiesTest extends AbstractTest {
         );
 
         assertCollectionSize(
-            "The import should succeed because the -C option has a valid Spark configuration property.",
+            "The import should succeed because the --spark-conf option has a valid Spark configuration property.",
             "files", 4);
     }
 
@@ -32,7 +32,7 @@ class SetSparkConfigurationPropertiesTest extends AbstractTest {
         String stderr = runAndReturnStderr(
             CommandLine.ExitCode.SOFTWARE,
             "import-files",
-            "-Cspark.io.encryption.enabled=invalid",
+            "--spark-conf", "spark.io.encryption.enabled=invalid",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,

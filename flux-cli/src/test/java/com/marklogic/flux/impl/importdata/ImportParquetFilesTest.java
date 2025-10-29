@@ -28,8 +28,8 @@ class ImportParquetFilesTest extends AbstractTest {
             "--batch-size", "5",
             "--log-progress", "10",
 
-            // Including this to ensure a valid -C option doesn't cause an error.
-            "-Cspark.sql.parquet.filterPushdown=false"
+            // Including this to ensure a valid --spark-conf option doesn't cause an error.
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false"
         );
 
         assertCollectionSize("parquet-test", 32);
@@ -165,7 +165,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "-Cspark.sql.parquet.filterPushdown=invalid-value"
+            "--spark-conf", "spark.sql.parquet.filterPushdown=invalid-value"
         );
 
         assertTrue(stderr.contains("INVALID_CONF_VALUE.TYPE_MISMATCH"),
