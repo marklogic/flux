@@ -42,18 +42,11 @@ public class CommonParams {
     private String sparkMasterUrl;
 
     @CommandLine.Option(
-        names = "-B",
-        description = "Specify any key and value to be applied when building the underlying Spark Session; " +
-            "%ne e.g. -Bspark.io.encryption.enabled=true . "
-    )
-    private Map<String, String> sparkSessionBuilderParams = new HashMap<>();
-
-    @CommandLine.Option(
         names = "-C",
-        description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true . " +
-            "This only accepts Spark configuration options that can be specified after the Spark session has been built."
+        description = "Specify any key and value to be added to the Spark runtime configuration before a Spark session is built" +
+            "; %ne.g. -Cspark.logConf=true or -Cspark.io.encryption.enabled=true . "
     )
-    private Map<String, String> sparkSessionConfigParams = new HashMap<>();
+    private Map<String, String> sparkConfigurationProperties = new HashMap<>();
 
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit > 0) {
@@ -81,12 +74,8 @@ public class CommonParams {
         return sparkMasterUrl;
     }
 
-    public Map<String, String> getSparkSessionConfigParams() {
-        return sparkSessionConfigParams;
-    }
-
-    public Map<String, String> getSparkSessionBuilderParams() {
-        return sparkSessionBuilderParams;
+    public Map<String, String> getSparkConfigurationProperties() {
+        return sparkConfigurationProperties;
     }
 
     public Preview getPreview() {

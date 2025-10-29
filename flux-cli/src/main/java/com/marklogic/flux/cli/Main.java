@@ -80,7 +80,7 @@ public class Main {
      * Spark can still be used, but this allows for programmatically providing a shared SparkConf in an environment
      * where this class is being invoked multiple times in the same JVM.
      *
-     * @since 1.5.0
+     * @since 2.0.0
      */
     public Main(SparkConf sparkConf) {
         this.sparkConf = sparkConf;
@@ -132,7 +132,7 @@ public class Main {
     }
 
     /**
-     * @since 1.5.0
+     * @since 2.0.0
      */
     public static class CommandContext {
         public final Command command;
@@ -151,7 +151,7 @@ public class Main {
      * @param errWriter optional, can be null
      * @param args
      * @return
-     * @since 1.5.0
+     * @since 2.0.0
      * <p>
      */
     public CommandContext buildCommandContext(PrintWriter outWriter, PrintWriter errWriter, String... args) {
@@ -208,15 +208,15 @@ public class Main {
 
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
-        Map<String, String> sparkSessionBuilderParams = null;
+        Map<String, String> sparkConfigurationProperties = null;
         if (selectedCommand instanceof AbstractCommand) {
             AbstractCommand<?> abstractCommand = (AbstractCommand<?>) selectedCommand;
             masterUrl = abstractCommand.determineSparkMasterUrl();
             if (abstractCommand.getCommonParams() != null) {
-                sparkSessionBuilderParams = abstractCommand.getCommonParams().getSparkSessionBuilderParams();
+                sparkConfigurationProperties = abstractCommand.getCommonParams().getSparkConfigurationProperties();
             }
         }
-        return SparkUtil.buildSparkSession(masterUrl, sparkConf, sparkSessionBuilderParams);
+        return SparkUtil.buildSparkSession(masterUrl, sparkConf, sparkConfigurationProperties);
     }
 
     private void printException(CommandLine.ParseResult parseResult, Exception ex) {

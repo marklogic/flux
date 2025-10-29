@@ -7,33 +7,40 @@ import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
-class OverrideSparkSessionBuilderTest extends AbstractTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SetSparkConfigurationPropertiesTest extends AbstractTest {
 
     @Test
-    void validBuilderOption() {
+    void validSparkConfProperty() {
         run(
             "import-files",
-            "-Bspark.io.encryption.enabled=true",
+            "-Cspark.io.encryption.enabled=true",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files"
         );
 
-        assertCollectionSize("files", 4);
+        assertCollectionSize(
+            "The import should succeed because the -C option has a valid Spark configuration property.",
+            "files", 4);
     }
-    
+
     @Test
-    void invalidBuilderOption() {
-        run(
+    void invalidSparkConfProperty() {
+        String stderr = runAndReturnStderr(
             CommandLine.ExitCode.SOFTWARE,
             "import-files",
-            "-Bspark.io.encryption.enabled=invalid",
+            "-Cspark.io.encryption.enabled=invalid",
             "--path", "src/test/resources/mixed-files/hello*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "files"
         );
+
+        assertTrue(stderr.contains("The value 'invalid' in the config \"spark.io.encryption.enabled\" is invalid"),
+            "Unexpected stderr: " + stderr);
 
         assertCollectionSize("The operation should have failed immediately due to the invalid value for a " +
             "Spark Session builder option", "files", 0);
