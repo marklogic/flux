@@ -24,7 +24,7 @@ public interface SparkUtil {
         return buildSparkSession(null, null, new HashMap<>());
     }
 
-    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkSessionBuilderParams) {
+    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkConfigurationProperties) {
         if (sparkConf == null) {
             if (masterUrl == null || masterUrl.trim().isEmpty()) {
                 masterUrl = "local[*]";
@@ -53,8 +53,8 @@ public interface SparkUtil {
         // ensure Jetty isn't used to start the Spark UI, as there's currently no use case for that when using Flux.
         sparkConf.set("spark.ui.enabled", "false");
 
-        if (sparkSessionBuilderParams != null) {
-            for (Map.Entry<String, String> entry : sparkSessionBuilderParams.entrySet()) {
+        if (sparkConfigurationProperties != null) {
+            for (Map.Entry<String, String> entry : sparkConfigurationProperties.entrySet()) {
                 sparkConf.set(entry.getKey(), entry.getValue());
             }
         }

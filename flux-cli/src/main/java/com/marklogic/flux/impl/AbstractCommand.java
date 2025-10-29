@@ -8,6 +8,7 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkException;
+import org.apache.spark.SparkIllegalArgumentException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +58,6 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public final void execute(SparkSession session) {
         try {
-            commonParams.getSparkSessionConfigParams().entrySet().stream()
-                .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
             if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
                 logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());
             }
@@ -149,7 +148,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
             // Our connector exceptions are expected to be helpful and friendly to the user.
             throw connectorException;
         }
-        
+
         if (ex instanceof FluxException fluxException) {
             throw fluxException;
         }
@@ -168,6 +167,11 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         // Generally, the message for an IllegalArgumentException is user-friendly, so we don't need to include
         // the class name in it like we do below.
         if (ex instanceof IllegalArgumentException) {
+            // If it's a Spark IllegalArgumentException, unwrap it so the user sees the more specific message, as the
+            // outer IllegalArgumentException is often something like "Error while instantiating 'org.apache.spark.sql.internal.SessionStateBuilder'".
+            if (ex.getCause() != null && ex.getCause() instanceof SparkIllegalArgumentException sparkException) {
+                throw new FluxException(sparkException.getMessage(), ex);
+            }
             throw new FluxException(ex.getMessage(), ex);
         }
 
