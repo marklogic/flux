@@ -41,14 +41,14 @@ class OllamaConfigTest {
     void noBaseUrl() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
             apply("model-name", "all-minilm"));
-        assertEquals("Must specify -Ebase-url= for connecting to Ollama.", ex.getMessage());
+        assertEquals("Must specify --embedder-prop base-url= for connecting to Ollama.", ex.getMessage());
     }
 
     @Test
     void noModelName() {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
             apply("base-url", "http://localhost:8008"));
-        assertEquals("Must specify -Emodel-name= for connecting to Ollama.", ex.getMessage());
+        assertEquals("Must specify --embedder-prop model-name= for connecting to Ollama.", ex.getMessage());
     }
 
     private EmbeddingModel apply(String... keysAndValues) {

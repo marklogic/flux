@@ -64,9 +64,9 @@ Each embedding model implementation provided by Flux can have options specified 
 embedding model. Embedding model options are defined via the following option, where `key` is the name of the option 
 and `value` is the value of the option:
 
-    -Ekey=value
+    --embedder-prop key=value
 
-You can use the `-E` option as many times as needed to configure the embedding model. 
+You can use the `--embedder-prop` option as many times as needed to configure the embedding model. 
 
 For the options below that enable logging of requests and responses, you will need to edit the `conf/log4j2.properties`
 file in your Flux installation and change the `logger.langchain4j.level` logger to have a value of `DEBUG`.
@@ -96,17 +96,17 @@ options to be used (the deployment names and endpoints are notional):
 {% tab log Unix %}
 ```
 --embedder azure \
--Eapi-key=changeme \
--Edeployment-name=text-test-embedding-ada-002 \
--Eendpoint=https://gpt-testing.openai.azure.com
+--embedder-prop api-key=changeme \
+--embedder-prop deployment-name=text-test-embedding-ada-002 \
+--embedder-prop endpoint=https://gpt-testing.openai.azure.com
 ```
 {% endtab %}
 {% tab log Windows %}
 ```
 --embedder azure ^
--Eapi-key=changeme ^
--Edeployment-name=text-test-embedding-ada-002 ^
--Eendpoint=https://gpt-testing.openai.azure.com
+--embedder-prop api-key=changeme ^
+--embedder-prop deployment-name=text-test-embedding-ada-002 ^
+--embedder-prop endpoint=https://gpt-testing.openai.azure.com
 ```
 {% endtab %}
 {% endtabs %}
@@ -139,15 +139,15 @@ have notional values:
 {% tab log Unix %}
 ```
 --embedder ollama \
--Ebase-url=http://localhost:11434 \
--Emodel-name=llama3.2
+--embedder-prop base-url=http://localhost:11434 \
+--embedder-prop model-name=llama3.2
 ```
 {% endtab %}
 {% tab log Windows %}
 ```
 --embedder ollama ^
--Ebase-url=http://localhost:11434 ^
--Emodel-name=llama3.2
+--embedder-prop base-url=http://localhost:11434 ^
+--embedder-prop model-name=llama3.2
 ```
 {% endtab %}
 {% endtabs %}
@@ -220,13 +220,14 @@ that this expression is relative to each element selected by `--embedder-chunks-
     --embedder-text-xpath "path/to/text"
 
 Both of the above expressions can use any number of XML namespace prefixes. Namespace prefixes can be registered via
-the `-X` option with a format of `-Xprefix=namespaceURI`. The `-X` option can be used multiple times. 
+the `--xpath-namespace` option with a format of `--xpath-namespace prefix=namespaceURI`. 
+The `--xpath-namespace` option can be used multiple times. 
 
 For example, to use an option of `--embedder-chunks-xpath /ex1:parent/ex2:chunks`, you would include the following 
 options to define the `ex1` and `ex2` namespace prefixes (the namespace URIs are notional and included only for sake
 of example):
 
-    -Xex1=org:example -Xex2=org:example2
+    --xpath-namespace ex1=org:example --xpath-namespace ex2=org:example2
 
 ## Configuring an embedding location
 
@@ -280,7 +281,7 @@ Consider the following requirements for splitting and adding embeddings to files
 
 The `azure-api-key.txt` will have a single entry:
 
-    -Eapi-key=the-azure-api-key
+    --embedder-prop api-key=the-azure-api-key
 
 The files can be imported with splitting and embedding enabled using the following command (file path and MarkLogic 
 connection string are notional):
@@ -299,8 +300,8 @@ connection string are notional):
     --splitter-sidecar-collections chunks \
     --embedder azure \
     @azure-api-key.txt \
-    -Edeployment-name=text-test-embedding-ada-002 \
-    -Eendpoint=https://gpt-testing.openai.azure.com
+    --embedder-prop deployment-name=text-test-embedding-ada-002 \
+    --embedder-prop endpoint=https://gpt-testing.openai.azure.com
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -316,8 +317,8 @@ bin\flux import-files ^
     --splitter-sidecar-collections chunks ^
     --embedder azure ^
     @azure-api-key.txt ^
-    -Edeployment-name=text-test-embedding-ada-002 ^
-    -Eendpoint=https://gpt-testing.openai.azure.com
+    --embedder-prop deployment-name=text-test-embedding-ada-002 ^
+    --embedder-prop endpoint=https://gpt-testing.openai.azure.com
 ```
 {% endtab %}
 {% endtabs %}

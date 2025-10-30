@@ -21,8 +21,8 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             "--classifier-path", "cls-endpoint",
             "--classifier-api-key", "secret key",
             "--classifier-token-path", "token-endpoint",
-            "-Lthreshold=17",
-            "-LsomethingElse=can-be-anything"
+            "--classifier-prop", "threshold=17",
+            "--classifier-prop", "somethingElse=can-be-anything"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),

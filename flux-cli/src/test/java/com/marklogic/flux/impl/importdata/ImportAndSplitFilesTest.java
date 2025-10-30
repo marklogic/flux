@@ -24,7 +24,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--collections", "files",
             "--uri-replace", ".*/xml-file,''",
             "--splitter-xpath", "/ex:root/ex:text/text()",
-            "-Xex=org:example",
+            "--xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "500",
             "--splitter-max-overlap-size", "100",
             "--stacktrace"
@@ -43,12 +43,12 @@ class ImportAndSplitFilesTest extends AbstractTest {
     @Test
     void invalidNamespaceDeclaration() {
         assertStderrContains(
-            "Value for option '-X' (<String=String>) should be in KEY=VALUE format but was org:example",
+            "Value for option '--xpath-namespace' (<String=String>) should be in KEY=VALUE format but was org:example",
             "import-files",
             "--path", "../flux-cli/src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
             "--splitter-xpath", "/ex:root/ex:text/text()",
-            "-Xorg:example"
+            "--xpath-namespace", "org:example"
         );
     }
 
@@ -132,7 +132,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.CustomSplitter",
             // This also shows how a map param can have an equals symbol in the value; picocli only looks for the first
             // equals symbol to use as a key/value separator.
-            "-StextToReturn=just=testing"
+            "--splitter-prop", "textToReturn=just=testing"
         );
 
         ArrayNode chunks = (ArrayNode) readJsonDocument("/java-client-intro.json").get("chunks");
@@ -159,7 +159,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
         assertStderrContains(
             // This is the default picocli error message for an invalid map option. It's a little technical, but seems
             // reasonable enough for a user to be able to fix their mistake.
-            "Value for option '-S' (<String=String>) should be in KEY=VALUE format but was missing an equals",
+            "Value for option '--splitter-prop' (<String=String>) should be in KEY=VALUE format but was missing an equals",
 
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
@@ -167,7 +167,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
-            "-Smissing an equals"
+            "--splitter-prop", "missing an equals"
         );
     }
 }

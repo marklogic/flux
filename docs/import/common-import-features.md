@@ -102,8 +102,8 @@ Each of the above types of metadata can be configured via the following options:
 | `--collections` | Comma-delimited list of collection names to add to each document. |
 | `--permissions` | Comma-delimited list of MarkLogic role names and capabilities - e.g. `rest-reader,read,rest-writer,update`. |
 | `--temporal-collection` | Name of a MarkLogic temporal collection to assign to each document. |
-| `-Mkey=value` | Key and value to add as a metadata value. Can be specified multiple times. |
-| `-Rkey=value` | Key and value to add as a document property. Can be specified multiple times. |
+| `--doc-metadata key=value` | Key and value to add as a metadata value. Can be specified multiple times. |
+| `--doc-prop key=value` | Key and value to add as a document property. Can be specified multiple times. |
 
 The following shows an example of each option:
 
@@ -111,8 +111,8 @@ The following shows an example of each option:
 --collections employees,imported-data \
 --permissions my-reader-role,read,my-writer-role,update \
 --temporal-collection my-temporal-data \
--Mmeta1=value1 -Mmeta2=value2 \
--Rprop1=value1 -Rprop2=value 
+--doc-metadata meta1=value1 --doc-metadata meta2=value2 \
+--doc-prop prop1=value1 --doc-prop prop2=value 
 ```
 
 ## Building a RAG data pipeline

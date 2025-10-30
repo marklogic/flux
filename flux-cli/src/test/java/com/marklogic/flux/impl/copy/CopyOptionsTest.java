@@ -84,10 +84,10 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-template", "/{example}.xml",
             "--splitter-text",
             "--embedder", "doesnt-matter",
-            "-Mmeta1=value1",
-            "-Mmeta2=value2",
-            "-Rprop1=value1",
-            "-Rprop2=value2"
+            "--output-doc-metadata", "meta1=value1",
+            "--output-doc-metadata", "meta2=value2",
+            "--output-doc-prop", "prop1=value1",
+            "--output-doc-prop", "prop2=value2"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -204,8 +204,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             CommandLine.Option option = field.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 String name = option.names()[0];
-                // The dynamic params can't start with "--output", piccolo requires a single letter.
-                if (name.startsWith("--output") || name.equals("-M") || name.equals("-R")) {
+                if (name.startsWith("--output")) {
                     count++;
                 }
             }
@@ -230,7 +229,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
 
         assertEquals(expectedOptions.size(), actualOptions.size(),
             "Expected " + expectedOptions.size() + " output connection option names");
-        
+
         assertTrue(actualOptions.containsAll(expectedOptions),
             "Missing options: " + expectedOptions.stream()
                 .filter(opt -> !actualOptions.contains(opt))

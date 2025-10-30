@@ -77,15 +77,15 @@ output as the text to be split:
     --splitter-xpath "/root"
 
 When constructing an XPath expression for the value of `--splitter-xpath`, you may need to specify one or more 
-XML namespace prefixes and URIs. You can do so via the `-X` option, where the value is of the 
+XML namespace prefixes and URIs. You can do so via the `--xpath-namespace` option, where the value is of the 
 pattern:
 
-    -Xprefix=URI
+    --xpath-namespace prefix=URI
 
 For example, for an XPath expression of "/ex:root/ex:text", where the "ex" prefix is associated with the namespace 
 "org:example", you would include the following option:
 
-    -Xex=org:example
+    --xpath-namespace ex=org:example
 
 ### Using all the text in a document
 
@@ -181,7 +181,7 @@ to the Flux classpath.
 Finally, to use your custom splitter, use the following command line options:
 
 1. `--splitter-custom-class` must specify the full class name of your splitter implementation - e.g. `org.example.MySplitter`.
-2. Use `-Skey=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
+2. Use `--splitter-prop key=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
 
 ## Configuring how chunks are stored
 
