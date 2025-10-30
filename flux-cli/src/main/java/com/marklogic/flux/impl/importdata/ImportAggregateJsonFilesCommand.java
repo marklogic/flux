@@ -72,9 +72,9 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark JSON option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. -PallowComments=true."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. --spark-prop allowComments=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

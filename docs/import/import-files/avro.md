@@ -123,14 +123,14 @@ queries. See [TDE template generation](../tde-generation.md) for more informatio
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
-specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
+specify a compression option. As noted in the "Advanced options" section below, you can use `--spark-prop compression=` to
 explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically.
 
 ## Advanced options
 
 The `import-avro-files` command reuses Spark's support for reading Avro files. You can include any of
-the [Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `-P` option
-to control how Avro content is read. These options are expressed as `-PoptionName=optionValue`.
+the [Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `--spark-prop` option
+to control how Avro content is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 For the configuration options listed in the above Spark Avro guide, use the `--spark-conf` option instead. For example, 
 `--spark-conf spark.sql.avro.filterPushdown.enabled=false` would configure Spark Avro to not push down filters.

@@ -18,7 +18,7 @@ class ImportAvroFilesOptionsTest extends AbstractOptionsTest {
             "import-avro-files",
             "--connection-string", makeConnectionString(),
             "--path", "/doesnt/matter",
-            "-PdatetimeRebaseMode=CORRECTED",
+            "--spark-prop", "datetimeRebaseMode=CORRECTED",
             "--spark-conf", "spark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );

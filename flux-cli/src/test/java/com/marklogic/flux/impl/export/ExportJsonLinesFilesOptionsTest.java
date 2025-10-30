@@ -20,14 +20,14 @@ class ExportJsonLinesFilesOptionsTest extends AbstractOptionsTest {
             "--query", "anything",
             "--path", "anywhere",
             "--encoding", "UTF-16",
-            "-Pkey=value",
+            "--spark-prop", "key=value",
             "--partitions", "7"
         );
 
         Map<String, String> options = command.getWriteFilesParams().get();
         assertEquals("value", options.get("key"));
         assertEquals("UTF-16", options.get("encoding"), "--encoding is included for consistency with other commands " +
-            "that support a custom encoding, even though a user can also specify it via -Pencoding=");
+            "that support a custom encoding, even though a user can also specify it via --spark-prop encoding=");
 
         assertEquals("local[7]", command.determineSparkMasterUrl());
     }

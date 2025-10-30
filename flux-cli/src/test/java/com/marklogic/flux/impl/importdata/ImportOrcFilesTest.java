@@ -103,7 +103,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "compression-test",
             "--uri-template", "/orc-compressed-test{LastName}.json",
-            "-Pcompression=snappy"
+            "--spark-prop", "compression=snappy"
         );
 
         getUrisInCollection("compression-test", 15).forEach(this::verifyDocContent);

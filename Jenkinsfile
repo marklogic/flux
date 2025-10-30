@@ -19,6 +19,8 @@ def runtests(){
 
     cd $WORKSPACE/flux;
     ./gradlew -i mlWaitTillReady
+    sleep 3
+    ./gradlew -i mlWaitTillReady
     ./gradlew mlTestConnections
     ./gradlew -i  mlDeploy;
 

@@ -29,7 +29,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
 
         Map<String, String> options = command.getReadParams().makeOptions();
         assertEquals("UTF-16", options.get("encoding"), "The --encoding option is a convenience for specifying " +
-            "the Spark JSON option so the user doesn't have to also learn -Pencoding=");
+            "the Spark JSON option so the user doesn't have to also learn --spark-prop encoding=");
     }
 
     @Test

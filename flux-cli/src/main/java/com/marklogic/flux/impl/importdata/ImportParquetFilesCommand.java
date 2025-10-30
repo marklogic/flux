@@ -54,9 +54,9 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark Parquet data source option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. --spark-prop mergeSchema=true. " +
                 "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
