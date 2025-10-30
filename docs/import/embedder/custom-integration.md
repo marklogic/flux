@@ -72,8 +72,8 @@ public class MyEmbeddingModel implements Function<Map<String, String>, Embedding
 ```
 
 The `apply` method must return an instance of the LangChain4j `EmbeddingModel` interface. The method will receive
-a map of options. The map of options is populated via the `-E` option described in the
-"Configuring embedding model options" section in the [embedder usage guide](embedder.md). The `-E` option therefore 
+a map of options. The map of options is populated via the `--embedder-prop` option described in the
+"Configuring embedding model options" section in the [embedder usage guide](embedder.md). The `--embedder-prop` option therefore 
 allows a user to pass any necessary options to your class.
 
 You are then free to implement the `apply` method any way you see fit. The
@@ -98,6 +98,6 @@ been copied to Flux's `./ext` directory, the integration can now be used via the
 
     --embedder "org.example.MyEmbeddingModel"
 
-If your integration accepts options, you can pass them via the `-E` option - for example:
+If your integration accepts options, you can pass them via the `--embedder-prop` option - for example:
 
-    --embedder "org.example.MyEmbeddingModel" -Eoption1=value1 -Eoption2=value2
+    --embedder "org.example.MyEmbeddingModel" --embedder-prop option1=value1 --embedder-prop option2=value2

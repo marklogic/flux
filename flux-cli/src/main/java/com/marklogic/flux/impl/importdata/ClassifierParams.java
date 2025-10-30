@@ -56,7 +56,7 @@ public class ClassifierParams implements ClassifierOptions {
     private Integer batchSize = 20;
 
     @CommandLine.Option(
-        names = "-L",
+        names = "--classifier-prop",
         description = "Specify additional options for configuring the behavior of the classifier service."
     )
     private Map<String, String> additionalOptions = new HashMap<>();

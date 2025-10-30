@@ -70,8 +70,8 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "--splitter-sidecar-max-chunks", "2",
             "--embedder", "ollama",
             "--embedder-prompt", "This is only included to ensure the option doesn't cause an error.",
-            "-Ebase-url=http://localhost:8008",
-            "-Emodel-name=all-minilm"
+            "--embedder-prop", "base-url=http://localhost:8008",
+            "--embedder-prop", "model-name=all-minilm"
         );
 
         verifyChunksHaveEmbeddings();
@@ -111,7 +111,7 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "azure",
-            "-Eapi-key=doesnt-matter"
+            "--embedder-prop", "api-key=doesnt-matter"
         );
     }
 

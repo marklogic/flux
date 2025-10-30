@@ -135,14 +135,14 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String uriTemplate;
 
     @CommandLine.Option(
-        names = {"-M"},
-        description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+        names = {"--doc-metadata"},
+        description = "Specify one or more metadata values to be added to each document; e.g. --doc-metadata param=value ."
     )
     private Map<String, String> metadataValues = new HashMap<>();
 
     @CommandLine.Option(
-        names = {"-R"},
-        description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+        names = {"--doc-prop"},
+        description = "Specify one or more document properties to be added to each document; e.g. --doc-prop param=value ."
     )
     private Map<String, String> documentProperties = new HashMap<>();
 

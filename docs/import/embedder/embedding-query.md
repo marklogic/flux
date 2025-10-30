@@ -59,7 +59,7 @@ in the below command to point to the location of the `data/marklogic-security-do
     --permissions flux-example-role,read,flux-example-role,update \
     --uri-replace ".*zip,''" \
     --splitter-xpath "//xhtml:p" \
-    -Xxhtml=http://www.w3.org/1999/xhtml \
+    --xpath-namespace xhtml=http://www.w3.org/1999/xhtml \
     --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections "chunks,docs-chunks" \
     --embedder minilm
@@ -75,7 +75,7 @@ bin\flux import-files ^
     --permissions flux-example-role,read,flux-example-role,update ^
     --uri-replace ".*zip,''" ^
     --splitter-xpath "//xhtml:p" ^
-    -Xxhtml=http://www.w3.org/1999/xhtml ^
+    --xpath-namespace xhtml=http://www.w3.org/1999/xhtml ^
     --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections "chunks" ^
     --embedder minilm

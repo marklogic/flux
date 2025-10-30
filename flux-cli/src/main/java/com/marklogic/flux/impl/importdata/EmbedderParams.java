@@ -26,8 +26,8 @@ public class EmbedderParams implements EmbedderOptions {
     private String prompt;
 
     @CommandLine.Option(
-        names = {"-E"},
-        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
+        names = {"--embedder-prop"},
+        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. --embedder-prop api-key=abc123 ."
     )
     private Map<String, String> embeddingModelOptions = new HashMap<>();
 
