@@ -38,8 +38,8 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         private String target;
 
         @CommandLine.Option(
-            names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--target' - e.g. -PmyOption=someValue."
+            names = "--spark-prop",
+            description = "Specify any number of options to be passed to the connector identified by '--target' - e.g. --spark-prop myOption=someValue."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

@@ -59,9 +59,9 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark CSV option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html; e.g. -PquoteAll=true."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html; e.g. --spark-prop quoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

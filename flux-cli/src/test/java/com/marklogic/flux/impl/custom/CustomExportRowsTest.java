@@ -26,9 +26,9 @@ class CustomExportRowsTest extends AbstractTest {
             "--query", READ_AUTHORS_OPTIC_QUERY + ".select(['CitationID', 'LastName'])",
             "--target", "xml",
             "--repartition", "1",
-            "-Ppath=" + tempDir.toFile().getAbsolutePath(),
-            "-ProotTag=authors",
-            "-ProwTag=author",
+            "--spark-prop", "path=" + tempDir.toFile().getAbsolutePath(),
+            "--spark-prop", "rootTag=authors",
+            "--spark-prop", "rowTag=author",
             "--mode", "Overwrite"
         );
 

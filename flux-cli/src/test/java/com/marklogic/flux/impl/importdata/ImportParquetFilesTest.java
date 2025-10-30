@@ -122,7 +122,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--uri-template", "/parquet/{color}.json"
         );
 
@@ -181,7 +181,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--path", "src/test/resources/avro/colors.avro",
             // Without mergeSchema=true, Spark will throw an error of "Unable to infer schema for Parquet". This seems
             // to occur if there's at least one bad file. With mergeSchema=true,
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-cars"
@@ -201,7 +201,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--abort-on-read-failure",
             // This is kept here to ensure the command fails because it could read the Avro file and not because
             // Spark could not infer a schema.
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         );

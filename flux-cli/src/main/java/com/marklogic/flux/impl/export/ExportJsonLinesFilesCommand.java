@@ -28,9 +28,9 @@ public class ExportJsonLinesFilesCommand extends AbstractExportRowsToFilesComman
         private String encoding;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark JSON option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. -Pcompression=bzip2."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. --spark-prop compression=bzip2."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

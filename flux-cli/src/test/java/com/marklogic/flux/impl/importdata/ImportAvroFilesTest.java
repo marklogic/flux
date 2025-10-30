@@ -106,7 +106,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "-PignoreExtension=false",
+            "--spark-prop", "ignoreExtension=false",
             "--uri-template", "/avro/{color}.json"
         );
 
