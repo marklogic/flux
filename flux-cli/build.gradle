@@ -26,15 +26,9 @@ dependencies {
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
     }
-    implementation("org.apache.zookeeper:zookeeper:3.9.4") {
-      because "Addresses CVE-2025-58457; Spark depends on 3.9.3, and the CVE is fixed in 3.9.4."
-    }
-    // Not yet defining constraints for io.netty, as doing so would require several separate modules to be defined
-    // here. The hope is that the 4.1.0 final release will use the latest patch version of io.netty and thus no
-    // constraints or top-level resolution strategies will be needed.
   }
 
-  implementation ("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
+  implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
   }
@@ -68,7 +62,7 @@ dependencies {
   // For Blob Storage
   implementation "com.microsoft.azure:azure-storage:8.6.6"
   // For Data Lake Storage Gen2
-  implementation ("com.azure:azure-storage-file-datalake:12.23.1") {
+  implementation("com.azure:azure-storage-file-datalake:12.25.0") {
     // Exclude the Jackson dependencies that Spark already provides, and we need the version required by Spark.
     // This exclusion can be tested by publishing flux-api locally and running the test programs in
     // examples/client-project.
@@ -88,7 +82,7 @@ dependencies {
   }
 
   // For configuring two-way SSL in tests.
-  testImplementation ("com.marklogic:ml-app-deployer:6.2-SNAPSHOT") {
+  testImplementation("com.marklogic:ml-app-deployer:6.2-SNAPSHOT") {
     // Prefer Spark's versions of Jackson.
     exclude group: "com.fasterxml.jackson.core"
     exclude group: "com.fasterxml.jackson.dataformat"
@@ -107,7 +101,7 @@ dependencies {
   testImplementation "org.postgresql:postgresql:42.7.8"
 
   // Required for compile-time references in the tests to langchain4j classes.
-  testImplementation ("dev.langchain4j:langchain4j:${langchain4jVersion}") {
+  testImplementation("dev.langchain4j:langchain4j:${langchain4jVersion}") {
     // Prefer Spark's versions of Jackson.
     exclude group: "com.fasterxml.jackson.core"
   }
@@ -120,10 +114,10 @@ dependencies {
   testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
 
   // For deep equals on JSON with diff.
-  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.1"
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:5.0.0"
 
   // For deep equals on XML with diff.
-  testImplementation "org.xmlunit:xmlunit-core:2.10.4"
+  testImplementation "org.xmlunit:xmlunit-core:2.11.0"
 }
 
 javadoc {

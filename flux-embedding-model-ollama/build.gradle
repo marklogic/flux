@@ -18,8 +18,9 @@ dependencies {
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
-  testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.5.19"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.0"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.14.0"
+  testImplementation "ch.qos.logback:logback-classic:1.5.20"
 }
 
 shadowJar {
