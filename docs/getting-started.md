@@ -32,6 +32,10 @@ application that can be deployed to your own instance of MarkLogic server. The a
 server and that the value of `mlRestPort` is a port available for a new MarkLogic app server to use.
 5. Run `./gradlew -i mlDeploy` to deploy the example application.
 
+**Note** - if you are deploying to a MarkLogic instance in Progress Data Cloud (PDC), please see 
+[the ml-gradle documentation](https://github.com/marklogic/ml-gradle/wiki/Progress-Data-Cloud-support) for support on 
+configuring the properties in `gradle.properties` for your PDC tenancy. 
+
 The example application consists of a REST API app server on port 8004 in your MarkLogic installation. 
 The application also includes a "flux-example-user" MarkLogic user that has the necessary MarkLogic roles and 
 privileges for running the examples in this guide. Finally, the application includes a
