@@ -5,9 +5,12 @@ package com.marklogic.flux.impl;
 
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import picocli.CommandLine;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Note that some tests will print a "An illegal reflective access operation has occurred" warning that occurs
@@ -141,5 +144,34 @@ class HandleErrorTest extends AbstractTest {
 
         assertFalse(stderr.contains("Command failed"), "The command should not have failed since it defaults to not " +
             "aborting on a write failure. Actual stderr: " + stderr);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "-P,--spark-prop",
+        "-E,--embedder-prop",
+        "-L,--classifier-prop",
+        "-S,--splitter-prop",
+        "-R,--doc-prop",
+        "-M,--doc-metadata",
+        "-X,--xpath-namespace",
+    })
+    void niceErrorMessageForShortOptionsRemovedInTwoDotZeroRelease(String shortOption, String longOption) {
+        // Verifying we get a helpful error message for each short option removed in the 2.0 release. The command here
+        // is not important.
+        String stderr = runAndReturnStderr(
+            CommandLine.ExitCode.USAGE,
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "%stheKey=theValue".formatted(shortOption)
+        );
+
+        assertTrue(stderr.contains("Did you mean to use %s instead of %s, as %s was replaced in the 2.0 release with %s?"
+            .formatted(longOption, shortOption, shortOption, longOption)), "Unexpected stderr: " + stderr);
+
+        assertTrue(stderr.contains("If so, use %s theKey=theValue instead.".formatted(longOption)),
+            "Unexpected stderr: " + stderr);
     }
 }
