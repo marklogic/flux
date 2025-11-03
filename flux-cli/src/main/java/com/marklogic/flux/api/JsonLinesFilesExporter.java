@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * Read rows via Optic from MarkLogic and write them to JSON Lines files on a local filesystem, HDFS, or S3 using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html">Spark's JSON support</a>.
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support</a>.
  */
 public interface JsonLinesFilesExporter extends Executor<JsonLinesFilesExporter> {
 

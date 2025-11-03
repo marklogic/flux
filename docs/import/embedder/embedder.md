@@ -98,7 +98,7 @@ options to be used (the deployment names and endpoints are notional):
 --embedder azure \
 --embedder-prop api-key=changeme \
 --embedder-prop deployment-name=text-test-embedding-ada-002 \
---embedder-prop endpoint=https://gpt-testing.openai.azure.com
+--embedder-prop endpoint=https://gpt-testing-custom-data1.openai.azure.com
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -106,7 +106,7 @@ options to be used (the deployment names and endpoints are notional):
 --embedder azure ^
 --embedder-prop api-key=changeme ^
 --embedder-prop deployment-name=text-test-embedding-ada-002 ^
---embedder-prop endpoint=https://gpt-testing.openai.azure.com
+--embedder-prop endpoint=https://gpt-testing-custom-data1.openai.azure.com
 ```
 {% endtab %}
 {% endtabs %}
@@ -301,7 +301,7 @@ connection string are notional):
     --embedder azure \
     @azure-api-key.txt \
     --embedder-prop deployment-name=text-test-embedding-ada-002 \
-    --embedder-prop endpoint=https://gpt-testing.openai.azure.com
+    --embedder-prop endpoint=https://gpt-testing-custom-data1.openai.azure.com
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -318,7 +318,7 @@ bin\flux import-files ^
     --embedder azure ^
     @azure-api-key.txt ^
     --embedder-prop deployment-name=text-test-embedding-ada-002 ^
-    --embedder-prop endpoint=https://gpt-testing.openai.azure.com
+    --embedder-prop endpoint=https://gpt-testing-custom-data1.openai.azure.com
 ```
 {% endtab %}
 {% endtabs %}

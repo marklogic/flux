@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * Read rows via Optic from MarkLogic and write them to delimited text files on a local filesystem, HDFS, or S3
- * using <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html">Spark's CSV support</a>.
+ * using <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>.
  */
 public interface DelimitedFilesExporter extends Executor<DelimitedFilesExporter> {
 

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 /**
  * Read rows via Optic from MarkLogic and write them to ORC files on a local filesystem, HDFS, or S3 using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html">Spark's ORC support</a>.
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-orc.html">Spark's ORC support</a>.
  */
 public interface OrcFilesExporter extends Executor<OrcFilesExporter> {
 

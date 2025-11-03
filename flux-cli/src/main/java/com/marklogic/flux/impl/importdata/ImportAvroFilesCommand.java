@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "import-avro-files",
     description = "Read Avro files from supported file locations using Spark's support defined at" +
-        "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html, and write JSON or XML documents " +
+        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html, and write JSON or XML documents " +
         "to MarkLogic."
 )
 public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFilesImporter> implements AvroFilesImporter {
@@ -56,7 +56,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         @CommandLine.Option(
             names = "--spark-prop",
             description = "Specify any Spark Avro data source option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. --spark-prop ignoreExtension=true. " +
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-avro.html; e.g. --spark-prop ignoreExtension=true. " +
                 "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();

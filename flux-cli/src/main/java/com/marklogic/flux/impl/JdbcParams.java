@@ -32,7 +32,7 @@ public class JdbcParams<T extends JdbcOptions> implements JdbcOptions<T> {
     @CommandLine.Option(
         names = "--spark-prop",
         description = "Specify any Spark JDBC option defined at " +
-            "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html; e.g. --spark-prop fetchsize=100 ."
+            "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html; e.g. --spark-prop fetchsize=100 ."
     )
     private Map<String, String> additionalOptions = new HashMap<>();
 
