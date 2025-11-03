@@ -6,6 +6,7 @@ package com.marklogic.flux.cli;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,16 @@ import java.util.Objects;
  * makes it very hard for the user to find the actual error message, which is printed first.
  */
 class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler {
+
+    private static final Map<String, String> SHORT_OPTIONS_REPLACED_IN_TWO_DOT_ZERO_RELEASE = Map.of(
+        "-P", "--spark-prop",
+        "-R", "--doc-prop",
+        "-M", "--doc-metadata",
+        "-S", "--splitter-prop",
+        "-X", "--xpath-namespace",
+        "-L", "--classifier-prop",
+        "-E", "--embedder-prop"
+    );
 
     public int handleParseException(CommandLine.ParameterException ex, String[] args) {
         final CommandLine commandLine = ex.getCommandLine();
@@ -29,7 +40,8 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
 
         final String exceptionMessage = getErrorMessageToPrint(ex);
         if (exceptionMessage != null) {
-            err.println(colorScheme.errorText(exceptionMessage)); // bold red
+            err.println(colorScheme.errorText(exceptionMessage));
+            printHelpfulMessageForReplacedSingleLetterOption(exceptionMessage, err, colorScheme);
         }
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
@@ -54,5 +66,25 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
             message = "Value for option " + message.substring(buggyPicocliMessage.length());
         }
         return message;
+    }
+
+    private void printHelpfulMessageForReplacedSingleLetterOption(String exceptionMessage, PrintWriter err, CommandLine.Help.ColorScheme colorScheme) {
+        SHORT_OPTIONS_REPLACED_IN_TWO_DOT_ZERO_RELEASE.keySet().forEach(shortOption -> {
+            final String indicatorOfReplacedShortOption = "Unknown option: '" + shortOption;
+            if (exceptionMessage.startsWith(indicatorOfReplacedShortOption)) {
+                String longOption = SHORT_OPTIONS_REPLACED_IN_TWO_DOT_ZERO_RELEASE.get(shortOption);
+                err.println("");
+                err.println(colorScheme.errorText("Did you mean to use %s instead of %s, as %s was replaced in the 2.0 release with %s?"
+                    .formatted(longOption, shortOption, shortOption, longOption)));
+
+                String optionValue = exceptionMessage.substring(indicatorOfReplacedShortOption.length());
+                if (optionValue.endsWith("'")) {
+                    optionValue = optionValue.substring(0, optionValue.length() - 1);
+                }
+
+                err.println(colorScheme.errorText("If so, use %s %s instead.".formatted(longOption, optionValue)));
+                err.println("");
+            }
+        });
     }
 }
