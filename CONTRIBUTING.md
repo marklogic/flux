@@ -1,7 +1,7 @@
 To contribute to this project, complete these steps to setup a MarkLogic instance via Docker with a test 
 application installed:
 
-1. Ensure you have Java 11 or higher installed; you will need Java 17 if you wish to use the Sonarqube support described below.
+1. Ensure you have Java 17 installed.
 2. Clone this repository if you have not already.
 3. From the root directory of the project, run `docker compose up -d --build`.
 4. Wait 10 to 20 seconds and verify that <http://localhost:8001> shows the MarkLogic admin screen before proceeding.
@@ -72,14 +72,12 @@ The version can then be viewed by running `./bin/flux version`.
 
 ## Running the tests
 
-*You must use Java 11 or Java 17* to run any Gradle tasks in this project.
-
 You can run the tests once you've followed the instructions above for loading the DVD rental dataset into Postgres and
 publishing a local snapshot of our Spark connector. Then just run:
 
     ./gradlew clean test
 
-If you are running the tests in Intellij with Java 17, you will need to perform the following steps:
+If you are running the tests in Intellij, you will need to perform the following steps:
 
 1. Go to Run -> Edit Configurations in the Intellij toolbar.
 2. Click on "Edit configuration templates".
@@ -134,8 +132,7 @@ You can then go to http://localhost:4000 to view the docs.
 ## Updating the published Javadoc
 
 This project's Javadocs are being published via inclusion in the `docs/assets/javadoc` directory. To update these
-files after changing any of the classes in the `com.marklogic.flux.api` package, run the following, 
-**being sure to use Java 17** (Java 11 will include a JavaScript file that has a security vulnerability against it):
+files after changing any of the classes in the `com.marklogic.flux.api` package, run the following:
 
     ./gradlew updateJavadoc
 
@@ -201,7 +198,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-1.4-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-2.0-SNAPSHOT-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -209,7 +206,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-1.4-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-2.0-SNAPSHOT-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content

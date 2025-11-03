@@ -4,10 +4,6 @@ plugins {
 }
 
 java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
   withJavadocJar()
   withSourcesJar()
 }
@@ -23,8 +19,9 @@ dependencies {
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-azure-open-ai:${langchain4jVersion}"
 
-  testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.5.18"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.0"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.14.0"
+  testImplementation "ch.qos.logback:logback-classic:1.5.20"
 }
 
 shadowJar {
@@ -75,8 +72,8 @@ publishing {
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
-          username mavenUser
-          password mavenPassword
+          username = mavenUser
+          password = mavenPassword
         }
         url publishUrl
         allowInsecureProtocol = true
@@ -84,8 +81,8 @@ publishing {
         name = "central"
         url = mavenCentralUrl
         credentials {
-          username mavenCentralUsername
-          password mavenCentralPassword
+          username = mavenCentralUsername
+          password = mavenCentralPassword
         }
       }
     }

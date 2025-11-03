@@ -54,10 +54,10 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark Avro data source option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. -PignoreExtension=true. " +
-                "Spark configuration options must be defined via '-C'."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. --spark-prop ignoreExtension=true. " +
+                "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

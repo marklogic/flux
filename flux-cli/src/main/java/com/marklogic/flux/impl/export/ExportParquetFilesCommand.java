@@ -35,9 +35,9 @@ public class ExportParquetFilesCommand extends AbstractExportRowsToFilesCommand<
     public static class WriteParquetFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark Parquet option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -Pcompression=gzip."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. --spark-prop compression=gzip."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

@@ -6,14 +6,18 @@ package com.marklogic.flux.impl;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VersionTest extends AbstractTest {
 
     @Test
     void test() {
-        String stdout = runAndReturnStdout("version");
-        assertTrue(stdout.contains("Flux version:"), "Unexpected stdout: " + stdout);
+        Stream.of("version", "-v", "-version").forEach(cmd -> {
+            String stdout = runAndReturnStdout(cmd);
+            assertTrue(stdout.contains("Flux version:"), "Unexpected stdout for command '" + cmd + "': " + stdout);
+        });
     }
 
     @Test

@@ -173,7 +173,7 @@ queries. See [TDE template generation](../tde-generation.md) for more informatio
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
-specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
+specify a compression option. As noted in the "Advanced options" section below, you can use `--spark-prop compression=` to
 explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically.
 
 ## Importing delimited files with different columns
@@ -186,10 +186,10 @@ Flux once and processing each file separately.
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
-the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `-P` option
-to control how delimited text is read. These options are expressed as `-PoptionName=optionValue`.
+the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `--spark-prop` option
+to control how delimited text is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
-A common option to include is `-PmultiLine=true` for when your files have rows with values that include newline 
+A common option to include is `--spark-prop multiLine=true` for when your files have rows with values that include newline 
 symbols. 
 
 The command defaults to setting the `header` option to `true` and the
@@ -200,8 +200,8 @@ example:
 {% tab log Unix %}
 ```
 ./bin/flux import-delimited-files \
-    -Pheader=false \
-    -PescapeQuotes=false \
+    --spark-prop header=false \
+    --spark-prop escapeQuotes=false \
     --connection-string "flux-example-user:password@localhost:8004" \
     --path path/to/files \
     --permissions flux-example-role,read,flux-example-role,update
@@ -210,8 +210,8 @@ example:
 {% tab log Windows %}
 ```
 bin\flux import-delimited-files ^
-    -Pheader=false ^
-    -PescapeQuotes=false ^
+    --spark-prop header=false ^
+    --spark-prop escapeQuotes=false ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --path path\to\files ^
     --permissions flux-example-role,read,flux-example-role,update

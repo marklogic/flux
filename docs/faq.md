@@ -30,7 +30,7 @@ The error is due to the underlying Spark runtime in Flux failing to startup. You
 [resolutions for this error](https://stackoverflow.com/questions/52133731/how-to-solve-cant-assign-requested-address-service-sparkdriver-failed-after),
 a few of which are summarized below:
 
-1. Include `-Cspark.driver.bindAddress=127.0.0.1` to define a Spark bind address that does not use `localhost`.
+1. Include `--spark-conf spark.driver.bindAddress=127.0.0.1` to define a Spark bind address that does not use `localhost`.
 2. Run `export SPARK_LOCAL_IP="127.0.0.1"` to define a Spark bind address via an environment variable.
 3. If you are on a VPN, try disconnecting and reconnecting to the VPN.
 

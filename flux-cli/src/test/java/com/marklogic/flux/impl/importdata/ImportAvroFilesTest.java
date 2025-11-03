@@ -27,8 +27,8 @@ class ImportAvroFilesTest extends AbstractTest {
             "--batch-size", "1",
             "--log-progress", "2",
 
-            // Including this to ensure a valid -C option doesn't cause an error.
-            "-Cspark.sql.avro.filterPushdown.enabled=false"
+            // Including this to ensure a valid --spark-conf option doesn't cause an error.
+            "--spark-conf", "spark.sql.avro.filterPushdown.enabled=false"
         );
 
         assertCollectionSize("avro-test", 6);
@@ -106,7 +106,7 @@ class ImportAvroFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
-            "-PignoreExtension=false",
+            "--spark-prop", "ignoreExtension=false",
             "--uri-template", "/avro/{color}.json"
         );
 
@@ -123,10 +123,10 @@ class ImportAvroFilesTest extends AbstractTest {
             "--path", "src/test/resources/avro/*",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "-Cspark.sql.parquet.filterPushdown=invalid-value"
+            "--spark-conf", "spark.sql.parquet.filterPushdown=invalid-value"
         );
 
-        assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
+        assertTrue(stderr.contains("INVALID_CONF_VALUE.TYPE_MISMATCH"),
             "This test verifies that spark.sql dynamic params are added to the Spark conf. An invalid value is used " +
                 "to verify this, as its inclusion in the Spark conf should cause an error. Actual stderr: " + stderr);
     }

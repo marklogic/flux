@@ -4,17 +4,12 @@ plugins {
 }
 
 java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
-
   withJavadocJar()
   withSourcesJar()
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.2.0-beta8") {
+  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.8.0-beta15") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
     exclude group: "com.fasterxml.jackson.core"
@@ -60,8 +55,8 @@ publishing {
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
-          username mavenUser
-          password mavenPassword
+          username = mavenUser
+          password = mavenPassword
         }
         url publishUrl
         allowInsecureProtocol = true
@@ -69,8 +64,8 @@ publishing {
         name = "central"
         url = mavenCentralUrl
         credentials {
-          username mavenCentralUsername
-          password mavenCentralPassword
+          username = mavenCentralUsername
+          password = mavenCentralPassword
         }
       }
     }

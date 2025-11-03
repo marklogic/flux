@@ -4,6 +4,8 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.api.SaveMode;
+import com.marklogic.spark.Util;
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -19,35 +21,45 @@ public interface SparkUtil {
     }
 
     static SparkSession buildSparkSession() {
-        return buildSparkSession(null, new HashMap<>());
+        return buildSparkSession(null, null, new HashMap<>());
     }
 
-    static SparkSession buildSparkSession(String masterUrl, Map<String, String> sparkConfigParams) {
-        if (masterUrl == null || masterUrl.trim().isEmpty()) {
-            masterUrl = "local[*]";
+    static SparkSession buildSparkSession(String masterUrl, SparkConf sparkConf, Map<String, String> sparkConfigurationProperties) {
+        if (sparkConf == null) {
+            if (masterUrl == null || masterUrl.trim().isEmpty()) {
+                masterUrl = "local[*]";
+            }
+            if (Util.MAIN_LOGGER.isDebugEnabled()) {
+                Util.MAIN_LOGGER.debug("Creating new SparkConf; master URL: {}", masterUrl);
+            }
+            sparkConf = new SparkConf().setMaster(masterUrl);
         }
 
-        SparkSession.Builder builder = SparkSession.builder()
-            .master(masterUrl)
-            // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
-            // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
-            // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
-            // user has control over this.
-            .config("spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
+        // Gets rid of the SUCCESS files. A Flux user who is not familiar with Spark is likely to be confused by
+        // these files. A Flux user experienced with Spark may eventually want this to be configurable, but is
+        // also likely to be using spark-submit or directly using the MarkLogic Spark connector, in which case the
+        // user has control over this.
+        sparkConf.set("spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
 
-            // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
-            // options now that are defined by the user is that they won't work when used with spark-submit, which
-            // handles constructing a SparkSession. We may eventually provide a feature though for providing options
-            // at this point for local users that want more control over the SparkSession itself.
-            .config("spark.sql.session.timeZone", "UTC");
+        // Spark config options can be provided now or at runtime via spark.conf().set(). The downside to setting
+        // options now that are defined by the user is that they won't work when used with spark-submit, which
+        // handles constructing a SparkSession. We may eventually provide a feature though for providing options
+        // at this point for local users that want more control over the SparkSession itself.
+        sparkConf.set("spark.sql.session.timeZone", "UTC");
 
-        if (sparkConfigParams != null) {
-            for (Map.Entry<String, String> entry : sparkConfigParams.entrySet()) {
-                builder = builder.config(entry.getKey(), entry.getValue());
+        // To avoid the need for Jetty on the classpath, which brings in a number of medium CVEs (as Spark 4 is using
+        // Jetty 9), the Spark UI is explicitly disabled. Curiously, this doesn't seem to be required - i.e. when
+        // excluding org.eclipse.jetty libraries from the classpath, no failures occur. But this is being done to
+        // ensure Jetty isn't used to start the Spark UI, as there's currently no use case for that when using Flux.
+        sparkConf.set("spark.ui.enabled", "false");
+
+        if (sparkConfigurationProperties != null) {
+            for (Map.Entry<String, String> entry : sparkConfigurationProperties.entrySet()) {
+                sparkConf.set(entry.getKey(), entry.getValue());
             }
         }
 
-        return builder.getOrCreate();
+        return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
     /**

@@ -13,6 +13,7 @@ class ImportRdfFilesOptionsTest extends AbstractOptionsTest {
     void numPartitions() {
         ImportRdfFilesCommand command = (ImportRdfFilesCommand) getCommand(
             "import-rdf-files",
+            "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/rdf",
             "--preview", "10",
             "--partitions", "4"

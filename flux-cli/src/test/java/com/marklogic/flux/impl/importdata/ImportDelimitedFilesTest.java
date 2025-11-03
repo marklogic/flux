@@ -45,13 +45,13 @@ class ImportDelimitedFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "multi-test",
-            "-PmultiLine=true",
+            "--spark-prop", "multiLine=true",
             "--ignore-null-fields",
             "--uri-template", "/multi/{MonitoringLocationIdentifier}.json"
         );
 
         assertCollectionSize(
-            "Using -PmultiLine will tell Spark CSV to include those ^M symbols in the test file as part of the value " +
+            "Using --spark-prop multiLine will tell Spark CSV to include those ^M symbols in the test file as part of the value " +
                 "for the MonitoringLocationDescriptionText column.",
             "multi-test", 6);
 
@@ -139,7 +139,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/semicolon-delimiter.csv",
-            "-Psep=;",
+            "--spark-prop", "sep=;",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "delimited-test",
@@ -157,7 +157,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/no-header.csv",
-            "-Pheader=false",
+            "--spark-prop", "header=false",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-header",
@@ -179,7 +179,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
         run(
             "import-delimited-files",
             "--path", "src/test/resources/delimited-files/three-rows.csv",
-            "-PinferSchema=false",
+            "--spark-prop", "inferSchema=false",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "no-schema-inference",
@@ -241,7 +241,7 @@ class ImportDelimitedFilesTest extends AbstractTest {
         );
 
         assertCollectionSize("delimited-test", 0);
-        assertTrue(stderr.contains("Error: [MALFORMED_RECORD_IN_PARSING"), "The command should " +
+        assertTrue(stderr.contains("Error: [MALFORMED_CSV_RECORD"), "The command should " +
             "have failed due to --abort-on-read-failure being included. This should result in the 'mode' option being " +
             "set to FAILFAST. Actual stderr: " + stderr);
     }

@@ -28,9 +28,9 @@ public class SplitterParams implements SplitterOptions {
     private String xpath;
 
     @CommandLine.Option(
-        names = {"-X"},
+        names = {"--xpath-namespace"},
         description = "Specify one or more XML namespace prefix and URI pairs to be used with options that " +
-            "require XPath expressions; e.g. -Xex=org:example ."
+            "require XPath expressions; e.g. --xpath-namespace ex=org:example ."
     )
     private Map<String, String> xmlNamespaces = new HashMap<>();
 
@@ -72,9 +72,9 @@ public class SplitterParams implements SplitterOptions {
     private String customClass;
 
     @CommandLine.Option(
-        names = "-S",
+        names = "--splitter-prop",
         description = "Key/value pairs, delimited by an equals sign, that are passed to the constructor of the " +
-            "class specified by --splitter-custom-class - e.g. -Skey=value."
+            "class specified by --splitter-custom-class - e.g. --splitter-prop key=value."
     )
     private Map<String, String> customClassOptions = new HashMap<>();
 

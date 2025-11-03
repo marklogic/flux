@@ -22,19 +22,21 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ImportDelimitedFilesCommand command = (ImportDelimitedFilesCommand) getCommand(
             "import-delimited-files",
+            "--connection-string", makeConnectionString(),
             "--path", "anywhere",
             "--encoding", "UTF-16"
         );
 
         Map<String, String> options = command.getReadParams().makeOptions();
         assertEquals("UTF-16", options.get("encoding"), "The --encoding option is a convenience for specifying " +
-            "the Spark JSON option so the user doesn't have to also learn -Pencoding=");
+            "the Spark JSON option so the user doesn't have to also learn --spark-prop encoding=");
     }
 
     @Test
     void tdeDirectories() {
         ImportDelimitedFilesCommand command = (ImportDelimitedFilesCommand) getCommand(
             "import-delimited-files",
+            "--connection-string", makeConnectionString(),
             "--path", "anywhere",
             "--encoding", "UTF-16",
             "--tde-directory", "/dir1",
@@ -55,6 +57,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
     void tdeColumnCustomizations() {
         ImportDelimitedFilesCommand command = (ImportDelimitedFilesCommand) getCommand(
             "import-delimited-files",
+            "--connection-string", makeConnectionString(),
             "--path", "anywhere",
             "--tde-schema", "test-schema",
             "--tde-view", "test-view",
@@ -221,7 +224,7 @@ class ImportDelimitedFilesOptionsTest extends AbstractOptionsTest {
 
         assertEquals("col1", inputs.getVirtualColumns().get(0));
         assertEquals(1, inputs.getVirtualColumns().size());
-        
+
         assertEquals(384, inputs.getColumnDimensions().get("col1").intValue());
         assertEquals(0.5f, inputs.getColumnAnnCompressions().get("col1").floatValue());
         assertEquals("cosine", inputs.getColumnAnnDistances().get("col1"));

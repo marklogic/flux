@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 @CommandLine.Command(
     name = "version",
+    aliases = {"-v", "-version"},
     description = "Print the version of Flux."
 )
 public class VersionCommand implements Command {

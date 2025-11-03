@@ -10,70 +10,114 @@ configurations {
   // Defines only those dependencies that we want to include in the assembly/shadow jar that will be used by spark-submit.
   shadowDependencies
 
-  // Defines dependencies to be included in the Flux distribution (in addition to all normal runtime dependencies),
-  // but should not be transitive dependencies of the Flux API. Typically, a Flux API user can easily choose to include
-  // those transitive dependencies if desired.
-  distributionDependencies
-
-  // Since the distribution dependencies are included in Flux, we want to test them. So the test runtime includes all
-  // distribution dependencies.
-  testImplementation.extendsFrom(distributionDependencies)
+  all {
+    resolutionStrategy {
+      // Resolves a medium CVE that comes from json-unit-assertj .
+      force "net.minidev:json-smart:2.5.2"
+    }
+  }
 }
 
 dependencies {
-  implementation "org.apache.spark:spark-sql_2.12:${sparkVersion}"
+  constraints {
+    implementation("org.codehaus.janino:janino:3.1.12") {
+      because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview2 depends on) to 3.1.12 to eliminate CVEs."
+    }
+    implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
+      because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
+    }
+  }
+
+  implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
+    // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
+    exclude module: "rocksdbjni"
+  }
+
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
-  implementation "info.picocli:picocli:4.7.6"
+  implementation "info.picocli:picocli:${picocliVersion}"
+
+  // Need this for compilation as it's not an API dependency of the Spark connector.
+  compileOnly "com.marklogic:marklogic-client-api:8.0.0"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
   // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
   shadowDependencies "com.marklogic:marklogic-spark-connector:${connectorVersion}"
-  shadowDependencies "info.picocli:picocli:4.7.6"
+  shadowDependencies "info.picocli:picocli:${picocliVersion}"
 
-  // Spark 3.4.3 depends on Hadoop 3.3.4, which depends on AWS SDK 1.12.262. As of August 2024, all public releases of
-  // Spark - through 3.5.1 - depend on Hadoop 3.3.4 as well.
-  // Hadoop 3.3.4 is flagged with a high security vulnerability - https://nvd.nist.gov/vuln/detail/CVE-2023-26031 .
-  // That CVE notes that the vulnerability is awaiting reanalysis.
-  //
-  // However, the CVE includes the text "If the YARN cluster is accepting work from remote (authenticated) users".
-  // Flux does not create a YARN cluster. It uses a local standalone Spark cluster. A user may choose to use Flux with
-  // spark-submit against a Spark cluster using YARN, but at that point, the user is 100% responsible for how they
-  // configure their own Spark cluster.
-  implementation("org.apache.hadoop:hadoop-aws:3.3.4") {
-    // We don't include the entire aws-java-sdk-bundle, as that clocks in as a single 380mb jar. We only need the S3
-    // portion of the AWS SDK.
-    exclude module: "aws-java-sdk-bundle"
+  implementation("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
+    // Excluded because it's a single 558mb that balloons the Flux distribution in size.
+    exclude group: "software.amazon.awssdk"
   }
 
-  // Depending on 262, which is what hadoop-aws 3.3.4 depends on.
-  implementation "com.amazonaws:aws-java-sdk-s3:1.12.262"
-
-  // With version 262 of the AWS SDK, we get a NoClassDefFoundError if this dynamodb module is not included.
-  implementation "com.amazonaws:aws-java-sdk-dynamodb:1.12.262"
+  // Based on testing so far, this appears to suffice for allowing hadoop-aws to read from and write to S3.
+  // Using 2.29.52, which is what Hadoop 3.4.2 depends on.
+  implementation "software.amazon.awssdk:s3-transfer-manager:2.29.52"
 
   // Adds support for Azure Storage. We may want these to be expressed using variants instead so that at least a
   // Gradle user of the API can ask for e.g. S3 or Azure Storage support without those dependencies being included
   // by default.
-  implementation "org.apache.hadoop:hadoop-azure:3.3.4"
+  implementation "org.apache.hadoop:hadoop-azure:${hadoopVersion}"
   // For Blob Storage
   implementation "com.microsoft.azure:azure-storage:8.6.6"
   // For Data Lake Storage Gen2
-  implementation "com.azure:azure-storage-file-datalake:12.23.1"
-
-  implementation "org.apache.hadoop:hadoop-client:3.3.4"
+  implementation("com.azure:azure-storage-file-datalake:12.25.0") {
+    // Exclude the Jackson dependencies that Spark already provides, and we need the version required by Spark.
+    // This exclusion can be tested by publishing flux-api locally and running the test programs in
+    // examples/client-project.
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.datatype"
+  }
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.12:${sparkVersion}"
+  implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
 
-  distributionDependencies "org.apache.tika:tika-parser-microsoft-module:${tikaVersion}"
-  distributionDependencies "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
+  // Optional dependencies - included in distribution but marked as optional in POM
+  implementation("org.apache.tika:tika-parser-microsoft-module:${tikaVersion}") {
+    // Will be marked as optional in the POM
+  }
+  implementation("org.apache.tika:tika-parser-pdf-module:${tikaVersion}") {
+    // Will be marked as optional in the POM
+  }
 
-  testImplementation project(":flux-tests-api")
+  // For configuring two-way SSL in tests.
+  testImplementation("com.marklogic:ml-app-deployer:6.2-SNAPSHOT") {
+    // Prefer Spark's versions of Jackson.
+    exclude group: "com.fasterxml.jackson.core"
+    exclude group: "com.fasterxml.jackson.dataformat"
+  }
 
-  // For testing custom commands with a 3rd party connector.
-  testImplementation "com.databricks:spark-xml_2.12:0.18.0"
+  // Automatic loading of test framework implementation dependencies is deprecated.
+  // https://docs.gradle.org/current/userguide/upgrading_version_8.html#test_framework_implementation_dependencies
+  // Without this, once using JUnit 5.12 or higher, Gradle will not find any tests and report an error of:
+  // org.junit.platform.commons.JUnitException: TestEngine with ID 'junit-jupiter' failed to discover tests
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.0"
+
+  testImplementation "com.marklogic:marklogic-junit5:2.0-SNAPSHOT"
+
+  // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
+  testImplementation "org.springframework:spring-jdbc:6.2.12"
+  testImplementation "org.postgresql:postgresql:42.7.8"
+
+  // Required for compile-time references in the tests to langchain4j classes.
+  testImplementation("dev.langchain4j:langchain4j:${langchain4jVersion}") {
+    // Prefer Spark's versions of Jackson.
+    exclude group: "com.fasterxml.jackson.core"
+  }
+
+  // The Gradle docs - https://docs.gradle.org/current/userguide/cross_project_publications.html#sec:simple-sharing-artifacts-between-projects -
+  // are not keen on this practice of depending on another project's configuration. But this seems fine for a test
+  // dependency, and testing has shown that Gradle will construct each project's shadowJar if it does not already exist.
+  testImplementation project(path: ":flux-embedding-model-minilm", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-azure-open-ai", configuration: "shadow")
+  testImplementation project(path: ":flux-embedding-model-ollama", configuration: "shadow")
+
+  // For deep equals on JSON with diff.
+  testImplementation "net.javacrumbs.json-unit:json-unit-assertj:5.0.0"
+
+  // For deep equals on XML with diff.
+  testImplementation "org.xmlunit:xmlunit-core:2.11.0"
 }
 
 javadoc {
@@ -115,14 +159,6 @@ distributions {
       from("hadoop") {
         include "libhadoop.so"
         into "lib/native"
-      }
-      // The distributionDependencies configuration allows us to include dependencies that should be part of the Flux
-      // distribution, but not part of the default Flux API set of dependencies.
-      into("lib") {
-        from configurations.distributionDependencies
-        // It's expected to run into duplicates with dependencies already on the runtime classpath, so any duplicates
-        // can safely be excluded.
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
       }
     }
   }
@@ -254,6 +290,7 @@ publishing {
       artifactId = "flux-api"
       version = version
       from components.java
+
       pom {
         name = "${group}:flux-api"
         description = "Flux API for data movement with MarkLogic"
@@ -279,6 +316,18 @@ publishing {
           connection = "scm:git@github.com:marklogic/flux.git"
           developerConnection = "scm:git@github.com:marklogic/flux.git"
         }
+
+        // Mark some dependencies as optional.
+        // May eventually do this for Azure and AWS dependencies as well.
+        withXml {
+          def dependenciesNode = asNode().dependencies[0]
+          dependenciesNode.dependency.each { dep ->
+            var artifactId = dep.artifactId.text()
+            if (artifactId.startsWith('tika-parser-') || artifactId.equals('spark-avro_2.13')) {
+              dep.appendNode('optional', 'true')
+            }
+          }
+        }
       }
     }
   }
@@ -286,8 +335,8 @@ publishing {
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
-          username mavenUser
-          password mavenPassword
+          username = mavenUser
+          password = mavenPassword
         }
         url publishUrl
         allowInsecureProtocol = true
@@ -295,8 +344,8 @@ publishing {
         name = "central"
         url = mavenCentralUrl
         credentials {
-          username mavenCentralUsername
-          password mavenCentralPassword
+          username = mavenCentralUsername
+          password = mavenCentralPassword
         }
       }
     }

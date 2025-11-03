@@ -8,21 +8,22 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.Util;
-import marklogicspark.marklogic.client.DatabaseClient;
-import marklogicspark.marklogic.client.io.DocumentMetadataHandle;
-import marklogicspark.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.JacksonHandle;
 
 public class TdeLoader {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final String SCRIPT = "declareUpdate(); const tde = require('/MarkLogic/tde.xqy');\n" +
-        "var URI, TEMPLATE, PERMISSIONS;\n" +
-        "const permissions = [];\n" +
-        "Object.keys(PERMISSIONS).forEach(roleName => {\n" +
-        "  PERMISSIONS[roleName].forEach(capability => permissions.push(xdmp.permission(roleName, capability)));\n" +
-        "});\n" +
-        "tde.templateBatchInsert(tde.templateInfo(URI, TEMPLATE, permissions))";
+    private static final String SCRIPT = """
+        declareUpdate(); const tde = require('/MarkLogic/tde.xqy');
+        var URI, TEMPLATE, PERMISSIONS;
+        const permissions = [];
+        Object.keys(PERMISSIONS).forEach(roleName => {
+           PERMISSIONS[roleName].forEach(capability => permissions.push(xdmp.permission(roleName, capability)));
+        });
+        tde.templateBatchInsert(tde.templateInfo(URI, TEMPLATE, permissions))""";
 
     private final DatabaseClient databaseClient;
 

@@ -3,27 +3,27 @@
  */
 package com.marklogic.flux.cli;
 
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.Command;
-import com.marklogic.flux.impl.SparkUtil;
-import com.marklogic.flux.impl.VersionCommand;
+import com.marklogic.flux.impl.*;
 import com.marklogic.flux.impl.copy.CopyCommand;
+import com.marklogic.flux.impl.copy.OutputConnectionParams;
 import com.marklogic.flux.impl.custom.CustomExportDocumentsCommand;
 import com.marklogic.flux.impl.custom.CustomExportRowsCommand;
 import com.marklogic.flux.impl.custom.CustomImportCommand;
 import com.marklogic.flux.impl.export.*;
 import com.marklogic.flux.impl.importdata.*;
 import com.marklogic.flux.impl.reprocess.ReprocessCommand;
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @CommandLine.Command(
     name = "./bin/flux",
@@ -68,6 +68,23 @@ import java.util.Objects;
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
+
+    private final SparkConf sparkConf;
+
+    public Main() {
+        this(null);
+    }
+
+    /**
+     * Allows for providing a SparkConf that will be used when creating a SparkSession. The options for configuring
+     * Spark can still be used, but this allows for programmatically providing a shared SparkConf in an environment
+     * where this class is being invoked multiple times in the same JVM.
+     *
+     * @since 2.0.0
+     */
+    public Main(SparkConf sparkConf) {
+        this.sparkConf = sparkConf;
+    }
 
     // Intended to be invoked solely by the application script. Tests should invoke "run" instead to avoid the
     // System.exit call.
@@ -114,7 +131,48 @@ public class Main {
         return commandLine.execute(args);
     }
 
-    public CommandLine newCommandLine() {
+    /**
+     * @since 2.0.0
+     */
+    public static class CommandContext {
+        public final Command command;
+        public final SparkSession sparkSession;
+
+        public CommandContext(Command command, SparkSession sparkSession) {
+            this.command = command;
+            this.sparkSession = sparkSession;
+        }
+    }
+
+    /**
+     * Parse the args and return a command that can be executed with a user-provided Spark session.
+     *
+     * @param outWriter optional, can be null
+     * @param errWriter optional, can be null
+     * @param args
+     * @return
+     * @since 2.0.0
+     * <p>
+     */
+    public CommandContext buildCommandContext(PrintWriter outWriter, PrintWriter errWriter, String... args) {
+        CommandLine commandLine = new Main().newCommandLine();
+        if (outWriter != null) {
+            commandLine.setOut(outWriter);
+        }
+        if (errWriter != null) {
+            commandLine.setErr(errWriter);
+        }
+        AtomicReference<CommandContext> commandRef = new AtomicReference<>();
+        commandLine.setExecutionStrategy(parseResult -> {
+            CommandContext context = parseAndReturnCommand(parseResult);
+            commandRef.set(context);
+            return 0;
+        });
+        commandLine.execute(args);
+        return commandRef.get();
+    }
+
+    protected CommandLine newCommandLine() {
         return new CommandLine(this)
             .setAbbreviatedOptionsAllowed(true)
             .setAbbreviatedSubcommandsAllowed(true)
@@ -127,15 +185,12 @@ public class Main {
 
     private int executeCommand(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
-        final Command command = PicoliUtil.getCommandInstance(parseResult);
         try {
-            Objects.requireNonNull(command);
-            command.validateCommandLineOptions(parseResult);
-            SparkSession session = buildSparkSession(command);
+            final CommandContext commandContext = parseAndReturnCommand(parseResult);
             if (logger.isDebugEnabled()) {
-                logger.debug("Spark master URL: {}", session.sparkContext().master());
+                logger.debug("Spark master URL: {}", commandContext.sparkSession.sparkContext().master());
             }
-            command.execute(session);
+            commandContext.command.execute(commandContext.sparkSession);
         } catch (Exception ex) {
             printException(parseResult, ex);
             return CommandLine.ExitCode.SOFTWARE;
@@ -143,20 +198,28 @@ public class Main {
         return CommandLine.ExitCode.OK;
     }
 
+    private CommandContext parseAndReturnCommand(CommandLine.ParseResult parseResult) {
+        Objects.requireNonNull(parseResult);
+        final Command command = PicoliUtil.getCommandInstance(parseResult);
+        Objects.requireNonNull(command);
+        command.validateCommandLineOptions(parseResult);
+        return new CommandContext(command, buildSparkSession(command));
+    }
+
     protected SparkSession buildSparkSession(Command selectedCommand) {
         String masterUrl = null;
-        Map<String, String> sparkSessionBuilderParams = null;
+        Map<String, String> sparkConfigurationProperties = null;
         if (selectedCommand instanceof AbstractCommand) {
             AbstractCommand<?> abstractCommand = (AbstractCommand<?>) selectedCommand;
             masterUrl = abstractCommand.determineSparkMasterUrl();
             if (abstractCommand.getCommonParams() != null) {
-                sparkSessionBuilderParams = abstractCommand.getCommonParams().getSparkSessionBuilderParams();
+                sparkConfigurationProperties = abstractCommand.getCommonParams().getSparkConfigurationProperties();
             }
         }
-        return SparkUtil.buildSparkSession(masterUrl, sparkSessionBuilderParams);
+        return SparkUtil.buildSparkSession(masterUrl, sparkConf, sparkConfigurationProperties);
     }
 
-    private void printException(@NotNull CommandLine.ParseResult parseResult, Exception ex) {
+    private void printException(CommandLine.ParseResult parseResult, Exception ex) {
         CommandLine.ParseResult subcommand = parseResult.subcommand();
         Objects.requireNonNull(subcommand);
         final boolean includeStacktrace = subcommand.hasMatchedOption("--stacktrace");
@@ -220,5 +283,21 @@ public class Main {
         stderr.println(String.format("To resolve an XDMP-OLDSTAMP error, consider using the --no-snapshot option " +
             "or consult the Flux documentation at https://marklogic.github.io/flux/ for " +
             "information on configuring your database to support point-in-time queries."));
+    }
+
+    /**
+     * @return list of connection option names like "--host", "--port", etc.
+     * @since 2.0.0
+     */
+    public static List<String> getConnectionOptionNames() {
+        return ConnectionParams.getOptionNames();
+    }
+
+    /**
+     * @return list of output connection option names like "--output-host", "--output-port", etc.
+     * @since 2.0.0
+     */
+    public static List<String> getOutputConnectionOptionNames() {
+        return OutputConnectionParams.getOptionNames();
     }
 }

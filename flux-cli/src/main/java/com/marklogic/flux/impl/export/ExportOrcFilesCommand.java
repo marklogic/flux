@@ -35,9 +35,9 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
     public static class WriteOrcFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark ORC option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html; e.g. -Pcompression=lz4."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html; e.g. --spark-prop compression=lz4."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

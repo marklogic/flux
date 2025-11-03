@@ -8,6 +8,7 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkException;
+import org.apache.spark.SparkIllegalArgumentException;
 import org.apache.spark.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +58,6 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     @Override
     public final void execute(SparkSession session) {
         try {
-            commonParams.getSparkSessionConfigParams().entrySet().stream()
-                .forEach(entry -> session.conf().set(entry.getKey(), entry.getValue()));
             if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
                 logger.info("Will connect to MarkLogic host: {}", getConnectionParams().getSelectedHost());
             }
@@ -144,26 +143,35 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     private void handleException(Exception ex) {
-        if (ex.getCause() instanceof ConnectorException) {
+        final Throwable cause = ex.getCause();
+        if (cause instanceof ConnectorException connectorException) {
             // Our connector exceptions are expected to be helpful and friendly to the user.
-            throw (ConnectorException) ex.getCause();
+            throw connectorException;
         }
-        if (ex instanceof FluxException) {
-            throw (FluxException) ex;
+
+        if (ex instanceof FluxException fluxException) {
+            throw fluxException;
         }
-        if (ex instanceof SparkException && ex.getCause() != null) {
-            if (ex.getCause() instanceof SparkException && ex.getCause().getCause() != null) {
+
+        if (ex instanceof SparkException && cause != null) {
+            final Throwable nestedCause = cause.getCause();
+            if (cause instanceof SparkException && nestedCause != null) {
                 // For some errors, Spark throws a SparkException that wraps a SparkException, and it's the
                 // wrapped SparkException that has a more useful error
-                throw new FluxException(ex.getCause().getCause());
+                throw new FluxException(nestedCause);
             }
             // The top-level SparkException message typically has a stacktrace in it that is not likely to be helpful.
-            throw new FluxException(ex.getCause());
+            throw new FluxException(cause);
         }
 
         // Generally, the message for an IllegalArgumentException is user-friendly, so we don't need to include
         // the class name in it like we do below.
         if (ex instanceof IllegalArgumentException) {
+            // If it's a Spark IllegalArgumentException, unwrap it so the user sees the more specific message, as the
+            // outer IllegalArgumentException is often something like "Error while instantiating 'org.apache.spark.sql.internal.SessionStateBuilder'".
+            if (ex.getCause() != null && ex.getCause() instanceof SparkIllegalArgumentException sparkException) {
+                throw new FluxException(sparkException.getMessage(), ex);
+            }
             throw new FluxException(ex.getMessage(), ex);
         }
 

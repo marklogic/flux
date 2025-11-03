@@ -5,15 +5,14 @@ package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.marklogic.flux.AbstractFluxTest;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ImportAndSplitFilesTest extends AbstractJava17Test {
+class ImportAndSplitFilesTest extends AbstractTest {
 
     @Test
     void splitNamespacedXml() {
@@ -21,11 +20,11 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/xml-file,''",
             "--splitter-xpath", "/ex:root/ex:text/text()",
-            "-Xex=org:example",
+            "--xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "500",
             "--splitter-max-overlap-size", "100",
             "--stacktrace"
@@ -44,12 +43,12 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
     @Test
     void invalidNamespaceDeclaration() {
         assertStderrContains(
-            "Value for option '-X' (<String=String>) should be in KEY=VALUE format but was org:example",
+            "Value for option '--xpath-namespace' (<String=String>) should be in KEY=VALUE format but was org:example",
             "import-files",
             "--path", "../flux-cli/src/test/resources/xml-file/namespaced-java-client-intro.xml",
             "--connection-string", makeConnectionString(),
             "--splitter-xpath", "/ex:root/ex:text/text()",
-            "-Xorg:example"
+            "--xpath-namespace", "org:example"
         );
     }
 
@@ -59,7 +58,7 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
@@ -83,7 +82,7 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", ""
@@ -104,7 +103,7 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/more-text",
@@ -127,13 +126,13 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.CustomSplitter",
             // This also shows how a map param can have an equals symbol in the value; picocli only looks for the first
             // equals symbol to use as a key/value separator.
-            "-StextToReturn=just=testing"
+            "--splitter-prop", "textToReturn=just=testing"
         );
 
         ArrayNode chunks = (ArrayNode) readJsonDocument("/java-client-intro.json").get("chunks");
@@ -149,7 +148,7 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "doesnt.exist.ClassName"
         );
@@ -160,15 +159,15 @@ class ImportAndSplitFilesTest extends AbstractJava17Test {
         assertStderrContains(
             // This is the default picocli error message for an invalid map option. It's a little technical, but seems
             // reasonable enough for a user to be able to fix their mistake.
-            "Value for option '-S' (<String=String>) should be in KEY=VALUE format but was missing an equals",
+            "Value for option '--splitter-prop' (<String=String>) should be in KEY=VALUE format but was missing an equals",
 
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--splitter-json-pointer", "/text",
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
-            "-Smissing an equals"
+            "--splitter-prop", "missing an equals"
         );
     }
 }

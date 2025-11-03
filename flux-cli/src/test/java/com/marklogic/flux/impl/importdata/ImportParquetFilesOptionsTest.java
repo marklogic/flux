@@ -16,9 +16,10 @@ class ImportParquetFilesOptionsTest extends AbstractOptionsTest {
     void configurationAndDataSourceOptions() {
         ImportParquetFilesCommand command = (ImportParquetFilesCommand) getCommand(
             "import-parquet-files",
+            "--connection-string", makeConnectionString(),
             "--path", "/doesnt/matter",
-            "-PdatetimeRebaseMode=CORRECTED",
-            "-Cspark.sql.parquet.filterPushdown=false",
+            "--spark-prop", "datetimeRebaseMode=CORRECTED",
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 

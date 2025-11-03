@@ -42,10 +42,10 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--extracted-text-collections", "e1,e2",
             "--extracted-text-permissions", "e1,read,e2,update",
             "--extracted-text-drop-source",
-            "-Mmeta1=value1",
-            "-Mmeta2=value2",
-            "-Rprop1=value1",
-            "-Rprop2=value2"
+            "--doc-metadata", "meta1=value1",
+            "--doc-metadata", "meta2=value2",
+            "--doc-prop", "prop1=value1",
+            "--doc-prop", "prop2=value2"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -99,7 +99,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--path", "anywhere",
             "--splitter-json-pointer", "/path1\n/path2",
             "--splitter-xpath", "/some/path",
-            "-Xex=org:example",
+            "--xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "100",
             "--splitter-max-overlap-size", "50",
             "--splitter-regex", "word",
@@ -142,8 +142,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", "user:password@host:8001",
             "--path", "anywhere",
             "--embedder", "azure",
-            "-Ekey=value",
-            "-EotherKey=otherValue",
+            "--embedder-prop", "key=value",
+            "--embedder-prop", "otherKey=otherValue",
             "--embedder-prompt", "This is a prompt",
             "--embedder-chunks-json-pointer", "/some/chunks",
             "--embedder-text-json-pointer", "/my-text",

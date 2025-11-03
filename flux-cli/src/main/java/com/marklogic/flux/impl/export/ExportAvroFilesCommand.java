@@ -35,9 +35,9 @@ public class ExportAvroFilesCommand extends AbstractExportRowsToFilesCommand<Avr
     public static class WriteAvroFilesParams extends WriteStructuredFilesParams<WriteSparkFilesOptions> implements WriteSparkFilesOptions {
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark Avro option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. -Pcompression=bzip2."
+                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html; e.g. --spark-prop compression=bzip2."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

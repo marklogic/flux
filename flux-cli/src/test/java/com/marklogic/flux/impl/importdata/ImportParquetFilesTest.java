@@ -28,8 +28,8 @@ class ImportParquetFilesTest extends AbstractTest {
             "--batch-size", "5",
             "--log-progress", "10",
 
-            // Including this to ensure a valid -C option doesn't cause an error.
-            "-Cspark.sql.parquet.filterPushdown=false"
+            // Including this to ensure a valid --spark-conf option doesn't cause an error.
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false"
         );
 
         assertCollectionSize("parquet-test", 32);
@@ -122,7 +122,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--uri-template", "/parquet/{color}.json"
         );
 
@@ -151,7 +151,7 @@ class ImportParquetFilesTest extends AbstractTest {
         );
 
         assertTrue(
-            stderr.contains("Error: [CANNOT_READ_FILE_FOOTER]"),
+            stderr.contains("Error: [FAILED_READ_FILE.CANNOT_READ_FILE_FOOTER]"),
             "Sometimes Spark will throw a SparkException that wraps a SparkException, and it's the wrapped exception " +
                 "that has the useful message in it. This test verifies that we use the message from the wrapped " +
                 "SparkException, which is far more helpful for this particular failure. Unexpected stderr: " + stderr
@@ -165,10 +165,10 @@ class ImportParquetFilesTest extends AbstractTest {
             "--path", "src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "-Cspark.sql.parquet.filterPushdown=invalid-value"
+            "--spark-conf", "spark.sql.parquet.filterPushdown=invalid-value"
         );
 
-        assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
+        assertTrue(stderr.contains("INVALID_CONF_VALUE.TYPE_MISMATCH"),
             "This test verifies that spark.sql dynamic params are added to the Spark conf. An invalid value is used " +
                 "to verify this, as its inclusion in the Spark conf should cause an error. Actual stderr: " + stderr);
     }
@@ -181,7 +181,7 @@ class ImportParquetFilesTest extends AbstractTest {
             "--path", "src/test/resources/avro/colors.avro",
             // Without mergeSchema=true, Spark will throw an error of "Unable to infer schema for Parquet". This seems
             // to occur if there's at least one bad file. With mergeSchema=true,
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-cars"
@@ -201,12 +201,12 @@ class ImportParquetFilesTest extends AbstractTest {
             "--abort-on-read-failure",
             // This is kept here to ensure the command fails because it could read the Avro file and not because
             // Spark could not infer a schema.
-            "-PmergeSchema=true",
+            "--spark-prop", "mergeSchema=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         );
 
-        assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer for file"),
+        assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer"),
             "The command should have failed because Spark could not read the footer of the invalid Avro file; " +
                 "stderr: " + stderr);
     }

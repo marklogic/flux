@@ -125,11 +125,11 @@ bin\flux export-avro-files ^
 {% endtabs %}
 
 You can include any of the 
-[Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `-P` option to
-control how Avro content is written. These options are expressed as `-PoptionName=optionValue`.
+[Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `--spark-prop` option to
+control how Avro content is written. These options are expressed as `--spark-prop optionName=optionValue`.
 
-For configuration options listed in the above Spark Avro guide, use the `-C` option instead. For example,
-`-Cspark.sql.avro.compression.codec=deflate` would change the type of compression used for writing Avro files.
+For configuration options listed in the above Spark Avro guide, use the `--spark-conf` option instead. For example,
+`--spark-conf spark.sql.avro.compression.codec=deflate` would change the type of compression used for writing Avro files.
 
 ### Delimited text
 
@@ -156,16 +156,16 @@ bin\flux export-delimited-files ^
 {% endtabs %}
 
 This command reuses Spark's support for writing delimited text files. You can include
-any of the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `-P` 
-option to control how delimited text is written. These options are expressed as `-PoptionName=optionValue`. 
+any of the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `--spark-prop` 
+option to control how delimited text is written. These options are expressed as `--spark-prop optionName=optionValue`. 
 
 The command defaults to setting the Spark CSV `header` option to `true` so that column
 names from your Optic query for selecting rows from MarkLogic are included in each output file. You can override this
-via `-Pheader=false` if desired.
+via `--spark-prop header=false` if desired.
 
 The command also defaults to setting the Spark CSV `inferSchema` option to `true`. This results in Flux, via Spark CSV,
 attempting to determine a type for each column in the delimited text file. To disable this behavior, resulting in 
-every column having a type of `string`, include `-PinferSchema=false`. 
+every column having a type of `string`, include `--spark-prop inferSchema=false`. 
 
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the 
 `--encoding` option - e.g. 
@@ -217,8 +217,8 @@ bin\flux export-json-lines-files ^
 
 
 This command reuses Spark's support for writing JSON files. You can include any of the
-[Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `-P` option to control
-how JSON Lines files are written. These options are expressed as `-PoptionName=optionValue`.
+[Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `--spark-prop` option to control
+how JSON Lines files are written. These options are expressed as `--spark-prop optionName=optionValue`.
 
 By default, each file will be written using the UTF-8 encoding. You can specify an alternate encoding via the
 `--encoding` option - e.g.
@@ -269,11 +269,11 @@ bin\flux export-orc-files ^
 
 
 This command reuses Spark's support for writing ORC files. You can include any of the
-[Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `-P` option to
-control how ORC content is written. These options are expressed as `-PoptionName=optionValue`.
+[Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `--spark-prop` option to
+control how ORC content is written. These options are expressed as `--spark-prop optionName=optionValue`.
 
-For configuration options listed in the above Spark ORC guide, use the `-C` option instead. For example,
-`-Cspark.sql.orc.impl=hive` would change the type of ORC implementation.
+For configuration options listed in the above Spark ORC guide, use the `--spark-conf` option instead. For example,
+`--spark-conf spark.sql.orc.impl=hive` would change the type of ORC implementation.
 
 ### Parquet
 
@@ -299,11 +299,11 @@ bin\flux export-parquet-files ^
 {% endtabs %}
 
 This command reuses Spark's support for writing Parquet files. You can include any of the
-[Spark Parquet data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html) via the `-P` option to
-control how Parquet content is written. These options are expressed as `-PoptionName=optionValue`.
+[Spark Parquet data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html) via the `--spark-prop` option to
+control how Parquet content is written. These options are expressed as `--spark-prop optionName=optionValue`.
 
-For configuration options listed in the above Spark Parquet guide, use the `-C` option instead. For example, 
-`-Cspark.sql.parquet.compression.codec=gzip` would change the compressed used for writing Parquet files.
+For configuration options listed in the above Spark Parquet guide, use the `--spark-conf` option instead. For example, 
+`--spark-conf spark.sql.parquet.compression.codec=gzip` would change the compressed used for writing Parquet files.
 
 ## Controlling the save mode
 

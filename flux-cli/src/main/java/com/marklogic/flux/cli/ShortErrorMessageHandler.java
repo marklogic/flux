@@ -5,7 +5,6 @@ package com.marklogic.flux.cli;
 
 import picocli.CommandLine;
 
-import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.util.Objects;
 
@@ -15,7 +14,7 @@ import java.util.Objects;
  */
 class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler {
 
-    public int handleParseException(@NotNull CommandLine.ParameterException ex, String[] args) {
+    public int handleParseException(CommandLine.ParameterException ex, String[] args) {
         final CommandLine commandLine = ex.getCommandLine();
         Objects.requireNonNull(commandLine);
         final PrintWriter err = commandLine.getErr();

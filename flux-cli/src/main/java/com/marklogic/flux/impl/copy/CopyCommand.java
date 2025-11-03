@@ -168,14 +168,14 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private String uriTemplate;
 
         @CommandLine.Option(
-            names = {"-M"},
-            description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+            names = {"--output-doc-metadata"},
+            description = "Specify one or more metadata values to be added to each document; e.g. --output-doc-metadata param=value ."
         )
         private Map<String, String> metadataValues = new HashMap<>();
 
         @CommandLine.Option(
-            names = {"-R"},
-            description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+            names = {"--output-doc-prop"},
+            description = "Specify one or more document properties to be added to each document; e.g. --output-doc-prop param=value ."
         )
         private Map<String, String> documentProperties = new HashMap<>();
 
