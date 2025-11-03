@@ -72,9 +72,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             r.rental_id, r.inventory_id,
             p.payment_id, p.amount
             from customer c
-            inner join public.rental r on c.customer_id = r.customer_id
-            inner join public.payment p on p.customer_id = p.customer_id
-            where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506""";
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 19000
+            order by p.amount
+            """;
 
         run(
             "import-jdbc",
@@ -95,13 +97,9 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         assertEquals("Mary", doc.get("first_name").asText());
 
         ArrayNode payments = (ArrayNode) doc.get("payments");
-        assertEquals(3, payments.size(), "The query should have selected 3 related payments.");
-        assertEquals(17503, payments.get(0).get("payment_id").asInt());
-        assertEquals(7.99, payments.get(0).get("amount").asDouble());
-        assertEquals(17504, payments.get(1).get("payment_id").asInt());
-        assertEquals(1.99, payments.get(1).get("amount").asDouble());
-        assertEquals(17505, payments.get(2).get("payment_id").asInt());
-        assertEquals(7.99, payments.get(2).get("amount").asDouble());
+        assertEquals(7, payments.size(), "The query should have selected 7 related payments.");
+        assertEquals(0.99, payments.get(0).get("amount").asDouble());
+        assertEquals(9.99, payments.get(6).get("amount").asDouble());
 
         ArrayNode rentals = (ArrayNode) doc.get("rentals");
         assertEquals(2, rentals.size(), "The query should have selected 2 related rentals.");
