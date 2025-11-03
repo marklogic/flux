@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-delimited-files",
     description = "Read rows via Optic from MarkLogic and write them to delimited text files on a local filesystem, " +
-        "HDFS, or S3 using Spark's support defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html ."
+        "HDFS, or S3 using Spark's support defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html ."
 )
 public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesCommand<DelimitedFilesExporter> implements DelimitedFilesExporter {
 
@@ -39,7 +39,7 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
 
         @CommandLine.Option(
             names = {"--spark-prop"},
-            description = "Specify any Spark CSV option defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html; e.g. --spark-prop quoteAll=true."
+            description = "Specify any Spark CSV option defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-csv.html; e.g. --spark-prop quoteAll=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 

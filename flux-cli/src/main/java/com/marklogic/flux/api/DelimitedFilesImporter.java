@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * Read delimited text files from supported file locations using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html">Spark's CSV support</a>,
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>,
  * and write JSON or XML documents to MarkLogic.
  */
 public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter> {
