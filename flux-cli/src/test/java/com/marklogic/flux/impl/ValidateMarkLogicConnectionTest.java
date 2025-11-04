@@ -71,15 +71,16 @@ class ValidateMarkLogicConnectionTest extends AbstractTest {
     }
 
     @Test
-    void cloudAuthDoesntRequirePort() {
+    void cloudAuthDoesntRequirePortOrAuthType() {
         // The expected error message verifies that the user does not need to provide a port when auth-type=cloud.
         // Otherwise, the validation for a missing port would trigger and no connection attempt would be made.
+        // Enhanced in 2.0.0 to not require authType either. We can assume that if the user specifies a cloud-api-key,
+        // then port should be 443 and auth type should be cloud.
         assertStderrContains(
             "Unable to call token endpoint at https://localhost/token",
             "import-files",
             "--path", "src/test/resources/mixed-files",
-            "--host", getDatabaseClient().getHost(),
-            "--auth-type", "cloud",
+            "--host", "localhost",
             "--cloud-api-key", "doesnt-matter-for-this-test"
         );
     }
