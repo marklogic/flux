@@ -183,14 +183,12 @@ threads available on each host, and also write directly to a forest on the host 
 
 ### Connecting to Progress Data Cloud
 
-To connect to Progress Data Cloud (PDC), you must set at least the following options:
+To connect to Progress Data Cloud (PDC), if you are using Flux 2.0 or higher, you must set at least the following options:
 
 {% tabs log %}
 {% tab log Unix %}
 ```
 --host your-pdc-host-name \
---port 443 \
---auth-type cloud \
 --cloud-api-key your-key-goes-here \
 --base-path your-integration-endpoint
 ```
@@ -198,13 +196,13 @@ To connect to Progress Data Cloud (PDC), you must set at least the following opt
 {% tab log Windows %}
 ```
 --host your-pdc-host-name ^
---port 443 ^
---auth-type cloud ^
 --cloud-api-key your-key-goes-here ^
 --base-path your-integration-endpoint
 ```
 {% endtab %}
 {% endtabs %}
+
+If you are using Flux 1.x, you must also include `--auth-type cloud`. 
 
 The value of `--cloud-api-key` is an API key that you have generated in your PDC tenancy. Please see the 
 [PDC documentation on API keys](https://docs.progress.com/bundle/progress-data-cloud-use/page/topics/account-settings/manage-api-key.html)
