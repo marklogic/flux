@@ -111,7 +111,8 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "azure",
-            "--embedder-prop", "api-key=doesnt-matter"
+            "--embedder-prop", "api-key=doesnt-matter",
+            "--embedder-prop", "deployment-name=anything"
         );
     }
 
