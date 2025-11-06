@@ -28,6 +28,20 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
     )
     private List<Aggregation> aggregations = new ArrayList<>();
 
+    @CommandLine.Option(
+        names = "--aggregate-order-by",
+        description = "Specify ordering for an aggregated array. Must be of the form aggregationName=columnName. " +
+            "The columnName must be one of the columns in the corresponding aggregation. Default order is ascending.",
+        converter = AggregateOrderBy.class
+    )
+    private AggregateOrderBy aggregateOrderBy;
+
+    @CommandLine.Option(
+        names = "--aggregate-order-desc",
+        description = "Sort the aggregated array in descending order. Only applies when --aggregate-order-by is specified."
+    )
+    private boolean aggregateOrderDesc = false;
+
     public static class Aggregation {
         private String newColumnName;
         private List<String> columnNamesToGroup;
@@ -35,6 +49,37 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         public Aggregation(String newColumnName, List<String> columnNamesToGroup) {
             this.newColumnName = newColumnName;
             this.columnNamesToGroup = columnNamesToGroup;
+        }
+    }
+
+    public static class AggregateOrderBy implements CommandLine.ITypeConverter<AggregateOrderBy> {
+        private String aggregationName;
+        private String columnName;
+
+        public AggregateOrderBy() {}
+
+        public AggregateOrderBy(String aggregationName, String columnName) {
+            this.aggregationName = aggregationName;
+            this.columnName = columnName;
+        }
+
+        @Override
+        public AggregateOrderBy convert(String value) {
+            String[] parts = value.split("=");
+            if (parts.length != 2) {
+                throw new FluxException(String.format("Invalid aggregate order-by: %s; must be of the form " +
+                    "aggregationName=columnName", value));
+            }
+
+            return new AggregateOrderBy(parts[0], parts[1]);
+        }
+
+        public String getAggregationName() {
+            return aggregationName;
+        }
+
+        public String getColumnName() {
+            return columnName;
         }
     }
 
@@ -61,6 +106,11 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         this.aggregations.add(new Aggregation(newColumnName, Arrays.asList(columns)));
     }
 
+    public void addAggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+        this.aggregateOrderBy = new AggregateOrderBy(aggregationName, columnName);
+        this.aggregateOrderDesc = !ascending;
+    }
+
     public Dataset<Row> applyGroupBy(Dataset<Row> dataset) {
         if (groupBy == null || groupBy.trim().isEmpty()) {
             return dataset;
@@ -73,13 +123,54 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         columns.addAll(aggregationColumns);
         final Column aliasColumn = columns.get(0);
         final Column[] columnsToGroup = columns.subList(1, columns.size()).toArray(new Column[]{});
+        Dataset<Row> result;
         try {
-            return groupedDataset.agg(aliasColumn, columnsToGroup);
+            result = groupedDataset.agg(aliasColumn, columnsToGroup);
         } catch (Exception e) {
             String columnNames = aggregations.stream().map(agg -> agg.columnNamesToGroup.toString()).collect(Collectors.joining(", "));
             throw new FluxException(String.format("Unable to aggregate columns: %s; please ensure that each column " +
                 "name will be present in the data read from the data source.", columnNames), e);
         }
+
+        // Apply sorting to aggregated arrays if specified
+        if (aggregateOrderBy != null) {
+            result = applySortToAggregatedArray(result);
+        }
+
+        return result;
+    }
+
+    private Dataset<Row> applySortToAggregatedArray(Dataset<Row> dataset) {
+        String aggName = aggregateOrderBy.getAggregationName();
+        String sortField = aggregateOrderBy.getColumnName();
+
+        // Find the aggregation to determine if it's single or multi-column
+        Aggregation agg = aggregations.stream()
+            .filter(a -> a.newColumnName.equals(aggName))
+            .findFirst()
+            .orElseThrow(() -> new FluxException(String.format(
+                "Aggregate order-by references unknown aggregation '%s'", aggName)));
+
+        Column sortedColumn;
+        if (agg.columnNamesToGroup.size() == 1) {
+            // For single-column arrays, use sort_array
+            sortedColumn = functions.sort_array(functions.col(aggName), aggregateOrderDesc);
+        } else {
+            // For struct arrays, use array_sort with SQL expression
+            // In array_sort lambda: return -1 if left should come before right, 1 if after, 0 if equal
+            int whenLessThan = aggregateOrderDesc ? 1 : -1;
+            int whenGreaterThan = aggregateOrderDesc ? -1 : 1;
+
+            sortedColumn = functions.expr(String.format(
+                "array_sort(%s, (left, right) -> " +
+                "case when left.%s < right.%s then %d " +
+                "when left.%s > right.%s then %d else 0 end)",
+                aggName, sortField, sortField, whenLessThan,
+                sortField, sortField, whenGreaterThan
+            ));
+        }
+
+        return dataset.withColumn(aggName, sortedColumn);
     }
 
     /**
@@ -108,17 +199,32 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         List<Column> columns = new ArrayList<>();
         aggregations.forEach(aggregation -> {
             final List<String> columnNames = aggregation.columnNamesToGroup;
+            Column resultColumn;
+
             if (columnNames.size() == 1) {
                 Column column = new Column(columnNames.get(0));
-                Column listOfValuesColumn = functions.collect_list(functions.concat(column));
-                columns.add(listOfValuesColumn.alias(aggregation.newColumnName));
+                resultColumn = functions.collect_list(functions.concat(column));
             } else {
                 Column[] structColumns = columnNames.stream().map(functions::col).toArray(Column[]::new);
                 Column arrayColumn = functions.collect_list(functions.struct(structColumns));
                 // array_distinct removes duplicate objects that can result from 2+ joins existing in the query.
                 // See https://www.sparkreference.com/reference/array_distinct/ for performance considerations.
-                columns.add(functions.array_distinct(arrayColumn).alias(aggregation.newColumnName));
+                resultColumn = functions.array_distinct(arrayColumn);
             }
+
+            // Validate aggregate-order-by if specified for this aggregation
+            if (aggregateOrderBy != null && aggregateOrderBy.getAggregationName().equals(aggregation.newColumnName)) {
+                if (!columnNames.contains(aggregateOrderBy.getColumnName())) {
+                    throw new FluxException(String.format(
+                        "Invalid aggregate order-by for '%s': column '%s' is not in the aggregation. " +
+                        "Available columns: %s",
+                        aggregation.newColumnName,
+                        aggregateOrderBy.getColumnName(),
+                        columnNames));
+                }
+            }
+
+            columns.add(resultColumn.alias(aggregation.newColumnName));
         });
         return columns;
     }

@@ -6,12 +6,16 @@ package com.marklogic.flux.impl.importdata;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.marklogic.client.ext.helper.ClientHelper;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportJdbcWithAggregatesTest extends AbstractTest {
 
@@ -74,7 +78,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             from customer c
             inner join rental r on c.customer_id = r.customer_id
             inner join payment p on c.customer_id = p.customer_id
-            where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 19000
+            where r.rental_id < 1000 and p.payment_id < 19000
             order by p.amount
             """;
 
@@ -86,6 +90,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--group-by", "customer_id",
             "--aggregate", "payments=payment_id,amount",
             "--aggregate", "rentals=rental_id,inventory_id",
+            "--aggregate-order-by", "payments=amount",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/customer/{customer_id}.json"
@@ -107,6 +112,39 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         assertEquals(3021, rentals.get(0).get("inventory_id").asInt());
         assertEquals(573, rentals.get(1).get("rental_id").asInt());
         assertEquals(4020, rentals.get(1).get("inventory_id").asInt());
+    }
+
+    /**
+     * Attempts to reproduce the query in MLE-25002 by using select statements for the "from" and "inner join".
+     */
+    @Test
+    void orderByPaymentsOnAllCustomers() {
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            order by p.amount
+            """;
+
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH, "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", query,
+            "--group-by", "customer_id",
+            "--aggregate", "payments=payment_id,amount",
+            "--aggregate-order-by", "payments=amount",
+            "--aggregate-order-desc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json",
+            "--collections", "customer"
+        );
+
+        verifyEachCustomerHasPaymentsOrderedDescending();
     }
 
     /**
@@ -175,5 +213,19 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         );
+    }
+
+    private void verifyEachCustomerHasPaymentsOrderedDescending() {
+        List<String> uris = new ClientHelper(getDatabaseClient()).getUrisInCollection("customer");
+        for (String uri : uris) {
+            JsonNode doc = readJsonDocument(uri);
+            ArrayNode payments = (ArrayNode) doc.get("payments");
+            if (payments.size() < 2) {
+                continue;
+            }
+            double firstAmount = payments.get(0).get("amount").asDouble();
+            double lastAmount = payments.get(payments.size() - 1).get("amount").asDouble();
+            assertTrue(lastAmount >= firstAmount, "Customer doesn't have payments ordered descending! " + doc.toPrettyString());
+        }
     }
 }
