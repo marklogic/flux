@@ -6,11 +6,7 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.JdbcImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
-import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.JdbcParams;
-import com.marklogic.flux.impl.JdbcUtil;
-import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.TdeHelper;
+import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
@@ -129,8 +125,15 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         }
 
         @Override
-        public ReadJdbcOptions aggregateColumns(String newColumnName, String... columns) {
-            this.aggregationParams.addAggregationExpression(newColumnName, columns);
+        public ReadJdbcOptions aggregateColumns(String aggregationName, String... columns) {
+            this.aggregationParams.addAggregationExpression(aggregationName, columns);
+            return this;
+        }
+
+        @Override
+        public ReadJdbcOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+            this.aggregationParams.setAggregateOrderBy(new AggregationParams.AggregateOrderBy(aggregationName, columnName));
+            this.aggregationParams.setAggregateOrderDescending(!ascending);
             return this;
         }
     }

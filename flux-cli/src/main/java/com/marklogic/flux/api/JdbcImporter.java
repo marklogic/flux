@@ -20,13 +20,19 @@ public interface JdbcImporter extends Executor<JdbcImporter> {
 
         /**
          * Either this or {@link #query(String)} must be invoked.
+         *
          * @since 1.4.0
          */
         ReadJdbcOptions table(String table);
 
         ReadJdbcOptions groupBy(String groupBy);
 
-        ReadJdbcOptions aggregateColumns(String newColumnName, String... columns);
+        ReadJdbcOptions aggregateColumns(String aggregationName, String... columns);
+
+        /**
+         * @since 2.0.0
+         */
+        ReadJdbcOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending);
     }
 
     JdbcImporter from(Consumer<ReadJdbcOptions> consumer);

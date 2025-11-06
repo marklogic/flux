@@ -6,12 +6,16 @@ package com.marklogic.flux.impl.importdata;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.marklogic.client.ext.helper.ClientHelper;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportJdbcWithAggregatesTest extends AbstractTest {
 
@@ -62,7 +66,8 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     /**
      * Demonstrates a query with 2+ joins, producing a customer document with rentals and payments as
-     * separate arrays.
+     * separate arrays. Note that aggregate-order-by isn't needed here since a single customer document is being
+     * created, and thus the "order by" in the SQL query should work as expected.
      */
     @Test
     void customerWithArrayOfRentalsAndArrayOfPayments() {
@@ -107,6 +112,44 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         assertEquals(3021, rentals.get(0).get("inventory_id").asInt());
         assertEquals(573, rentals.get(1).get("rental_id").asInt());
         assertEquals(4020, rentals.get(1).get("inventory_id").asInt());
+    }
+
+    /**
+     * Verifies that "aggregate-order-by" works for all customers. In this scenario, an "order by" in the SQL query
+     * won't work because of how Spark aggregates payments and rentals into many customers.
+     */
+    @Test
+    void orderByPaymentsOnAllCustomers() {
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            """;
+
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH, "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", query,
+            "--group-by", "customer_id",
+            "--aggregate", "payments=payment_id,amount",
+
+            // Order payments, which is ascending by default.
+            "--aggregate-order-by", "payments=amount",
+
+            // But make the ordering descending!
+            "--aggregate-order-desc",
+
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json",
+            "--collections", "customer"
+        );
+
+        verifyEachCustomerHasPaymentsOrderedDescending();
     }
 
     /**
@@ -175,5 +218,21 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         );
+    }
+
+    private void verifyEachCustomerHasPaymentsOrderedDescending() {
+        List<String> uris = new ClientHelper(getDatabaseClient()).getUrisInCollection("customer");
+        for (String uri : uris) {
+            JsonNode doc = readJsonDocument(uri);
+            ArrayNode payments = (ArrayNode) doc.get("payments");
+            if (payments.size() < 2) {
+                continue;
+            }
+            double firstAmount = payments.get(0).get("amount").asDouble();
+            double lastAmount = payments.get(payments.size() - 1).get("amount").asDouble();
+            assertTrue(lastAmount <= firstAmount,
+                "Customer doesn't have payments ordered descending! First amount: %f; last amount: %f; doc: %s".formatted(
+                    firstAmount, lastAmount, doc.toPrettyString()));
+        }
     }
 }
