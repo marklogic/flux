@@ -121,8 +121,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
         @Override
         public ReadDelimitedFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.setAggregateOrderBy(new AggregationParams.AggregateOrderBy(aggregationName, columnName));
-            this.aggregationParams.setAggregateOrderDescending(!ascending);
+            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }
     }

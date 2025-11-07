@@ -30,17 +30,13 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
 
     @CommandLine.Option(
         names = "--aggregate-order-by",
-        description = "Specify ordering for an aggregated array. Must be of the form aggregationName=columnName. " +
-            "The columnName must be one of the columns in the corresponding aggregation. Default order is ascending.",
-        converter = AggregateOrderBy.class
+        description = "Specify ordering for an an aggregation produced by --aggregate. Must be of the form aggregationName=columnName:asc " +
+            "or aggregationName=columnName:desc. The columnName must be one of the columns in the corresponding " +
+            "aggregation. Default order is ascending if not specified. Can be specified multiple times to order " +
+            "multiple aggregations.",
+        converter = AggregationOrdering.class
     )
-    private AggregateOrderBy aggregateOrderBy;
-
-    @CommandLine.Option(
-        names = "--aggregate-order-desc",
-        description = "Sort the aggregated array in descending order. Only applies when --aggregate-order-by is specified."
-    )
-    private boolean aggregateOrderDescending;
+    private List<AggregationOrdering> aggregationOrderings = new ArrayList<>();
 
     public static class Aggregation {
         private String newColumnName;
@@ -52,27 +48,46 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         }
     }
 
-    public static class AggregateOrderBy implements CommandLine.ITypeConverter<AggregateOrderBy> {
+    public static class AggregationOrdering implements CommandLine.ITypeConverter<AggregationOrdering> {
         private String aggregationName;
         private String columnName;
+        private boolean ascending = true;
 
-        public AggregateOrderBy() {
+        public AggregationOrdering() {
         }
 
-        public AggregateOrderBy(String aggregationName, String columnName) {
+        public AggregationOrdering(String aggregationName, String columnName, boolean ascending) {
             this.aggregationName = aggregationName;
             this.columnName = columnName;
+            this.ascending = ascending;
         }
 
         @Override
-        public AggregateOrderBy convert(String value) {
+        public AggregationOrdering convert(String value) {
             String[] parts = value.split("=");
             if (parts.length != 2) {
                 throw new FluxException(String.format("Invalid aggregate order-by: %s; must be of the form " +
-                    "aggregationName=columnName", value));
+                    "aggregationName=columnName[:asc|desc]", value));
             }
 
-            return new AggregateOrderBy(parts[0], parts[1]);
+            String aggregationName = parts[0];
+            String columnAndDirection = parts[1];
+
+            String columnName;
+            boolean ascending = true;
+
+            if (columnAndDirection.endsWith(":asc")) {
+                columnName = columnAndDirection.substring(0, columnAndDirection.length() - 4);
+                ascending = true;
+            } else if (columnAndDirection.endsWith(":desc")) {
+                columnName = columnAndDirection.substring(0, columnAndDirection.length() - 5);
+                ascending = false;
+            } else {
+                // No direction specified, default to ascending
+                columnName = columnAndDirection;
+            }
+
+            return new AggregationOrdering(aggregationName, columnName, ascending);
         }
 
         public String getAggregationName() {
@@ -81,6 +96,10 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
 
         public String getColumnName() {
             return columnName;
+        }
+
+        public boolean isAscending() {
+            return ascending;
         }
     }
 
@@ -100,12 +119,11 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         this.groupBy = groupBy;
     }
 
-    public void setAggregateOrderBy(AggregateOrderBy aggregateOrderBy) {
-        this.aggregateOrderBy = aggregateOrderBy;
-    }
-
-    public void setAggregateOrderDescending(boolean aggregateOrderDescending) {
-        this.aggregateOrderDescending = aggregateOrderDescending;
+    public void addAggregationOrdering(String aggregationName, String columnName, boolean ascending) {
+        if (this.aggregationOrderings == null) {
+            this.aggregationOrderings = new ArrayList<>();
+        }
+        this.aggregationOrderings.add(new AggregationOrdering(aggregationName, columnName, ascending));
     }
 
     public void addAggregationExpression(String newColumnName, String... columns) {
@@ -136,8 +154,8 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
                 "name will be present in the data read from the data source.", columnNames), e);
         }
 
-        return aggregateOrderBy != null ?
-            applySortToAggregatedArray(result) :
+        return aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
+            applySortToAggregatedArrays(result) :
             result;
     }
 
@@ -181,8 +199,10 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
             }
 
             // Validate aggregate-order-by if specified for this aggregation
-            if (aggregateOrderBy != null && aggregateOrderBy.getAggregationName().equals(aggregation.newColumnName)) {
-                validateAggregateOrderBy(aggregation, columnNames);
+            if (aggregationOrderings != null) {
+                aggregationOrderings.stream()
+                    .filter(orderBy -> orderBy.getAggregationName().equals(aggregation.newColumnName))
+                    .forEach(orderBy -> validateAggregateOrderBy(aggregation, columnNames, orderBy));
             }
 
             columns.add(resultColumn.alias(aggregation.newColumnName));
@@ -190,20 +210,28 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         return columns;
     }
 
-    private void validateAggregateOrderBy(Aggregation aggregation, List<String> columnNames) {
-        if (!columnNames.contains(aggregateOrderBy.getColumnName())) {
+    private void validateAggregateOrderBy(Aggregation aggregation, List<String> columnNames, AggregationOrdering orderBy) {
+        if (!columnNames.contains(orderBy.getColumnName())) {
             throw new FluxException(String.format(
                 "Invalid aggregate order-by for '%s': column '%s' is not in the aggregation. " +
                     "Available columns: %s",
                 aggregation.newColumnName,
-                aggregateOrderBy.getColumnName(),
+                orderBy.getColumnName(),
                 columnNames));
         }
     }
 
-    private Dataset<Row> applySortToAggregatedArray(Dataset<Row> dataset) {
-        final String aggregationName = aggregateOrderBy.getAggregationName();
-        final String columnToSortBy = aggregateOrderBy.getColumnName();
+    private Dataset<Row> applySortToAggregatedArrays(Dataset<Row> dataset) {
+        Dataset<Row> result = dataset;
+        for (AggregationOrdering orderBy : aggregationOrderings) {
+            result = applySortToSingleAggregation(result, orderBy);
+        }
+        return result;
+    }
+
+    private Dataset<Row> applySortToSingleAggregation(Dataset<Row> dataset, AggregationOrdering orderBy) {
+        final String aggregationName = orderBy.getAggregationName();
+        final String columnToSortBy = orderBy.getColumnName();
 
         // Find the aggregation to determine if it's single or multi-column
         Aggregation aggregation = aggregations.stream()
@@ -213,19 +241,19 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
                 "Aggregate order-by references unknown aggregation '%s'", aggregationName)));
 
         Column sortedAggregationColumn = aggregation.columnNamesToGroup.size() == 1 ?
-            functions.sort_array(functions.col(aggregationName), aggregateOrderDescending) :
-            sortArrayColumn(aggregationName, columnToSortBy);
+            functions.sort_array(functions.col(aggregationName), !orderBy.isAscending()) :
+            sortArrayColumn(aggregationName, columnToSortBy, orderBy.isAscending());
 
         // withColumn replaces the existing aggregation column with the just-sorted aggregation column.
         return dataset.withColumn(aggregationName, sortedAggregationColumn);
     }
 
-    private Column sortArrayColumn(String aggregationName, String columnToSortBy) {
+    private Column sortArrayColumn(String aggregationName, String columnToSortBy, boolean ascending) {
         // Generated by Copilot.
         // For struct arrays, use array_sort with SQL expression
         // In array_sort lambda: return -1 if left should come before right, 1 if after, 0 if equal
-        int whenLessThan = aggregateOrderDescending ? 1 : -1;
-        int whenGreaterThan = aggregateOrderDescending ? -1 : 1;
+        int whenLessThan = ascending ? -1 : 1;
+        int whenGreaterThan = ascending ? 1 : -1;
 
         return functions.expr(String.format(
             "array_sort(%s, (left, right) -> " +

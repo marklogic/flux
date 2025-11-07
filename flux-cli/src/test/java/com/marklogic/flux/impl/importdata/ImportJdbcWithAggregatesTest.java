@@ -138,19 +138,14 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--group-by", "customer_id",
             "--aggregate", "payments=payment_id,amount",
             "--aggregate", "rentals=rental_id,inventory_id",
-
-            // Order payments, which is ascending by default.
-            "--aggregate-order-by", "payments=amount",
-
-            // But make the ordering descending!
-            "--aggregate-order-desc",
-
+            "--aggregate-order-by", "payments=amount:desc",
+            "--aggregate-order-by", "rentals=inventory_id:asc",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "customer"
         );
 
-        verifyEachCustomerHasPaymentsOrderedDescending();
+        verifyEachCustomerHasPaymentsAndRentalsOrdered();
     }
 
     @Test
@@ -174,6 +169,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
                 .aggregateColumns("payments", "payment_id", "amount")
                 .aggregateColumns("rentals", "rental_id", "inventory_id")
                 .aggregateOrderBy("payments", "amount", false)
+                .aggregateOrderBy("rentals", "inventory_id", true)
             )
             .connectionString(makeConnectionString())
             .to(options -> options
@@ -182,7 +178,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             )
             .execute();
 
-        verifyEachCustomerHasPaymentsOrderedDescending();
+        verifyEachCustomerHasPaymentsAndRentalsOrdered();
     }
 
     /**
@@ -253,20 +249,31 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         );
     }
 
-    private void verifyEachCustomerHasPaymentsOrderedDescending() {
+    private void verifyEachCustomerHasPaymentsAndRentalsOrdered() {
         List<String> uris = new ClientHelper(getDatabaseClient()).getUrisInCollection("customer");
         assertTrue(!uris.isEmpty(), "No URIs found in customer collection, something went wrong!");
         for (String uri : uris) {
             JsonNode doc = readJsonDocument(uri);
+
+            // Verify payments are ordered descending by amount
             ArrayNode payments = (ArrayNode) doc.get("payments");
-            if (payments.size() < 2) {
-                continue;
+            if (payments.size() >= 2) {
+                double firstAmount = payments.get(0).get("amount").asDouble();
+                double lastAmount = payments.get(payments.size() - 1).get("amount").asDouble();
+                assertTrue(lastAmount <= firstAmount,
+                    "Customer doesn't have payments ordered descending! First amount: %f; last amount: %f; doc: %s".formatted(
+                        firstAmount, lastAmount, doc.toPrettyString()));
             }
-            double firstAmount = payments.get(0).get("amount").asDouble();
-            double lastAmount = payments.get(payments.size() - 1).get("amount").asDouble();
-            assertTrue(lastAmount <= firstAmount,
-                "Customer doesn't have payments ordered descending! First amount: %f; last amount: %f; doc: %s".formatted(
-                    firstAmount, lastAmount, doc.toPrettyString()));
+
+            // Verify rentals are ordered ascending by inventory_id
+            ArrayNode rentals = (ArrayNode) doc.get("rentals");
+            if (rentals.size() >= 2) {
+                int firstInventoryId = rentals.get(0).get("inventory_id").asInt();
+                int lastInventoryId = rentals.get(rentals.size() - 1).get("inventory_id").asInt();
+                assertTrue(firstInventoryId <= lastInventoryId,
+                    "Customer doesn't have rentals ordered ascending! First inventory_id: %d; last inventory_id: %d; doc: %s".formatted(
+                        firstInventoryId, lastInventoryId, doc.toPrettyString()));
+            }
         }
     }
 }
