@@ -92,3 +92,77 @@ payment, as shown in the example below:
 The approach can be used for many joins as well, thus producing multiple top-level array fields containing
 related objects. You are restricted to a single `--group-by`, but you can include many `--aggregate` options, one for
 each join that you wish to aggregate rows from. 
+
+## Ordering aggregates
+
+When aggregating rows, the order of elements in the resulting arrays is not guaranteed, even if your SQL query includes an `ORDER BY` clause. To ensure a specific order for elements in an aggregated array, use the `--aggregate-order-by` option:
+
+- `--aggregate-order-by` specifies which aggregated array to sort and which column to sort by, in the form
+  `aggregationName=columnName`. The column name must be one of the columns included in the corresponding aggregation.
+- `--aggregate-order-desc` is an optional flag that sorts the array in descending order. If omitted, the array is
+  sorted in ascending order (the default).
+
+For example, to ensure that the `payments` array in each customer document is ordered by payment amount in ascending
+order:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-jdbc \
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
+    --group-by customer_id \
+    --aggregate "payments=payment_id,amount,payment_date" \
+    --aggregate-order-by "payments=amount" \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" ^
+    --group-by customer_id ^
+    --aggregate "payments=payment_id,amount,payment_date" ^
+    --aggregate-order-by "payments=amount" ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
+To sort in descending order (highest amount first), add the `--aggregate-order-desc` flag:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-jdbc \
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" \
+    --group-by customer_id \
+    --aggregate "payments=payment_id,amount,payment_date" \
+    --aggregate-order-by "payments=amount" \
+    --aggregate-order-desc \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-jdbc ^
+    --query "select c.*, p.payment_id, p.amount, p.payment_date from customer c inner join payment p on c.customer_id = p.customer_id" ^
+    --group-by customer_id ^
+    --aggregate "payments=payment_id,amount,payment_date" ^
+    --aggregate-order-by "payments=amount" ^
+    --aggregate-order-desc ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
+**Important notes:**
+
+- Only one aggregated array can be ordered using `--aggregate-order-by`. If you have multiple aggregations, choose
+  the one where ordering is most critical for your use case.
+- The ordering is applied after the aggregation is complete, ensuring consistent results across all documents.
+- For single-column aggregations (arrays of simple values rather than objects), the array will be sorted by those
+  values directly.
