@@ -91,8 +91,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
 
         @Override
         public ReadTabularFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.setAggregateOrderBy(new AggregationParams.AggregateOrderBy(aggregationName, columnName));
-            this.aggregationParams.setAggregateOrderDescending(!ascending);
+            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }
 
