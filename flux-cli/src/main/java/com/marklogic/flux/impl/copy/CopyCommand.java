@@ -386,7 +386,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         super.validateCommandLineOptions(parseResult);
         Objects.requireNonNull(outputConnectionParams);
-        if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
+        if (outputConnectionParams.atLeastOneOutputConnectionParameterExists(parseResult)) {
             CopyCommand copyCommand = (CopyCommand) PicoliUtil.getCommandInstance(parseResult);
             Objects.requireNonNull(copyCommand);
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
@@ -410,9 +410,17 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             .save();
     }
 
-    protected Map<String, String> makeOutputConnectionOptions() {
+    protected final Map<String, String> makeOutputConnectionOptions() {
         Map<String, String> options = outputConnectionParams.makeOptions();
-        // If user doesn't specify any "--output" connection options, then reuse the connection for reading data.
+        if (options.size() == 1 && options.containsKey(Options.CLIENT_DATABASE)) {
+            // The user can specify just an output database, in which case the "from" connection will be reused plus
+            // this output database.
+            Map<String, String> fromOptions = getConnectionParams().makeOptions();
+            fromOptions.put(Options.CLIENT_DATABASE, options.get(Options.CLIENT_DATABASE));
+            return fromOptions;
+        }
+
+        // If user otherwise doesn't specify any "--output" connection options, then reuse the connection for reading data.
         return options.isEmpty() ? getConnectionParams().makeOptions() : options;
     }
 

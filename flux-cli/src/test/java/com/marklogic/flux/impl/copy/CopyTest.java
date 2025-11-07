@@ -3,13 +3,18 @@
  */
 package com.marklogic.flux.impl.copy;
 
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.ext.helper.ClientHelper;
 import com.marklogic.client.io.SearchHandle;
 import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CopyTest extends AbstractTest {
 
@@ -32,6 +37,31 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
+    }
+
+    @Test
+    void sameConnectionStringButDifferentOutputDatabase() {
+        final String otherTestDatabase = "flux-other-test-content";
+
+        try (DatabaseClient otherTestClient = newDatabaseClient(otherTestDatabase)) {
+            // Clear out the other test database first in case anything is hanging around in there.
+            otherTestClient.newServerEval().xquery("cts:uris((), (), cts:true-query()) ! xdmp:document-delete(.)").evalAs(String.class);
+
+            run(
+                "copy",
+                "--collections", "author",
+                "--connection-string", makeConnectionString(),
+                "--output-database", otherTestDatabase
+            );
+
+            final List<String> originalAuthorUris = getUrisInCollection("author", 15);
+
+            List<String> otherAuthorUris = new ClientHelper(otherTestClient).getUrisInCollection("author", 15);
+            for (String authorUri : originalAuthorUris) {
+                assertTrue(otherAuthorUris.contains(authorUri),
+                    "Did not find expected author URI in other test database: " + authorUri);
+            }
+        }
     }
 
     @Test

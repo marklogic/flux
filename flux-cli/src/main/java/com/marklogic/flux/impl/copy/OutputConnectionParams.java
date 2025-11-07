@@ -25,12 +25,17 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
      * The user has the option not to provide any output connection params, in which case the "Copy" command will use
      * the normal connection params for the target database.
      */
-    public boolean atLeastOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
+    public boolean atLeastOneOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
         for (Method method : getClass().getMethods()) {
             CommandLine.Option option = method.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 for (String name : option.names()) {
+                    // We let a user specify just output-database and reuse the "from" connection options for the use
+                    // case of copying from one database to another in the same cluster.
+                    if ("--output-database".equals(name)) {
+                        continue;
+                    }
                     if (parseResult.subcommand() != null && parseResult.subcommand().hasMatchedOption(name)) {
                         return true;
                     }
