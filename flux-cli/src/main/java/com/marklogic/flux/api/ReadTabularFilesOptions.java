@@ -20,7 +20,7 @@ public interface ReadTabularFilesOptions extends ReadFilesOptions<ReadTabularFil
     /**
      * @since 2.0.0
      */
-    ReadTabularFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending);
+    ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending);
 
     ReadTabularFilesOptions uriIncludeFilePath(boolean value);
 }

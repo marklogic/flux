@@ -168,8 +168,8 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
                 .groupBy("customer_id")
                 .aggregateColumns("payments", "payment_id", "amount")
                 .aggregateColumns("rentals", "rental_id", "inventory_id")
-                .aggregateOrderBy("payments", "amount", false)
-                .aggregateOrderBy("rentals", "inventory_id", true)
+                .orderAggregation("payments", "amount", false)
+                .orderAggregation("rentals", "inventory_id", true)
             )
             .connectionString(makeConnectionString())
             .to(options -> options

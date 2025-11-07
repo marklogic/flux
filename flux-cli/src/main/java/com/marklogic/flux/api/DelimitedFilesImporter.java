@@ -31,7 +31,7 @@ public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter>
         /**
          * @since 2.0.0
          */
-        ReadDelimitedFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending);
+        ReadDelimitedFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending);
 
         ReadDelimitedFilesOptions encoding(String encoding);
 

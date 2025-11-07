@@ -50,7 +50,7 @@ class DelimitedFilesImporterTest extends AbstractTest {
                 .paths("src/test/resources/delimited-files/join-rows.csv")
                 .groupBy("number")
                 .aggregateColumns("objects", "color", "flag")
-                .aggregateOrderBy("objects", "color", true)
+                .orderAggregation("objects", "color", true)
             )
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

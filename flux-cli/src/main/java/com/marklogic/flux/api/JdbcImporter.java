@@ -32,7 +32,7 @@ public interface JdbcImporter extends Executor<JdbcImporter> {
         /**
          * @since 2.0.0
          */
-        ReadJdbcOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending);
+        ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending);
     }
 
     JdbcImporter from(Consumer<ReadJdbcOptions> consumer);
