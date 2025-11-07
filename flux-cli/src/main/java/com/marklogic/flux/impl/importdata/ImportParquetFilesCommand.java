@@ -90,7 +90,7 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         }
 
         @Override
-        public ReadTabularFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+        public ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
             this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }

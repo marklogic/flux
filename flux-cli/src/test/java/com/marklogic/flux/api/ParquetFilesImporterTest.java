@@ -67,7 +67,7 @@ class ParquetFilesImporterTest extends AbstractTest {
                 .paths("src/test/resources/parquet/individual/cars.parquet")
                 .groupBy("cyl")
                 .aggregateColumns("models", "model", "mpg")
-                .aggregateOrderBy("models", "mpg", true)
+                .orderAggregation("models", "mpg", true)
             )
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

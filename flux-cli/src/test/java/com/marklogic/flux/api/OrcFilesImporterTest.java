@@ -61,7 +61,7 @@ class OrcFilesImporterTest extends AbstractTest {
                 .paths("src/test/resources/orc-files/authors.orc")
                 .groupBy("CitationID")
                 .aggregateColumns("names", "ForeName", "LastName")
-                .aggregateOrderBy("names", "LastName", true)
+                .orderAggregation("names", "LastName", true)
             )
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

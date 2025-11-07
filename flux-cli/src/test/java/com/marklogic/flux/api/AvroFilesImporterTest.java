@@ -64,7 +64,7 @@ class AvroFilesImporterTest extends AbstractTest {
                 .paths("src/test/resources/avro")
                 .groupBy("flag")
                 .aggregateColumns("values", "number", "color")
-                .aggregateOrderBy("values", "number", false)
+                .orderAggregation("values", "number", false)
             )
             .to(options -> options
                 .permissionsString(DEFAULT_PERMISSIONS)

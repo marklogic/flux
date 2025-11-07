@@ -131,7 +131,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         }
 
         @Override
-        public ReadJdbcOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+        public ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
             this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }
