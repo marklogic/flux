@@ -114,8 +114,15 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         }
 
         @Override
-        public ReadDelimitedFilesOptions aggregateColumns(String newColumnName, String... columns) {
-            aggregationParams.addAggregationExpression(newColumnName, columns);
+        public ReadDelimitedFilesOptions aggregateColumns(String aggregationName, String... columns) {
+            aggregationParams.addAggregationExpression(aggregationName, columns);
+            return this;
+        }
+
+        @Override
+        public ReadDelimitedFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+            this.aggregationParams.setAggregateOrderBy(new AggregationParams.AggregateOrderBy(aggregationName, columnName));
+            this.aggregationParams.setAggregateOrderDescending(!ascending);
             return this;
         }
     }

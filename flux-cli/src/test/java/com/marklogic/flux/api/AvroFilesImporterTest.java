@@ -3,12 +3,15 @@
  */
 package com.marklogic.flux.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AvroFilesImporterTest extends AbstractTest {
 
@@ -51,5 +54,33 @@ class AvroFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void aggregate() {
+        Flux.importAvroFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/avro")
+                .groupBy("flag")
+                .aggregateColumns("values", "number", "color")
+                .aggregateOrderBy("values", "number", false)
+            )
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("my-avro")
+                .uriTemplate("/avro/{flag}.json")
+            )
+            .execute();
+
+        assertCollectionSize("my-avro", 2);
+        JsonNode doc = readJsonDocument("/avro/true.json");
+        ArrayNode values = (ArrayNode) doc.get("values");
+        assertEquals(4, values.size());
+
+        assertEquals(6, values.get(0).get("number").asInt());
+        assertEquals(4, values.get(1).get("number").asInt());
+        assertEquals(3, values.get(2).get("number").asInt());
+        assertEquals(1, values.get(3).get("number").asInt());
     }
 }

@@ -84,8 +84,15 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         }
 
         @Override
-        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
-            aggregationParams.addAggregationExpression(newColumnName, columns);
+        public ReadTabularFilesOptions aggregateColumns(String aggregationName, String... columns) {
+            aggregationParams.addAggregationExpression(aggregationName, columns);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions aggregateOrderBy(String aggregationName, String columnName, boolean ascending) {
+            this.aggregationParams.setAggregateOrderBy(new AggregationParams.AggregateOrderBy(aggregationName, columnName));
+            this.aggregationParams.setAggregateOrderDescending(!ascending);
             return this;
         }
 

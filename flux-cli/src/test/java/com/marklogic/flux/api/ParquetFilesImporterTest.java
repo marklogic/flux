@@ -4,6 +4,7 @@
 package com.marklogic.flux.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
@@ -56,5 +57,32 @@ class ParquetFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void aggregate() {
+        Flux.importParquetFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/parquet/individual/cars.parquet")
+                .groupBy("cyl")
+                .aggregateColumns("models", "model", "mpg")
+                .aggregateOrderBy("models", "mpg", true)
+            )
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("cyl-test")
+                .uriTemplate("/parquet/{cyl}.json")
+            )
+            .execute();
+
+        assertCollectionSize("Expecting 3 documents, since there are 3 values for cyl - 4, 6, and 8", "cyl-test", 3);
+        JsonNode doc = readJsonDocument("/parquet/4.json");
+        assertEquals(4, doc.get("cyl").asInt());
+        ArrayNode models = (ArrayNode) doc.get("models");
+        assertEquals(11, models.size(), "Expecting 11 models to have cyl=4");
+
+        assertEquals(21.4, models.get(0).get("mpg").asDouble());
+        assertEquals(33.9, models.get(10).get("mpg").asDouble());
     }
 }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.client.ext.helper.ClientHelper;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.api.Flux;
 import com.marklogic.flux.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
@@ -136,6 +137,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--query", query,
             "--group-by", "customer_id",
             "--aggregate", "payments=payment_id,amount",
+            "--aggregate", "rentals=rental_id,inventory_id",
 
             // Order payments, which is ascending by default.
             "--aggregate-order-by", "payments=amount",
@@ -145,9 +147,40 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "--uri-template", "/customer/{customer_id}.json",
             "--collections", "customer"
         );
+
+        verifyEachCustomerHasPaymentsOrderedDescending();
+    }
+
+    @Test
+    void orderByPaymentsOnAllCustomersWithApi() {
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            """;
+
+        Flux.importJdbc()
+            .from(options -> options
+                .url(PostgresUtil.URL_WITH_AUTH)
+                .driver(PostgresUtil.DRIVER)
+                .query(query)
+                .groupBy("customer_id")
+                .aggregateColumns("payments", "payment_id", "amount")
+                .aggregateColumns("rentals", "rental_id", "inventory_id")
+                .aggregateOrderBy("payments", "amount", false)
+            )
+            .connectionString(makeConnectionString())
+            .to(options -> options
+                .collections("customer")
+                .permissionsString(DEFAULT_PERMISSIONS)
+            )
+            .execute();
 
         verifyEachCustomerHasPaymentsOrderedDescending();
     }
@@ -222,6 +255,7 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     private void verifyEachCustomerHasPaymentsOrderedDescending() {
         List<String> uris = new ClientHelper(getDatabaseClient()).getUrisInCollection("customer");
+        assertTrue(!uris.isEmpty(), "No URIs found in customer collection, something went wrong!");
         for (String uri : uris) {
             JsonNode doc = readJsonDocument(uri);
             ArrayNode payments = (ArrayNode) doc.get("payments");

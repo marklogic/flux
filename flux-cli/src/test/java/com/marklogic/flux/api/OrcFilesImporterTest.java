@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
@@ -50,5 +51,32 @@ class OrcFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void aggregate() {
+        Flux.importOrcFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/orc-files/authors.orc")
+                .groupBy("CitationID")
+                .aggregateColumns("names", "ForeName", "LastName")
+                .aggregateOrderBy("names", "LastName", true)
+            )
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("orc-test")
+                .uriTemplate("/orc-test/{CitationID}.json")
+            )
+            .execute();
+
+        assertCollectionSize("Expecting 1 doc for each CitationID", "orc-test", 5);
+
+        JsonNode doc = readJsonDocument("/orc-test/1.json");
+        JsonNode names = doc.get("names");
+        assertEquals("Awton", names.get(0).get("LastName").asText());
+        assertEquals("Bernadzki", names.get(1).get("LastName").asText());
+        assertEquals("Canham", names.get(2).get("LastName").asText());
+        assertEquals("Golby", names.get(3).get("LastName").asText());
     }
 }
