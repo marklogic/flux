@@ -4,13 +4,14 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.cli.Main;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import picocli.CommandLine;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Note that some tests will print a "An illegal reflective access operation has occurred" warning that occurs
@@ -66,6 +67,27 @@ class HandleErrorTest extends AbstractTest {
             "Run './bin/flux help import-files' for more information.",
             "import-files", "--connection-string", makeConnectionString()
         );
+    }
+
+    @Test
+    void buildCommandContextWithMissingRequiredOption() {
+        String[] args = {"import-files", "--connection-string", makeConnectionString()};
+        Main main = new Main();
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, () -> main.buildCommandContext(args));
+        assertEquals("Missing required option: '--path <path>'", ex.getMessage(),
+            "Verifies that for standard parameter exceptions thrown by picocli will be propagated instead of being " +
+                "written to stderr.");
+    }
+
+    @Test
+    void buildCommandContextWithInvalidConnectionOptions() {
+        String[] args = {"import-files", "--path", "/tmp", "--port", "8000"};
+        Main main = new Main();
+        FluxException ex = assertThrowsFluxException(() -> main.buildCommandContext(args));
+        assertEquals("Must specify a MarkLogic host via --host or --connection-string.", ex.getMessage(),
+            "Verifies that if there's any issue with the args, an exception is thrown instead of being written " +
+                "to stderr. This should be more useful in a context where a command is being run programmatically " +
+                "via command line options.");
     }
 
     /**

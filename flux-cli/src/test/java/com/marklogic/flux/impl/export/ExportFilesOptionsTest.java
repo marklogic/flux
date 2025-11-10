@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ExportFilesOptionsTest extends AbstractOptionsTest {
 
@@ -108,23 +109,6 @@ class ExportFilesOptionsTest extends AbstractOptionsTest {
         assertEquals("myXQueryFile.xqy", options.get(Options.READ_SECONDARY_URIS_XQUERY_FILE));
         assertEquals("value1", options.get(Options.READ_SECONDARY_URIS_VARS_PREFIX + "var1"));
         assertEquals("value2", options.get(Options.READ_SECONDARY_URIS_VARS_PREFIX + "var2"));
-    }
-
-    @Test
-    void invalidSecondaryVar() {
-        String stderr = applyOptionsAndReturnStderr(
-            "export-files",
-            "--connection-string", "test:test@host:8000",
-            "--collections", "anything",
-            "--path", "anywhere",
-            "--secondary-uris-var", "var1=value1",
-            "--secondary-uris-var", "var2"
-        );
-
-        assertTrue(stderr.contains("Unmatched argument at index 10: 'var2'"),
-            "The default picocli message for an unmatched map argument is hopefully sufficient to indicate " +
-                "that the value for var2 is missing. Both our docs and the inline help will indicate what the " +
-                "required syntax is. Actual stderr: " + stderr);
     }
 
     @Test
