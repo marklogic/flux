@@ -145,30 +145,38 @@ public class Main {
     }
 
     /**
-     * Parse the args and return a command that can be executed with a user-provided Spark session.
+     * Parse the args and return a context containing the command to be executed and the Spark session with which to
+     * execute it.
      *
-     * @param outWriter optional, can be null
-     * @param errWriter optional, can be null
-     * @param args
-     * @return
      * @since 2.0.0
-     * <p>
      */
-    public CommandContext buildCommandContext(PrintWriter outWriter, PrintWriter errWriter, String... args) {
-        CommandLine commandLine = new Main().newCommandLine();
-        if (outWriter != null) {
-            commandLine.setOut(outWriter);
-        }
-        if (errWriter != null) {
-            commandLine.setErr(errWriter);
-        }
+    public CommandContext buildCommandContext(String... args) {
+        CommandLine commandLine = newCommandLine();
+
         AtomicReference<CommandContext> commandRef = new AtomicReference<>();
+        AtomicReference<RuntimeException> exceptionRef = new AtomicReference<>();
+
         commandLine.setExecutionStrategy(parseResult -> {
-            CommandContext context = parseAndReturnCommand(parseResult);
-            commandRef.set(context);
-            return 0;
+            try {
+                CommandContext context = parseAndReturnCommandContext(parseResult);
+                commandRef.set(context);
+                return CommandLine.ExitCode.OK;
+            } catch (RuntimeException e) {
+                exceptionRef.set(e);
+                return CommandLine.ExitCode.USAGE;
+            }
         });
+
+        commandLine.setParameterExceptionHandler((ex, theArgs) -> {
+            exceptionRef.set(ex);
+            return CommandLine.ExitCode.USAGE;
+        });
+
         commandLine.execute(args);
+
+        if (exceptionRef.get() != null) {
+            throw exceptionRef.get();
+        }
         return commandRef.get();
     }
 
@@ -186,7 +194,7 @@ public class Main {
     private int executeCommand(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
         try {
-            final CommandContext commandContext = parseAndReturnCommand(parseResult);
+            final CommandContext commandContext = parseAndReturnCommandContext(parseResult);
             if (logger.isDebugEnabled()) {
                 logger.debug("Spark master URL: {}", commandContext.sparkSession.sparkContext().master());
             }
@@ -198,12 +206,13 @@ public class Main {
         return CommandLine.ExitCode.OK;
     }
 
-    private CommandContext parseAndReturnCommand(CommandLine.ParseResult parseResult) {
+    private CommandContext parseAndReturnCommandContext(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
         final Command command = PicoliUtil.getCommandInstance(parseResult);
         Objects.requireNonNull(command);
         command.validateCommandLineOptions(parseResult);
-        return new CommandContext(command, buildSparkSession(command));
+        SparkSession sparkSession = buildSparkSession(command);
+        return new CommandContext(command, sparkSession);
     }
 
     protected SparkSession buildSparkSession(Command selectedCommand) {

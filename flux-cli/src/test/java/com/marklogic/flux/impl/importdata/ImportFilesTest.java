@@ -4,12 +4,7 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.AbstractTest;
-import com.marklogic.flux.cli.Main;
 import com.marklogic.junit5.XmlNode;
-import org.apache.commons.io.IOUtils;
-import org.apache.spark.scheduler.SparkListener;
-import org.apache.spark.scheduler.SparkListenerJobEnd;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.FileCopyUtils;
@@ -355,45 +350,6 @@ class ImportFilesTest extends AbstractTest {
         assertCollectionSize("files", 1);
         XmlNode doc = readXmlDocument("/japanese-files/太田佳伸のＸＭＬファイル.xml");
         doc.assertElementValue("/root/filename", "太田佳伸のＸＭＬファイル");
-    }
-
-    @Test
-    @Disabled("This is mysteriously failing intermittently on Jenkins, needs research.")
-    void withCustomSparkListener() {
-        Main.CommandContext commandContext = new Main().buildCommandContext(null, null,
-            "import-files",
-            "--path", "src/test/resources/mixed-files/hello*txt*",
-            "--path", "src/test/resources/mixed-files/hello.json",
-            "--path", "src/test/resources/mixed-files/hello.xml",
-            "--connection-string", makeConnectionString(),
-            "--permissions", DEFAULT_PERMISSIONS,
-            "--collections", "files",
-            "--uri-replace", ".*/mixed-files,''"
-        );
-
-        TestListener testListener = new TestListener();
-        commandContext.sparkSession.sparkContext().addSparkListener(testListener);
-
-        try {
-            commandContext.command.execute(commandContext.sparkSession);
-
-            assertTrue(testListener.jobEnded, "Expected the SparkListener to have been called when the job ends. " +
-                "This verifies that a Flux user can use the Main class to construct a Command object that is ready " +
-                "to be executed, based on command line args, with a custom Spark Session provided by the user.");
-
-            verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
-        } finally {
-            IOUtils.closeQuietly(commandContext.sparkSession);
-        }
-    }
-
-    private class TestListener extends SparkListener {
-        boolean jobEnded;
-
-        @Override
-        public void onJobEnd(SparkListenerJobEnd jobEnd) {
-            jobEnded = true;
-        }
     }
 
     private void verifyDocsWereWritten(int expectedUriCount, String... values) {

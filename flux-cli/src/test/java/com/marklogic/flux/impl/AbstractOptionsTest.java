@@ -6,8 +6,6 @@ package com.marklogic.flux.impl;
 import com.marklogic.flux.cli.Main;
 import org.apache.commons.io.IOUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,19 +26,9 @@ public abstract class AbstractOptionsTest {
     }
 
     protected final Object getCommand(String... args) {
-        Main.CommandContext context = new Main().buildCommandContext(null, null, args);
+        Main.CommandContext context = new Main().buildCommandContext(args);
         IOUtils.closeQuietly(context.sparkSession);
         return context.command;
-    }
-
-    protected final String applyOptionsAndReturnStderr(String... args) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        Main.CommandContext context = new Main().buildCommandContext(null, pw, args);
-        if (context != null && context.sparkSession != null) {
-            IOUtils.closeQuietly(context.sparkSession);
-        }
-        return sw.toString();
     }
 
     protected final String makeConnectionString() {
