@@ -151,8 +151,18 @@ public class Main {
      * @since 2.0.0
      */
     public CommandContext buildCommandContext(String... args) {
-        CommandLine commandLine = newCommandLine();
+        return buildCommandContext(null, null, args);
+    }
 
+    public CommandContext buildCommandContext(PrintWriter stdout, PrintWriter stderr, String... args) {
+        CommandLine commandLine = newCommandLine();
+        if (stdout != null) {
+            commandLine.setOut(stdout);
+        }
+        if (stderr != null) {
+            commandLine.setErr(stderr);
+        }
+        
         AtomicReference<CommandContext> commandRef = new AtomicReference<>();
         AtomicReference<RuntimeException> exceptionRef = new AtomicReference<>();
 
