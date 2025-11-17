@@ -30,6 +30,19 @@ class HandleErrorTest extends AbstractTest {
     }
 
     @Test
+    void missingOptionsFile() {
+        assertStderrContains(
+            "Please ensure the options file you are referencing exists and is readable.",
+
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--connection-string", makeConnectionString(),
+            "@no-such-options.txt",
+            "--path", "somewhere"
+        );
+    }
+
+    @Test
     void invalidParam() {
         assertStderrContains(
             "Unknown option: '--not-a-real-param'",
