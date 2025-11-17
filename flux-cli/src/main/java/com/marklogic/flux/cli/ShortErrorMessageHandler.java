@@ -42,6 +42,7 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         if (exceptionMessage != null) {
             err.println(colorScheme.errorText(exceptionMessage));
             printHelpfulMessageForReplacedSingleLetterOption(exceptionMessage, err, colorScheme);
+            printHelpfulMessageForMissingOptionsFile(exceptionMessage, err, colorScheme);
         }
 
         CommandLine.UnmatchedArgumentException.printSuggestions(ex, err);
@@ -86,5 +87,15 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
                 err.println("");
             }
         });
+    }
+
+    private void printHelpfulMessageForMissingOptionsFile(String exceptionMessage, PrintWriter err, CommandLine.Help.ColorScheme colorScheme) {
+        // Per https://picocli.info/#AtFiles, picocli will treat a missing options file as a regular argument, which
+        // can be very confusing for a user who doesn't realize they have a typo or a permissions error on their
+        // options file. So we give a better hint as to what the problem likely is.
+        if (exceptionMessage.contains("Unmatched argument at index") && exceptionMessage.contains("'@")) {
+            err.println(colorScheme.errorText("Please ensure the options file you are referencing exists and is readable."));
+            err.println("");
+        }
     }
 }
