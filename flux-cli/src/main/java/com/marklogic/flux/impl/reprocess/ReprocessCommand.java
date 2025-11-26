@@ -377,7 +377,7 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
 
         @CommandLine.Option(
             names = "--thread-count",
-            description = "The number of threads for processing items. This is an alias for '--reprocess' as it " +
+            description = "The number of threads for processing items. This is an alias for '--repartition' as it " +
                 "defines the number of Spark partitions used for processing items."
         )
         private int threadCount = 16;
