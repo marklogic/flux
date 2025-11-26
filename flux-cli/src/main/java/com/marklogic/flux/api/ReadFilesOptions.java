@@ -21,6 +21,8 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T s3SecretAccessKey(String secretAccessKey);
 
+    T s3SessionToken(String sessionToken);
+
     T s3Endpoint(String endpoint);
 
     /**

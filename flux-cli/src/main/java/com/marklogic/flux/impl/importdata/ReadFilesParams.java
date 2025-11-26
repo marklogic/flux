@@ -156,6 +156,12 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     @Override
+    public T s3SessionToken(String sessionToken) {
+        s3Params.setSessionToken(sessionToken);
+        return (T) this;
+    }
+
+    @Override
     public T s3Endpoint(String endpoint) {
         this.s3Params.setEndpoint(endpoint);
         return (T) this;
