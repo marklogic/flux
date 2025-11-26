@@ -179,6 +179,7 @@ can use one of the following options to define partitions for your reader:
 - `--read-partitions-xquery` = XQuery code that returns partitions.
 - `--read-partitions-xquery-file` = path to file containing XQuery code that returns partitions.
 - `--read-partitions-invoke` = path of a MarkLogic server module to invoke for returning partitions.
+- `--read-var` = variables sent to the code for reading items will also be sent to the code that returns partitions.
 
 For each partition returned, the reader code will be invoked with a variable named `PARTITION` containing the value of
 the partition. Your reader code is then free to use that value however you wish.
