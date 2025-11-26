@@ -16,9 +16,6 @@ public class S3Params {
     private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
     private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
 
-    private static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
-    private static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
-
     @CommandLine.Option(
         names = "--s3-add-credentials",
         description = "Add credentials retrieved via the AWS SDK to the Spark context for use when accessing S3."
@@ -61,25 +58,20 @@ public class S3Params {
                 AwsCredentials credentials = provider.resolveCredentials();
                 config.set(S3A_ACCESS_KEY, credentials.accessKeyId());
                 config.set(S3A_SECRET_KEY, credentials.secretAccessKey());
-                config.set(S3N_ACCESS_KEY, credentials.accessKeyId());
-                config.set(S3N_SECRET_KEY, credentials.secretAccessKey());
             }
         }
 
         if (hasText(accessKeyId)) {
             config.set(S3A_ACCESS_KEY, accessKeyId);
-            config.set(S3N_ACCESS_KEY, accessKeyId);
         }
         if (hasText(secretAccessKey)) {
             config.set(S3A_SECRET_KEY, secretAccessKey);
-            config.set(S3N_SECRET_KEY, secretAccessKey);
         }
         if (hasText(sessionToken)) {
             config.set("fs.s3a.session.token", sessionToken);
         }
         if (hasText(endpoint)) {
             config.set("fs.s3a.endpoint", endpoint);
-            config.set("fs.s3n.endpoint", endpoint);
         }
     }
 
