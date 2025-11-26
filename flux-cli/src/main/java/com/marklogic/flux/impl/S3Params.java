@@ -15,6 +15,7 @@ public class S3Params {
 
     private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
     private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
+
     private static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
     private static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
 
@@ -35,6 +36,12 @@ public class S3Params {
         description = "Specifies the AWS secret key to use for accessing S3 paths."
     )
     private String secretAccessKey;
+
+    @CommandLine.Option(
+        names = "--s3-session-token",
+        description = "Specifies the AWS session token to use, along with the access key ID and secret access key, for accessing S3 paths."
+    )
+    private String sessionToken;
 
     @CommandLine.Option(
         names = "--s3-endpoint",
@@ -58,18 +65,26 @@ public class S3Params {
                 config.set(S3N_SECRET_KEY, credentials.secretAccessKey());
             }
         }
-        if (accessKeyId != null && !accessKeyId.trim().isEmpty()) {
+
+        if (hasText(accessKeyId)) {
             config.set(S3A_ACCESS_KEY, accessKeyId);
             config.set(S3N_ACCESS_KEY, accessKeyId);
         }
-        if (secretAccessKey != null && !secretAccessKey.trim().isEmpty()) {
+        if (hasText(secretAccessKey)) {
             config.set(S3A_SECRET_KEY, secretAccessKey);
             config.set(S3N_SECRET_KEY, secretAccessKey);
         }
-        if (endpoint != null && !endpoint.trim().isEmpty()) {
+        if (hasText(sessionToken)) {
+            config.set("fs.s3a.session.token", sessionToken);
+        }
+        if (hasText(endpoint)) {
             config.set("fs.s3a.endpoint", endpoint);
             config.set("fs.s3n.endpoint", endpoint);
         }
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     public void setAddCredentials(boolean addCredentials) {
@@ -82,6 +97,10 @@ public class S3Params {
 
     public void setSecretAccessKey(String secretAccessKey) {
         this.secretAccessKey = secretAccessKey;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     public void setEndpoint(String endpoint) {

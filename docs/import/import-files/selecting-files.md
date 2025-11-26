@@ -128,6 +128,9 @@ You can also explicitly define your AWS credentials via `--s3-access-key-id` and
 typing these in plaintext, you may want to store these in a file and reference the file via an options file. See
 [Common Options](../../common-options.md) for more information on how to use options files.
 
+As of Flux 2.0.0, you may also specify an AWS session token via the `--s3-session-token` option. This token will be
+used with your access key ID and secret access key when authenticating with S3.
+
 You can also specify an S3 endpoint via `--s3-endpoint`. This is typically required when running Flux in AWS in one 
 region while trying to access S3 in a separate region. 
 
