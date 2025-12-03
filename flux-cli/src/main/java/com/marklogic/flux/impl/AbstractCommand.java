@@ -24,6 +24,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     protected static final String MARKLOGIC_CONNECTOR = "marklogic";
     protected static final Logger logger = LoggerFactory.getLogger("com.marklogic.flux");
 
+    // An ArgGroup is used instead of Mixin as it allows for grouping options together when the user views the help
+    // for a command.
     // The order values of 1 and 3 allow for CopyCommand to include Output Connection Options in between them. Feel free
     // to tweak these in the future as needed.
     @CommandLine.ArgGroup(exclusive = false, heading = "%nConnection Options%n", order = 1)
