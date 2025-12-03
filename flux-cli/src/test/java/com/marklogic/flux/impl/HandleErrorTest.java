@@ -209,4 +209,32 @@ class HandleErrorTest extends AbstractTest {
         assertTrue(stderr.contains("If so, use %s theKey=theValue instead.".formatted(longOption)),
             "Unexpected stderr: " + stderr);
     }
+
+    /**
+     * The ConnectionParams ArgGroup is very handy because it allows for ordering and grouping options when a user
+     * views the "help" for a command. However, picocli has a quirk where if an option in an ArgGroup is specified
+     * multiple times, the error message is not very helpful. This test verifies that our custom error handling
+     * converts the picocli message into something more user friendly.
+     */
+    @Test
+    void duplicateOptionFromArgGroup() {
+        assertStderrContains(
+            "option '--port' should be specified only once",
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--path", "build",
+            "--host", "localhost",
+            "--port", "8000",
+            "--port", "8000"
+        );
+
+        assertStderrContains(
+            "option '--connection-string' should be specified only once",
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--path", "build",
+            "--connection-string", makeConnectionString(),
+            "--connection-string", makeConnectionString()
+        );
+    }
 }
