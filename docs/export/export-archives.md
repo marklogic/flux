@@ -108,7 +108,7 @@ To resolve this issue, you must
 [enable point-in-time queries](https://docs.marklogic.com/11.0/guide/app-dev/point_in_time#id_32468) for your database
 by configuring the `merge timestamp` setting. The recommended practice is to
 [use a negative value](https://docs.marklogic.com/11.0/guide/admin-guide/en/understanding-and-controlling-database-merges/setting-a-negative-merge-timestamp-to-preserve-fragments-for-a-rolling-window-of-time.html)
-that exceeds the expected duration of the export operation. For example, a value of `-864,000,000,000` for the merge
+that exceeds the expected duration of the export operation. For example, a value of `-864000000000` for the merge
 timestamp would give the export operation 24 hours to complete.
 
 Alternatively, you can disable the use of point-in-time queries by including the following option:
