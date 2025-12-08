@@ -90,10 +90,8 @@ class ShortErrorMessageHandler implements CommandLine.IParameterExceptionHandler
         Set<String> seenOptions = new HashSet<>();
         for (String arg : args) {
             if (arg.startsWith("--")) {
-                // Handle --option=value format
-                String optionName = arg.contains("=") ? arg.substring(0, arg.indexOf('=')) : arg;
-                if (!seenOptions.add(optionName)) {
-                    return String.format("option '%s' should be specified only once", optionName);
+                if (!seenOptions.add(arg)) {
+                    return String.format("option '%s' should be specified only once", arg);
                 }
             }
         }
