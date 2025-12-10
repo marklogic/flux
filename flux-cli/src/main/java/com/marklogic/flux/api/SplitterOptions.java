@@ -30,7 +30,7 @@ public interface SplitterOptions {
 
     SplitterOptions documentSplitterClassOptions(Map<String, String> options);
 
-    SplitterOptions outputMaxChunks(int maxChunks);
+    SplitterOptions outputMaxChunks(Integer maxChunks);
 
     SplitterOptions outputDocumentType(ChunkDocumentType documentType);
 

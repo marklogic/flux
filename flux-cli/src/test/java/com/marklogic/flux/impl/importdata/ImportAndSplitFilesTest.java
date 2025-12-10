@@ -27,6 +27,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "500",
             "--splitter-max-overlap-size", "100",
+            "--splitter-sidecar-max-chunks", "0",
             "--stacktrace"
         );
 
@@ -64,6 +65,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--splitter-json-pointer", "/text",
             "--splitter-json-pointer", "/more-text",
             "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "0",
             "--stacktrace"
         );
 
@@ -85,7 +87,8 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--collections", "files",
             "--uri-replace", ".*/json-files,''",
-            "--splitter-json-pointer", ""
+            "--splitter-json-pointer", "",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/java-client-intro.json");
@@ -107,6 +110,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--collections", "files",
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/more-text",
+            "--splitter-sidecar-max-chunks", "0",
             "--splitter-regex", "w",
             "--splitter-join-delimiter", "---"
         );
@@ -129,6 +133,7 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
+            "--splitter-sidecar-max-chunks", "0",
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.CustomSplitter",
             // This also shows how a map param can have an equals symbol in the value; picocli only looks for the first
             // equals symbol to use as a key/value separator.

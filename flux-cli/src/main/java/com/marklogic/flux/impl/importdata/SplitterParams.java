@@ -80,10 +80,9 @@ public class SplitterParams implements SplitterOptions {
 
     @CommandLine.Option(
         names = "--splitter-sidecar-max-chunks",
-        description = "Maximum number of chunks to write to a sidecar document. If not specified or set to zero, " +
-            "chunks will be written to the source document."
+        description = "Maximum number of chunks to write to a sidecar document. If set to zero, chunks will be written to the source document."
     )
-    private int maxChunks;
+    private Integer maxChunks = 1;
 
     @CommandLine.Option(
         names = "--splitter-sidecar-document-type",
@@ -138,7 +137,10 @@ public class SplitterParams implements SplitterOptions {
             Options.WRITE_SPLITTER_REGEX, regex,
             Options.WRITE_SPLITTER_JOIN_DELIMITER, joinDelimiter,
             Options.WRITE_SPLITTER_CUSTOM_CLASS, customClass,
-            Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, OptionsUtil.intOption(maxChunks),
+
+            // Zero is a valid value
+            Options.WRITE_SPLITTER_SIDECAR_MAX_CHUNKS, maxChunks != null && maxChunks >= 0 ? maxChunks.toString() : null,
+
             Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
             Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, collections,
             Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, permissions,
@@ -233,7 +235,7 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions outputMaxChunks(int maxChunks) {
+    public SplitterOptions outputMaxChunks(Integer maxChunks) {
         this.maxChunks = maxChunks;
         return this;
     }

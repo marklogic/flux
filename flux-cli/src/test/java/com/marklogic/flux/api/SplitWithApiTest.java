@@ -60,7 +60,8 @@ class SplitWithApiTest extends AbstractTest {
             .to(writeOptions -> writeOptions
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text"))
+                .splitter(splitterOptions -> splitterOptions
+                    .jsonPointers("/text", "/more-text").outputMaxChunks(0))
             ).execute();
 
         JsonNode doc = readJsonDocument("/split-test.json");
@@ -76,6 +77,7 @@ class SplitWithApiTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/split-test.json")
                 .splitter(splitterOptions -> splitterOptions.jsonPointers("/text", "/more-text")
+                    .outputMaxChunks(0)
                     .documentSplitterClassName("com.marklogic.flux.impl.importdata.CustomSplitter")
                     .documentSplitterClassOptions(Map.of("textToReturn", "just testing")))
             ).execute();
@@ -93,7 +95,7 @@ class SplitWithApiTest extends AbstractTest {
             .to(writeOptions -> writeOptions
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text").outputMaxChunks(0))
                 .embedder(embedderOptions -> embedderOptions.embedder("minilm"))
             ).execute();
 
@@ -115,7 +117,7 @@ class SplitWithApiTest extends AbstractTest {
             .to(writeOptions -> writeOptions
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriTemplate("/split-test.json")
-                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text"))
+                .splitter(splitterOptions -> splitterOptions.jsonPointers("/text").outputMaxChunks(0))
                 .embedder(embedderOptions -> embedderOptions.embedder("com.marklogic.flux.langchain4j.embedding.MinilmEmbeddingModelFunction"))
             ).execute();
 
@@ -142,6 +144,7 @@ class SplitWithApiTest extends AbstractTest {
                 .splitter(splitterOptions -> splitterOptions
                     .jsonPointers("/text")
                     .maxChunkSize(1500)
+                    .outputMaxChunks(0)
                     .regex("MarkLogic")
                     .joinDelimiter(" "))
             )
