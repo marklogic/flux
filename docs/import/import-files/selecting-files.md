@@ -89,6 +89,26 @@ Depending on your shell environment, you may need to include the value of `--fil
 ensure that each asterisk is interpreted correctly. However, if you include `--filter` in an options file as 
 described in [Common Options](../../common-options.md), you do not need double quotes around the value. 
 
+## Working with large numbers of files
+
+In general, Flux performs better with smaller numbers of large files versus large numbers of small files. Having a 
+large number of small files in a directory, such as 1 million or more files, is a pattern that causes performance 
+issues across many systems. With Flux, you may encounter out-of-memory errors in this scenario due to the need to
+create a list of all file paths. 
+
+If you have large numbers of files to import, consider one of the following approaches:
+
+- **Combine files into archives**: Zip your files into larger archive files before importing. This significantly 
+  reduces the number of file handles that need to be managed. Use the `--compression zip` option when importing zip files.  
+- **Use JSON Lines format**: If your files contain structured data, combine them into one or more 
+  [JSON Lines](https://jsonlines.org/) files where each line is a separate JSON document. Flux can efficiently process 
+  JSON Lines files of any size via the `import-aggregate-json-files` command.
+- **Process in batches**: Break your import into multiple smaller operations, each processing a manageable subset of files.
+
+Additionally, for commands that support the `--partitions` option, specify a value such as `--partitions 10` to 
+limit the number of partitions created by Flux. This addresses a bug that will be fixed in Flux 2.0. Without this, 
+the import command will succeed but will perform much worse than with a fixed, small number of partitions.
+
 ## Ignoring child directories
 
 By default, child directories of each directory specified by `--path` are included. To prevent this, include the following
