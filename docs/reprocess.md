@@ -174,12 +174,13 @@ Flux will send a single request to MarkLogic to execute your reader code. If you
 and is at risk of timing out, or if you seek better performance by breaking your query into many smaller queries, you 
 can use one of the following options to define partitions for your reader:
 
-- `--read-partitions-javascript` = JavaScript code that returns partitions. 
-- `--read-partitions-javascript-file` = path to file containing JavaScript code that returns partitions. 
+- `--read-partitions-javascript` = JavaScript code that returns partitions.
+- `--read-partitions-javascript-file` = path to file containing JavaScript code that returns partitions.
 - `--read-partitions-xquery` = XQuery code that returns partitions.
 - `--read-partitions-xquery-file` = path to file containing XQuery code that returns partitions.
 - `--read-partitions-invoke` = path of a MarkLogic server module to invoke for returning partitions.
-- `--read-var` = variables sent to the code for reading items will also be sent to the code that returns partitions.
+- `--read-partitions-var` = variables sent to the code for reading partitions; available as of Flux 2.0.0. Prior to Flux
+  2.0.0, variables specified via `--read-var` will also be sent to the code for returning partitions.
 
 For each partition returned, the reader code will be invoked with a variable named `PARTITION` containing the value of
 the partition. Your reader code is then free to use that value however you wish.
