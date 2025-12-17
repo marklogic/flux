@@ -31,7 +31,14 @@ dependencies {
   implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
+
+    // As of Spark 4.1.0-preview4, Spark is depending on a 1.8.x version of lz4-java that has two
+    // CVEs. According to https://github.com/yawkat/lz4-java, patched versions should now be obtained from
+    // that repository. If Spark 4.1.0 uses the patched version, this can be removed.
+    exclude module: "lz4-java"
   }
+
+  implementation "at.yawk.lz4:lz4-java:1.10.2"
 
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:${picocliVersion}"
