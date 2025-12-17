@@ -23,6 +23,8 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--read-partitions-invoke", "/my/other-invoke.sjs",
             "--read-var", "param1=value1",
             "--read-var", "param2=spaces work!",
+            "--read-partitions-var", "partVar1=partValue1",
+            "--read-partitions-var", "partVar2=another value",
             "--write-invoke", "/my/invoke.sjs"
         );
 
@@ -30,7 +32,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             Options.READ_INVOKE, "/my/invoke.sjs",
             Options.READ_PARTITIONS_INVOKE, "/my/other-invoke.sjs",
             Options.READ_VARS_PREFIX + "param1", "value1",
-            Options.READ_VARS_PREFIX + "param2", "spaces work!"
+            Options.READ_VARS_PREFIX + "param2", "spaces work!",
+            Options.READ_PARTITIONS_VARS_PREFIX + "partVar1", "partValue1",
+            Options.READ_PARTITIONS_VARS_PREFIX + "partVar2", "another value"
         );
     }
 

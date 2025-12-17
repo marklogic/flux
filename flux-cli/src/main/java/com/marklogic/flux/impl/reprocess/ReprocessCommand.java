@@ -187,6 +187,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         private Map<String, String> readVars = new HashMap<>();
 
         @CommandLine.Option(
+            names = "--read-partitions-var", arity = "*",
+            description = "Define variables to be sent to the code for reading partitions; e.g. '--read-partitions-var var1=value1'."
+        )
+        private Map<String, String> readPartitionsVars = new HashMap<>();
+
+        @CommandLine.Option(
             names = "--log-read-progress",
             description = "Log a count of total items read every time this many items are read."
         )
@@ -229,6 +235,11 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             if (readVars != null) {
                 readVars.entrySet().forEach(entry ->
                     options.put(Options.READ_VARS_PREFIX + entry.getKey(), entry.getValue()));
+            }
+
+            if (readPartitionsVars != null) {
+                readPartitionsVars.entrySet().forEach(entry ->
+                    options.put(Options.READ_PARTITIONS_VARS_PREFIX + entry.getKey(), entry.getValue()));
             }
 
             return options;
@@ -297,6 +308,12 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
         @Override
         public ReadOptions vars(Map<String, String> namesAndValues) {
             this.readVars = namesAndValues;
+            return this;
+        }
+
+        @Override
+        public ReadOptions partitionsVars(Map<String, String> namesAndValues) {
+            this.readPartitionsVars = namesAndValues;
             return this;
         }
 
