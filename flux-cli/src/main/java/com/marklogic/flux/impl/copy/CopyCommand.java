@@ -168,6 +168,13 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private String uriTemplate;
 
         @CommandLine.Option(
+            names = "--output-uri-template-fail-on-missing-field",
+            description = "Causes the command to fail if a field referenced in the URI template is missing from a record. " +
+                "Defaults to false, which results in a warning being logged and a UUID being used in place of the missing field value."
+        )
+        private boolean uriTemplateFailOnMissingField;
+
+        @CommandLine.Option(
             names = {"--output-doc-metadata"},
             description = "Specify one or more metadata values to be added to each document; e.g. --output-doc-metadata param=value ."
         )
@@ -224,7 +231,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_URI_PREFIX, uriPrefix,
                 Options.WRITE_URI_REPLACE, uriReplace,
                 Options.WRITE_URI_SUFFIX, uriSuffix,
-                Options.WRITE_URI_TEMPLATE, uriTemplate
+                Options.WRITE_URI_TEMPLATE, uriTemplate,
+                Options.WRITE_URI_TEMPLATE_FAIL_ON_MISSING_FIELD, uriTemplateFailOnMissingField ? "true" : null
             );
         }
 
@@ -351,6 +359,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsParams uriTemplate(String uriTemplate) {
             this.uriTemplate = uriTemplate;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions uriTemplateFailOnMissingField() {
+            this.uriTemplateFailOnMissingField = true;
             return this;
         }
 

@@ -135,6 +135,13 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String uriTemplate;
 
     @CommandLine.Option(
+        names = "--uri-template-fail-on-missing-field",
+        description = "Causes the command to fail if a field referenced in the URI template is missing from a record. " +
+            "Defaults to false, which results in a warning being logged and a UUID being used in place of the missing field value."
+    )
+    private boolean uriTemplateFailOnMissingField;
+
+    @CommandLine.Option(
         names = {"--doc-metadata"},
         description = "Specify one or more metadata values to be added to each document; e.g. --doc-metadata param=value ."
     )
@@ -176,6 +183,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_REPLACE, uriReplace,
             Options.WRITE_URI_SUFFIX, uriSuffix,
             Options.WRITE_URI_TEMPLATE, uriTemplate,
+            Options.WRITE_URI_TEMPLATE_FAIL_ON_MISSING_FIELD, uriTemplateFailOnMissingField ? "true" : null,
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
@@ -334,6 +342,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T uriTemplate(String uriTemplate) {
         this.uriTemplate = uriTemplate;
+        return (T) this;
+    }
+
+    @Override
+    public T uriTemplateFailOnMissingField() {
+        this.uriTemplateFailOnMissingField = true;
         return (T) this;
     }
 
