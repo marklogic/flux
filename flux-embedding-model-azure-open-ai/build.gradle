@@ -9,6 +9,13 @@ java {
 }
 
 dependencies {
+  constraints {
+    implementation("com.azure:azure-core-http-netty:1.16.2") {
+      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.8 " +
+        "or higher to address CVE-2025-22227."
+    }
+  }
+
   implementation ("dev.langchain4j:langchain4j-azure-open-ai:${langchain4jVersion}") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
