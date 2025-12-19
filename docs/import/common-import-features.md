@@ -26,6 +26,7 @@ command reads. The following command line options offer further control over eac
 | `--uri-suffix` | A suffix to apply to each URI. |
 | `--uri-replace` | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
 | `--uri-template` | Template for each URI containing one or more column names. |
+| `--uri-template-fail-on-missing-field` | Added in 2.0.0; causes a failure if the template specified by `--uri-template` has an expression that returns null for a document. |
 
 ### Replacing URI contents
 
@@ -71,6 +72,11 @@ JSON document with this root field applied, so you would need to use JSON Pointe
 `last_name` values:
 
     --json-root-name employee --uri-template "/employee/{/employee/id}/{/employee/last_name}.json"
+
+As of Flux 2.0.0, if an expression cannot be resolved to a field in the document, Flux will log a warning and use a random UUID
+value instead. Prior to Flux 2.0.0, Flux will throw an error in this scenario. To force an error to occur, include the 
+`--uri-template-fail-on-missing-field` option added in Flux 2.0.0. This may be desirable for when the fields you reference
+in the template are expected to be present, and when that is not the case, you want Flux to fail fast. 
 
 The following techniques can assist you with writing a URI template:
 

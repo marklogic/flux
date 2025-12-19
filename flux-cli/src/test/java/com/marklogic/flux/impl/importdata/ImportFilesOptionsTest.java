@@ -7,6 +7,10 @@ import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 class ImportFilesOptionsTest extends AbstractOptionsTest {
 
     @Test
@@ -36,6 +40,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-replace", ".*value,''",
             "--uri-suffix", ".suffix",
             "--uri-template", "/test/{value}.json",
+            "--uri-template-fail-on-missing-field",
             "--streaming",
             "--extract-text",
             "--extracted-text-document-type", "XML",
@@ -78,6 +83,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_REPLACE, ".*value,''",
             Options.WRITE_URI_SUFFIX, ".suffix",
             Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
+            Options.WRITE_URI_TEMPLATE_FAIL_ON_MISSING_FIELD, "true",
             Options.STREAM_FILES, "true",
             Options.WRITE_EXTRACTED_TEXT, "true",
             Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
@@ -179,8 +185,13 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--splitter-json-pointer", ""
         );
 
-        assertOptions(command.getWriteParams().makeOptions(),
+        Map<String, String> options = command.getWriteParams().makeOptions();
+        assertOptions(options,
             Options.WRITE_SPLITTER_JSON_POINTERS, ""
         );
+
+        assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_FAIL_ON_MISSING_FIELD),
+            "As a boolean option, this should not be present when the option is not set so that the feature " +
+                "defaults to false, as of Flux 2.0.0.");
     }
 }

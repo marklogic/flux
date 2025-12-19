@@ -5,13 +5,13 @@ package com.marklogic.flux.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AggregateJsonFilesImporterTest extends AbstractTest {
 
@@ -37,6 +37,25 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
             assertTrue(doc.has("firstName"));
             assertTrue(doc.has("lastName"));
         });
+    }
+
+    @Test
+    void missingFieldInUriTemplate() {
+        AggregateJsonFilesImporter importer = Flux.importAggregateJsonFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
+                .jsonLines()
+                .additionalOptions(Map.of("lineSep", ":\n")))
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("custom-delimiter")
+                .uriTemplate("/custom-delimiter/{doesntExist}.json")
+                .uriTemplateFailOnMissingField());
+
+        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
+        assertTrue(ex.getMessage().contains("Expression 'doesntExist' did not resolve to a value in row"),
+            "Unexpected exception message: " + ex.getMessage());
     }
 
     @Test
