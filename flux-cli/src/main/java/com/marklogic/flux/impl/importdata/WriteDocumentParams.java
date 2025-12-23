@@ -135,11 +135,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String uriTemplate;
 
     @CommandLine.Option(
-        names = "--uri-template-fail-on-missing-field",
-        description = "Causes the command to fail if a field referenced in the URI template is missing from a record. " +
-            "Defaults to false, which results in a warning being logged and a UUID being used in place of the missing field value."
+        names = "--uri-template-warn-on-missing-field",
+        description = "Causes Flux to log a warning instead of failing when a URI template contains an expression " +
+            "that cannot be resolved to a field in a document. The expression will instead be replaced with the text " +
+            "'UNRESOLVED-' followed by a UUID to ensure the document is still created with a unique URI."
     )
-    private boolean uriTemplateFailOnMissingField;
+    private boolean uriTemplateWarnOnMissingField;
 
     @CommandLine.Option(
         names = {"--doc-metadata"},
@@ -183,7 +184,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_REPLACE, uriReplace,
             Options.WRITE_URI_SUFFIX, uriSuffix,
             Options.WRITE_URI_TEMPLATE, uriTemplate,
-            Options.WRITE_URI_TEMPLATE_FAIL_ON_MISSING_FIELD, uriTemplateFailOnMissingField ? "true" : null,
+            Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null,
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
@@ -346,8 +347,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     }
 
     @Override
-    public T uriTemplateFailOnMissingField() {
-        this.uriTemplateFailOnMissingField = true;
+    public T uriTemplateWarnOnMissingField() {
+        this.uriTemplateWarnOnMissingField = true;
         return (T) this;
     }
 

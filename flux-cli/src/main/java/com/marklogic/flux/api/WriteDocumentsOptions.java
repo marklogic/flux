@@ -60,7 +60,7 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     /**
      * @since 2.0.0
      */
-    T uriTemplateFailOnMissingField();
+    T uriTemplateWarnOnMissingField();
 
     /**
      * @since 1.3.0

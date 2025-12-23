@@ -5,13 +5,14 @@ package com.marklogic.flux.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
-import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AggregateJsonFilesImporterTest extends AbstractTest {
 
@@ -41,7 +42,7 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
 
     @Test
     void missingFieldInUriTemplate() {
-        AggregateJsonFilesImporter importer = Flux.importAggregateJsonFiles()
+        Flux.importAggregateJsonFiles()
             .connectionString(makeConnectionString())
             .from(options -> options
                 .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
@@ -51,11 +52,13 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .collections("custom-delimiter")
                 .uriTemplate("/custom-delimiter/{doesntExist}.json")
-                .uriTemplateFailOnMissingField());
+                .uriTemplateWarnOnMissingField())
+            .execute();
 
-        ConnectorException ex = assertThrows(ConnectorException.class, () -> importer.execute());
-        assertTrue(ex.getMessage().contains("Expression 'doesntExist' did not resolve to a value in row"),
-            "Unexpected exception message: " + ex.getMessage());
+        List<String> uris = getUrisInCollection("custom-delimiter", 3);
+        uris.forEach(uri -> assertTrue(uri.startsWith("/custom-delimiter/UNRESOLVED-"),
+            "When a field cannot be resolved in a URI template, it should be replaced with UNRESOLVED-<UUID>. " +
+                "Actual URI: " + uri));
     }
 
     @Test

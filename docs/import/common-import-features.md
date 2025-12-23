@@ -26,7 +26,7 @@ command reads. The following command line options offer further control over eac
 | `--uri-suffix` | A suffix to apply to each URI. |
 | `--uri-replace` | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
 | `--uri-template` | Template for each URI containing one or more column names. |
-| `--uri-template-fail-on-missing-field` | Added in 2.0.0; causes a failure if the template specified by `--uri-template` has an expression that returns null for a document. |
+| `--uri-template-warn-on-missing-field` | Added in 2.0.0; causes a warning if the template specified by `--uri-template` has an expression that returns null for a document. The expression will instead be replaced with the string "UNRESOLVED-" followed by a random UUID. |
 
 ### Replacing URI contents
 
@@ -73,10 +73,10 @@ JSON document with this root field applied, so you would need to use JSON Pointe
 
     --json-root-name employee --uri-template "/employee/{/employee/id}/{/employee/last_name}.json"
 
-As of Flux 2.0.0, if an expression cannot be resolved to a field in the document, Flux will log a warning and use a random UUID
-value instead. Prior to Flux 2.0.0, Flux will throw an error in this scenario. To force an error to occur, include the 
-`--uri-template-fail-on-missing-field` option added in Flux 2.0.0. This may be desirable for when the fields you reference
-in the template are expected to be present, and when that is not the case, you want Flux to fail fast. 
+If an expression cannot be resolved to a field in a document, Flux will by default throw an error and terminate. 
+As of Flux 2.0.0, you can instead use the `--uri-template-warn-on-missing-field` option to cause Flux to log a warning 
+and replace the expression with "UNRESOLVED-" followed by a random UUID. This option can be useful when you are not
+certain that your URI template will work for every document you intend to write to MarkLogic.
 
 The following techniques can assist you with writing a URI template:
 
