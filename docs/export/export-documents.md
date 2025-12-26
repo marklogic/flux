@@ -242,6 +242,17 @@ To write multiple files to one or more ZIP files, include `--compression ZIP`. A
 partition that was created when reading data via Optic. You can include `--zip-file-count 1` to force all documents to be
 written to a single ZIP file. See the below section on "Understanding partitions" for more information. 
 
+### Limiting entry counts per ZIP file
+
+Depending on the number of documents exported from each forest in MarkLogic, it is possible to encounter JVM heap space
+issues when creating larger ZIP files. This is due to the memory consumed by a ZIP file as it tracks metadata on each
+entry before the ZIP file is closed. 
+
+To write more ZIP files with fewer entries, use the `--partitions-per-forest` option to increase the number of 
+partitions. For example, if your database has 12 forests across 3 hosts, and you set `--partitions-per-forest 20`, Flux
+will create 240 partitions and thus write 240 ZIP files. The number of entries per ZIP file will vary based on the 
+distribution of exported documents across these forests.
+
 ### Windows-specific issues with ZIP files
 
 In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a ZIP file
@@ -305,7 +316,9 @@ large binary document may exhaust the amount of memory available to MarkLogic.
 As Flux is built on top of Apache Spark, it is heavily influenced by how Spark
 [defines and manages partitions](https://sparkbyexamples.com/spark/spark-partitioning-understanding/). Within the
 context of Flux, partitions can be thought of as "workers", with each worker operating in parallel on a different subset
-of data. Generally, more partitions allow for more parallel work and improved performance.
+of data. Generally, more partitions allow for more parallel work and improved performance. In the case of ZIP files, as
+noted in the above section on compressing content, more partitions will help avoid JVM heap space issues due to the
+memory consumed by a ZIP file as it tracks metadata on each entry before the ZIP file is closed.
 
 When exporting documents to files, the number of partitions impacts how many files will be written. For example, run
 the following command below from the [Getting Started guide](getting-started.md):

@@ -66,6 +66,17 @@ In some scenarios, it may not be possible to express all the URIs you wish to ex
 the [guide for exporting documents](export-documents.md) and the section titled "Including additional URIs" for
 information on the options that allow you to export additional URIs via a secondary query.
 
+### Limiting entry counts per ZIP file
+
+Depending on the number of documents exported from each forest in MarkLogic, it is possible to encounter JVM heap space
+issues when creating larger ZIP files. This is due to the memory consumed by a ZIP file as it tracks metadata on each
+entry before the ZIP file is closed.
+
+To write more ZIP files with fewer entries, use the `--partitions-per-forest` option to increase the number of
+partitions. For example, if your database has 12 forests across 3 hosts, and you set `--partitions-per-forest 20`, Flux
+will create 240 partitions and thus write 240 ZIP files. The number of entries per ZIP file will vary based on the
+distribution of exported documents across these forests.
+
 ### Windows-specific issues with ZIP files
 
 In the likely event that you have one or more URIs with a forward slash - `/` - in them, then creating a ZIP file
