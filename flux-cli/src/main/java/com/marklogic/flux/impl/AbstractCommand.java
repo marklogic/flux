@@ -40,16 +40,7 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
         if (commonParams.getSparkMasterUrl() != null) {
             return commonParams.getSparkMasterUrl();
         }
-        if (commonParams.getRepartition() > 0) {
-            return SparkUtil.makeSparkMasterUrl(commonParams.getRepartition());
-        }
-        String url = getCustomSparkMasterUrl();
-        return url != null ? url : "local[*]";
-    }
-
-    protected String getCustomSparkMasterUrl() {
-        // Allows subclasses to provide their own Spark master URL based on command-specific options.
-        return null;
+        return "local[*]";
     }
 
     @Override

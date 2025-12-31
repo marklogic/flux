@@ -35,11 +35,6 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
     }
 
     @Override
-    protected String getCustomSparkMasterUrl() {
-        return readParams.getPartitions() > 0 ? SparkUtil.makeSparkMasterUrl(readParams.getPartitions()) : null;
-    }
-
-    @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {
         return reader.format(MARKLOGIC_CONNECTOR)
             .options(getConnectionParams().makeOptions())

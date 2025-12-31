@@ -176,45 +176,6 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
-    void masterUrlBasedOffRepartitionCount() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--repartition", "32",
-            "--thread-count", "0",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[32]", url);
-    }
-
-    @Test
-    void masterUrlBasedOffThreadCount() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--thread-count", "24",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[24]", url);
-    }
-
-    @Test
-    void defaultMasterUrl() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[16]", url, "The reprocess command defaults to 16 threads.");
-    }
-
-    @Test
     void zeroThreadCount() {
         ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
             "--thread-count", "0",

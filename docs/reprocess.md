@@ -231,10 +231,7 @@ perform well. The two primary techniques for improving performance are:
 
 The `--thread-count` option is an alias for the `--repartition` option. It is included in the `reprocess` command
 as it is a familiar option name for other tools for reprocessing data in MarkLogic. Both options have the same effect, 
-which is to configure the number of partitions used by Flux for processing items. In addition, as of Flux 1.2.0, 
-setting either option will adjust the default value of the `--spark-master-url` option to be `local[N]`, where `N` is
-the number of Spark worker threads. This ensures that each partition processing items will have a Spark worker thread
-available to it. 
+which is to configure the number of partitions used by Flux for processing items. 
 
 When using an option such as `--limit`, where you do not want to wait for all the data to be read first, 
 you may want to include `--thread-count 0` to prevent the data from being repartitioned.
