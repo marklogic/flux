@@ -7,7 +7,6 @@ import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.Reprocessor;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
-import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
@@ -58,11 +57,6 @@ public class ReprocessCommand extends AbstractCommand<Reprocessor> implements Re
             .options(writeParams.get())
             .mode(SaveMode.Append)
             .save();
-    }
-
-    @Override
-    protected String getCustomSparkMasterUrl() {
-        return writeParams.threadCount > 0 ? SparkUtil.makeSparkMasterUrl(writeParams.threadCount) : null;
     }
 
     @Override
