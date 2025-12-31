@@ -162,7 +162,7 @@ public class Main {
         if (stderr != null) {
             commandLine.setErr(stderr);
         }
-        
+
         AtomicReference<CommandContext> commandRef = new AtomicReference<>();
         AtomicReference<RuntimeException> exceptionRef = new AtomicReference<>();
 
@@ -207,6 +207,7 @@ public class Main {
             final CommandContext commandContext = parseAndReturnCommandContext(parseResult);
             if (logger.isDebugEnabled()) {
                 logger.debug("Spark master URL: {}", commandContext.sparkSession.sparkContext().master());
+                logger.debug("Spark default parallelism: {}", commandContext.sparkSession.sparkContext().defaultParallelism());
             }
             commandContext.command.execute(commandContext.sparkSession);
         } catch (Exception ex) {

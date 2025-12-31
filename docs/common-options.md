@@ -513,25 +513,19 @@ time you run Flux:
 Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 
 configuring the underlying Spark runtime environment used by Flux. 
 
-### Configuring Spark worker threads
+### Understanding Spark task parallelism
 
-By default, Flux creates a Spark runtime with a master URL of `local[*]`, which runs Spark with as many worker 
-threads as logical cores on the machine running Flux. The number of worker threads affects how many partitions can be
-processed in parallel. You can change this setting via the`--spark-master-url` option; please see 
-[the Spark documentation](https://spark.apache.org/docs/3.5.6/submitting-applications.html#master-urls) for examples
-of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
+By default, Flux creates a Spark runtime with a master URL of `local[*]`, which uses all available cores on your machine. 
+The number of cores determines how many partitions can be processed concurrently. You can change this setting via the 
+`--spark-master-url` option; please see [the Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls) 
+for examples of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
 [Spark Integration guide](spark-integration.md) for details on integrating Flux with `spark-submit`.
 
-For import commands, you typically will not need to adjust this as a partition writer in an import command supports its
-own pool of threads via the [MarkLogic data movement library](https://docs.marklogic.com/guide/java/data-movement). However,
-depending on the data source, additional worker threads may help with reading data in parallel. 
-
-For the [`reprocess` command](reprocess.md), setting the number of worker threads is critical to achieving optimal 
-performance. As of Flux 1.2.0, the `--thread-count` option will adjust the Spark master URL based on the number of 
-threads you specify. Prior to Flux 1.2.0, you can use `--repartition` to achieve the same effect. 
-
-For exporting data, please see the [exporting guide](export/export.md) for information on how to adjust the worker 
-threads depending on whether you are reading documents or rows from MarkLogic.
+Note that task parallelism is separate from the number of partitions your data is divided into. If you have 200 
+partitions but only 10 cores, Spark will process 10 partitions at a time, queueing the remaining partitions until 
+cores become available. Additionally, each task may use its own thread pool for operations like writing to MarkLogic.
+For example, import commands use the [MarkLogic data movement library](https://docs.marklogic.com/guide/java/data-movement), 
+which maintains a separate pool of threads for writing documents concurrently within each task.
 
 ### Configuring the number of Spark partitions
 
@@ -549,10 +543,6 @@ The downside to this option is that it forces Flux to read all the data from the
 target. Generally, this option will help when data can be read quickly and the performance of writing can be
 improved by using more partitions than were created when reading data - this is almost always the case for the 
 `reprocess` command.
-
-As of Flux 1.2.0, setting `--repartition` will default the value of the `--spark-master-url` option to be `local[N]`, 
-where `N` is the value of `--repartition`. This ensures that each partition writer has a Spark worker thread available
-to it. You can still override `--spark-master-url` if you wish.
 
 ### Setting Spark configuration properties
 

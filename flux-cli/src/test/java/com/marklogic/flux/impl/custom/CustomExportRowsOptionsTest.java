@@ -20,6 +20,9 @@ class CustomExportRowsOptionsTest extends AbstractOptionsTest {
             "--partitions", "4"
         );
 
-        assertEquals("local[4]", command.determineSparkMasterUrl());
+        assertEquals("local[*]", command.determineSparkMasterUrl(),
+            "As of 2.0, the default Spark master URL is not adjusted based on the number " +
+                "of partitions; this was a mistake as the URL should be controlled by the number of " +
+                "available core for processing partitions via tasks.");
     }
 }
