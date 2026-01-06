@@ -101,7 +101,7 @@ dependencies {
   // org.junit.platform.commons.JUnitException: TestEngine with ID 'junit-jupiter' failed to discover tests
   testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.0"
 
-  testImplementation "com.marklogic:marklogic-junit5:2.0-SNAPSHOT"
+  testImplementation "com.marklogic:marklogic-junit5:2.0.0"
 
   // Used for tests involving JDBC. Spring JDBC greatly simplifies executing SQL queries.
   testImplementation "org.springframework:spring-jdbc:6.2.12"
