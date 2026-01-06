@@ -85,10 +85,20 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-template-warn-on-missing-field",
             "--splitter-text",
             "--embedder", "doesnt-matter",
+            "--embedder-prompt", "Hello: ",
+            "--embedder-prop", "e1=v1",
             "--output-doc-metadata", "meta1=value1",
             "--output-doc-metadata", "meta2=value2",
             "--output-doc-prop", "prop1=value1",
-            "--output-doc-prop", "prop2=value2"
+            "--output-doc-prop", "prop2=value2",
+            "--classifier-host", "somewhere",
+            "--classifier-port", "1234",
+            "--classifier-http",
+            "--classifier-path", "/path",
+            "--classifier-api-key", "apikey",
+            "--classifier-token-path", "/token/path",
+            "--classifier-batch-size", "50",
+            "--classifier-prop", "key1=value1"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -110,10 +120,20 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
             Options.WRITE_SPLITTER_TEXT, "true",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
+            Options.WRITE_EMBEDDER_PROMPT, "Hello: ",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "e1", "v1",
             Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
             Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
-            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2",
+            Options.WRITE_CLASSIFIER_HOST, "somewhere",
+            Options.WRITE_CLASSIFIER_PORT, "1234",
+            Options.WRITE_CLASSIFIER_HTTP, "true",
+            Options.WRITE_CLASSIFIER_PATH, "/path",
+            Options.WRITE_CLASSIFIER_APIKEY, "apikey",
+            Options.WRITE_CLASSIFIER_TOKEN_PATH, "/token/path",
+            Options.WRITE_CLASSIFIER_BATCH_SIZE, "50",
+            Options.WRITE_CLASSIFIER_OPTION_PREFIX + "key1", "value1"
         );
     }
 
