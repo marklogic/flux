@@ -203,6 +203,10 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 options.putAll(embedderParams.makeOptions());
             }
 
+            if (classifierParams != null) {
+                options.putAll(classifierParams.makeOptions());
+            }
+
             if (metadataValues != null) {
                 metadataValues.entrySet().forEach(entry -> options.put(
                     Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
