@@ -60,7 +60,6 @@ in the below command to point to the location of the `data/marklogic-security-do
     --uri-replace ".*zip,''" \
     --splitter-xpath "//xhtml:p" \
     --xpath-namespace xhtml=http://www.w3.org/1999/xhtml \
-    --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections "chunks,docs-chunks" \
     --embedder minilm
 ```
@@ -76,7 +75,6 @@ bin\flux import-files ^
     --uri-replace ".*zip,''" ^
     --splitter-xpath "//xhtml:p" ^
     --xpath-namespace xhtml=http://www.w3.org/1999/xhtml ^
-    --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections "chunks" ^
     --embedder minilm
 ```
@@ -96,7 +94,7 @@ omitted for brevity):
   "chunks": [
     {
       "text": "This table shows some examples of protected paths...",
-      "embedding": [-0.0011005516, -0.04141206, ...]
+      "_vector": [-0.0011005516, -0.04141206, ...]
     }
   ]
 }
@@ -127,8 +125,8 @@ op.fromSearchDocs(cts.andQuery([
   ]), null, {"scoreMethod": "bm25"})
   .orderBy("score")
   .limit(20)
-  .bind(op.as("chunkEmbedding", op.vec.vector(op.xpath("doc", "/chunks/embedding"))))
-  .bind(op.as("similarity", op.vec.cosine(op.col("chunkEmbedding"), op.vec.vector(vector))))
+  .bind(op.as("chunkVector", op.vec.vector(op.xpath("doc", "/chunks/*:_vector"))))
+  .bind(op.as("similarity", op.vec.cosine(op.col("chunkVector"), op.vec.vector(vector))))
   .orderBy(op.desc("similarity"))
   .limit(10)
   .bind(op.as("chunkText", op.xpath("doc", "/chunks/text")))
@@ -209,7 +207,7 @@ convenience, Flux will log this value with a message containing "Using embedding
           {
             "name": "embedding",
             "scalarType": "vector",
-            "val": "vec:vector(embedding)",
+            "val": "vec:vector(_vector)",
             "dimension": "384",
             "invalidValues": "ignore",
             "nullable": false

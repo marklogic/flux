@@ -104,8 +104,8 @@ class SplitWithApiTest extends AbstractTest {
 
         doc.get("chunks").forEach(chunk -> {
             assertTrue(chunk.has("text"));
-            assertTrue(chunk.has("embedding"));
-            assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
+            assertTrue(chunk.has("_vector"));
+            assertEquals(JsonNodeType.ARRAY, chunk.get("_vector").getNodeType());
         });
     }
 

@@ -296,7 +296,6 @@ connection string are notional):
     --permissions flux-example-role,read,flux-example-role,update \
     --splitter-json-pointer "/description" \
     --splitter-max-chunk-size 500 \
-    --splitter-sidecar-max-chunks 1 \
     --splitter-sidecar-collections chunks \
     --embedder azure \
     @azure-api-key.txt \
@@ -313,7 +312,6 @@ bin\flux import-files ^
     --permissions flux-example-role,read,flux-example-role,update ^
     --splitter-json-pointer "/description" ^
     --splitter-max-chunk-size 500 ^
-    --splitter-sidecar-max-chunks 1 ^
     --splitter-sidecar-collections chunks ^
     --embedder azure ^
     @azure-api-key.txt ^
@@ -331,7 +329,7 @@ The above command will produce JSON sidecar documents with the following structu
   "chunks": [
     {
       "text": "This is a chunk of text that was split from the original document.",
-      "embedding": [0.1234, -0.5678, 0.9012, ...]
+      "_vector": [0.1234, -0.5678, 0.9012, ...]
     }
   ]
 }
@@ -346,7 +344,7 @@ following structure:
   <chunks>
     <chunk>
       <text>This is a chunk of text that was split from the original document.</text>
-      <embedding xml:lang="zxx">[0.1234, -0.5678, 0.9012, ...]</embedding>
+      <vector xml:lang="zxx" xmlns="http://marklogic.com/vector">[0.1234, -0.5678, 0.9012, ...]</vector>
     </chunk>
   </chunks>
 </root>
@@ -384,7 +382,7 @@ When this option is enabled, instead of storing an embedding as an array like th
 ```json
 {
   "text": "MarkLogic is a database",
-  "embedding": [0.1234, -0.5678, 0.9012, ...]
+  "_vector": [0.1234, -0.5678, 0.9012, ...]
 }
 ```
 
@@ -393,7 +391,7 @@ Flux will store the embedding as an encoded string:
 ```json
 {
   "text": "MarkLogic is a database", 
-  "embedding": "AAAAAAMAAADD9UhAH4XLP5qZKUA="
+  "_vector": "AAAAAAMAAADD9UhAH4XLP5qZKUA="
 }
 ```
 
@@ -401,7 +399,7 @@ For XML, the embedding will be stored as a string with an XML attribute used to
 [disable stemming](https://docs.progress.com/bundle/marklogic-server-use-search-11/page/topics/languages.html) on the value:
 
 ```
-<embedding xml:lang="zxx">AAAAAAMAAADD9UhAH4XLP5qZKUA=</embedding>
+<vector xml:lang="zxx" xmlns="http://marklogic.com/vector">AAAAAAMAAADD9UhAH4XLP5qZKUA=</vector>
 ```
 
 The encoding used by this option matches the encoding used by the `vec:base64-encode` function in MarkLogic 
