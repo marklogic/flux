@@ -2,6 +2,7 @@
 
 def runtests(){
   cleanupDocker()
+
   sh label:'mlsetup', script: '''#!/bin/bash
     cd $WORKSPACE/flux;
     sudo /usr/local/sbin/mladmin stop;

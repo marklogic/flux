@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -54,10 +55,12 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
         );
 
         XmlNode doc = readXmlDocument("/java-client-intro.json-chunks-1.xml");
-        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/vec:embedding");
+        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/vec:vector");
     }
 
     @Test
+    @Disabled("Stopped working around 2025-01-08, possibly due to Ollama changes. Works locally if you pull the " +
+        "latest ollama/ollama image, but that hasn't worked in Jenkins yet.")
     void ollama() {
         run(
             "import-files",
@@ -91,8 +94,8 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
         );
 
         JsonNode doc = readJsonDocument("/top-chunks-test.json");
-        assertTrue(doc.has("embedding"), "Using '' should result in the whole document being treated as a chunk.");
-        assertEquals(JsonNodeType.ARRAY, doc.get("embedding").getNodeType());
+        assertTrue(doc.has("_vector"), "Using '' should result in the whole document being treated as a chunk.");
+        assertEquals(JsonNodeType.ARRAY, doc.get("_vector").getNodeType());
     }
 
     /**
@@ -142,8 +145,8 @@ class ImportFilesWithEmbedderTest extends AbstractTest {
 
             chunks.forEach(chunk -> {
                 assertTrue(chunk.has("text"));
-                assertTrue(chunk.has("embedding"));
-                assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
+                assertTrue(chunk.has("_vector"));
+                assertEquals(JsonNodeType.ARRAY, chunk.get("_vector").getNodeType());
             });
         });
     }
