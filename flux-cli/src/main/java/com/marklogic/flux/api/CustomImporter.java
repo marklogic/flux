@@ -18,6 +18,13 @@ public interface CustomImporter extends Executor<CustomImporter> {
 
         CustomReadOptions s3AddCredentials();
 
+        /**
+         * Enable use of the AWS profile credentials provider.
+         *
+         * @since 2.0.0
+         */
+        CustomReadOptions s3UseProfile();
+
         CustomReadOptions s3AccessKeyId(String accessKeyId);
 
         CustomReadOptions s3SecretAccessKey(String secretAccessKey);

@@ -102,6 +102,12 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         }
 
         @Override
+        public CustomReadOptions s3UseProfile() {
+            this.s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
         public CustomReadOptions s3AccessKeyId(String accessKeyId) {
             this.s3Params.setAccessKeyId(accessKeyId);
             return this;

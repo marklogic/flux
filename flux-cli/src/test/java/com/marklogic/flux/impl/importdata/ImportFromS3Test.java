@@ -29,6 +29,9 @@ class ImportFromS3Test extends AbstractTest {
             "--preview-drop", "content", "modificationTime",
             "--connection-string", makeConnectionString(),
             "--s3-add-credentials"
+
+            // Can also test --s3-use-profile as it should pick up credentials from the local AWS config
+            // "--s3-use-profile"
         );
 
         assertNotNull(stdout);

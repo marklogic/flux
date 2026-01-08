@@ -144,6 +144,12 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     @Override
+    public T s3UseProfile() {
+        this.s3Params.setUseProfile(true);
+        return (T) this;
+    }
+
+    @Override
     public T s3AccessKeyId(String accessKeyId) {
         s3Params.setAccessKeyId(accessKeyId);
         return (T) this;
