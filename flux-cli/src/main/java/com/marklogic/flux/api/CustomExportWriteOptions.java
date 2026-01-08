@@ -16,6 +16,13 @@ public interface CustomExportWriteOptions {
 
     CustomExportWriteOptions s3AddCredentials();
 
+    /**
+     * Enable use of the AWS profile credentials provider.
+     *
+     * @since 2.0.0
+     */
+    CustomExportWriteOptions s3UseProfile();
+
     CustomExportWriteOptions s3AccessKeyId(String accessKeyId);
 
     CustomExportWriteOptions s3SecretAccessKey(String secretAccessKey);

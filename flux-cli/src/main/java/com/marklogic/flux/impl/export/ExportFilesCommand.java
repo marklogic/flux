@@ -185,6 +185,12 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         }
 
         @Override
+        public WriteGenericFilesOptions s3UseProfile() {
+            s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
         public WriteGenericFilesOptions azureStorage(Consumer<AzureStorageOptions> consumer) {
             consumer.accept(azureStorageParams);
             return this;

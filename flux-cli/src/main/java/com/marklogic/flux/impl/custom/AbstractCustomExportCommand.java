@@ -83,6 +83,12 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         }
 
         @Override
+        public CustomExportWriteOptions s3UseProfile() {
+            this.s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
         public CustomExportWriteOptions s3AccessKeyId(String accessKeyId) {
             this.s3Params.setAccessKeyId(accessKeyId);
             return this;
