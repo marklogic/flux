@@ -1,5 +1,5 @@
 plugins {
-  id 'com.gradleup.shadow' version '8.3.3'
+  id 'com.gradleup.shadow' version '9.2.1'
   id 'maven-publish'
 }
 
@@ -16,6 +16,11 @@ dependencies {
   }
 }
 
+// Prevents the shadow variant from being published; see https://gradleup.com/shadow/publishing/#shadow-variant-in-default-java-component
+shadow {
+  addShadowVariantIntoJavaComponent = false
+}
+
 publishing {
   publications {
     mainJava(MavenPublication) {
@@ -25,7 +30,7 @@ publishing {
       from components.java
       pom {
         name = "${group}:${project.name}"
-        description = "Integration for minilm with the MarkLogic Flux API"
+        description = "Integration for minilm with the Progress MarkLogic Flux API"
         packaging = "jar"
         url = "https://github.com/marklogic/flux"
         licenses {
@@ -70,8 +75,4 @@ publishing {
       }
     }
   }
-}
-
-components.java.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
-  skip()
 }
