@@ -62,13 +62,14 @@ public class EmbedderParams implements EmbedderOptions {
     @CommandLine.Option(
         names = "--embedder-embedding-name",
         description = "The name of the JSON array or XML element to add to a chunk that contains the generated " +
-            "embedding. If not specified, defaults to 'embedding'."
+            "embedding. If not specified, defaults to '_vector' for JSON and 'vector' for XML."
     )
     private String embeddingName;
 
     @CommandLine.Option(
         names = "--embedder-embedding-namespace",
-        description = "Optional namespace to assign to the embedding element added to XML chunks."
+        description = "Optional namespace to assign to the embedding element added to XML chunks. If not specified, " +
+            "defaults to 'http://marklogic.com/vector' for XML documents."
     )
     private String embeddingNamespace;
 
