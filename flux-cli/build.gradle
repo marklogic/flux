@@ -28,7 +28,7 @@ dependencies {
     }
   }
 
-  implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
+  implementation("org.apache.spark:spark-sql_2.13:4.1.1") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
 
@@ -40,7 +40,7 @@ dependencies {
 
   implementation "at.yawk.lz4:lz4-java:1.10.2"
 
-  implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
+  implementation "com.marklogic:marklogic-spark-connector:3.0.0"
   implementation "info.picocli:picocli:${picocliVersion}"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
@@ -50,7 +50,7 @@ dependencies {
   // API since spark-submit provides that.
   // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
-  shadowDependencies "com.marklogic:marklogic-spark-connector:${connectorVersion}"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:3.0.0"
   shadowDependencies "info.picocli:picocli:${picocliVersion}"
 
   implementation("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
@@ -83,7 +83,7 @@ dependencies {
   }
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
+  implementation "org.apache.spark:spark-avro_2.13:4.1.1"
 
   // Optional dependencies - included in distribution but marked as optional in POM
   implementation("org.apache.tika:tika-parser-microsoft-module:${tikaVersion}") {
