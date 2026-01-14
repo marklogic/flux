@@ -21,26 +21,26 @@ configurations {
 dependencies {
   constraints {
     implementation("org.codehaus.janino:janino:3.1.12") {
-      because "Bumping from 3.1.9 (what Spark SQL 4.1.0-preview2 depends on) to 3.1.12 to eliminate CVEs."
+      because "Bumping from 3.1.9 (what Spark SQL 4.1.1 depends on) to 3.1.12 to eliminate CVEs."
     }
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
     }
   }
 
-  implementation("org.apache.spark:spark-sql_2.13:4.1.1") {
+  implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
 
-    // As of Spark 4.1.0-preview4, Spark is depending on a 1.8.x version of lz4-java that has two
+    // As of Spark 4.1.1, Spark is depending on a 1.8.x version of lz4-java that has two
     // CVEs. According to https://github.com/yawkat/lz4-java, patched versions should now be obtained from
-    // that repository. If Spark 4.1.0 uses the patched version, this can be removed.
+    // that repository. Once Spark uses a patched version, this exclusion can be removed.
     exclude module: "lz4-java"
   }
 
   implementation "at.yawk.lz4:lz4-java:1.10.2"
 
-  implementation "com.marklogic:marklogic-spark-connector:3.0.0"
+  implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:${picocliVersion}"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
@@ -50,7 +50,7 @@ dependencies {
   // API since spark-submit provides that.
   // Any other implementation dependencies below this are either provided by spark-submit or can be easily included
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
-  shadowDependencies "com.marklogic:marklogic-spark-connector:3.0.0"
+  shadowDependencies "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   shadowDependencies "info.picocli:picocli:${picocliVersion}"
 
   implementation("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
@@ -83,7 +83,7 @@ dependencies {
   }
 
   // Spark doesn't include Avro support by default, so need to bring this in.
-  implementation "org.apache.spark:spark-avro_2.13:4.1.1"
+  implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
 
   // Optional dependencies - included in distribution but marked as optional in POM
   implementation("org.apache.tika:tika-parser-microsoft-module:${tikaVersion}") {
