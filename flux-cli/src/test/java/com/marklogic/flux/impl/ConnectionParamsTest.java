@@ -170,7 +170,7 @@ class ConnectionParamsTest extends AbstractOptionsTest {
             "--truststore-path", "--truststore-password", "--truststore-type", "--truststore-algorithm"
         );
 
-        List<String> actualOptions = Main.getConnectionOptionNames();
+        List<String> actualOptions = ConnectionParams.getOptionNames();
 
         assertEquals(expectedOptions.size(), actualOptions.size(),
             "Expected " + expectedOptions.size() + " connection option names");

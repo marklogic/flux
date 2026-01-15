@@ -35,14 +35,14 @@ Flux integrates with [spark-submit](https://spark.apache.org/docs/3.5.6/submitti
 submit a Flux command invocation to a remote Spark cluster. Every Flux command is a Spark application, and thus every
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
-To use Flux with `spark-submit`, first download the `marklogic-flux-1.4.0-all.jar` file from the 
-[GitHub release page](https://github.com/marklogic/flux/releases/tag/1.4.0). This jar file includes Flux and all of 
+To use Flux with `spark-submit`, first download the `marklogic-flux-2.0.0-all.jar` file from the 
+[GitHub release page](https://github.com/marklogic/flux/releases/tag/2.0.0). This jar file includes Flux and all of 
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
-You can now run any Flux command with `spark-submit`. As of Flux 1.4.0, Flux depends on Spark 3.5.6, and thus you should
-use Spark 3.5.6 or higher. Prior versions of Spark 3.5.x may work as well. Please also ensure that you use a Spark 
-runtime that depends on Scala 2.12 and not Scala 2.13.
+You can now run any Flux command with `spark-submit`. As of Flux 2.0.0, Flux depends on Spark 4.1.1, and thus you should
+use Spark 4.1.1 or higher. Prior versions of Spark 4.x may work as well. Please also ensure that you use a Spark 
+runtime that depends on Scala 2.13.
 
 The following shows a notional example of running the Flux `import-files` command:
 
@@ -51,7 +51,7 @@ The following shows a notional example of running the Flux `import-files` comman
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
     --master spark://changeme:7077 \
-    marklogic-flux-1.4.0-all.jar \
+    marklogic-flux-2.0.0-all.jar \
     import-files \
     --path path/to/data \
     --connection-string user:password@host:8000 \
@@ -62,7 +62,7 @@ $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 ```
 $SPARK_HOME\bin\spark-submit --class com.marklogic.flux.spark.Submit ^
     --master spark://changeme:7077 ^
-    marklogic-flux-1.4.0-all.jar ^
+    marklogic-flux-2.0.0-all.jar ^
     import-files ^
     --path path/to/data ^
     --connection-string user:password@host:8000 ^
