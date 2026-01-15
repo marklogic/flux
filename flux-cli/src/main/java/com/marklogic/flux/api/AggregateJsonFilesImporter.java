@@ -15,15 +15,6 @@ public interface AggregateJsonFilesImporter extends Executor<AggregateJsonFilesI
 
     interface ReadJsonFilesOptions extends ReadFilesOptions<ReadJsonFilesOptions> {
         /**
-         * @param value set to true to read JSON Lines files. Defaults to reading files that either contain an array
-         *              of JSON objects or a single JSON object.
-         * @deprecated since 1.1.2; use {@code jsonLines()} instead.
-         */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.1.2", forRemoval = true)
-        ReadJsonFilesOptions jsonLines(boolean value);
-
-        /**
          * Call this to read JSON Lines files. Otherwise, defaults to reading files that either contain an array of
          * JSON objects or a single JSON object.
          *
