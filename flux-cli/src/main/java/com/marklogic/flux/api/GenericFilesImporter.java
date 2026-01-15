@@ -10,15 +10,6 @@ import java.util.function.Consumer;
  */
 public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
-    /**
-     * @deprecated Use {@link com.marklogic.flux.api.DocumentType} instead
-     */
-    @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-    @Deprecated(since = "1.4.0", forRemoval = true)
-    enum DocumentType {
-        JSON, TEXT, XML
-    }
-
     interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
         ReadGenericFilesOptions compressionType(CompressionType compressionType);
 
@@ -29,13 +20,6 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
     interface WriteGenericDocumentsOptions extends WriteDocumentsOptions<WriteGenericDocumentsOptions> {
         /**
-         * @deprecated Use {@link #documentType(com.marklogic.flux.api.DocumentType)} instead
-         */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.4.0", forRemoval = true)
-        WriteGenericDocumentsOptions documentType(DocumentType documentType);
-
-        /**
          * @since 1.4.0
          */
         WriteGenericDocumentsOptions documentType(com.marklogic.flux.api.DocumentType documentType);
@@ -44,14 +28,6 @@ public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
          * @since 1.3.0
          */
         WriteGenericDocumentsOptions extractText();
-
-        /**
-         * @since 1.3.0
-         * @deprecated Use {@link #extractedTextDocumentType(String)} instead
-         */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.4.0", forRemoval = true)
-        WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType);
 
         /**
          * @param documentType can be "json" or "xml"; defaults to "json" if not specified or if an unrecognized value is provided.

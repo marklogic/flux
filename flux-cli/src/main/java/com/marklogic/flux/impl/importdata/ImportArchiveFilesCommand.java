@@ -5,7 +5,6 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.ArchiveFilesImporter;
 import com.marklogic.flux.api.DocumentType;
-import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -132,17 +131,6 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
     @Override
     public ArchiveFilesImporter streaming() {
         this.streaming = true;
-        return this;
-    }
-
-    /**
-     * @deprecated Use {@link #toOptions(Consumer)} instead
-     */
-    @Override
-    @SuppressWarnings({"java:S1133", "unchecked", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
-    @Deprecated(since = "1.4.0", forRemoval = true)
-    public <T extends WriteDocumentsOptions<T>> ArchiveFilesImporter to(Consumer<T> consumer) {
-        consumer.accept((T) writeParams);
         return this;
     }
 
