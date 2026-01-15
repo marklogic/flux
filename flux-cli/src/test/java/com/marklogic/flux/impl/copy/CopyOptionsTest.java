@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.copy;
 
-import com.marklogic.flux.cli.Main;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.flux.impl.importdata.WriteDocumentParams;
 import com.marklogic.spark.Options;
@@ -247,7 +246,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-truststore-type", "--output-truststore-algorithm"
         );
 
-        List<String> actualOptions = Main.getOutputConnectionOptionNames();
+        List<String> actualOptions = OutputConnectionParams.getOptionNames();
 
         assertEquals(expectedOptions.size(), actualOptions.size(),
             "Expected " + expectedOptions.size() + " output connection option names");
