@@ -237,4 +237,25 @@ class HandleErrorTest extends AbstractTest {
             "--connection-string", makeConnectionString()
         );
     }
+
+    @Test
+    void s3ConnectException() {
+        assertStderrContains(
+            "For connectivity issues with S3, consider configuring an explicit S3 endpoint or region.",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "s3a://doesnt-matter-for-this-test/",
+            "--preview", "1",
+            "--connection-string", makeConnectionString(),
+            "--s3-add-credentials",
+
+            // Copilot-recommended URL for failing as quickly as possible with a connection error.
+            "--s3-endpoint", "http://localhost:9999",
+
+            // These 3 options force Spark to fail as fast as possible with an invalid endpoint.
+            "--spark-conf", "spark.hadoop.fs.s3a.retry.limit=0",
+            "--spark-conf", "spark.hadoop.fs.s3a.retry.interval=1m",
+            "--spark-conf", "spark.hadoop.fs.s3a.attempts.maximum=1"
+        );
+    }
 }

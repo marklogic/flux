@@ -19,8 +19,10 @@ import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
+import software.amazon.awssdk.core.exception.SdkClientException;
 
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
@@ -259,12 +261,22 @@ public class Main {
                 stderr.println("The error is from the database you are connecting to via the configured JDBC driver.");
                 stderr.println("You may find it helpful to consult your database documentation for the error message.");
             }
+            if (isS3ConnectException(ex)) {
+                stderr.println("For connectivity issues with S3, consider configuring an explicit S3 endpoint or region.");
+            }
             stderr.println(String.format("Error: %s", message));
         }
 
         if (message != null && message.contains("XDMP-OLDSTAMP")) {
             printMessageForTimestampError(stderr);
         }
+    }
+
+    private boolean isS3ConnectException(Exception ex) {
+        if (ex.getCause() instanceof ConnectException connectException) {
+            return connectException.getCause() instanceof SdkClientException;
+        }
+        return false;
     }
 
     /**
