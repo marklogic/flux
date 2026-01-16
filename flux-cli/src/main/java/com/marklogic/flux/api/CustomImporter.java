@@ -32,6 +32,11 @@ public interface CustomImporter extends Executor<CustomImporter> {
         CustomReadOptions s3Endpoint(String endpoint);
 
         /**
+         * @since 2.0.0
+         */
+        CustomReadOptions s3Region(String region);
+
+        /**
          * @since 1.4.0
          */
         CustomReadOptions azureStorageAccount(String storageAccount);

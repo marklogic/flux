@@ -107,6 +107,12 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         }
 
         @Override
+        public CustomExportWriteOptions s3Region(String region) {
+            this.s3Params.setRegion(region);
+            return this;
+        }
+
+        @Override
         public CustomExportWriteOptions azureStorage(Consumer<AzureStorageOptions> consumer) {
             consumer.accept(this.azureStorageParams);
             return this;

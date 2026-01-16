@@ -22,6 +22,11 @@ public interface WriteFilesOptions<T extends WriteFilesOptions>  {
 
     T s3Endpoint(String endpoint);
 
+    /**
+     * @since 2.0.0
+     */
+    T s3Region(String region);
+
     T s3AccessKeyId(String accessKeyId);
 
     T s3SecretAccessKey(String secretAccessKey);

@@ -120,7 +120,11 @@ option:
 
 Flux can read files from S3 via a path expression of the form `s3a://bucket-name/optional/path`.
 
-In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux uses the AWS SDK to fetch credentials from 
+### Authentication
+
+In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux supports several authentication methods:
+
+**Automatic credential retrieval** - Flux uses the AWS SDK to fetch credentials from 
 [locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html). 
 To enable this, include the `--s3-add-credentials` option:
 
@@ -143,26 +147,32 @@ bin\flux import-files ^
 {% endtab %}
 {% endtabs %}
 
+**Explicit credentials** - You can explicitly define your AWS credentials via `--s3-access-key-id` and 
+`--s3-secret-access-key`. To avoid typing these in plaintext, you may want to store these in a file and reference 
+the file via an options file. See [Common Options](../../common-options.md) for more information on how to use 
+options files. As of Flux 2.0.0, you may also specify an AWS session token via the `--s3-session-token` option. 
+This token will be used with your access key ID and secret access key values when authenticating with S3.
 
-You can also explicitly define your AWS credentials via `--s3-access-key-id` and `--s3-secret-access-key`. To avoid 
-typing these in plaintext, you may want to store these in a file and reference the file via an options file. See
-[Common Options](../../common-options.md) for more information on how to use options files.
+**Profile-based authentication** - As of Flux 2.0.0, you can use `--s3-use-profile` to authenticate with AWS profile 
+credentials from `~/.aws/config` and `~/.aws/credentials`. This supports SSO profiles (configured via `aws sso login`), 
+standard profiles with access keys, and any other profile types. By default, the `[default]` profile is used, or you 
+can specify a profile via the `AWS_PROFILE` environment variable. See the 
+[AWS documentation on configuration and credential files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 
+for more information.
 
-You can also specify an S3 endpoint via `--s3-endpoint`. This is typically required when running Flux in AWS in one 
-region while trying to access S3 in a separate region. 
+### Configuring the S3 connection
 
-### Session token usage
+When running Flux within AWS and accessing an S3 bucket in a different region, you may need to configure the S3 
+connection explicitly. Use `--s3-endpoint` to specify the S3 endpoint URL, and as of Flux 2.0.0, use `--s3-region` 
+to specify the AWS region of the S3 bucket to access.
 
-As of Flux 2.0.0, you may also specify an AWS session token via the `--s3-session-token` option. This token will be
-used with your access key ID and secret access key values when authenticating with S3.
+For advanced S3 configuration, you can use `--spark-conf` to set 
+[Hadoop S3 properties](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#General_S3A_Client_configuration). 
+For example, the following sets the connection timeout:
 
-### Profile-based authentication
+`--spark-conf spark.hadoop.fs.s3a.connection.timeout=300000`
 
-As of Flux 2.0.0, you can use `--s3-use-profile` to authenticate with AWS profile credentials from `~/.aws/config` 
-and `~/.aws/credentials`. This supports SSO profiles (configured via `aws sso login`), standard profiles with access 
-keys, and any other profile types. By default, the `[default]` profile is used, or you can specify a profile via the 
-`AWS_PROFILE` environment variable. See the [AWS documentation on configuration and credential files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for more information.
-
+See [Common Options](../common-options.md) for more information on using `--spark-conf`.
 
 ## Importing from Azure Storage
 

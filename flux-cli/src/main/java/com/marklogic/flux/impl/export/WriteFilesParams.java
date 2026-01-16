@@ -96,6 +96,12 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     @Override
+    public T s3Region(String region) {
+        s3Params.setRegion(region);
+        return (T) this;
+    }
+
+    @Override
     public T fileCount(int fileCount) {
         this.fileCount = fileCount;
         return (T) this;

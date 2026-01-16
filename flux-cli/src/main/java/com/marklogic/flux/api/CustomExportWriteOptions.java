@@ -30,6 +30,11 @@ public interface CustomExportWriteOptions {
     CustomExportWriteOptions s3Endpoint(String endpoint);
 
     /**
+     * @since 2.0.0
+     */
+    CustomExportWriteOptions s3Region(String region);
+
+    /**
      * @since 1.4.0
      */
     CustomExportWriteOptions azureStorage(Consumer<AzureStorageOptions> consumer);
