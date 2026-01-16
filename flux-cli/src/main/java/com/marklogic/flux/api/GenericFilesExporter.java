@@ -37,6 +37,11 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         WriteGenericFilesOptions s3Endpoint(String endpoint);
 
         /**
+         * @since 2.0.0
+         */
+        WriteGenericFilesOptions s3Region(String region);
+
+        /**
          * @since 1.4.0
          */
         WriteGenericFilesOptions azureStorage(Consumer<AzureStorageOptions> consumer);

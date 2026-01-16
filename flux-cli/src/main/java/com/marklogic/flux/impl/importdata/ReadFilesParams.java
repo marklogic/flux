@@ -174,6 +174,12 @@ public class ReadFilesParams<T extends ReadFilesOptions> implements ReadFilesOpt
     }
 
     @Override
+    public T s3Region(String region) {
+        this.s3Params.setRegion(region);
+        return (T) this;
+    }
+
+    @Override
     public T azureStorage(Consumer<AzureStorageOptions> consumer) {
         consumer.accept(this.azureStorageParams);
         return (T) this;

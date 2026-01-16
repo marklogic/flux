@@ -33,6 +33,11 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
     T s3Endpoint(String endpoint);
 
     /**
+     * @since 2.0.0
+     */
+    T s3Region(String region);
+
+    /**
      * @since 1.4.0
      */
     T azureStorage(Consumer<AzureStorageOptions> consumer);

@@ -126,6 +126,12 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         }
 
         @Override
+        public CustomReadOptions s3Region(String region) {
+            this.s3Params.setRegion(region);
+            return this;
+        }
+
+        @Override
         public CustomReadOptions azureStorageAccount(String storageAccount) {
             this.azureStorageParams.storageAccount(storageAccount);
             return this;

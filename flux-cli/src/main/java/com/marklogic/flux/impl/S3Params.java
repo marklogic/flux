@@ -57,6 +57,12 @@ public class S3Params {
     )
     private String endpoint;
 
+    @CommandLine.Option(
+        names = "--s3-region",
+        description = "Specifies the AWS region of the S3 bucket to access."
+    )
+    private String region;
+
     /**
      * @param config the Spark runtime configuration object
      */
@@ -90,6 +96,9 @@ public class S3Params {
         if (hasText(endpoint)) {
             config.set("fs.s3a.endpoint", endpoint);
         }
+        if (hasText(region)) {
+            config.set("fs.s3a.endpoint.region", region);
+        }
     }
 
     private boolean hasText(String value) {
@@ -118,5 +127,9 @@ public class S3Params {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
