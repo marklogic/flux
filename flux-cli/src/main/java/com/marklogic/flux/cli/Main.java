@@ -274,7 +274,8 @@ public class Main {
 
     private boolean isS3ConnectException(Exception ex) {
         if (ex.getCause() instanceof ConnectException connectException) {
-            return connectException.getCause() instanceof SdkClientException;
+            Throwable cause = connectException.getCause();
+            return cause != null && cause instanceof SdkClientException;
         }
         return false;
     }
