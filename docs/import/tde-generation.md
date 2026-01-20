@@ -37,9 +37,9 @@ to load a TDE into the schemas database associated with your application.
 
 If you are not connecting as a user with the MarkLogic `admin` role, your MarkLogic user must meet the following requirements in order to generate and load a TDE template:
 
-- Must have the `xdmp-eval` privilege.
-- Must have the `xdmp-eval-in` privilege.
-- Must have either the `tde-admin` role or the `any-collections` privilege.
+- Must have the `xdmp-eval`, `xdmp-eval-in`, and `xdbc-eval` privileges in order to use the [v1/eval REST API endpoint](https://docs.marklogic.com/REST/POST/v1/eval).
+- Must have the `unprotected-uri` or `any-uri` privilege in order to write a TDE document.
+- Must have either the `tde-admin` role or the `any-collection` privilege in order to write a TDE document into the required collection.
 
 Additionally, if your user does not have the `admin` role, you must specify at least one update permission via the 
 `--tde-permissions` option described below.
