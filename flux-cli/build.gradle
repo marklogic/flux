@@ -87,11 +87,13 @@ dependencies {
 
   // Optional dependencies - included in distribution but marked as optional in POM
   implementation("org.apache.tika:tika-parser-microsoft-module:${tikaVersion}") {
-    // Will be marked as optional in the POM
+    // Exclude Jackcess - not needed since Access database (.mdb/.accdb) parsing is not required.
+    // Jackcess has an LGPL license that complicates legal review, so further reason to omit this
+    // until we have a use case for parsing Access files (as opposed to importing them via JDBC).
+    exclude group: 'com.healthmarketscience.jackcess', module: 'jackcess'
+    exclude group: 'com.healthmarketscience.jackcess', module: 'jackcess-encrypt'
   }
-  implementation("org.apache.tika:tika-parser-pdf-module:${tikaVersion}") {
-    // Will be marked as optional in the POM
-  }
+  implementation "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
 
   // For configuring two-way SSL in tests.
   testImplementation("com.marklogic:ml-app-deployer:6.2-SNAPSHOT") {
