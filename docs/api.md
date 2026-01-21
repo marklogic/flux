@@ -77,6 +77,17 @@ If you are using Maven, you must add the following to your `pom.xml` file:
 </dependencyManagement>
 ```
 
+### Additional dependencies
+
+If you wish to use Flux's text extraction capabilities, you will need to include the following Apache Tika libraries
+as dependencies in your project:
+
+- For extracting text from Microsoft Office files, include `org.apache.tika:tika-parser-microsoft-module:3.2.3`.
+- For extracting text from PDF files, include `org.apache.tika:tika-parser-pdf-module:3.2.3`.
+
+Apache Tika supports [additional formats](https://tika.apache.org/3.2.3/formats.html) 
+that may require including other Tika libraries as dependencies.
+
 ## Javadocs
 
 Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
