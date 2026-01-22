@@ -10,18 +10,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:2.0-SNAPSHOT"
-  }
-
-  // This is required when a plugin, such as ml-gradle, is on the classpath that brings along a version of Jackson
-  // that is incompatible with the version of Apache Spark used by Flux.
-  configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-      if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        details.useVersion '2.18.2'
-        details.because 'Must ensure the Jackson version preferred by Spark is used to avoid classpath conflicts.'
-      }
-    }
+    classpath "com.marklogic:flux-api:2.0.0"
   }
 }
 
@@ -32,7 +21,7 @@ plugins {
   // class conflicts pertaining to OkHttp or Jackson.
   // Can run "./gradlew mlTestConnections -PmlUsername=admin -PmlPassword=admin -PmlRestPort=8000" to verify that
   // ml-gradle is able to connect to MarkLogic.
-  id "com.marklogic.ml-gradle" version "6.0.1"
+  id "com.marklogic.ml-gradle" version "6.1.0"
 }
 
 repositories {
@@ -41,8 +30,8 @@ repositories {
 }
 
 dependencies {
-  implementation "com.marklogic:flux-api:2.0-SNAPSHOT"
-  implementation "com.marklogic:flux-embedding-model-minilm:2.0-SNAPSHOT"
+  implementation "com.marklogic:flux-api:2.0.0"
+  implementation "com.marklogic:flux-embedding-model-minilm:2.0.0"
 }
 
 /**
