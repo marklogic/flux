@@ -88,6 +88,13 @@ as dependencies in your project:
 Apache Tika supports [additional formats](https://tika.apache.org/3.2.3/formats.html) 
 that may require including other Tika libraries as dependencies.
 
+If you wish to use Flux's support for adding embeddings while importing data, 
+you will likely want to include one of the following, depending on which embedding model you are using:
+
+- For Azure OpenAI, include `com.marklogic:flux-embedding-model-azure-open-ai:2.0.0`.
+- For miniml, include `com.marklogic:flux-embedding-model-minilm:2.0.0`.
+- For Ollama, include `com.marklogic:flux-embedding-model-ollama:2.0.0`.
+
 ## Javadocs
 
 Please see [the Flux API Javadocs](https://marklogic.github.io/flux/assets/javadoc) for a list of all
@@ -197,8 +204,8 @@ Prior to Flux 1.3.0, the Flux API could not be used in the Gradle buildscript cl
 [the ml-gradle plugin](https://github.com/marklogic/ml-gradle) due to a classpath conflict. This conflict has been
 resolved with Flux 1.3.0.
 
-However, you must include the following `configurations` block in your `build.gradle` file to ensure that when 
-running a custom task that depends on the Flux API while also applying the ml-gradle plugin, 
+Prior to Flux 2.0.0 though, you must include the following `configurations` block in your `build.gradle` file to 
+ensure that when running a custom task that depends on the Flux API while also applying the ml-gradle plugin, 
 the required version of a particularly shared dependency is used:
 
 ```
