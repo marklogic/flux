@@ -8,7 +8,7 @@ It has some simple logic in it for attempting to ignore the headers in each emai
 as an example and is not intended to be a completely accurate email parser. 
 
 If you would like to download the Enron email dataset from the above link and test it with this custom splitter, 
-perform the following steps, using Java 11 or higher: 
+perform the following steps, using Java 17 or Java 21: 
 
 1. Clone this repository using git if you have not already.
 2. From the directory containing this README file, run `../gradlew shadowJar` to produce a single jar file containing

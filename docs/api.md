@@ -187,7 +187,7 @@ which demonstrates multiple ways of using the Flux API within Gradle.
 
 ### Granting access to Java modules
 
-If you are running Gradle with Java 17 or higher, you will likely need to specify one or more `--add-opens` arguments
+If you are running Gradle with Java 17 or Java 21, you will likely need to specify one or more `--add-opens` arguments
 when running Gradle. For example, if you run Gradle with `--stacktrace` and see the text 
 "because module java.base does not export sun.nio.ch" in the exception, you can add the following to your 
 `gradle.properties` file to allow access to the `sun.nio.ch` package:
