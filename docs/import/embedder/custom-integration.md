@@ -23,7 +23,7 @@ Before beginning, you may wish to inspect the project that Flux uses to build a
 [JAR file for Azure OpenAI](https://github.com/marklogic/flux/tree/develop/flux-embedding-model-azure-open-ai). This project
 should serve as a useful reference for building your own integration.
 
-You must have Java 11 or higher installed on your workstation along with [Gradle](https://gradle.org/) 8.x or
+You must have Java 17 or Java 21 installed on your workstation along with [Gradle](https://gradle.org/) 8.x or
 higher. The examples below assume that the `gradle` command is available on your path.
 
 Begin by creating a new directory for your integration. Add a `build.gradle` file to the directory with the following
