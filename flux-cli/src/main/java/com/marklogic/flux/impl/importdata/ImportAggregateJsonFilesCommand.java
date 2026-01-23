@@ -20,7 +20,7 @@ import java.util.function.Consumer;
     name = "import-aggregate-json-files",
     description = "Read either JSON Lines files or files containing arrays of JSON objects from " +
         "local, HDFS, and S3 locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html, with each object being written " +
+        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html, with each object being written " +
         "as a JSON document to MarkLogic."
 )
 public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<AggregateJsonFilesImporter> implements AggregateJsonFilesImporter {
@@ -51,7 +51,7 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         @CommandLine.Option(
             names = "--json-lines",
             description = "Specifies that the file contains one JSON object per line, per the JSON Lines format defined at https://jsonlines.org/ , " +
-                "using the Spark JSON data source defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html."
+                "using the Spark JSON data source defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html."
         )
         private boolean jsonLines;
 
@@ -72,9 +72,9 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark JSON option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-json.html; e.g. -PallowComments=true."
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-json.html; e.g. --spark-prop allowComments=true."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -93,15 +93,6 @@ public class ImportAggregateJsonFilesCommand extends AbstractImportFilesCommand<
             }
             options.putAll(additionalOptions);
             return options;
-        }
-
-        @Override
-        // Sonar complains about this method existing, but it has to exist since it's implementing a required
-        // method in the interface.
-        @SuppressWarnings({"java:S5738", "removal"})
-        public ReadJsonFilesOptions jsonLines(boolean value) {
-            this.jsonLines = value;
-            return this;
         }
 
         @Override

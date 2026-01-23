@@ -1,14 +1,9 @@
 plugins {
-  id 'com.gradleup.shadow' version '8.3.3'
+  id 'com.gradleup.shadow' version '9.2.1'
   id 'maven-publish'
 }
 
 java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
-
   withJavadocJar()
   withSourcesJar()
 }
@@ -23,21 +18,23 @@ dependencies {
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
-  testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.5.18"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:6.0.1"
+  testImplementation "org.junit.jupiter:junit-jupiter:6.0.1"
+  testImplementation "ch.qos.logback:logback-classic:1.5.23"
 }
 
 shadowJar {
-  // Avoids conflict with Spark's OkHttp.
-  relocate "okhttp3", "com.marklogic.flux.okhttp3"
-  relocate "okio", "com.marklogic.flux.okio"
-
   // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
   dependencies {
     exclude {
       it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
     }
   }
+}
+
+// Prevents the shadow variant from being published; see https://gradleup.com/shadow/publishing/#shadow-variant-in-default-java-component
+shadow {
+  addShadowVariantIntoJavaComponent = false
 }
 
 publishing {
@@ -49,7 +46,7 @@ publishing {
       from components.java
       pom {
         name = "${group}:${project.name}"
-        description = "Integration for Ollama with the MarkLogic Flux API"
+        description = "Integration for Ollama with the Progress MarkLogic Flux API"
         packaging = "jar"
         url = "https://github.com/marklogic/flux"
         licenses {
@@ -79,8 +76,8 @@ publishing {
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
-          username mavenUser
-          password mavenPassword
+          username = mavenUser
+          password = mavenPassword
         }
         url publishUrl
         allowInsecureProtocol = true
@@ -88,14 +85,10 @@ publishing {
         name = "central"
         url = mavenCentralUrl
         credentials {
-          username mavenCentralUsername
-          password mavenCentralPassword
+          username = mavenCentralUsername
+          password = mavenCentralPassword
         }
       }
     }
   }
-}
-
-components.java.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
-  skip()
 }

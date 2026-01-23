@@ -34,6 +34,11 @@ public interface Reprocessor extends Executor<Reprocessor> {
 
         ReadOptions vars(Map<String, String> namesAndValues);
 
+        /**
+         * @since 2.0.0
+         */
+        ReadOptions partitionsVars(Map<String, String> namesAndValues);
+
         ReadOptions logProgress(int interval);
     }
 

@@ -52,11 +52,11 @@ class ExportOrcFilesTest extends AbstractTest {
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "1",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "-Pcompression=lz4"
+            "--spark-prop", "compression=lz4"
         );
 
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".lz4.orc"));
         assertEquals(1, files.length, "Expecting 1 gzipped ORC file, as there is a single partition, and the " +
-            "-Pcompression option should tell Spark ORC to use lz4 instead of snappy.");
+            "compression option should tell Spark ORC to use lz4 instead of snappy.");
     }
 }

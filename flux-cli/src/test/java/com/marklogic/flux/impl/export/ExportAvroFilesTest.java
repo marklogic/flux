@@ -56,11 +56,11 @@ class ExportAvroFilesTest extends AbstractTest {
             "--query", READ_AUTHORS_OPTIC_QUERY,
             "--partitions", "2",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "-PavroSchema=intentionally-invalid"
+            "--spark-prop", "avroSchema=intentionally-invalid"
         );
 
         assertTrue(stderr.contains("Error: SchemaParseException: com.fasterxml.jackson.core.JsonParseException"),
-            "This test is verifying that -P params are passed to the Avro data source. Since an invalid " +
+            "This test is verifying that --spark-prop params are passed to the Avro data source. Since an invalid " +
                 "Avro schema is being set, this test expects an error. Unexpected stderr: " + stderr);
         assertTrue(tempDir.toFile().exists(), "Making Sonar happy, which complains otherwise that the temp dir is not used.");
     }

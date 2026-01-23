@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /**
  * Read delimited text files from supported file locations using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html">Spark's CSV support</a>,
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-csv.html">Spark's CSV support</a>,
  * and write JSON or XML documents to MarkLogic.
  */
 public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter> {
@@ -26,7 +26,12 @@ public interface DelimitedFilesImporter extends Executor<DelimitedFilesImporter>
 
         ReadDelimitedFilesOptions groupBy(String columnName);
 
-        ReadDelimitedFilesOptions aggregateColumns(String newColumnName, String... columns);
+        ReadDelimitedFilesOptions aggregateColumns(String aggregationName, String... columns);
+
+        /**
+         * @since 2.0.0
+         */
+        ReadDelimitedFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending);
 
         ReadDelimitedFilesOptions encoding(String encoding);
 

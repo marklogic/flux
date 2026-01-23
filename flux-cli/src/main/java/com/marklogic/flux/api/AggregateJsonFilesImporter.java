@@ -8,21 +8,12 @@ import java.util.function.Consumer;
 
 /**
  * Read either JSON Lines files or files containing arrays of JSON objects from supported file locations using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html">Spark's JSON support</a>,
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html">Spark's JSON support</a>,
  * and write each object as a JSON document to MarkLogic.
  */
 public interface AggregateJsonFilesImporter extends Executor<AggregateJsonFilesImporter> {
 
     interface ReadJsonFilesOptions extends ReadFilesOptions<ReadJsonFilesOptions> {
-        /**
-         * @param value set to true to read JSON Lines files. Defaults to reading files that either contain an array
-         *              of JSON objects or a single JSON object.
-         * @deprecated since 1.1.2; use {@code jsonLines()} instead.
-         */
-        @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.1.2", forRemoval = true)
-        ReadJsonFilesOptions jsonLines(boolean value);
-
         /**
          * Call this to read JSON Lines files. Otherwise, defaults to reading files that either contain an array of
          * JSON objects or a single JSON object.

@@ -33,7 +33,7 @@ via `custom-export-rows`:
     --connection-string "flux-example-user:password@localhost:8004" \
     --query "op.fromView('schema', 'view')" \
     --target text \
-    -Ppath=export
+    --spark-prop path=export
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -42,7 +42,7 @@ bin\flux custom-export-rows ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --query "op.fromView('schema', 'view')" ^
     --target text ^
-    -Ppath=export
+    --spark-prop path=export
 ```
 {% endtab %}
 {% endtabs %}

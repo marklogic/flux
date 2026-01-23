@@ -315,10 +315,14 @@ large binary document may exhaust the amount of memory available to MarkLogic.
 
 As Flux is built on top of Apache Spark, it is heavily influenced by how Spark
 [defines and manages partitions](https://sparkbyexamples.com/spark/spark-partitioning-understanding/). Within the
-context of Flux, partitions can be thought of as "workers", with each worker operating in parallel on a different subset
-of data. Generally, more partitions allow for more parallel work and improved performance. In the case of ZIP files, as
-noted in the above section on compressing content, more partitions will help avoid JVM heap space issues due to the
-memory consumed by a ZIP file as it tracks metadata on each entry before the ZIP file is closed.
+context of Flux, each partition represents a subset of data that can be processed by a Spark task. The number of 
+partitions that can be processed concurrently depends on Spark's task parallelism (the maximum number of tasks that 
+can run at the same time). Spark defaults to the number of available cores for running tasks 
+in parallel. 
+
+In the case of ZIP files, as noted in the above section on compressing content, 
+more partitions will help avoid JVM heap space issues due to the memory consumed by a ZIP file as it tracks metadata 
+on each entry before the ZIP file is closed.
 
 When exporting documents to files, the number of partitions impacts how many files will be written. For example, run
 the following command below from the [Getting Started guide](getting-started.md):
@@ -352,8 +356,8 @@ The `./export` directory will have 12 ZIP files in it. This count is due to how 
 which involves creating 4 partitions by default per forest in the MarkLogic database. The example application has 3
 forests in its content database, and thus 12 partitions are created, resulting in 12 separate ZIP files.
 
-You can use the `--partitions-per-forest` option to control how many partitions - and thus workers - read documents
-from each forest in your database:
+You can use the `--partitions-per-forest` option to control how many partitions read documents from each forest in 
+your database:
 
 {% tabs log %}
 {% tab log Unix %}
@@ -385,21 +389,8 @@ bin\flux export-files ^
 
 This approach will produce 3 ZIP files - one per forest.
 
-To ensure that each partition reader can work in parallel with the others, you should consider setting the 
-`--spark-master-url` option to a value of `local[N]`, where `N` is the total number of partition readers. For example,
-if your database has 4 forests and you want 4 partitions per forest, you would use the following options:
-
-```
---partitions-per-forest 4
---spark-master-url local[16]
-```
-
-A future release of Flux may automatically set the `--spark-master-url` option based on the database configuration. 
-
 You can also use the `--repartition` option, available on every command, to force the number of partitions used when
-writing data, regardless of how many were used to read the data. As of Flux 1.2.0, if you do use `--repartition`, 
-Flux will automatically set the `--spark-master-url` option based on the value you provide for `--repartition`. 
-For example:
+writing data, regardless of how many were used to read the data. For example:
 
 {% tabs log %}
 {% tab log Unix %}

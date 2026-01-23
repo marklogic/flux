@@ -63,8 +63,8 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         private String source;
 
         @CommandLine.Option(
-            names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--source' - e.g. -PmyOption=someValue."
+            names = "--spark-prop",
+            description = "Specify any number of options to be passed to the connector identified by '--source' - e.g. --spark-prop myOption=someValue."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -102,6 +102,12 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         }
 
         @Override
+        public CustomReadOptions s3UseProfile() {
+            this.s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
         public CustomReadOptions s3AccessKeyId(String accessKeyId) {
             this.s3Params.setAccessKeyId(accessKeyId);
             return this;
@@ -116,6 +122,12 @@ public class CustomImportCommand extends AbstractCommand<CustomImporter> impleme
         @Override
         public CustomReadOptions s3Endpoint(String endpoint) {
             this.s3Params.setEndpoint(endpoint);
+            return this;
+        }
+
+        @Override
+        public CustomReadOptions s3Region(String region) {
+            this.s3Params.setRegion(region);
             return this;
         }
 

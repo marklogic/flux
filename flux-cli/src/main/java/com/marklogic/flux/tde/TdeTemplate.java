@@ -3,7 +3,7 @@
  */
 package com.marklogic.flux.tde;
 
-import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
 
 public interface TdeTemplate {
 

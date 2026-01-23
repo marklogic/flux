@@ -168,14 +168,22 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private String uriTemplate;
 
         @CommandLine.Option(
-            names = {"-M"},
-            description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+            names = "--output-uri-template-warn-on-missing-field",
+            description = "Causes Flux to log a warning instead of failing when a URI template contains an expression " +
+                "that cannot be resolved to a field in a document. The expression will instead be replaced with the text " +
+                "'UNRESOLVED-' followed by a UUID to ensure the document is still created with a unique URI."
+        )
+        private boolean uriTemplateWarnOnMissingField;
+
+        @CommandLine.Option(
+            names = {"--output-doc-metadata"},
+            description = "Specify one or more metadata values to be added to each document; e.g. --output-doc-metadata param=value ."
         )
         private Map<String, String> metadataValues = new HashMap<>();
 
         @CommandLine.Option(
-            names = {"-R"},
-            description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+            names = {"--output-doc-prop"},
+            description = "Specify one or more document properties to be added to each document; e.g. --output-doc-prop param=value ."
         )
         private Map<String, String> documentProperties = new HashMap<>();
 
@@ -193,6 +201,10 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
             if (embedderParams != null) {
                 options.putAll(embedderParams.makeOptions());
+            }
+
+            if (classifierParams != null) {
+                options.putAll(classifierParams.makeOptions());
             }
 
             if (metadataValues != null) {
@@ -224,7 +236,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_URI_PREFIX, uriPrefix,
                 Options.WRITE_URI_REPLACE, uriReplace,
                 Options.WRITE_URI_SUFFIX, uriSuffix,
-                Options.WRITE_URI_TEMPLATE, uriTemplate
+                Options.WRITE_URI_TEMPLATE, uriTemplate,
+                Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null
             );
         }
 
@@ -355,6 +368,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
 
         @Override
+        public CopyWriteDocumentsOptions uriTemplateWarnOnMissingField() {
+            this.uriTemplateWarnOnMissingField = true;
+            return this;
+        }
+
+        @Override
         public CopyWriteDocumentsOptions metadataValues(Map<String, String> metadataValues) {
             this.metadataValues = metadataValues;
             return this;
@@ -386,7 +405,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
     public void validateCommandLineOptions(CommandLine.ParseResult parseResult) {
         super.validateCommandLineOptions(parseResult);
         Objects.requireNonNull(outputConnectionParams);
-        if (outputConnectionParams.atLeastOutputConnectionParameterExists(parseResult)) {
+        if (outputConnectionParams.atLeastOneOutputConnectionParameterExists(parseResult)) {
             CopyCommand copyCommand = (CopyCommand) PicoliUtil.getCommandInstance(parseResult);
             Objects.requireNonNull(copyCommand);
             new ConnectionParamsValidator(true).validate(copyCommand.outputConnectionParams);
@@ -410,9 +429,17 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             .save();
     }
 
-    protected Map<String, String> makeOutputConnectionOptions() {
+    protected final Map<String, String> makeOutputConnectionOptions() {
         Map<String, String> options = outputConnectionParams.makeOptions();
-        // If user doesn't specify any "--output" connection options, then reuse the connection for reading data.
+        if (options.size() == 1 && options.containsKey(Options.CLIENT_DATABASE)) {
+            // The user can specify just an output database, in which case the "from" connection will be reused plus
+            // this output database.
+            Map<String, String> fromOptions = getConnectionParams().makeOptions();
+            fromOptions.put(Options.CLIENT_DATABASE, options.get(Options.CLIENT_DATABASE));
+            return fromOptions;
+        }
+
+        // If user otherwise doesn't specify any "--output" connection options, then reuse the connection for reading data.
         return options.isEmpty() ? getConnectionParams().makeOptions() : options;
     }
 

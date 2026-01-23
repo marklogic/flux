@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class ImportOrcFilesTest extends AbstractTest {
 
     @Test
@@ -27,8 +26,8 @@ class ImportOrcFilesTest extends AbstractTest {
             "--batch-size", "5",
             "--log-progress", "5",
 
-            // Including this to ensure a valid -C option doesn't cause an error.
-            "-Cspark.sql.orc.filterPushdown=false"
+            // Including this to ensure a valid --spark-conf option doesn't cause an error.
+            "--spark-conf", "spark.sql.orc.filterPushdown=false"
         );
 
         getUrisInCollection("orcFile-test", 15).forEach(this::verifyDocContent);
@@ -104,7 +103,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "compression-test",
             "--uri-template", "/orc-compressed-test{LastName}.json",
-            "-Pcompression=snappy"
+            "--spark-prop", "compression=snappy"
         );
 
         getUrisInCollection("compression-test", 15).forEach(this::verifyDocContent);
@@ -117,10 +116,10 @@ class ImportOrcFilesTest extends AbstractTest {
             "--path", "src/test/resources/orc-files",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
-            "-Cspark.sql.parquet.filterPushdown=invalid-value"
+            "--spark-conf", "spark.sql.parquet.filterPushdown=invalid-value"
         );
 
-        assertTrue(stderr.contains("spark.sql.parquet.filterPushdown should be boolean, but was invalid-value"),
+        assertTrue(stderr.contains("INVALID_CONF_VALUE.TYPE_MISMATCH"),
             "This test verifies that spark.sql dynamic params are added to the Spark conf. An invalid value is used " +
                 "to verify this, as its inclusion in the Spark conf should cause an error. Actual stderr: " + stderr);
     }
@@ -151,7 +150,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS
         );
 
-        assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer for file"),
+        assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer"),
             "The command should have failed because Spark could not read the footer of the invalid Avro file; " +
                 "stderr: " + stderr);
     }

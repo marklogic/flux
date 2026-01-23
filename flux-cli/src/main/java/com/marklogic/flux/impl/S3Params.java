@@ -3,10 +3,10 @@
  */
 package com.marklogic.flux.impl;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.apache.hadoop.conf.Configuration;
 import picocli.CommandLine;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 /**
  * Intended to be a delegate in any command that can access S3.
@@ -15,14 +15,22 @@ public class S3Params {
 
     private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
     private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
-    private static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
-    private static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
+    private static final String S3A_CREDENTIALS_PROVIDER = "fs.s3a.aws.credentials.provider";
 
     @CommandLine.Option(
         names = "--s3-add-credentials",
         description = "Add credentials retrieved via the AWS SDK to the Spark context for use when accessing S3."
     )
     private boolean addCredentials;
+
+    // Added in 2.0.0
+    @CommandLine.Option(
+        names = "--s3-use-profile",
+        description = "Use AWS profile credentials from ~/.aws/config and ~/.aws/credentials files. " +
+            "Supports SSO profiles (configured via 'aws sso login'), standard profiles with access keys, " +
+            "and any other profile types. Uses the [default] profile or the profile specified by the AWS_PROFILE environment variable."
+    )
+    private boolean useProfile;
 
     @CommandLine.Option(
         names = "--s3-access-key-id",
@@ -37,11 +45,23 @@ public class S3Params {
     private String secretAccessKey;
 
     @CommandLine.Option(
+        names = "--s3-session-token",
+        description = "Specifies the AWS session token to use, along with the access key ID and secret access key, for accessing S3 paths."
+    )
+    private String sessionToken;
+
+    @CommandLine.Option(
         names = "--s3-endpoint",
         description = "Define the S3 endpoint for any operations involving S3; typically used when a " +
             "process like AWS EMR must access an S3 bucket in a separate region."
     )
     private String endpoint;
+
+    @CommandLine.Option(
+        names = "--s3-region",
+        description = "Specifies the AWS region of the S3 bucket to access."
+    )
+    private String region;
 
     /**
      * @param config the Spark runtime configuration object
@@ -49,29 +69,48 @@ public class S3Params {
     public void addToHadoopConfiguration(Configuration config) {
         // See https://sparkbyexamples.com/amazon-aws/write-read-csv-file-from-s3-into-dataframe/ for more
         // information on the keys used below.
+
+        // See https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-providers.html for
+        // an explanation of how this provider works. The main use case is for enabling SSO auth.
+        if (useProfile) {
+            config.set(S3A_CREDENTIALS_PROVIDER, "software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider");
+        }
+
         if (addCredentials) {
-            AWSCredentials credentials = new DefaultAWSCredentialsProviderChain().getCredentials();
-            config.set(S3A_ACCESS_KEY, credentials.getAWSAccessKeyId());
-            config.set(S3A_SECRET_KEY, credentials.getAWSSecretKey());
-            config.set(S3N_ACCESS_KEY, credentials.getAWSAccessKeyId());
-            config.set(S3N_SECRET_KEY, credentials.getAWSSecretKey());
+            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.create()) {
+                AwsCredentials credentials = provider.resolveCredentials();
+                config.set(S3A_ACCESS_KEY, credentials.accessKeyId());
+                config.set(S3A_SECRET_KEY, credentials.secretAccessKey());
+            }
         }
-        if (accessKeyId != null && !accessKeyId.trim().isEmpty()) {
+
+        if (hasText(accessKeyId)) {
             config.set(S3A_ACCESS_KEY, accessKeyId);
-            config.set(S3N_ACCESS_KEY, accessKeyId);
         }
-        if (secretAccessKey != null && !secretAccessKey.trim().isEmpty()) {
+        if (hasText(secretAccessKey)) {
             config.set(S3A_SECRET_KEY, secretAccessKey);
-            config.set(S3N_SECRET_KEY, secretAccessKey);
         }
-        if (endpoint != null && !endpoint.trim().isEmpty()) {
+        if (hasText(sessionToken)) {
+            config.set("fs.s3a.session.token", sessionToken);
+        }
+        if (hasText(endpoint)) {
             config.set("fs.s3a.endpoint", endpoint);
-            config.set("fs.s3n.endpoint", endpoint);
         }
+        if (hasText(region)) {
+            config.set("fs.s3a.endpoint.region", region);
+        }
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     public void setAddCredentials(boolean addCredentials) {
         this.addCredentials = addCredentials;
+    }
+
+    public void setUseProfile(boolean useProfile) {
+        this.useProfile = useProfile;
     }
 
     public void setAccessKeyId(String accessKeyId) {
@@ -82,7 +121,15 @@ public class S3Params {
         this.secretAccessKey = secretAccessKey;
     }
 
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
+    }
+
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

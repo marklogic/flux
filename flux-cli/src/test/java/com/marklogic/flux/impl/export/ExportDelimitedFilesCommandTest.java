@@ -102,7 +102,7 @@ class ExportDelimitedFilesCommandTest extends AbstractTest {
                 ".orderBy(op.asc(op.col('LastName')))" +
                 ".select(['CitationID', 'LastName', 'ForeName'])",
             "--path", tempDir.toFile().getAbsolutePath(),
-            "-Pheader=false",
+            "--spark-prop", "header=false",
             "--file-count", "1"
         );
 

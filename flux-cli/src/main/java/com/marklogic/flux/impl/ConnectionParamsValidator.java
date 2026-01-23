@@ -23,6 +23,9 @@ public class ConnectionParamsValidator {
             throw new FluxException(String.format("Must specify a MarkLogic host via %s or %s.",
                 paramNames.host, paramNames.connectionString));
         }
+
+        setDefaultValuesIfCloudApiKeyIsSet(connectionInputs);
+
         if (connectionInputs.port <= 0 && !AuthenticationType.CLOUD.equals(connectionInputs.authType)) {
             throw new FluxException(String.format("Must specify a MarkLogic app server port via %s or %s.",
                 paramNames.port, paramNames.connectionString));
@@ -32,6 +35,18 @@ public class ConnectionParamsValidator {
         boolean isDigestOrBasicAuth = authType == null || (AuthenticationType.DIGEST.equals(authType) || AuthenticationType.BASIC.equals(authType));
         if (isDigestOrBasicAuth) {
             validateUsernameAndPassword(connectionInputs);
+        }
+    }
+
+    private void setDefaultValuesIfCloudApiKeyIsSet(ConnectionInputs connectionInputs) {
+        final String cloudApiKey = connectionInputs.cloudApiKey;
+        if (cloudApiKey != null && !cloudApiKey.trim().isEmpty()) {
+            if (connectionInputs.port <= 0) {
+                connectionInputs.port = 443;
+            }
+            if (connectionInputs.authType == null) {
+                connectionInputs.authType = AuthenticationType.CLOUD;
+            }
         }
     }
 

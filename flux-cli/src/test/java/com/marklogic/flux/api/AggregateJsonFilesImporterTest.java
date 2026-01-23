@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -37,6 +38,27 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
             assertTrue(doc.has("firstName"));
             assertTrue(doc.has("lastName"));
         });
+    }
+
+    @Test
+    void missingFieldInUriTemplate() {
+        Flux.importAggregateJsonFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
+                .jsonLines()
+                .additionalOptions(Map.of("lineSep", ":\n")))
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("custom-delimiter")
+                .uriTemplate("/custom-delimiter/{doesntExist}.json")
+                .uriTemplateWarnOnMissingField())
+            .execute();
+
+        List<String> uris = getUrisInCollection("custom-delimiter", 3);
+        uris.forEach(uri -> assertTrue(uri.startsWith("/custom-delimiter/UNRESOLVED-"),
+            "When a field cannot be resolved in a URI template, it should be replaced with UNRESOLVED-<UUID>. " +
+                "Actual URI: " + uri));
     }
 
     @Test

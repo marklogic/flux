@@ -9,15 +9,5 @@ dependencies {
   jacocoAggregation project(':flux-embedding-model-azure-open-ai')
   jacocoAggregation project(':flux-embedding-model-minilm')
   jacocoAggregation project(':flux-embedding-model-ollama')
-  jacocoAggregation project(':flux-tests-api')
   jacocoAggregation project(':flux-cli')
-  jacocoAggregation project(':flux-java17-tests')
-}
-
-reporting {
-  reports {
-    testCodeCoverageReport(JacocoCoverageReport) {
-      testType = TestSuiteType.UNIT_TEST
-    }
-  }
 }

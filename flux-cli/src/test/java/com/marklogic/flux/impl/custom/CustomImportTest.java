@@ -21,7 +21,7 @@ class CustomImportTest extends AbstractTest {
         run(
             "custom-import",
             "--source", "parquet",
-            "-Ppath=src/test/resources/parquet/individual/cars.parquet",
+            "--spark-prop", "path=src/test/resources/parquet/individual/cars.parquet",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "parquet-test",
@@ -40,7 +40,7 @@ class CustomImportTest extends AbstractTest {
         run(
             "custom-import",
             "--source", "avro",
-            "-Ppath=src/test/resources/avro",
+            "--spark-prop", "path=src/test/resources/avro",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "avro-test",
@@ -58,9 +58,9 @@ class CustomImportTest extends AbstractTest {
         run(
             "custom-import",
             "--source", "csv",
-            "-Ppath=src/test/resources/delimited-files/semicolon-delimiter.csv",
-            "-Pdelimiter=;",
-            "-Pheader=true",
+            "--spark-prop", "path=src/test/resources/delimited-files/semicolon-delimiter.csv",
+            "--spark-prop", "delimiter=;",
+            "--spark-prop", "header=true",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "csv-test",
@@ -81,8 +81,8 @@ class CustomImportTest extends AbstractTest {
             "custom-import",
             // "xml" is associated with the external Spark XML connector from Databricks.
             "--source", "xml",
-            "-Ppath=src/test/resources/xml-file/people.xml",
-            "-ProwTag=person",
+            "--spark-prop", "path=src/test/resources/xml-file/people.xml",
+            "--spark-prop", "rowTag=person",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "spark-data",

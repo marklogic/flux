@@ -4,14 +4,14 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.flux.impl.PostgresUtil;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SplitterSmokeTest extends AbstractJava17Test {
+class SplitterSmokeTest extends AbstractTest {
 
     @Test
     void aggregateJsonFiles() {
@@ -23,7 +23,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--collections", "json-objects",
             "--uri-template", "/json-object/{number}.json",
             "--splitter-json-pointer", "/description",
-            "--splitter-max-chunk-size", "30"
+            "--splitter-max-chunk-size", "30",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/json-object/2.json");
@@ -39,7 +40,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/xml-file,''",
-            "--splitter-xpath", "/person/company/text()"
+            "--splitter-xpath", "/person/company/text()",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         XmlNode doc = readXmlDocument("/people.xml-1.xml");
@@ -53,7 +55,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--path", "../flux-cli/src/test/resources/archive-files",
             "--uri-replace", ".*archive.zip,''",
             "--connection-string", makeConnectionString(),
-            "--splitter-xpath", "/hello/text()"
+            "--splitter-xpath", "/hello/text()",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         XmlNode doc = readXmlDocument("/test/1.xml");
@@ -73,7 +76,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--permissions", DEFAULT_PERMISSIONS,
             "--json-root-name", "myAvroData",
             "--uri-template", "/avro/{/myAvroData/color}.json",
-            "--splitter-json-pointer", "/myAvroData/color"
+            "--splitter-json-pointer", "/myAvroData/color",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/avro/blue.json");
@@ -90,7 +94,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--output-collections", "author-copies",
             "--output-uri-prefix", "/copied",
             "--output-permissions", DEFAULT_PERMISSIONS,
-            "--splitter-json-pointer", "/ForeName"
+            "--splitter-json-pointer", "/ForeName",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/copied/author/author4.json");
@@ -105,7 +110,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/delimited/{/number}.json",
-            "--splitter-json-pointer", "/color"
+            "--splitter-json-pointer", "/color",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/delimited/1.json");
@@ -124,7 +130,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/customer/{/customer_id}.json",
-            "--splitter-json-pointer", "/first_name"
+            "--splitter-json-pointer", "/first_name",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/customer/1.json");
@@ -137,7 +144,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "import-mlcp-archive-files",
             "--path", "../flux-cli/src/test/resources/mlcp-archives",
             "--connection-string", makeConnectionString(),
-            "--splitter-xpath", "/hello/text()"
+            "--splitter-xpath", "/hello/text()",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         XmlNode doc = readXmlDocument("/test/1.xml");
@@ -152,7 +160,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/orc-test/{LastName}.json",
-            "--splitter-json-pointer", "/LastName"
+            "--splitter-json-pointer", "/LastName",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/orc-test/Awton.json");
@@ -167,7 +176,8 @@ class SplitterSmokeTest extends AbstractJava17Test {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--uri-template", "/parquet/{model}.json",
-            "--splitter-json-pointer", "/model"
+            "--splitter-json-pointer", "/model",
+            "--splitter-sidecar-max-chunks", "0"
         );
 
         JsonNode doc = readJsonDocument("/parquet/Valiant.json");

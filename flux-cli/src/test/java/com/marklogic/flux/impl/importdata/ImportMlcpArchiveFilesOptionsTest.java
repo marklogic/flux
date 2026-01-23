@@ -13,6 +13,7 @@ class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
             "import-mlcp-archive-files",
+            "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
             "--preview", "10",
             "--partitions", "7",

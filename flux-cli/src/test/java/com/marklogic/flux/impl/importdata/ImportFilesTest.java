@@ -24,6 +24,25 @@ class ImportFilesTest extends AbstractTest {
     private static final String[] MIXED_FILES_URIS = new String[]{"/hello.json", "/hello.txt", "/hello.xml", "/hello2.txt.gz"};
 
     @Test
+    void connectionStringViaSysProperty() {
+        final String property = "marklogic.client.connectionString";
+        try {
+            System.setProperty(property, makeConnectionString());
+            run(
+                "import-files",
+                "--path", "src/test/resources/mixed-files/hello*",
+                "--permissions", DEFAULT_PERMISSIONS,
+                "--collections", "files",
+                "--uri-replace", ".*/mixed-files,''"
+            );
+
+            verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
+        } finally {
+            System.clearProperty(property);
+        }
+    }
+
+    @Test
     void multiplePaths() {
         run(
             CommandLine.ExitCode.OK,
@@ -152,6 +171,20 @@ class ImportFilesTest extends AbstractTest {
         );
 
         verifyDocsWereWritten(MIXED_FILES_URIS.length, MIXED_FILES_URIS);
+    }
+
+    @Test
+    void zipTestWithOtherOption() {
+        run(
+            "import-files",
+            "--path", "src/test/resources/mixed-files/goodbye.zip",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "-vfiles",
+            "--compression", "zip"
+        );
+
+        assertCollectionSize("-vfiles", 3);
     }
 
     @Test

@@ -8,11 +8,15 @@ import com.marklogic.flux.api.ConnectionOptions;
 import com.marklogic.flux.api.SslHostnameVerifier;
 import picocli.CommandLine;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ConnectionParams extends ConnectionInputs implements ConnectionOptions {
 
     @Override
     @CommandLine.Option(
         names = "--connection-string",
+        defaultValue = "${sys:marklogic.client.connectionString}",
         converter = ConnectionStringValidator.class,
         description = "Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using 'DIGEST' or 'BASIC' authentication."
     )
@@ -24,6 +28,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = {"--host"},
+        defaultValue = "${sys:marklogic.client.host}",
         description = "The MarkLogic host to connect to."
     )
     public ConnectionOptions host(String host) {
@@ -34,6 +39,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--port",
+        defaultValue = "${sys:marklogic.client.port}",
         description = "Port of a MarkLogic REST API app server to connect to."
     )
     public ConnectionOptions port(int port) {
@@ -44,6 +50,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--base-path",
+        defaultValue = "${sys:marklogic.client.basePath}",
         description = "Path to prepend to each call to a MarkLogic REST API app server."
     )
     public ConnectionOptions basePath(String basePath) {
@@ -54,6 +61,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--database",
+        defaultValue = "${sys:marklogic.client.database}",
         description = "Name of a database to connect to if it differs from the one associated with the app server identified by '--port'."
     )
     public ConnectionOptions database(String database) {
@@ -63,6 +71,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
 
     @CommandLine.Option(
         names = "--connection-type",
+        defaultValue = "${sys:marklogic.client.connectionType}",
         description = "Set to 'DIRECT' if connections can be made directly to each host in the MarkLogic cluster. Defaults to 'GATEWAY'. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions connectionType(ConnectionType connectionType) {
@@ -78,6 +87,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--disable-gzipped-responses",
+        defaultValue = "${sys:marklogic.client.disableGzippedResponses}",
         description = "If included, responses from MarkLogic will not be gzipped. May improve performance when responses are very small."
     )
     public ConnectionOptions disableGzippedResponses(boolean disableGzippedResponses) {
@@ -88,6 +98,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--auth-type",
+        defaultValue = "${sys:marklogic.client.authType}",
         description = "Type of authentication to use. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions authenticationType(AuthenticationType authType) {
@@ -98,6 +109,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--username",
+        defaultValue = "${sys:marklogic.client.username}",
         description = "Username when using 'DIGEST' or 'BASIC' authentication."
     )
     public ConnectionOptions username(String username) {
@@ -108,6 +120,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--password",
+        defaultValue = "${sys:marklogic.client.password}",
         description = "Password when using 'DIGEST' or 'BASIC' authentication.",
         interactive = true,
         arity = "0..1"
@@ -120,6 +133,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--certificate-file",
+        defaultValue = "${sys:marklogic.client.certificate.file}",
         description = "File path for a keystore to be used for 'CERTIFICATE' authentication."
     )
     public ConnectionOptions certificateFile(String certificateFile) {
@@ -130,6 +144,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--certificate-password",
+        defaultValue = "${sys:marklogic.client.certificate.password}",
         description = "Password for the keystore referenced by '--certificate-file'.",
         interactive = true,
         arity = "0..1"
@@ -142,6 +157,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--cloud-api-key",
+        defaultValue = "${sys:marklogic.client.cloud.apiKey}",
         description = "API key for authenticating with a MarkLogic Cloud cluster when using 'CLOUD' authentication."
     )
     public ConnectionOptions cloudApiKey(String cloudApiKey) {
@@ -152,6 +168,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--kerberos-principal",
+        defaultValue = "${sys:marklogic.client.kerberos.principal}",
         description = "Principal to be used with 'KERBEROS' authentication."
     )
     public ConnectionOptions kerberosPrincipal(String kerberosPrincipal) {
@@ -162,6 +179,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--saml-token",
+        defaultValue = "${sys:marklogic.client.saml.token}",
         description = "Token to be used with 'SAML' authentication."
     )
     public ConnectionOptions samlToken(String samlToken) {
@@ -172,6 +190,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--oauth-token",
+        defaultValue = "${sys:marklogic.client.oauth.token}",
         description = "Token to be used with 'OAUTH' authentication."
     )
     public ConnectionOptions oauthToken(String oauthToken) {
@@ -182,6 +201,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--ssl-protocol",
+        defaultValue = "${sys:marklogic.client.sslProtocol}",
         description = "SSL protocol to use when the MarkLogic app server requires an SSL connection. If a keystore " +
             "or truststore is configured, defaults to 'TLSv1.2'."
     )
@@ -193,6 +213,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--ssl-hostname-verifier",
+        defaultValue = "${sys:marklogic.client.sslHostnameVerifier}",
         description = "Hostname verification strategy when connecting via SSL. " + OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     public ConnectionOptions sslHostnameVerifier(SslHostnameVerifier sslHostnameVerifier) {
@@ -203,6 +224,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--keystore-path",
+        defaultValue = "${sys:marklogic.client.ssl.keystore.path}",
         description = "File path for a keystore for two-way SSL connections."
     )
     public ConnectionOptions keyStorePath(String keyStorePath) {
@@ -213,6 +235,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--keystore-password",
+        defaultValue = "${sys:marklogic.client.ssl.keystore.password}",
         description = "Password for the keystore identified by '--keystore-path'.",
         interactive = true,
         arity = "0..1"
@@ -225,6 +248,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--keystore-type",
+        defaultValue = "${sys:marklogic.client.ssl.keystore.type}",
         description = "Type of the keystore identified by '--keystore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions keyStoreType(String keyStoreType) {
@@ -235,6 +259,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--keystore-algorithm",
+        defaultValue = "${sys:marklogic.client.ssl.keystore.algorithm}",
         description = "Algorithm of the keystore identified by '--keystore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions keyStoreAlgorithm(String keyStoreAlgorithm) {
@@ -245,6 +270,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--truststore-path",
+        defaultValue = "${sys:marklogic.client.ssl.truststore.path}",
         description = "File path for a truststore for establishing trust with the certificate used by the MarkLogic app server."
     )
     public ConnectionOptions trustStorePath(String trustStorePath) {
@@ -255,6 +281,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--truststore-password",
+        defaultValue = "${sys:marklogic.client.ssl.truststore.password}",
         description = "Password for the truststore identified by '--truststore-path'.",
         interactive = true,
         arity = "0..1"
@@ -267,6 +294,7 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--truststore-type",
+        defaultValue = "${sys:marklogic.client.ssl.truststore.type}",
         description = "Type of the truststore identified by '--truststore-path'; defaults to 'JKS'."
     )
     public ConnectionOptions trustStoreType(String trustStoreType) {
@@ -277,10 +305,21 @@ public class ConnectionParams extends ConnectionInputs implements ConnectionOpti
     @Override
     @CommandLine.Option(
         names = "--truststore-algorithm",
+        defaultValue = "${sys:marklogic.client.ssl.truststore.algorithm}",
         description = "Algorithm of the truststore identified by '--truststore-path'; defaults to 'SunX509'."
     )
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;
         return this;
+    }
+
+    /**
+     * Returns all option names defined by @Option annotations in this class.
+     */
+    public static List<String> getOptionNames() {
+        return Arrays.stream(ConnectionParams.class.getDeclaredMethods())
+            .filter(method -> method.isAnnotationPresent(CommandLine.Option.class))
+            .map(method -> method.getAnnotation(CommandLine.Option.class).names()[0])
+            .toList();
     }
 }

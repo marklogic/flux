@@ -174,11 +174,13 @@ Flux will send a single request to MarkLogic to execute your reader code. If you
 and is at risk of timing out, or if you seek better performance by breaking your query into many smaller queries, you 
 can use one of the following options to define partitions for your reader:
 
-- `--read-partitions-javascript` = JavaScript code that returns partitions. 
-- `--read-partitions-javascript-file` = path to file containing JavaScript code that returns partitions. 
+- `--read-partitions-javascript` = JavaScript code that returns partitions.
+- `--read-partitions-javascript-file` = path to file containing JavaScript code that returns partitions.
 - `--read-partitions-xquery` = XQuery code that returns partitions.
 - `--read-partitions-xquery-file` = path to file containing XQuery code that returns partitions.
 - `--read-partitions-invoke` = path of a MarkLogic server module to invoke for returning partitions.
+- `--read-partitions-var` = variables sent to the code for reading partitions; available as of Flux 2.0.0. Prior to Flux
+  2.0.0, variables specified via `--read-var` will also be sent to the code for returning partitions.
 
 For each partition returned, the reader code will be invoked with a variable named `PARTITION` containing the value of
 the partition. Your reader code is then free to use that value however you wish.
@@ -229,10 +231,7 @@ perform well. The two primary techniques for improving performance are:
 
 The `--thread-count` option is an alias for the `--repartition` option. It is included in the `reprocess` command
 as it is a familiar option name for other tools for reprocessing data in MarkLogic. Both options have the same effect, 
-which is to configure the number of partitions used by Flux for processing items. In addition, as of Flux 1.2.0, 
-setting either option will adjust the default value of the `--spark-master-url` option to be `local[N]`, where `N` is
-the number of Spark worker threads. This ensures that each partition processing items will have a Spark worker thread
-available to it. 
+which is to configure the number of partitions used by Flux for processing items. 
 
 When using an option such as `--limit`, where you do not want to wait for all the data to be read first, 
 you may want to include `--thread-count 0` to prevent the data from being repartitioned.

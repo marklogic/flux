@@ -38,14 +38,14 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         private String target;
 
         @CommandLine.Option(
-            names = "-P",
-            description = "Specify any number of options to be passed to the connector identified by '--target' - e.g. -PmyOption=someValue."
+            names = "--spark-prop",
+            description = "Specify any number of options to be passed to the connector identified by '--target' - e.g. --spark-prop myOption=someValue."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written if the path already exists. " +
-                "See %nhttps://spark.apache.org/docs/3.5.6/api/java/org/apache/spark/sql/SaveMode.html for more information. "
+                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
                 + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private SaveMode saveMode = SaveMode.APPEND;
 
@@ -83,6 +83,12 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         }
 
         @Override
+        public CustomExportWriteOptions s3UseProfile() {
+            this.s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
         public CustomExportWriteOptions s3AccessKeyId(String accessKeyId) {
             this.s3Params.setAccessKeyId(accessKeyId);
             return this;
@@ -97,6 +103,12 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         @Override
         public CustomExportWriteOptions s3Endpoint(String endpoint) {
             this.s3Params.setEndpoint(endpoint);
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions s3Region(String region) {
+            this.s3Params.setRegion(region);
             return this;
         }
 

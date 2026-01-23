@@ -183,14 +183,12 @@ threads available on each host, and also write directly to a forest on the host 
 
 ### Connecting to Progress Data Cloud
 
-To connect to Progress Data Cloud (PDC), you must set at least the following options:
+To connect to Progress Data Cloud (PDC), if you are using Flux 2.0 or higher, you must set at least the following options:
 
 {% tabs log %}
 {% tab log Unix %}
 ```
 --host your-pdc-host-name \
---port 443 \
---auth-type cloud \
 --cloud-api-key your-key-goes-here \
 --base-path your-integration-endpoint
 ```
@@ -198,13 +196,13 @@ To connect to Progress Data Cloud (PDC), you must set at least the following opt
 {% tab log Windows %}
 ```
 --host your-pdc-host-name ^
---port 443 ^
---auth-type cloud ^
 --cloud-api-key your-key-goes-here ^
 --base-path your-integration-endpoint
 ```
 {% endtab %}
 {% endtabs %}
+
+If you are using Flux 1.x, you must also include `--auth-type cloud`. 
 
 The value of `--cloud-api-key` is an API key that you have generated in your PDC tenancy. Please see the 
 [PDC documentation on API keys](https://docs.progress.com/bundle/progress-data-cloud-use/page/topics/account-settings/manage-api-key.html)
@@ -515,25 +513,19 @@ time you run Flux:
 Flux is built on top of [Apache Spark](https://spark.apache.org/) and provides a number of command line options for 
 configuring the underlying Spark runtime environment used by Flux. 
 
-### Configuring Spark worker threads
+### Understanding Spark task parallelism
 
-By default, Flux creates a Spark runtime with a master URL of `local[*]`, which runs Spark with as many worker 
-threads as logical cores on the machine running Flux. The number of worker threads affects how many partitions can be
-processed in parallel. You can change this setting via the`--spark-master-url` option; please see 
-[the Spark documentation](https://spark.apache.org/docs/3.5.6/submitting-applications.html#master-urls) for examples
-of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
+By default, Flux creates a Spark runtime with a master URL of `local[*]`, which uses all available cores on your machine. 
+The number of cores determines how many partitions can be processed concurrently. You can change this setting via the 
+`--spark-master-url` option; please see [the Spark documentation](https://spark.apache.org/docs/latest/submitting-applications.html#master-urls) 
+for examples of valid values. If you are looking to run a Flux command on a remote Spark cluster, please instead see the 
 [Spark Integration guide](spark-integration.md) for details on integrating Flux with `spark-submit`.
 
-For import commands, you typically will not need to adjust this as a partition writer in an import command supports its
-own pool of threads via the [MarkLogic data movement library](https://docs.marklogic.com/guide/java/data-movement). However,
-depending on the data source, additional worker threads may help with reading data in parallel. 
-
-For the [`reprocess` command](reprocess.md), setting the number of worker threads is critical to achieving optimal 
-performance. As of Flux 1.2.0, the `--thread-count` option will adjust the Spark master URL based on the number of 
-threads you specify. Prior to Flux 1.2.0, you can use `--repartition` to achieve the same effect. 
-
-For exporting data, please see the [exporting guide](export/export.md) for information on how to adjust the worker 
-threads depending on whether you are reading documents or rows from MarkLogic.
+Note that task parallelism is separate from the number of partitions your data is divided into. If you have 200 
+partitions but only 10 cores, Spark will process 10 partitions at a time, queueing the remaining partitions until 
+cores become available. Additionally, each task may use its own thread pool for operations like writing to MarkLogic.
+For example, import commands use the [MarkLogic data movement library](https://docs.marklogic.com/guide/java/data-movement), 
+which maintains a separate pool of threads for writing documents concurrently within each task.
 
 ### Configuring the number of Spark partitions
 
@@ -552,31 +544,19 @@ target. Generally, this option will help when data can be read quickly and the p
 improved by using more partitions than were created when reading data - this is almost always the case for the 
 `reprocess` command.
 
-As of Flux 1.2.0, setting `--repartition` will default the value of the `--spark-master-url` option to be `local[N]`, 
-where `N` is the value of `--repartition`. This ensures that each partition writer has a Spark worker thread available
-to it. You can still override `--spark-master-url` if you wish.
+### Setting Spark configuration properties
 
-### Configuring Spark Session creation
+Flux allows for [Spark configuration properties](https://spark.apache.org/docs/latest/configuration.html) to be defined which will 
+control the Spark runtime and how a Spark session is built. 
 
-Many [Spark configuration options](https://spark.apache.org/docs/3.5.6/configuration.html) must be specified before
-the Spark Session is built. For example, if you wish to 
-[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/3.5.6/security.html#local-storage-encryption), 
-the `spark.io.encryption.enabled=true` option must be set before the Spark session is built. 
+To specify options that control how the Spark Session is built, use the `--spark-conf` option as many times as needed. For example,
+[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/3.5.6/security.html#local-storage-encryption), you could include the following options:
 
-To specify options that control how the Spark Session is built, use the `-B` option as many times as need. For example, 
-to enable encryption with a custom value for the key size in bits, include the following options:
+    --spark-conf spark.io.encryption.enabled=true \
+    --spark-conf spark.io.encryption.keySizeBits=256
 
-    -Bspark.io.encryption.enabled=true \
-    -Bspark.io.encryption.keySizeBits=256
-
-### Configuring the Spark Session at runtime
-
-Some Flux commands reuse [Spark data sources](https://spark.apache.org/docs/3.5.6/sql-data-sources.html) that 
-accept configuration items via the Spark runtime. You can provide these configuration items via the `-C` option. 
+You can also use this option for [Spark data sources](https://spark.apache.org/docs/3.5.6/sql-data-sources.html) that 
+define configuration properties. 
 For example, the [Spark Avro data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html#configuration)
-identifies several configuration items, such as `spark.sql.avro.compression.codec`. You can set this value by 
-including `-Cspark.sql.avro.compression.codec=snappy` as a command line option. 
-
-Note that the majority of [Spark cluster configuration properties](https://spark.apache.org/docs/3.5.6/configuration.html)
-cannot be set via the `-C` option as those options must be set before a Spark session is built. Please see the section
-above on using the `-B` option for options that control how a Spark session is built.
+identifies several configuration properties, such as `spark.sql.avro.compression.codec`. You can set this value by 
+including `--spark-conf spark.sql.avro.compression.codec=snappy` as a command line option. 

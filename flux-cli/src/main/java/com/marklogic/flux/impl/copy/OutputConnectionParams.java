@@ -11,6 +11,8 @@ import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,12 +25,17 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
      * The user has the option not to provide any output connection params, in which case the "Copy" command will use
      * the normal connection params for the target database.
      */
-    public boolean atLeastOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
+    public boolean atLeastOneOutputConnectionParameterExists(CommandLine.ParseResult parseResult) {
         Objects.requireNonNull(parseResult);
         for (Method method : getClass().getMethods()) {
             CommandLine.Option option = method.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 for (String name : option.names()) {
+                    // We let a user specify just output-database and reuse the "from" connection options for the use
+                    // case of copying from one database to another in the same cluster.
+                    if ("--output-database".equals(name)) {
+                        continue;
+                    }
                     if (parseResult.subcommand() != null && parseResult.subcommand().hasMatchedOption(name)) {
                         return true;
                     }
@@ -41,6 +48,7 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     @Override
     @CommandLine.Option(
         names = {"--output-connection-string"},
+        defaultValue = "${sys:marklogic.client.output.connectionString}",
         description = "Defines a connection string as user:password@host:port/optionalDatabaseName; only usable when using 'DIGEST' or 'BASIC' authentication.",
         converter = ConnectionStringValidator.class
     )
@@ -307,5 +315,15 @@ public class OutputConnectionParams extends ConnectionInputs implements Connecti
     public ConnectionOptions trustStoreAlgorithm(String trustStoreAlgorithm) {
         this.trustStoreAlgorithm = trustStoreAlgorithm;
         return this;
+    }
+
+    /**
+     * Returns all option names defined by @Option annotations in this class.
+     */
+    public static List<String> getOptionNames() {
+        return Arrays.stream(OutputConnectionParams.class.getDeclaredMethods())
+            .filter(method -> method.isAnnotationPresent(CommandLine.Option.class))
+            .map(method -> method.getAnnotation(CommandLine.Option.class).names()[0])
+            .toList();
     }
 }

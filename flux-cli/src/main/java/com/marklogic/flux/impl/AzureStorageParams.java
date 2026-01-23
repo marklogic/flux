@@ -101,7 +101,7 @@ public class AzureStorageParams implements AzureStorageOptions {
 
         return paths.stream()
             .map(this::transformSinglePath)
-            .collect(java.util.stream.Collectors.toList());
+            .toList();
     }
 
     private boolean atLeastOnePathHasProtocol(List<String> paths) {

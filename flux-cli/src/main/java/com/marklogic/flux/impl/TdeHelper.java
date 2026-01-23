@@ -8,7 +8,7 @@ import com.marklogic.flux.impl.importdata.TdeParams;
 import com.marklogic.flux.tde.*;
 import com.marklogic.spark.ContextSupport;
 import com.marklogic.spark.Util;
-import marklogicspark.marklogic.client.DatabaseClient;
+import com.marklogic.client.DatabaseClient;
 import org.apache.spark.sql.types.StructType;
 
 /**

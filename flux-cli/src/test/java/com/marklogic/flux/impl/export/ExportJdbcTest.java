@@ -77,11 +77,11 @@ class ExportJdbcTest extends AbstractExportJdbcTest {
             "--jdbc-url", PostgresUtil.URL_WITH_AUTH,
             "--jdbc-driver", "this should be overwritten by the dynamic param",
             "--table", EXPORTED_TABLE_NAME,
-            "-Pdriver=" + PostgresUtil.DRIVER
+            "--spark-prop", "driver=" + PostgresUtil.DRIVER
         );
 
         verifyRowCountInTable(15, "Spark options specified via dynamic params should take precedence over options " +
-            "set via command arguments, so the value of -Pdriver should be used, causing the query to work.");
+            "set via command arguments, so the value of --spark-prop driver should be used, causing the query to work.");
     }
 
     @Test

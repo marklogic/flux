@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,7 +129,7 @@ class ExportFilesTest extends AbstractTest {
         List<String> filenames = rows.stream().map(row -> {
             String path = row.getString(0);
             return path.substring(path.lastIndexOf("/") + 1);
-        }).collect(Collectors.toList());
+        }).toList();
 
         for (int i = 1; i <= 15; i++) {
             String expectedFilename = "author" + i + ".json";
@@ -265,6 +265,24 @@ class ExportFilesTest extends AbstractTest {
         );
 
         verifyFiveAuthorsAreWritten(tempDir);
+    }
+
+    @Test
+    void invalidSecondaryVar() {
+        String stderr = runAndReturnStderr(
+            CommandLine.ExitCode.USAGE,
+            "export-files",
+            "--connection-string", "test:test@host:8000",
+            "--collections", "anything",
+            "--path", "anywhere",
+            "--secondary-uris-var", "var1=value1",
+            "--secondary-uris-var", "var2"
+        );
+
+        assertTrue(stderr.contains("Unmatched argument at index 10: 'var2'"),
+            "The default picocli message for an unmatched map argument is hopefully sufficient to indicate " +
+                "that the value for var2 is missing. Both our docs and the inline help will indicate what the " +
+                "required syntax is. Actual stderr: " + stderr);
     }
 
     private void verifyFiveAuthorsAreWritten(Path tempDir) {

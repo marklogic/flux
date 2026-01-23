@@ -21,6 +21,11 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
             throw new IllegalArgumentException(String.format("Must specify either api-key or %s.", nonAzureKey));
         }
 
+        final String deploymentName = options.get("deployment-name");
+        if (deploymentName == null || deploymentName.trim().isEmpty()) {
+            throw new IllegalArgumentException("deployment-name must be specified");
+        }
+
         AzureOpenAiEmbeddingModel.Builder builder = AzureOpenAiEmbeddingModel.builder()
             .apiKey(options.get("api-key"))
             .deploymentName(options.get("deployment-name"))

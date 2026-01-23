@@ -12,13 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ErrorMessagesTest {
 
-    // Don't need Sonar to complain about WRITE_FILE_ROWS_DOCUMENT_TYPE being deprecated, we are aware of that.
-    @SuppressWarnings({"java:S5738", "removal"})
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");
-        assertEquals(22, bundle.keySet().size(),
-            "Expecting 22 keys as of the upcoming 1.2.0 release. Bump this up as more keys are added. Each key should " +
+        assertEquals(21, bundle.keySet().size(),
+            "Expecting 21 keys as of the upcoming 2.0.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
         assertEquals("--connection-string", bundle.getString(Options.CLIENT_URI));
@@ -27,7 +25,6 @@ class ErrorMessagesTest {
         assertEquals("--partitions", bundle.getString(Options.READ_NUM_PARTITIONS));
         assertEquals("--batch-size", bundle.getString(Options.WRITE_BATCH_SIZE));
         assertEquals("--document-type", bundle.getString(Options.WRITE_DOCUMENT_TYPE));
-        assertEquals("--document-type", bundle.getString(Options.WRITE_FILE_ROWS_DOCUMENT_TYPE));
         assertEquals("--graph", bundle.getString(Options.WRITE_GRAPH));
         assertEquals("--graph-override", bundle.getString(Options.WRITE_GRAPH_OVERRIDE));
         assertEquals("--json-root-name", bundle.getString(Options.WRITE_JSON_ROOT_NAME));

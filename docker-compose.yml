@@ -17,6 +17,10 @@ services:
   marklogic:
     image: "${MARKLOGIC_IMAGE}"
     platform: linux/amd64
+    # The NET_RAW capability allows a process to create raw sockets. Polaris does not like that.
+    # This setting removes the NET_RAW capability from the container.
+    cap_drop:
+      - NET_RAW
     environment:
       - MARKLOGIC_INIT=true
       - MARKLOGIC_ADMIN_USERNAME=admin
@@ -28,6 +32,8 @@ services:
 
   postgres:
     image: postgres:15-alpine
+    cap_drop:
+      - NET_RAW
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -42,6 +48,8 @@ services:
   # Postgres DVD rental example - https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/
   pgadmin:
     image: dpage/pgadmin4:latest
+    cap_drop:
+      - NET_RAW
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: postgres
@@ -55,6 +63,8 @@ services:
   # See https://github.com/ollama/ollama for more information.
   ollama:
     image: "ollama/ollama"
+    cap_drop:
+      - NET_RAW
     ports:
       - 8008:11434
 

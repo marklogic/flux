@@ -26,8 +26,8 @@ public class EmbedderParams implements EmbedderOptions {
     private String prompt;
 
     @CommandLine.Option(
-        names = {"-E"},
-        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. -Eapi-key=abc123 ."
+        names = {"--embedder-prop"},
+        description = "Specify zero to many options to pass to the class specified by the '--embedder' option - e.g. --embedder-prop api-key=abc123 ."
     )
     private Map<String, String> embeddingModelOptions = new HashMap<>();
 
@@ -62,13 +62,14 @@ public class EmbedderParams implements EmbedderOptions {
     @CommandLine.Option(
         names = "--embedder-embedding-name",
         description = "The name of the JSON array or XML element to add to a chunk that contains the generated " +
-            "embedding. If not specified, defaults to 'embedding'."
+            "embedding. If not specified, defaults to '_vector' for JSON and 'vector' for XML."
     )
     private String embeddingName;
 
     @CommandLine.Option(
         names = "--embedder-embedding-namespace",
-        description = "Optional namespace to assign to the embedding element added to XML chunks."
+        description = "Optional namespace to assign to the embedding element added to XML chunks. If not specified, " +
+            "defaults to 'http://marklogic.com/vector' for XML documents."
     )
     private String embeddingNamespace;
 

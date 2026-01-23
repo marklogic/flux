@@ -13,6 +13,7 @@ class ImportAggregateXmlFilesOptionsTest extends AbstractOptionsTest {
     void numPartitions() {
         ImportAggregateXmlFilesCommand command = (ImportAggregateXmlFilesCommand) getCommand(
             "import-aggregate-xml-files",
+            "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/xml-file",
             "--preview", "10",
             "--element", "anything",

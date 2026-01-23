@@ -41,7 +41,7 @@ The table below lists each of the options used to configure how the classifier i
 | `--classifier-api-key`     | Provide the API key for accessing the classifier service when hosted in Progress Data Cloud. | 
 | `--classifier-token-path`  | Specify the path to the token generator for the classifier service when hosted in Progress Data Cloud. | 
 | `--classifier-batch-size`  | Set the number of documents or text chunks to send in a single request to the classifier. Defaults to 20. | 
-| `-Lkey=value` | Specify additional options for configuring the behavior of the classifier service. |
+| `--classifier-prop key=value` | Specify additional options for configuring the behavior of the classifier service. |
 
 As an example, the following options - applicable to any import command - would result in the text of each document 
 to be written to MarkLogic having classification added to it, generated via Semaphore:
@@ -75,7 +75,7 @@ higher number, and vice versa for larger documents.
 
 ## Configuring the behavior of the classifier service
 
-The `-L` option allows for passing options that affect the behavior of the classifier service. The
+The `--classifier-prop` option allows for passing options that affect the behavior of the classifier service. The
 [Semaphore documentation](https://portal.smartlogic.com/docs/5.6/classification_server_-_developers_guide/calling_classification_server), 
 which requires logging in to the Semaphore portal, provides a list of the options that you can pass. 
 

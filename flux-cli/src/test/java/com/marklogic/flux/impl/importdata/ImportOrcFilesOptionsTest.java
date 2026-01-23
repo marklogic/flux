@@ -16,9 +16,10 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ImportOrcFilesCommand command = (ImportOrcFilesCommand) getCommand(
             "import-orc-files",
+            "--connection-string", makeConnectionString(),
             "--path", "/doesnt/matter",
-            "-PmergeSchema=true",
-            "-Cspark.sql.parquet.filterPushdown=false",
+            "--spark-prop", "mergeSchema=true",
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 
@@ -27,6 +28,6 @@ class ImportOrcFilesOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey("spark.sql.parquet.filterPushdown"),
             "Dynamic params starting with 'spark.sql' should not be added to the 'read' options. They should " +
                 "instead be added to the SparkConf object, per the documentation at " +
-                "https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html .");
+                "https://spark.apache.org/docs/latest/sql-data-sources-orc.html .");
     }
 }

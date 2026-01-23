@@ -13,10 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JdbcImporterTest extends AbstractTest {
 
-    private static final String QUERY = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
-        "from customer c\n" +
-        "inner join public.payment p on c.customer_id = p.customer_id\n" +
-        "where c.customer_id = 1";
+    private static final String QUERY = """
+        select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date
+        from customer c
+        inner join public.payment p on c.customer_id = p.customer_id
+        where c.customer_id = 1""";
 
     @Test
     void test() {

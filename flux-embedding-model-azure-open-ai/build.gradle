@@ -1,18 +1,21 @@
 plugins {
-  id 'com.gradleup.shadow' version '8.3.3'
+  id 'com.gradleup.shadow' version '9.2.1'
   id 'maven-publish'
 }
 
 java {
-  // Must use Java 17 as langchain4j depends on 17+.
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(17)
-  }
   withJavadocJar()
   withSourcesJar()
 }
 
 dependencies {
+  constraints {
+    implementation("com.azure:azure-core-http-netty:1.16.2") {
+      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.8 " +
+        "or higher to address CVE-2025-22227."
+    }
+  }
+
   implementation ("dev.langchain4j:langchain4j-azure-open-ai:${langchain4jVersion}") {
     // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
     // will bring in a later version of Jackson that causes Spark to fail.
@@ -23,8 +26,9 @@ dependencies {
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-azure-open-ai:${langchain4jVersion}"
 
-  testImplementation "org.junit.jupiter:junit-jupiter:5.11.2"
-  testImplementation "ch.qos.logback:logback-classic:1.5.18"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:6.0.1"
+  testImplementation "org.junit.jupiter:junit-jupiter:6.0.1"
+  testImplementation "ch.qos.logback:logback-classic:1.5.23"
 }
 
 shadowJar {
@@ -36,6 +40,11 @@ shadowJar {
   }
 }
 
+// Prevents the shadow variant from being published; see https://gradleup.com/shadow/publishing/#shadow-variant-in-default-java-component
+shadow {
+  addShadowVariantIntoJavaComponent = false
+}
+
 publishing {
   publications {
     mainJava(MavenPublication) {
@@ -45,7 +54,7 @@ publishing {
       from components.java
       pom {
         name = "${group}:${project.name}"
-        description = "Integration for Azure OpenAI with the MarkLogic Flux API"
+        description = "Integration for Azure OpenAI with the Progress MarkLogic Flux API"
         packaging = "jar"
         url = "https://github.com/marklogic/flux"
         licenses {
@@ -75,8 +84,8 @@ publishing {
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
-          username mavenUser
-          password mavenPassword
+          username = mavenUser
+          password = mavenPassword
         }
         url publishUrl
         allowInsecureProtocol = true
@@ -84,14 +93,10 @@ publishing {
         name = "central"
         url = mavenCentralUrl
         credentials {
-          username mavenCentralUsername
-          password mavenCentralPassword
+          username = mavenCentralUsername
+          password = mavenCentralPassword
         }
       }
     }
   }
-}
-
-components.java.withVariantsFromConfiguration(configurations.shadowRuntimeElements) {
-  skip()
 }

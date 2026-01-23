@@ -124,7 +124,7 @@ For some use cases, you may wish to read each line "as is" without any modificat
 a JSON document and will not attempt to enforce any commonality across the lines. This option also has the following
 effects on the `import-aggregate-json-files` command:
 
-1. You cannot use any `-P` options as described in the "Advanced Options" section below.
+1. You cannot use any `--spark-prop` options as described in the "Advanced Options" section below.
 2. The `--uri-include-file-path` option has no effect as each JSON document will default to a URI including the file path.
 3. The following options also have no effect as each JSON document is intentionally left as is: `--json-root-name`, `--xml-root-name`, 
 `--xml-namespace`, and `--ignore-null-fields`.
@@ -139,7 +139,7 @@ Flux defaults to reading JSON lines with a mode of "permissive". With this mode,
 and Flux will continue processing lines. 
 
 You can configure the underlying [Spark JSON data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) to 
-instead fail fast when it encounters a malformed line by including `-Pmode=failfast` as an option. When Flux encounters
+instead fail fast when it encounters a malformed line by including `--spark-prop mode=failfast` as an option. When Flux encounters
 a malformed line, it will immediately fail with an error message describing the problem with the line. 
 
 ## Specifying a JSON root name
@@ -213,15 +213,15 @@ bin\flux import-aggregate-json-files ^
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
-specify a compression option. As noted in the "Advanced options" section below, you can use `-Pcompression=` to
+specify a compression option. As noted in the "Advanced options" section below, you can use `--spark-prop compression=` to
 explicitly specify a compression algorithm if Flux is not able to read your compressed files automatically. Note
-that the use of `-Pcompression=` is only supported if the `--json-lines-raw` option is not used. 
+that the use of `--spark-prop compression=` is only supported if the `--json-lines-raw` option is not used. 
 
 ## Advanced options
 
 The `import-aggregate-json-files` command reuses Spark's support for reading JSON files. You can include any of
-the [Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `-P` option
-to control how JSON content is read. These options are expressed as `-PoptionName=optionValue`.
+the [Spark JSON options](https://spark.apache.org/docs/3.5.6/sql-data-sources-json.html) via the `--spark-prop` option
+to control how JSON content is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 For example, if your files use a format other than `yyyy-MM-dd` values, you can specify that format via the following:
 
@@ -230,7 +230,7 @@ For example, if your files use a format other than `yyyy-MM-dd` values, you can 
 ```
 ./bin/flux import-aggregate-json-files \
     --path source \
-    -PdateFormat=MM-dd-yyyy \
+    --spark-prop dateFormat=MM-dd-yyyy \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
@@ -239,7 +239,7 @@ For example, if your files use a format other than `yyyy-MM-dd` values, you can 
 ```
 bin\flux import-aggregate-json-files ^
     --path source ^
-    -PdateFormat=MM-dd-yyyy ^
+    --spark-prop dateFormat=MM-dd-yyyy ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --permissions flux-example-role,read,flux-example-role,update
 ```

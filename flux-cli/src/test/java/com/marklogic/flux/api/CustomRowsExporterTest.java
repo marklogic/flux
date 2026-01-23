@@ -6,6 +6,7 @@ package com.marklogic.flux.api;
 import com.marklogic.flux.junit5.TestDataReloader;
 import com.marklogic.junit5.XmlNode;
 import com.marklogic.flux.AbstractTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -20,6 +21,7 @@ import java.util.Map;
 @ExtendWith(TestDataReloader.class)
 class CustomRowsExporterTest extends AbstractTest {
 
+    @Disabled("Need a different data source since xml is part of Spark 4")
     @Test
     void test(@TempDir Path tempDir) throws IOException {
         Flux.customExportRows()

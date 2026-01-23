@@ -6,12 +6,17 @@ package com.marklogic.flux.impl.importdata;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.marklogic.client.ext.helper.ClientHelper;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.api.Flux;
 import com.marklogic.flux.impl.PostgresUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImportJdbcWithAggregatesTest extends AbstractTest {
 
@@ -20,10 +25,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
      */
     @Test
     void customerWithArrayOfRentals() {
-        String query = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
-            "        from customer c\n" +
-            "        inner join public.payment p on c.customer_id = p.customer_id\n" +
-            "        where c.customer_id = 1";
+        String query = """
+            select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date
+            from customer c
+            inner join public.payment p on c.customer_id = p.customer_id
+            where c.customer_id = 1""";
 
         run(
             "import-jdbc",
@@ -61,18 +67,22 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     /**
      * Demonstrates a query with 2+ joins, producing a customer document with rentals and payments as
-     * separate arrays.
+     * separate arrays. Note that aggregate-order-by isn't needed here since a single customer document is being
+     * created, and thus the "order by" in the SQL query should work as expected.
      */
     @Test
     void customerWithArrayOfRentalsAndArrayOfPayments() {
-        String query = "select " +
-            "c.customer_id, c.first_name, " +
-            "r.rental_id, r.inventory_id, " +
-            "p.payment_id, p.amount\n" +
-            "from customer c\n" +
-            "inner join public.rental r on c.customer_id = r.customer_id\n" +
-            "inner join public.payment p on p.customer_id = p.customer_id\n" +
-            "where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 17506";
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            where c.customer_id = 1 and r.rental_id < 1000 and p.payment_id < 19000
+            order by p.amount
+            """;
 
         run(
             "import-jdbc",
@@ -93,13 +103,9 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
         assertEquals("Mary", doc.get("first_name").asText());
 
         ArrayNode payments = (ArrayNode) doc.get("payments");
-        assertEquals(3, payments.size(), "The query should have selected 3 related payments.");
-        assertEquals(17503, payments.get(0).get("payment_id").asInt());
-        assertEquals(7.99, payments.get(0).get("amount").asDouble());
-        assertEquals(17504, payments.get(1).get("payment_id").asInt());
-        assertEquals(1.99, payments.get(1).get("amount").asDouble());
-        assertEquals(17505, payments.get(2).get("payment_id").asInt());
-        assertEquals(7.99, payments.get(2).get("amount").asDouble());
+        assertEquals(7, payments.size(), "The query should have selected 7 related payments.");
+        assertEquals(0.99, payments.get(0).get("amount").asDouble());
+        assertEquals(9.99, payments.get(6).get("amount").asDouble());
 
         ArrayNode rentals = (ArrayNode) doc.get("rentals");
         assertEquals(2, rentals.size(), "The query should have selected 2 related rentals.");
@@ -110,14 +116,81 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
     }
 
     /**
+     * Verifies that "aggregate-order-by" works for all customers. In this scenario, an "order by" in the SQL query
+     * won't work because of how Spark aggregates payments and rentals into many customers.
+     */
+    @Test
+    void orderByPaymentsOnAllCustomers() {
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            """;
+
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL_WITH_AUTH, "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", query,
+            "--group-by", "customer_id",
+            "--aggregate", "payments=payment_id,amount",
+            "--aggregate", "rentals=rental_id,inventory_id",
+            "--aggregate-order-by", "payments=amount:desc",
+            "--aggregate-order-by", "rentals=inventory_id:asc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "customer"
+        );
+
+        verifyEachCustomerHasPaymentsAndRentalsOrdered();
+    }
+
+    @Test
+    void orderByPaymentsOnAllCustomersWithApi() {
+        String query = """
+            select
+            c.customer_id, c.first_name,
+            r.rental_id, r.inventory_id,
+            p.payment_id, p.amount
+            from customer c
+            inner join rental r on c.customer_id = r.customer_id
+            inner join payment p on c.customer_id = p.customer_id
+            """;
+
+        Flux.importJdbc()
+            .from(options -> options
+                .url(PostgresUtil.URL_WITH_AUTH)
+                .driver(PostgresUtil.DRIVER)
+                .query(query)
+                .groupBy("customer_id")
+                .aggregateColumns("payments", "payment_id", "amount")
+                .aggregateColumns("rentals", "rental_id", "inventory_id")
+                .orderAggregation("payments", "amount", false)
+                .orderAggregation("rentals", "inventory_id", true)
+            )
+            .connectionString(makeConnectionString())
+            .to(options -> options
+                .collections("customer")
+                .permissionsString(DEFAULT_PERMISSIONS)
+            )
+            .execute();
+
+        verifyEachCustomerHasPaymentsAndRentalsOrdered();
+    }
+
+    /**
      * Demonstrates that a join can produce an array with atomic/simple values, instead of structs / objects.
      */
     @Test
     void joinThatProducesArrayWithAtomicValues() {
-        String query = "select f.film_id, f.title, fa.actor_id\n" +
-            "from film f\n" +
-            "inner join film_actor fa on f.film_id = fa.film_id\n" +
-            "where f.film_id = 1";
+        String query = """
+            select f.film_id, f.title, fa.actor_id
+            from film f
+            inner join film_actor fa on f.film_id = fa.film_id
+            where f.film_id = 1""";
 
         run(
             "import-jdbc",
@@ -155,10 +228,11 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
 
     @Test
     void badColumnName() {
-        String query = "select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date\n" +
-            "        from customer c\n" +
-            "        inner join public.payment p on c.customer_id = p.customer_id\n" +
-            "        where c.customer_id < 10";
+        String query = """
+            select c.customer_id, c.first_name, p.payment_id, p.amount, p.payment_date
+            from customer c
+            inner join public.payment p on c.customer_id = p.customer_id
+            where c.customer_id < 10""";
 
         assertStderrContains(
             "Unable to aggregate columns: [payment_id, notfound], [payment_date]; please ensure that each column name " +
@@ -173,5 +247,33 @@ class ImportJdbcWithAggregatesTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS
         );
+    }
+
+    private void verifyEachCustomerHasPaymentsAndRentalsOrdered() {
+        List<String> uris = new ClientHelper(getDatabaseClient()).getUrisInCollection("customer");
+        assertTrue(!uris.isEmpty(), "No URIs found in customer collection, something went wrong!");
+        for (String uri : uris) {
+            JsonNode doc = readJsonDocument(uri);
+
+            // Verify payments are ordered descending by amount
+            ArrayNode payments = (ArrayNode) doc.get("payments");
+            if (payments.size() >= 2) {
+                double firstAmount = payments.get(0).get("amount").asDouble();
+                double lastAmount = payments.get(payments.size() - 1).get("amount").asDouble();
+                assertTrue(lastAmount <= firstAmount,
+                    "Customer doesn't have payments ordered descending! First amount: %f; last amount: %f; doc: %s".formatted(
+                        firstAmount, lastAmount, doc.toPrettyString()));
+            }
+
+            // Verify rentals are ordered ascending by inventory_id
+            ArrayNode rentals = (ArrayNode) doc.get("rentals");
+            if (rentals.size() >= 2) {
+                int firstInventoryId = rentals.get(0).get("inventory_id").asInt();
+                int lastInventoryId = rentals.get(rentals.size() - 1).get("inventory_id").asInt();
+                assertTrue(firstInventoryId <= lastInventoryId,
+                    "Customer doesn't have rentals ordered ascending! First inventory_id: %d; last inventory_id: %d; doc: %s".formatted(
+                        firstInventoryId, lastInventoryId, doc.toPrettyString()));
+            }
+        }
     }
 }

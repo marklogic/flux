@@ -77,15 +77,15 @@ output as the text to be split:
     --splitter-xpath "/root"
 
 When constructing an XPath expression for the value of `--splitter-xpath`, you may need to specify one or more 
-XML namespace prefixes and URIs. You can do so via the `-X` option, where the value is of the 
+XML namespace prefixes and URIs. You can do so via the `--xpath-namespace` option, where the value is of the 
 pattern:
 
-    -Xprefix=URI
+    --xpath-namespace prefix=URI
 
 For example, for an XPath expression of "/ex:root/ex:text", where the "ex" prefix is associated with the namespace 
 "org:example", you would include the following option:
 
-    -Xex=org:example
+    --xpath-namespace ex=org:example
 
 ### Using all the text in a document
 
@@ -181,7 +181,7 @@ to the Flux classpath.
 Finally, to use your custom splitter, use the following command line options:
 
 1. `--splitter-custom-class` must specify the full class name of your splitter implementation - e.g. `org.example.MySplitter`.
-2. Use `-Skey=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
+2. Use `--splitter-prop key=value` as many times as you wish to pass key/value pairs to the constructor of your splitter. 
 
 ## Configuring how chunks are stored
 
@@ -192,8 +192,13 @@ Flux supports two approaches for storing chunks that have been split from the se
 
 ### Storing chunks in the source document
 
-For JSON and XML source documents, Flux defaults to storing chunks in the source document itself. For Text source
-documents, Flux only supports writing sidecar documents, which are described in the next section of this guide. 
+For JSON and XML source documents, Flux 2.0 defaults to storing each chunk in a separate "sidecar" document - i.e. a
+separate document that can have its own collections and permissions configured. Prior to the 2.0 release, Flux 1.x 
+defaulted to storing chunks in the source document itself. To restore that behavior in Flux 2.0, use the following option:
+
+    --splitter-sidecar-max-chunks 0
+
+For Text source documents, Flux only supports writing separate sidecar documents. 
 
 #### JSON source documents
 
@@ -268,6 +273,11 @@ sidecar document. For example, given a source document that produces 10 chunks, 
 would result in 4 sidecar documents. The first 3 sidecar documents would each have 3 chunks, and the 4th sidecar 
 document would have 1 chunk. You can also ensure that only one sidecar document is written by giving the option a 
 number higher than the maximum number of chunks in any of your documents. 
+
+As noted earlier, Flux 2.0 defaults to a value of one for this option, while prior versions of Flux defaulted to a value
+of zero. You can force chunks to be written to the source document by including this option:
+
+    --splitter-sidecar-max-chunks 0
 
 #### Controlling the document type 
 

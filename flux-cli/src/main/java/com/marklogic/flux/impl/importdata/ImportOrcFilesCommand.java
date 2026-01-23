@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "import-orc-files",
     description = "Read ORC files from supported file locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html, and write JSON or " +
+        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html, and write JSON or " +
         "XML documents to MarkLogic."
 )
 public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesImporter> implements OrcFilesImporter {
@@ -54,10 +54,10 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark ORC data source option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html; e.g. -PmergeSchema=true. " +
-                "Spark configuration options must be defined via '-C'."
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-orc.html; e.g. --spark-prop mergeSchema=true. " +
+                "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -84,8 +84,14 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         }
 
         @Override
-        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
-            aggregationParams.addAggregationExpression(newColumnName, columns);
+        public ReadTabularFilesOptions aggregateColumns(String aggregationName, String... columns) {
+            aggregationParams.addAggregationExpression(aggregationName, columns);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
+            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }
 

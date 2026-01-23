@@ -23,11 +23,23 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
 
         WriteGenericFilesOptions s3AddCredentials();
 
+        /**
+         * Enable use of the AWS profile credentials provider.
+         *
+         * @since 2.0.0
+         */
+        WriteGenericFilesOptions s3UseProfile();
+
         WriteGenericFilesOptions s3AccessKeyId(String accessKeyId);
 
         WriteGenericFilesOptions s3SecretAccessKey(String secretAccessKey);
 
         WriteGenericFilesOptions s3Endpoint(String endpoint);
+
+        /**
+         * @since 2.0.0
+         */
+        WriteGenericFilesOptions s3Region(String region);
 
         /**
          * @since 1.4.0

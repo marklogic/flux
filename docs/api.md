@@ -22,7 +22,7 @@ To add Flux as a dependency to your application, add the following to your Maven
 <dependency>
   <groupId>com.marklogic</groupId>
   <artifactId>flux-api</artifactId>
-  <version>1.4.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:1.4.0"
+  implementation "com.marklogic:flux-api:2.0.0"
 }
 ```
 
@@ -40,12 +40,14 @@ dependencies {
 configurations.all {
   resolutionStrategy.eachDependency { DependencyResolveDetails details ->
     if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-      details.useVersion '2.15.2'
+      details.useVersion '2.18.2'
       details.because 'Must use the version of Jackson required by Spark.'
     }
   }
 }
 ```
+
+The above is not needed for Flux 2.0.0 and later. 
 
 If you are using Maven, you must add the following to your `pom.xml` file:
 ```xml
@@ -54,22 +56,22 @@ If you are using Maven, you must add the following to your `pom.xml` file:
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.15.2</version>
+      <version>2.18.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.15.2</version>
+      <version>2.18.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
-      <version>2.15.2</version>
+      <version>2.18.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.2</version>
+      <version>2.18.2</version>
     </dependency>
   </dependencies>
 </dependencyManagement>
@@ -80,11 +82,18 @@ If you are using Maven, you must add the following to your `pom.xml` file:
 If you wish to use Flux's text extraction capabilities, you will need to include the following Apache Tika libraries
 as dependencies in your project:
 
-- For extracting text from Microsoft Office files, include `org.apache.tika:tika-parser-microsoft-module:3.2.1`.
-- For extracting text from PDF files, include `org.apache.tika:tika-parser-pdf-module:3.2.1`.
+- For extracting text from Microsoft Office files, include `org.apache.tika:tika-parser-microsoft-module:3.2.3`.
+- For extracting text from PDF files, include `org.apache.tika:tika-parser-pdf-module:3.2.3`.
 
 Apache Tika supports [additional formats](https://tika.apache.org/3.2.3/formats.html) 
 that may require including other Tika libraries as dependencies.
+
+If you wish to use Flux's support for adding embeddings while importing data, 
+you will likely want to include one of the following, depending on which embedding model you are using:
+
+- For Azure OpenAI, include `com.marklogic:flux-embedding-model-azure-open-ai:2.0.0`.
+- For miniml, include `com.marklogic:flux-embedding-model-minilm:2.0.0`.
+- For Ollama, include `com.marklogic:flux-embedding-model-ollama:2.0.0`.
 
 ## Javadocs
 
@@ -151,7 +160,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.4.0"
+    classpath "com.marklogic:flux-api:2.0.0"
   }
 }
 ```
@@ -195,8 +204,8 @@ Prior to Flux 1.3.0, the Flux API could not be used in the Gradle buildscript cl
 [the ml-gradle plugin](https://github.com/marklogic/ml-gradle) due to a classpath conflict. This conflict has been
 resolved with Flux 1.3.0.
 
-However, you must include the following `configurations` block in your `build.gradle` file to ensure that when 
-running a custom task that depends on the Flux API while also applying the ml-gradle plugin, 
+Prior to Flux 2.0.0 though, you must include the following `configurations` block in your `build.gradle` file to 
+ensure that when running a custom task that depends on the Flux API while also applying the ml-gradle plugin, 
 the required version of a particularly shared dependency is used:
 
 ```
@@ -205,12 +214,12 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:1.4.0"
+    classpath "com.marklogic:flux-api:2.0.0"
   }
   configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
       if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-        details.useVersion '2.15.2'
+        details.useVersion '2.18.2'
         details.because 'Must ensure the Jackson version preferred by Spark is used to avoid classpath conflicts.'
       }
     }
@@ -222,7 +231,7 @@ Without the `configurations` block shown above, you will encounter an error simi
 (you will likely need to include the Gradle `--stacktrace` option to see this error):
 
 ```
-Scala module 2.17.2 requires Jackson Databind version >= 2.17.0 and < 2.18.0 - Found jackson-databind version 2.15.2
+Scala module 2.18.2 requires Jackson Databind version >= 2.18.0 and < 2.19.0 - Found jackson-databind version 2.17.2
 ```
 
 You may encounter this error with Gradle plugins other than ml-gradle that also use the Jackson library. If you do, 

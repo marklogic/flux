@@ -13,6 +13,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
     void test() {
         ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
             "import-archive-files",
+            "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
             "--preview", "10",
             "--partitions", "18",
@@ -29,6 +30,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
     void streaming() {
         ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
             "import-archive-files",
+            "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
             "--streaming",
             "--document-type", "xml"

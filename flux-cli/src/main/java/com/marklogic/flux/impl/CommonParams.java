@@ -39,21 +39,14 @@ public class CommonParams {
         names = "--spark-master-url",
         description = "Specify the Spark master URL for configuring the local Spark cluster created by Flux."
     )
-    private String sparkMasterUrl;
+    private String sparkMasterUrl = "local[*]";
 
     @CommandLine.Option(
-        names = "-B",
-        description = "Specify any key and value to be applied when building the underlying Spark Session; " +
-            "%ne e.g. -Bspark.io.encryption.enabled=true . "
+        names = {"--spark-conf"},
+        description = "Specify any key and value to be added to the Spark runtime configuration before a Spark session is built" +
+            "; %ne.g. --spark-conf spark.logConf=true or --spark-conf spark.io.encryption.enabled=true . "
     )
-    private Map<String, String> sparkSessionBuilderParams = new HashMap<>();
-
-    @CommandLine.Option(
-        names = "-C",
-        description = "Specify any key and value to be added to the Spark runtime configuration; %ne.g. -Cspark.logConf=true . " +
-            "This only accepts Spark configuration options that can be specified after the Spark session has been built."
-    )
-    private Map<String, String> sparkSessionConfigParams = new HashMap<>();
+    private Map<String, String> sparkConfigurationProperties = new HashMap<>();
 
     public Dataset<Row> applyParams(Dataset<Row> dataset) {
         if (limit > 0) {
@@ -81,19 +74,11 @@ public class CommonParams {
         return sparkMasterUrl;
     }
 
-    public Map<String, String> getSparkSessionConfigParams() {
-        return sparkSessionConfigParams;
-    }
-
-    public Map<String, String> getSparkSessionBuilderParams() {
-        return sparkSessionBuilderParams;
+    public Map<String, String> getSparkConfigurationProperties() {
+        return sparkConfigurationProperties;
     }
 
     public Preview getPreview() {
         return preview;
-    }
-
-    public int getRepartition() {
-        return repartition;
     }
 }

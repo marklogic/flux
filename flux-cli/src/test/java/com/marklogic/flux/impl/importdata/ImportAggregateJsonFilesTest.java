@@ -139,7 +139,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
         );
 
         assertCollectionSize(
-            "Spark data sources will automatically handle .gz files without -Pcompression=gzip being specified.",
+            "Spark data sources will automatically handle .gz files without --spark-prop compression=gzip being specified.",
             "delimited-json-test", 3
         );
         verifyDoc("/delimited/lastName-1.json", "firstName-1", "lastName-1");
@@ -171,7 +171,7 @@ class ImportAggregateJsonFilesTest extends AbstractTest {
             "import-aggregate-json-files",
             "--path", "src/test/resources/delimited-files/custom-delimiter-json.txt",
             "--json-lines",
-            "-PlineSep=:\n",
+            "--spark-prop", "lineSep=:\n",
             "--connection-string", makeConnectionString(),
             "--permissions", DEFAULT_PERMISSIONS,
             "--collections", "custom-delimited-test",

@@ -4,10 +4,14 @@
 package com.marklogic.flux.impl;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.cli.Main;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import picocli.CommandLine;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Note that some tests will print a "An illegal reflective access operation has occurred" warning that occurs
@@ -22,6 +26,19 @@ class HandleErrorTest extends AbstractTest {
             "Unmatched arguments from index 0: 'not_a_real_command'",
             CommandLine.ExitCode.USAGE,
             "not_a_real_command", "--connection-string", makeConnectionString()
+        );
+    }
+
+    @Test
+    void missingOptionsFile() {
+        assertStderrContains(
+            "Please ensure the options file you are referencing exists and is readable.",
+
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--connection-string", makeConnectionString(),
+            "@no-such-options.txt",
+            "--path", "somewhere"
         );
     }
 
@@ -46,8 +63,8 @@ class HandleErrorTest extends AbstractTest {
     @Test
     void badDynamicOption() {
         assertStderrContains(
-            "Value for option '-C' (<String=String>) should be in KEY=VALUE format but was noValue",
-            CommandLine.ExitCode.USAGE, "import-files", "-CnoValue"
+            "Value for option '--spark-conf' (<String=String>) should be in KEY=VALUE format but was noValue",
+            CommandLine.ExitCode.USAGE, "import-files", "--spark-conf", "noValue"
         );
     }
 
@@ -63,6 +80,27 @@ class HandleErrorTest extends AbstractTest {
             "Run './bin/flux help import-files' for more information.",
             "import-files", "--connection-string", makeConnectionString()
         );
+    }
+
+    @Test
+    void buildCommandContextWithMissingRequiredOption() {
+        String[] args = {"import-files", "--connection-string", makeConnectionString()};
+        Main main = new Main();
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, () -> main.buildCommandContext(args));
+        assertEquals("Missing required option: '--path <path>'", ex.getMessage(),
+            "Verifies that for standard parameter exceptions thrown by picocli will be propagated instead of being " +
+                "written to stderr.");
+    }
+
+    @Test
+    void buildCommandContextWithInvalidConnectionOptions() {
+        String[] args = {"import-files", "--path", "/tmp", "--port", "8000"};
+        Main main = new Main();
+        FluxException ex = assertThrowsFluxException(() -> main.buildCommandContext(args));
+        assertEquals("Must specify a MarkLogic host via --host or --connection-string.", ex.getMessage(),
+            "Verifies that if there's any issue with the args, an exception is thrown instead of being written " +
+                "to stderr. This should be more useful in a context where a command is being run programmatically " +
+                "via command line options.");
     }
 
     /**
@@ -141,5 +179,83 @@ class HandleErrorTest extends AbstractTest {
 
         assertFalse(stderr.contains("Command failed"), "The command should not have failed since it defaults to not " +
             "aborting on a write failure. Actual stderr: " + stderr);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "-P,--spark-prop",
+        "-E,--embedder-prop",
+        "-L,--classifier-prop",
+        "-S,--splitter-prop",
+        "-R,--doc-prop",
+        "-M,--doc-metadata",
+        "-X,--xpath-namespace",
+    })
+    void niceErrorMessageForShortOptionsRemovedInTwoDotZeroRelease(String shortOption, String longOption) {
+        // Verifying we get a helpful error message for each short option removed in the 2.0 release. The command here
+        // is not important.
+        String stderr = runAndReturnStderr(
+            CommandLine.ExitCode.USAGE,
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "%stheKey=theValue".formatted(shortOption)
+        );
+
+        assertTrue(stderr.contains("Did you mean to use %s instead of %s, as %s was replaced in the 2.0 release with %s?"
+            .formatted(longOption, shortOption, shortOption, longOption)), "Unexpected stderr: " + stderr);
+
+        assertTrue(stderr.contains("If so, use %s theKey=theValue instead.".formatted(longOption)),
+            "Unexpected stderr: " + stderr);
+    }
+
+    /**
+     * The ConnectionParams ArgGroup is very handy because it allows for ordering and grouping options when a user
+     * views the "help" for a command. However, picocli has a quirk where if an option in an ArgGroup is specified
+     * multiple times, the error message is not very helpful. This test verifies that our custom error handling
+     * converts the picocli message into something more user friendly.
+     */
+    @Test
+    void duplicateOptionFromArgGroup() {
+        assertStderrContains(
+            "option '--port' should be specified only once",
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--path", "build",
+            "--host", "localhost",
+            "--port", "8000",
+            "--port", "8000"
+        );
+
+        assertStderrContains(
+            "option '--connection-string' should be specified only once",
+            CommandLine.ExitCode.USAGE,
+            "import-files",
+            "--path", "build",
+            "--connection-string", makeConnectionString(),
+            "--connection-string", makeConnectionString()
+        );
+    }
+
+    @Test
+    void s3ConnectException() {
+        assertStderrContains(
+            "For connectivity issues with S3, consider configuring an explicit S3 endpoint or region.",
+            CommandLine.ExitCode.SOFTWARE,
+            "import-files",
+            "--path", "s3a://doesnt-matter-for-this-test/",
+            "--preview", "1",
+            "--connection-string", makeConnectionString(),
+            "--s3-add-credentials",
+
+            // Copilot-recommended URL for failing as quickly as possible with a connection error.
+            "--s3-endpoint", "http://localhost:9999",
+
+            // These 3 options force Spark to fail as fast as possible with an invalid endpoint.
+            "--spark-conf", "spark.hadoop.fs.s3a.retry.limit=0",
+            "--spark-conf", "spark.hadoop.fs.s3a.retry.interval=1m",
+            "--spark-conf", "spark.hadoop.fs.s3a.attempts.maximum=1"
+        );
     }
 }

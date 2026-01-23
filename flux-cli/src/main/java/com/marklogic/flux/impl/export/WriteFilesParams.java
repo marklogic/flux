@@ -67,6 +67,12 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     @Override
+    public T s3UseProfile() {
+        s3Params.setUseProfile(true);
+        return (T) this;
+    }
+
+    @Override
     public T s3AccessKeyId(String accessKeyId) {
         s3Params.setAccessKeyId(accessKeyId);
         return (T) this;
@@ -86,6 +92,12 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     @Override
     public T s3Endpoint(String endpoint) {
         s3Params.setEndpoint(endpoint);
+        return (T) this;
+    }
+
+    @Override
+    public T s3Region(String region) {
+        s3Params.setRegion(region);
         return (T) this;
     }
 

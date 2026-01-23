@@ -17,11 +17,25 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
 
     T s3AddCredentials();
 
+    /**
+     * Enable use of the AWS profile credentials provider.
+     *
+     * @since 2.0.0
+     */
+    T s3UseProfile();
+
     T s3AccessKeyId(String accessKeyId);
 
     T s3SecretAccessKey(String secretAccessKey);
 
+    T s3SessionToken(String sessionToken);
+
     T s3Endpoint(String endpoint);
+
+    /**
+     * @since 2.0.0
+     */
+    T s3Region(String region);
 
     /**
      * @since 1.4.0

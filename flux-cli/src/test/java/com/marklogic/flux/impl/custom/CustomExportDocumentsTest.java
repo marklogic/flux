@@ -18,10 +18,10 @@ class CustomExportDocumentsTest extends AbstractTest {
             "--connection-string", makeConnectionString(),
             "--collections", "author",
             "--target", "marklogic",
-            String.format("-P%s=%s", Options.CLIENT_URI, makeConnectionString()),
-            String.format("-P%s=%s", Options.WRITE_PERMISSIONS, DEFAULT_PERMISSIONS),
-            String.format("-P%s=/exported", Options.WRITE_URI_PREFIX),
-            String.format("-P%s=exported-authors", Options.WRITE_COLLECTIONS)
+            "--spark-prop", String.format("%s=%s", Options.CLIENT_URI, makeConnectionString()),
+            "--spark-prop", String.format("%s=%s", Options.WRITE_PERMISSIONS, DEFAULT_PERMISSIONS),
+            "--spark-prop", String.format("%s=/exported", Options.WRITE_URI_PREFIX),
+            "--spark-prop", String.format("%s=exported-authors", Options.WRITE_COLLECTIONS)
         );
 
         assertCollectionSize("We can use our own connector as a custom target, and thus we expect the 15 " +

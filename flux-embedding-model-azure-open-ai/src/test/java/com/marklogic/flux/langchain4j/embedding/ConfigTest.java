@@ -4,7 +4,6 @@
 package com.marklogic.flux.langchain4j.embedding;
 
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -43,7 +42,28 @@ class ConfigTest {
     void missingEndpoint() {
         expectError(
             "endpoint cannot be null or blank",
-            "api-key", "abc123"
+            "api-key", "abc123",
+            "deployment-name", "anything"
+        );
+    }
+
+    @Test
+    void missingDeploymentName() {
+        expectError(
+            // We have to translate the internal Azure error, as it will say "deploymentName" instead of "deployment-name".
+            "deployment-name must be specified",
+            "api-key", "abc123",
+            "endpoint", "somewhere"
+        );
+    }
+
+    @Test
+    void emptyDeploymentName() {
+        expectError(
+            "deployment-name must be specified",
+            "api-key", "abc123",
+            "endpoint", "somewhere",
+            "deployment-name", ""
         );
     }
 
@@ -60,7 +80,8 @@ class ConfigTest {
         expectError(
             "dimensions must have a numeric value; invalid value: abc",
             "api-key", "abc123",
-            "dimensions", "abc"
+            "dimensions", "abc",
+            "deployment-name", "anything"
         );
     }
 
@@ -69,7 +90,8 @@ class ConfigTest {
         expectError(
             "max-retries must have a numeric value; invalid value: abc",
             "max-retries", "abc",
-            "api-key", "abc123"
+            "api-key", "abc123",
+            "deployment-name", "anything"
         );
     }
 
@@ -78,7 +100,8 @@ class ConfigTest {
         expectError(
             "duration must have a numeric value; invalid value: abc",
             "duration", "abc",
-            "api-key", "abc123"
+            "api-key", "abc123",
+            "deployment-name", "anything"
         );
     }
 

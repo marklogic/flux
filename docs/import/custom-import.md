@@ -22,7 +22,7 @@ via `custom-import`:
 {% tab log Unix %}
 ```
 ./bin/flux custom-import --source text \
-    -Ppath=/path/to/text/files \
+    --spark-prop path=/path/to/text/files \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
 ```
@@ -30,7 +30,7 @@ via `custom-import`:
 {% tab log Windows %}
 ```
 bin\flux custom-import --source text ^
-    -Ppath=/path/to/text/files ^
+    --spark-prop path=/path/to/text/files ^
     --connection-string "flux-example-user:password@localhost:8004" ^
     --permissions flux-example-role,read,flux-example-role,update
 ```

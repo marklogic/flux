@@ -6,8 +6,8 @@ package com.marklogic.flux.tde;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import marklogicspark.marklogic.client.io.JacksonHandle;
-import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
 
 import java.util.Iterator;
 import java.util.Set;

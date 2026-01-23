@@ -15,10 +15,10 @@ public class OllamaEmbeddingModelFunction implements Function<Map<String, String
     @Override
     public EmbeddingModel apply(Map<String, String> options) {
         if (!options.containsKey("base-url")) {
-            throw new IllegalArgumentException("Must specify -Ebase-url= for connecting to Ollama.");
+            throw new IllegalArgumentException("Must specify --embedder-prop base-url= for connecting to Ollama.");
         }
         if (!options.containsKey("model-name")) {
-            throw new IllegalArgumentException("Must specify -Emodel-name= for connecting to Ollama.");
+            throw new IllegalArgumentException("Must specify --embedder-prop model-name= for connecting to Ollama.");
         }
 
         OllamaEmbeddingModel.OllamaEmbeddingModelBuilder builder = OllamaEmbeddingModel.builder()

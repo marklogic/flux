@@ -159,16 +159,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
             return this;
         }
 
-        /**
-         * @deprecated Use {@link #documentType(com.marklogic.flux.api.DocumentType)} instead
-         */
-        @SuppressWarnings({"java:S1133", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.4.0", forRemoval = true)
-        public WriteGenericDocumentsOptions documentType(GenericFilesImporter.DocumentType documentType) {
-            this.documentType = documentType != null ? com.marklogic.flux.api.DocumentType.valueOf(documentType.name()) : null;
-            return this;
-        }
-
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
@@ -184,17 +174,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public WriteGenericDocumentsOptions extractText() {
             this.extractText = true;
-            return this;
-        }
-
-        /**
-         * @deprecated Use {@link #extractedTextDocumentType(String)} instead
-         */
-        @SuppressWarnings({"java:S1133", "removal"}) // Telling Sonar we don't need a reminder to remove this some day.
-        @Deprecated(since = "1.4.0", forRemoval = true)
-        @Override
-        public WriteGenericDocumentsOptions extractedTextDocumentType(DocumentType documentType) {
-            this.extractedTextDocumentType = documentType != null ? documentType.name() : null;
             return this;
         }
 

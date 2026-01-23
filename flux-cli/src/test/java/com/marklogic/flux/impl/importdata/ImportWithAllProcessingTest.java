@@ -3,10 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
-class ImportWithAllProcessingTest extends AbstractJava17Test {
+class ImportWithAllProcessingTest extends AbstractTest {
 
     @Test
     void extractAndSplitAndEmbed() {

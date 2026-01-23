@@ -13,3 +13,4 @@ flux-cli/src/dist/ext/*.jar
 flux-version.properties
 docker/sonarqube
 optionsExperiments
+dep.txt

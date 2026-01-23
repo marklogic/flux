@@ -35,13 +35,6 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
     ArchiveFilesImporter streaming();
 
     /**
-     * @deprecated Use {@link #toOptions(Consumer)} instead
-     */
-    @SuppressWarnings("java:S1133") // Telling Sonar we don't need a reminder to remove this some day.
-    @Deprecated(since = "1.4.0", forRemoval = true)
-    <T extends WriteDocumentsOptions<T>> ArchiveFilesImporter to(Consumer<T> consumer);
-
-    /**
      * Added in the 1.4.0 release to support additional options. In Flux 2.0.0, this will be renamed to
      * "to" and the deprecated "to" method will be removed.
      *

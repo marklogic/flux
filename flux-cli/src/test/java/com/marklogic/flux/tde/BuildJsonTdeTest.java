@@ -6,8 +6,8 @@ package com.marklogic.flux.tde;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.flux.impl.importdata.SparkColumnIterator;
-import marklogicspark.marklogic.client.io.JacksonHandle;
-import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;

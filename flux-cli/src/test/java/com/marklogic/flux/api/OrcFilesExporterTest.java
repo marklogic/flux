@@ -61,6 +61,6 @@ class OrcFilesExporterTest extends AbstractTest {
     private void verifyFiles(Path tempDir) {
         File[] files = tempDir.toFile().listFiles(file -> file.getName().endsWith(".lz4.orc"));
         assertEquals(1, files.length, "Expecting 1 gzipped ORC file, and the " +
-            "-Pcompression option should tell Spark ORC to use lz4 instead of snappy.");
+            "compression option should tell Spark ORC to use lz4 instead of snappy.");
     }
 }

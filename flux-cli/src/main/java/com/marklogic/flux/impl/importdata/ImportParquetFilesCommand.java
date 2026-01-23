@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "import-parquet-files",
     description = "Read Parquet files from supported file locations using Spark's support " +
-        "defined at %nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html, and write JSON or XML " +
+        "defined at %nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html, and write JSON or XML " +
         "documents to MarkLogic."
 )
 public class ImportParquetFilesCommand extends AbstractImportFilesCommand<ParquetFilesImporter> implements ParquetFilesImporter {
@@ -54,10 +54,10 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         private boolean uriIncludeFilePath;
 
         @CommandLine.Option(
-            names = "-P",
+            names = "--spark-prop",
             description = "Specify any Spark Parquet data source option defined at " +
-                "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html; e.g. -PmergeSchema=true. " +
-                "Spark configuration options must be defined via '-C'."
+                "%nhttps://spark.apache.org/docs/latest/sql-data-sources-parquet.html; e.g. --spark-prop mergeSchema=true. " +
+                "Spark configuration options must be defined via '--spark-conf'."
         )
         private Map<String, String> additionalOptions = new HashMap<>();
 
@@ -84,8 +84,14 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
         }
 
         @Override
-        public ReadTabularFilesOptions aggregateColumns(String newColumnName, String... columns) {
-            aggregationParams.addAggregationExpression(newColumnName, columns);
+        public ReadTabularFilesOptions aggregateColumns(String aggregationName, String... columns) {
+            aggregationParams.addAggregationExpression(aggregationName, columns);
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
+            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
             return this;
         }
 

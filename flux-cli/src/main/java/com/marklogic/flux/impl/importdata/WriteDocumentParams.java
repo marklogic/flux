@@ -135,14 +135,22 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     private String uriTemplate;
 
     @CommandLine.Option(
-        names = {"-M"},
-        description = "Specify one or more metadata values to be added to each document; e.g. -Mparam=value ."
+        names = "--uri-template-warn-on-missing-field",
+        description = "Causes Flux to log a warning instead of failing when a URI template contains an expression " +
+            "that cannot be resolved to a field in a document. The expression will instead be replaced with the text " +
+            "'UNRESOLVED-' followed by a UUID to ensure the document is still created with a unique URI."
+    )
+    private boolean uriTemplateWarnOnMissingField;
+
+    @CommandLine.Option(
+        names = {"--doc-metadata"},
+        description = "Specify one or more metadata values to be added to each document; e.g. --doc-metadata param=value ."
     )
     private Map<String, String> metadataValues = new HashMap<>();
 
     @CommandLine.Option(
-        names = {"-R"},
-        description = "Specify one or more document properties to be added to each document; e.g. -Rparam=value ."
+        names = {"--doc-prop"},
+        description = "Specify one or more document properties to be added to each document; e.g. --doc-prop param=value ."
     )
     private Map<String, String> documentProperties = new HashMap<>();
 
@@ -176,6 +184,7 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_REPLACE, uriReplace,
             Options.WRITE_URI_SUFFIX, uriSuffix,
             Options.WRITE_URI_TEMPLATE, uriTemplate,
+            Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null,
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
@@ -334,6 +343,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T uriTemplate(String uriTemplate) {
         this.uriTemplate = uriTemplate;
+        return (T) this;
+    }
+
+    @Override
+    public T uriTemplateWarnOnMissingField() {
+        this.uriTemplateWarnOnMissingField = true;
         return (T) this;
     }
 

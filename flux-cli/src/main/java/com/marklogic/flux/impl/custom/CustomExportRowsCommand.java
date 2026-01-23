@@ -7,7 +7,6 @@ import com.marklogic.flux.api.CustomExportWriteOptions;
 import com.marklogic.flux.api.CustomRowsExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
-import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.flux.impl.export.ReadRowsParams;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
@@ -25,11 +24,6 @@ public class CustomExportRowsCommand extends AbstractCustomExportCommand<CustomR
 
     @CommandLine.Mixin
     private ReadRowsParams readParams = new ReadRowsParams();
-
-    @Override
-    protected String getCustomSparkMasterUrl() {
-        return readParams.getPartitions() > 0 ? SparkUtil.makeSparkMasterUrl(readParams.getPartitions()) : null;
-    }
 
     @Override
     protected Dataset<Row> loadDataset(SparkSession session, DataFrameReader reader) {

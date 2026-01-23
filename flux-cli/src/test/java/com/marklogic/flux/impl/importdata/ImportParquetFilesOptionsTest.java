@@ -16,9 +16,10 @@ class ImportParquetFilesOptionsTest extends AbstractOptionsTest {
     void configurationAndDataSourceOptions() {
         ImportParquetFilesCommand command = (ImportParquetFilesCommand) getCommand(
             "import-parquet-files",
+            "--connection-string", makeConnectionString(),
             "--path", "/doesnt/matter",
-            "-PdatetimeRebaseMode=CORRECTED",
-            "-Cspark.sql.parquet.filterPushdown=false",
+            "--spark-prop", "datetimeRebaseMode=CORRECTED",
+            "--spark-conf", "spark.sql.parquet.filterPushdown=false",
             "--preview", "10"
         );
 
@@ -27,6 +28,6 @@ class ImportParquetFilesOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey("spark.sql.parquet.filterPushdown"),
             "Dynamic params starting with 'spark.sql' should not be added to the 'read' options. They should " +
                 "instead be added to the SparkConf object, per the documentation at " +
-                "https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html .");
+                "https://spark.apache.org/docs/latest/sql-data-sources-parquet.html .");
     }
 }

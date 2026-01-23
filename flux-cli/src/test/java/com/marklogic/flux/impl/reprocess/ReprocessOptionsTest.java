@@ -23,6 +23,8 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             "--read-partitions-invoke", "/my/other-invoke.sjs",
             "--read-var", "param1=value1",
             "--read-var", "param2=spaces work!",
+            "--read-partitions-var", "partVar1=partValue1",
+            "--read-partitions-var", "partVar2=another value",
             "--write-invoke", "/my/invoke.sjs"
         );
 
@@ -30,7 +32,9 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
             Options.READ_INVOKE, "/my/invoke.sjs",
             Options.READ_PARTITIONS_INVOKE, "/my/other-invoke.sjs",
             Options.READ_VARS_PREFIX + "param1", "value1",
-            Options.READ_VARS_PREFIX + "param2", "spaces work!"
+            Options.READ_VARS_PREFIX + "param2", "spaces work!",
+            Options.READ_PARTITIONS_VARS_PREFIX + "partVar1", "partValue1",
+            Options.READ_PARTITIONS_VARS_PREFIX + "partVar2", "another value"
         );
     }
 
@@ -169,45 +173,6 @@ class ReprocessOptionsTest extends AbstractOptionsTest {
         assertOptions(command.writeParams.get(),
             Options.WRITE_XQUERY_FILE, "my-code.xqy"
         );
-    }
-
-    @Test
-    void masterUrlBasedOffRepartitionCount() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--repartition", "32",
-            "--thread-count", "0",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[32]", url);
-    }
-
-    @Test
-    void masterUrlBasedOffThreadCount() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--thread-count", "24",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[24]", url);
-    }
-
-    @Test
-    void defaultMasterUrl() {
-        ReprocessCommand command = (ReprocessCommand) getCommand("reprocess",
-            "--connection-string", "user:password@host:8000",
-            "--read-invoke", "/my/invoke.sjs",
-            "--write-invoke", "/my/invoke.sjs"
-        );
-
-        String url = command.determineSparkMasterUrl();
-        assertEquals("local[16]", url, "The reprocess command defaults to 16 threads.");
     }
 
     @Test

@@ -58,6 +58,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T uriTemplate(String uriTemplate);
 
     /**
+     * @since 2.0.0
+     */
+    T uriTemplateWarnOnMissingField();
+
+    /**
      * @since 1.3.0
      */
     T classifier(Consumer<ClassifierOptions> consumer);

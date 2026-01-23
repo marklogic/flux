@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 /**
  * Read Avro files from supported file locations using
- * <a href="https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html">Spark's Avro support</a>,
+ * <a href="https://spark.apache.org/docs/latest/sql-data-sources-avro.html">Spark's Avro support</a>,
  * and write JSON or XML documents to MarkLogic.
  */
 public interface AvroFilesImporter extends Executor<AvroFilesImporter> {

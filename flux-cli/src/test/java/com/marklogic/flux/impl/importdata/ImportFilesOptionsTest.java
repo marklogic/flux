@@ -7,6 +7,10 @@ import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 class ImportFilesOptionsTest extends AbstractOptionsTest {
 
     @Test
@@ -36,16 +40,17 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-replace", ".*value,''",
             "--uri-suffix", ".suffix",
             "--uri-template", "/test/{value}.json",
+            "--uri-template-warn-on-missing-field",
             "--streaming",
             "--extract-text",
             "--extracted-text-document-type", "XML",
             "--extracted-text-collections", "e1,e2",
             "--extracted-text-permissions", "e1,read,e2,update",
             "--extracted-text-drop-source",
-            "-Mmeta1=value1",
-            "-Mmeta2=value2",
-            "-Rprop1=value1",
-            "-Rprop2=value2"
+            "--doc-metadata", "meta1=value1",
+            "--doc-metadata", "meta2=value2",
+            "--doc-prop", "prop1=value1",
+            "--doc-prop", "prop2=value2"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -78,6 +83,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_REPLACE, ".*value,''",
             Options.WRITE_URI_SUFFIX, ".suffix",
             Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
+            Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
             Options.STREAM_FILES, "true",
             Options.WRITE_EXTRACTED_TEXT, "true",
             Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
@@ -99,7 +105,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--path", "anywhere",
             "--splitter-json-pointer", "/path1\n/path2",
             "--splitter-xpath", "/some/path",
-            "-Xex=org:example",
+            "--xpath-namespace", "ex=org:example",
             "--splitter-max-chunk-size", "100",
             "--splitter-max-overlap-size", "50",
             "--splitter-regex", "word",
@@ -142,8 +148,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", "user:password@host:8001",
             "--path", "anywhere",
             "--embedder", "azure",
-            "-Ekey=value",
-            "-EotherKey=otherValue",
+            "--embedder-prop", "key=value",
+            "--embedder-prop", "otherKey=otherValue",
             "--embedder-prompt", "This is a prompt",
             "--embedder-chunks-json-pointer", "/some/chunks",
             "--embedder-text-json-pointer", "/my-text",
@@ -179,8 +185,13 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--splitter-json-pointer", ""
         );
 
-        assertOptions(command.getWriteParams().makeOptions(),
+        Map<String, String> options = command.getWriteParams().makeOptions();
+        assertOptions(options,
             Options.WRITE_SPLITTER_JSON_POINTERS, ""
         );
+
+        assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD),
+            "As a boolean option, this should not be present when the option is not set so that the feature " +
+                "defaults to false, as of Flux 2.0.0.");
     }
 }

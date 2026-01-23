@@ -20,7 +20,7 @@ class ExportDelimitedFilesOptionsTest extends AbstractOptionsTest {
             "--query", "anything",
             "--path", "anywhere",
             "--encoding", "UTF-16",
-            "-Pkey=value"
+            "--spark-prop", "key=value"
         );
 
         Map<String, String> options = command.getWriteFilesParams().get();
@@ -28,6 +28,6 @@ class ExportDelimitedFilesOptionsTest extends AbstractOptionsTest {
             "consistency with MLCP and because it's very common to want a header in a delimited file.");
         assertEquals("value", options.get("key"));
         assertEquals("UTF-16", options.get("encoding"), "--encoding is included for consistency with other commands " +
-            "that support a custom encoding, even though a user can also specify it via -Pencoding=");
+            "that support a custom encoding, even though a user can also specify it via --spark-prop encoding=");
     }
 }

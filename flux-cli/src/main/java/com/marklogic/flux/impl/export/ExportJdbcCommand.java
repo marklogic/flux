@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 @CommandLine.Command(
     name = "export-jdbc",
     description = "Read rows via Optic from MarkLogic and write them to a table using Spark's support defined at" +
-        "%nhttps://spark.apache.org/docs/3.5.6/sql-data-sources-jdbc.html ."
+        "%nhttps://spark.apache.org/docs/latest/sql-data-sources-jdbc.html ."
 )
 public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements JdbcExporter {
 
@@ -32,11 +32,6 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
             "url", "Must specify a JDBC URL",
             "dbtable", "Must specify a table"
         );
-    }
-
-    @Override
-    protected String getCustomSparkMasterUrl() {
-        return readParams.getPartitions() > 0 ? SparkUtil.makeSparkMasterUrl(readParams.getPartitions()) : null;
     }
 
     @Override
@@ -67,7 +62,7 @@ public class ExportJdbcCommand extends AbstractCommand<JdbcExporter> implements 
 
         @CommandLine.Option(names = "--mode",
             description = "Specifies how data is written to a table if the table already exists. " +
-                "See %nhttps://spark.apache.org/docs/3.5.6/api/java/org/apache/spark/sql/SaveMode.html for more information. "
+                "See %nhttps://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SaveMode.html for more information. "
                 + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private SaveMode saveMode = SaveMode.ERRORIFEXISTS;
 

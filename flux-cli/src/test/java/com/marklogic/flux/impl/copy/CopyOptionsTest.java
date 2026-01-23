@@ -10,8 +10,12 @@ import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CopyOptionsTest extends AbstractOptionsTest {
 
@@ -77,12 +81,23 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-replace", ".*data,''",
             "--output-uri-suffix", ".xml",
             "--output-uri-template", "/{example}.xml",
+            "--output-uri-template-warn-on-missing-field",
             "--splitter-text",
             "--embedder", "doesnt-matter",
-            "-Mmeta1=value1",
-            "-Mmeta2=value2",
-            "-Rprop1=value1",
-            "-Rprop2=value2"
+            "--embedder-prompt", "Hello: ",
+            "--embedder-prop", "e1=v1",
+            "--output-doc-metadata", "meta1=value1",
+            "--output-doc-metadata", "meta2=value2",
+            "--output-doc-prop", "prop1=value1",
+            "--output-doc-prop", "prop2=value2",
+            "--classifier-host", "somewhere",
+            "--classifier-port", "1234",
+            "--classifier-http",
+            "--classifier-path", "/path",
+            "--classifier-api-key", "apikey",
+            "--classifier-token-path", "/token/path",
+            "--classifier-batch-size", "50",
+            "--classifier-prop", "key1=value1"
         );
 
         assertOptions(command.writeParams.makeOptions(),
@@ -101,12 +116,23 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_REPLACE, ".*data,''",
             Options.WRITE_URI_SUFFIX, ".xml",
             Options.WRITE_URI_TEMPLATE, "/{example}.xml",
+            Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
             Options.WRITE_SPLITTER_TEXT, "true",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
+            Options.WRITE_EMBEDDER_PROMPT, "Hello: ",
+            Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "e1", "v1",
             Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
             Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
-            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2",
+            Options.WRITE_CLASSIFIER_HOST, "somewhere",
+            Options.WRITE_CLASSIFIER_PORT, "1234",
+            Options.WRITE_CLASSIFIER_HTTP, "true",
+            Options.WRITE_CLASSIFIER_PATH, "/path",
+            Options.WRITE_CLASSIFIER_APIKEY, "apikey",
+            Options.WRITE_CLASSIFIER_TOKEN_PATH, "/token/path",
+            Options.WRITE_CLASSIFIER_BATCH_SIZE, "50",
+            Options.WRITE_CLASSIFIER_OPTION_PREFIX + "key1", "value1"
         );
     }
 
@@ -199,12 +225,58 @@ class CopyOptionsTest extends AbstractOptionsTest {
             CommandLine.Option option = field.getAnnotation(CommandLine.Option.class);
             if (option != null) {
                 String name = option.names()[0];
-                // The dynamic params can't start with "--output", piccolo requires a single letter.
-                if (name.startsWith("--output") || name.equals("-M") || name.equals("-R")) {
+                if (name.startsWith("--output")) {
                     count++;
                 }
             }
         }
         return count;
+    }
+
+    @Test
+    void getOptionNames() {
+        List<String> expectedOptions = List.of(
+            "--output-connection-string", "--output-host", "--output-port", "--output-base-path",
+            "--output-database", "--output-connection-type", "--output-auth-type", "--output-username",
+            "--output-password", "--output-certificate-file", "--output-certificate-password",
+            "--output-cloud-api-key", "--output-kerberos-principal", "--output-saml-token",
+            "--output-oauth-token", "--output-ssl-protocol", "--output-ssl-hostname-verifier",
+            "--output-keystore-path", "--output-keystore-password", "--output-keystore-type",
+            "--output-keystore-algorithm", "--output-truststore-path", "--output-truststore-password",
+            "--output-truststore-type", "--output-truststore-algorithm"
+        );
+
+        List<String> actualOptions = OutputConnectionParams.getOptionNames();
+
+        assertEquals(expectedOptions.size(), actualOptions.size(),
+            "Expected " + expectedOptions.size() + " output connection option names");
+
+        assertTrue(actualOptions.containsAll(expectedOptions),
+            "Missing options: " + expectedOptions.stream()
+                .filter(opt -> !actualOptions.contains(opt))
+                .toList());
+    }
+
+    @Test
+    void systemProperties() {
+        Map<String, String> systemProps = new HashMap<>();
+
+        // For a flux-box prototype, only supporting this for now. May add all the output options later.
+        systemProps.put("marklogic.client.output.connectionString", "user:password@output:8000");
+
+        try {
+            systemProps.forEach(System::setProperty);
+
+            CopyCommand command = (CopyCommand) getCommand("copy",
+                "--connection-string", "test:test@host:8000"
+            );
+
+            assertOptions(
+                command.makeOutputConnectionOptions(),
+                Options.CLIENT_URI, "user:password@output:8000"
+            );
+        } finally {
+            systemProps.keySet().forEach(System::clearProperty);
+        }
     }
 }

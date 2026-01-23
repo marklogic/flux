@@ -6,9 +6,9 @@ package com.marklogic.flux.impl.importdata;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.marklogic.flux.AbstractFluxTest;
-import com.marklogic.flux.AbstractJava17Test;
+import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ImportFilesWithEmbedderTest extends AbstractJava17Test {
+class ImportFilesWithEmbedderTest extends AbstractTest {
 
     @Test
     void minilm() {
@@ -24,7 +24,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
@@ -44,7 +44,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
@@ -55,24 +55,26 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
         );
 
         XmlNode doc = readXmlDocument("/java-client-intro.json-chunks-1.xml");
-        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/embedding");
+        doc.assertElementExists("Empty quotes is a valid value for a namespace", "/root/chunks/chunk[1]/vec:vector");
     }
 
     @Test
+    @Disabled("Stopped working around 2025-01-08, possibly due to Ollama changes. Works locally if you pull the " +
+        "latest ollama/ollama image, but that hasn't worked in Jenkins yet.")
     void ollama() {
         run(
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--splitter-max-chunk-size", "500",
             "--splitter-sidecar-max-chunks", "2",
             "--embedder", "ollama",
             "--embedder-prompt", "This is only included to ensure the option doesn't cause an error.",
-            "-Ebase-url=http://localhost:8008",
-            "-Emodel-name=all-minilm"
+            "--embedder-prop", "base-url=http://localhost:8008",
+            "--embedder-prop", "model-name=all-minilm"
         );
 
         verifyChunksHaveEmbeddings();
@@ -84,7 +86,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-template", "/top-chunks-test.json",
             "--embedder", "minilm",
             "--embedder-chunks-json-pointer", "",
@@ -92,8 +94,8 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
         );
 
         JsonNode doc = readJsonDocument("/top-chunks-test.json");
-        assertTrue(doc.has("embedding"), "Using '' should result in the whole document being treated as a chunk.");
-        assertEquals(JsonNodeType.ARRAY, doc.get("embedding").getNodeType());
+        assertTrue(doc.has("_vector"), "Using '' should result in the whole document being treated as a chunk.");
+        assertEquals(JsonNodeType.ARRAY, doc.get("_vector").getNodeType());
     }
 
     /**
@@ -108,11 +110,12 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "azure",
-            "-Eapi-key=doesnt-matter"
+            "--embedder-prop", "api-key=doesnt-matter",
+            "--embedder-prop", "deployment-name=anything"
         );
     }
 
@@ -125,7 +128,7 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
             "import-files",
             "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
             "--connection-string", makeConnectionString(),
-            "--permissions", AbstractFluxTest.DEFAULT_PERMISSIONS,
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
             "--uri-replace", ".*/json-files,''",
             "--splitter-json-pointer", "/text",
             "--embedder", "not.valid.class"
@@ -142,8 +145,8 @@ class ImportFilesWithEmbedderTest extends AbstractJava17Test {
 
             chunks.forEach(chunk -> {
                 assertTrue(chunk.has("text"));
-                assertTrue(chunk.has("embedding"));
-                assertEquals(JsonNodeType.ARRAY, chunk.get("embedding").getNodeType());
+                assertTrue(chunk.has("_vector"));
+                assertEquals(JsonNodeType.ARRAY, chunk.get("_vector").getNodeType());
             });
         });
     }

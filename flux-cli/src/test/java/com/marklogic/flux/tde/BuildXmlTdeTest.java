@@ -4,8 +4,8 @@
 package com.marklogic.flux.tde;
 
 import com.marklogic.flux.impl.importdata.SparkColumnIterator;
-import marklogicspark.marklogic.client.io.DOMHandle;
-import marklogicspark.marklogic.client.io.marker.AbstractWriteHandle;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.marker.AbstractWriteHandle;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
