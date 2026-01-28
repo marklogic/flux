@@ -26,6 +26,9 @@ dependencies {
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
     }
+    testImplementation("org.assertj:assertj-core:3.27.7") {
+      because "Resolves CVE https://nvd.nist.gov/vuln/detail/CVE-2026-24400"
+    }
   }
 
   implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
