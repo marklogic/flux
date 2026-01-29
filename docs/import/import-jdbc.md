@@ -91,9 +91,23 @@ The `--table` option maps to the `dbtable` option for
 in addition to a table name, you can also specify "anything that is valid in the `FROM` clause of a SQL query... 
 such as a subquery in parentheses".
 
+### Previewing data before import
+
+Before importing a large dataset, you can preview how Flux will read and process your data using the `--preview` and `--preview-schema` options that are documented under [Common Options](../common-options.md). 
+
+These options are particularly helpful in identifying issues such as incorrect data types or unexpected data
+formats. The `--preview-schema` option allows you to see details about each column of data returned by your query. 
+And `--preview` allows you to see the format of data in one or many rows before writing any documents to MarkLogic.
+
+You can also use both options together - for example, the following would display the schema of columns and the 
+first 5 rows of data, without writing any data to MarkLogic:
+
+    --preview-schema --preview 5
+
+
 ## Specifying a JSON root name
 
-By default, each column a row will become a top-level field in the JSON document written to
+By default, each column in a row will become a top-level field in the JSON document written to
 MarkLogic. It is often useful to have a single "root" field in a JSON document so that it is more self-describing. It
 can help with indexing purposes in MarkLogic as well. To include a JSON root field, use the `--json-root-name` option with
 a value for the name of the root field. The data read from a row will then be nested under this root field.
