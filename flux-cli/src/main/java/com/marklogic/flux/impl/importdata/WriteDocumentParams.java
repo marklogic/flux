@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.ClassifierOptions;
 import com.marklogic.flux.api.EmbedderOptions;
+import com.marklogic.flux.api.NucliaOptions;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -163,6 +164,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @CommandLine.Mixin
     private ClassifierParams classifierParams = new ClassifierParams();
 
+    @CommandLine.Mixin
+    private NucliaParams nucliaParams = new NucliaParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
@@ -210,6 +214,10 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
         if (classifierParams != null) {
             options.putAll(classifierParams.makeOptions());
+        }
+
+        if (nucliaParams != null) {
+            options.putAll(nucliaParams.makeOptions());
         }
 
         return options;
@@ -277,6 +285,12 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T classifier(Consumer<ClassifierOptions> consumer) {
         consumer.accept(classifierParams);
+        return (T) this;
+    }
+
+    @Override
+    public T nuclia(Consumer<NucliaOptions> consumer) {
+        consumer.accept(nucliaParams);
         return (T) this;
     }
 
