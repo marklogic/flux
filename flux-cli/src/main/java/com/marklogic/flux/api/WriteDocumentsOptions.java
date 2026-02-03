@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -66,6 +66,11 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
      * @since 1.3.0
      */
     T classifier(Consumer<ClassifierOptions> consumer);
+
+    /**
+     * @since 2.1.0
+     */
+    T nuclia(Consumer<NucliaOptions> consumer);
 
     /**
      * @since 1.3.0

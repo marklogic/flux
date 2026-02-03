@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -172,6 +172,24 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "key", "value",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "otherKey", "otherValue",
             Options.WRITE_EMBEDDER_BATCH_SIZE, "14"
+        );
+    }
+
+    @Test
+    void nucliaOptions() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--nuclia-nua-key", "test-api-key",
+            "--nuclia-api-url", "http://localhost:8000/api",
+            "--nuclia-timeout", "300"
+        );
+
+        assertOptions(command.getWriteParams().makeOptions(),
+            Options.WRITE_NUCLIA_NUA_KEY, "test-api-key",
+            Options.WRITE_NUCLIA_API_URL, "http://localhost:8000/api",
+            Options.WRITE_NUCLIA_TIMEOUT, "300"
         );
     }
 

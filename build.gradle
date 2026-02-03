@@ -37,6 +37,8 @@ subprojects {
   repositories {
     mavenCentral()
 
+    mavenLocal()
+
     // For temporary dependencies on internal snapshots.
     maven {
       url = "https://bed-artifactory.bedford.progress.com:443/artifactory/ml-maven-snapshots/"
