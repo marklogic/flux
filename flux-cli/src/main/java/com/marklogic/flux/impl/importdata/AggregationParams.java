@@ -16,6 +16,14 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
 
     private static final String AGGREGATE_DELIMITER = ",";
 
+    // Adding this for 2.1, which suggests that this class should be renamed to something like
+    // "StructuredDataTransformParams'.
+    @CommandLine.Option(
+        names = "--where",
+        description = "Filter rows using a SQL-like WHERE expression; e.g. --where \"size < 10\" or --where \"status = 'active'\"."
+    )
+    private String where;
+
     @CommandLine.Option(
         names = "--group-by",
         description = "Name of a column to group the rows by before constructing documents. Typically used with at " +
@@ -121,6 +129,11 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         this.groupBy = groupBy;
     }
 
+    public AggregationParams where(String expression) {
+        this.where = expression;
+        return this;
+    }
+
     @Override
     public AggregationParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
         if (this.aggregationOrderings == null) {
@@ -139,7 +152,18 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         return this;
     }
 
-    public Dataset<Row> applyGroupBy(Dataset<Row> dataset) {
+    public Dataset<Row> applyTransformations(Dataset<Row> dataset) {
+        // Apply where filter first, before groupBy. This allows the user to filter out rows that would otherwise be
+        // included in the groupBy and thus end up in the aggregated arrays.
+        if (where != null && !where.trim().isEmpty()) {
+            try {
+                dataset = dataset.where(where);
+            } catch (Exception ex) {
+                throw new FluxException("Unable to apply 'where' clause: '%s'; cause: %s"
+                    .formatted(where, ex.getMessage()), ex);
+            }
+        }
+
         if (groupBy == null || groupBy.trim().isEmpty()) {
             return dataset;
         }

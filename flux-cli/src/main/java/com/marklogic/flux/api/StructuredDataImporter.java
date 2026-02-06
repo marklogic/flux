@@ -51,6 +51,23 @@ public interface StructuredDataImporter<T extends StructuredDataImporter<T>> ext
     }
 
     /**
+     * Filter rows using a SQL-like WHERE expression before constructing documents.
+     * <p>
+     * Examples:
+     * <ul>
+     * <li>{@code where("size < 10")}</li>
+     * <li>{@code where("status = 'active'")}</li>
+     * <li>{@code where("age > 21 AND city = 'Boston'")}</li>
+     * </ul>
+     * </p>
+     *
+     * @param expression a SQL-like WHERE clause expression
+     * @return this importer instance
+     * @since 2.1.0
+     */
+    T where(String expression);
+
+    /**
      * Group rows by the specified column name before constructing documents, with options for aggregating and
      * ordering columns.
      *

@@ -112,7 +112,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
 
-        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.aggregationParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -137,6 +137,12 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     @Override
     public AvroFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
+        return this;
+    }
+
+    @Override
+    public AvroFilesImporter where(String expression) {
+        readParams.aggregationParams.where(expression);
         return this;
     }
 
