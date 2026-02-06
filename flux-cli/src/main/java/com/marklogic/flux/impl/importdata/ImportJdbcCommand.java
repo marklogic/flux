@@ -50,7 +50,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.aggregationParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -78,6 +78,12 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
     @Override
     public JdbcImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
+        return this;
+    }
+
+    @Override
+    public JdbcImporter where(String expression) {
+        readParams.aggregationParams.where(expression);
         return this;
     }
 
