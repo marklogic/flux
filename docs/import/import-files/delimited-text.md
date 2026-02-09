@@ -183,7 +183,7 @@ As a structured data source, the `import-delimited-files` command also supports 
 ## Advanced options
 
 The `import-delimited-files` command reuses Spark's support for reading delimited text data. You can include any of
-the [Spark CSV options](https://spark.apache.org/docs/3.5.6/sql-data-sources-csv.html) via the `--spark-prop` option
+the [Spark CSV options](https://spark.apache.org/docs/latest/sql-data-sources-csv.html) via the `--spark-prop` option
 to control how delimited text is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 A common option to include is `--spark-prop multiLine=true` for when your files have rows with values that include newline 
