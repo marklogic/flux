@@ -159,17 +159,6 @@ bin\flux import-delimited-text-files ^
 {% endtab %}
 {% endtabs %}
 
-## Aggregating rows
-
-The `import-delimited-files` command supports aggregating related rows together to produce hierarchical documents. See
-[Aggregating rows](../aggregating-rows.md) for more information.
-
-## Generating a TDE template
-
-The `import-delimited-files` command supports generating TDE templates to make imported data immediately available for relational
-queries. See [TDE template generation](../tde-generation.md) for more information.
-
-
 ## Reading compressed files
 
 Flux will automatically read files compressed with gzip when they have a filename ending in `.gz`; you do not need to
@@ -182,6 +171,14 @@ If you wish to import 2 or more delimited files that have different columns, you
 by importing each file one at a time via Flux. This is due to the underlying Spark file reader needing to construct
 a schema based on the complete set of files. A future release of Flux may allow for this effect to be achieved by running 
 Flux once and processing each file separately.
+
+## See also
+
+As a structured data source, the `import-delimited-files` command also supports the following features:
+
+- [Filtering rows](../structured-data/filtering-rows.md) - Use WHERE expressions to selectively import rows
+- [Aggregating rows](../structured-data/aggregating-rows.md) - Combine related rows to create hierarchical documents
+- [Generating TDE templates](../structured-data/tde-generation.md) - Automatically create templates for relational queries
 
 ## Advanced options
 
