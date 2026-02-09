@@ -127,7 +127,7 @@ As a structured data source, the `import-parquet-files` command also supports th
 ## Advanced options
 
 The `import-parquet-files` command reuses Spark's support for reading Parquet files. You can include any of
-the [Spark Parquet data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-parquet.html) via the `--spark-prop` option
+the [Spark Parquet data source options](https://spark.apache.org/docs/latest/sql-data-sources-parquet.html) via the `--spark-prop` option
 to control how Parquet content is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 For the configuration options listed in the above Spark Parquet guide, use the `--spark-conf` option instead. For example,

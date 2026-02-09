@@ -188,7 +188,7 @@ along with a link to the worker that you started. You are now able to run tests 
 
 ### Testing with spark-submit
 
-Spark's [spark-submit](https://spark.apache.org/docs/3.5.6/submitting-applications.html) program allows for a Spark
+Spark's [spark-submit](https://spark.apache.org/docs/latest/submitting-applications.html) program allows for a Spark
 program to be run on a separate (and possibly remote) Spark cluster. Now that you have a separate Spark cluster running
 per the above instructions, you can test each CLI command by running it via spark-submit.
 

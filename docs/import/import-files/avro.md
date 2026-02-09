@@ -127,7 +127,7 @@ As a structured data source, the `import-avro-files` command also supports the f
 ## Advanced options
 
 The `import-avro-files` command reuses Spark's support for reading Avro files. You can include any of
-the [Spark Avro data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html) via the `--spark-prop` option
+the [Spark Avro data source options](https://spark.apache.org/docs/latest/sql-data-sources-avro.html) via the `--spark-prop` option
 to control how Avro content is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 For the configuration options listed in the above Spark Avro guide, use the `--spark-conf` option instead. For example, 

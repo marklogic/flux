@@ -550,13 +550,13 @@ Flux allows for [Spark configuration properties](https://spark.apache.org/docs/l
 control the Spark runtime and how a Spark session is built. 
 
 To specify options that control how the Spark Session is built, use the `--spark-conf` option as many times as needed. For example,
-[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/3.5.6/security.html#local-storage-encryption), you could include the following options:
+[encrypt data that Spark spills from memory to disk](https://spark.apache.org/docs/latest/security.html#local-storage-encryption), you could include the following options:
 
     --spark-conf spark.io.encryption.enabled=true \
     --spark-conf spark.io.encryption.keySizeBits=256
 
-You can also use this option for [Spark data sources](https://spark.apache.org/docs/3.5.6/sql-data-sources.html) that 
+You can also use this option for [Spark data sources](https://spark.apache.org/docs/latest/sql-data-sources.html) that 
 define configuration properties. 
-For example, the [Spark Avro data source](https://spark.apache.org/docs/3.5.6/sql-data-sources-avro.html#configuration)
+For example, the [Spark Avro data source](https://spark.apache.org/docs/latest/sql-data-sources-avro.html#configuration)
 identifies several configuration properties, such as `spark.sql.avro.compression.codec`. You can set this value by 
 including `--spark-conf spark.sql.avro.compression.codec=snappy` as a command line option. 
