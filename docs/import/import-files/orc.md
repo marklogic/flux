@@ -129,7 +129,7 @@ explicitly specify a compression algorithm if Flux is not able to read your comp
 ## Advanced options
 
 The `import-orc-files` command reuses Spark's support for reading ORC files. You can include any of
-the [Spark ORC data source options](https://spark.apache.org/docs/3.5.6/sql-data-sources-orc.html) via the `--spark-prop` option
+the [Spark ORC data source options](https://spark.apache.org/docs/latest/sql-data-sources-orc.html) via the `--spark-prop` option
 to control how ORC content is read. These options are expressed as `--spark-prop optionName=optionValue`.
 
 For the configuration options listed in the above Spark ORC guide, use the `--spark-conf` option instead. For example, 
