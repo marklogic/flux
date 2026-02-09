@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -57,9 +57,8 @@ class OrcFilesImporterTest extends AbstractTest {
     void aggregate() {
         Flux.importOrcFiles()
             .connectionString(makeConnectionString())
-            .from(options -> options
-                .paths("src/test/resources/orc-files/authors.orc")
-                .groupBy("CitationID")
+            .from("src/test/resources/orc-files/authors.orc")
+            .groupBy("CitationID", options -> options
                 .aggregateColumns("names", "ForeName", "LastName")
                 .orderAggregation("names", "LastName", true)
             )

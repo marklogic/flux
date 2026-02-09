@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.OrcFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
+import com.marklogic.flux.api.StructuredDataImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.flux.impl.TdeHelper;
@@ -78,20 +79,23 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions groupBy(String columnName) {
             aggregationParams.setGroupBy(columnName);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions aggregateColumns(String aggregationName, String... columns) {
-            aggregationParams.addAggregationExpression(aggregationName, columns);
+            aggregationParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
+            aggregationParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
 
@@ -133,6 +137,13 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
     @Override
     public OrcFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
+        return this;
+    }
+
+    @Override
+    public OrcFilesImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
+        readParams.aggregationParams.setGroupBy(columnName);
+        consumer.accept(readParams.aggregationParams);
         return this;
     }
 }

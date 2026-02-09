@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.JdbcImporter;
+import com.marklogic.flux.api.StructuredDataImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.*;
@@ -80,6 +81,13 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         return this;
     }
 
+    @Override
+    public JdbcImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
+        readParams.aggregationParams.setGroupBy(columnName);
+        consumer.accept(readParams.aggregationParams);
+        return this;
+    }
+
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
         static class QueryOptions {
@@ -119,20 +127,23 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         }
 
         @Override
+        @Deprecated
         public JdbcImporter.ReadJdbcOptions groupBy(String groupBy) {
             this.aggregationParams.setGroupBy(groupBy);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadJdbcOptions aggregateColumns(String aggregationName, String... columns) {
-            this.aggregationParams.addAggregationExpression(aggregationName, columns);
+            this.aggregationParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
+            this.aggregationParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
     }
