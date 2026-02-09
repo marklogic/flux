@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Aggregating rows
-parent: Importing Data
-nav_order: 5
+parent: Structured data sources
+grand_parent: Importing Data
+nav_order: 2
+redirect_from:
+  - /import/aggregating-rows.html
 ---
 
 When importing from tabular data sources, Flux provides support for aggregating rows together to produce hierarchical

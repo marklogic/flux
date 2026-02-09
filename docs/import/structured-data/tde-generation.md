@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Generating a TDE template
-parent: Importing Data
-nav_order: 6
+parent: Structured data sources
+grand_parent: Importing Data
+nav_order: 3
+redirect_from:
+  - /import/tde-generation.html
 ---
 
 Flux 1.4.0 supports automatically generating [Template Driven Extraction (TDE)](https://docs.marklogic.com/guide/app-dev/TDE) templates during data import operations. TDE templates enable MarkLogic to extract row data from documents, making that data available through
