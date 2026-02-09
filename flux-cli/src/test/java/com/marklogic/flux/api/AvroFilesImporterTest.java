@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -60,9 +60,8 @@ class AvroFilesImporterTest extends AbstractTest {
     void aggregate() {
         Flux.importAvroFiles()
             .connectionString(makeConnectionString())
-            .from(options -> options
-                .paths("src/test/resources/avro")
-                .groupBy("flag")
+            .from("src/test/resources/avro")
+            .groupBy("flag", options -> options
                 .aggregateColumns("values", "number", "color")
                 .orderAggregation("values", "number", false)
             )

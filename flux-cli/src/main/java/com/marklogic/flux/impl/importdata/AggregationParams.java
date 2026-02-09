@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.api.StructuredDataImporter;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.Aggregation> {
+class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.Aggregation>,
+    StructuredDataImporter.GroupByOptions<AggregationParams> {
 
     private static final String AGGREGATE_DELIMITER = ",";
 
@@ -119,18 +121,22 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         this.groupBy = groupBy;
     }
 
-    public void addAggregationOrdering(String aggregationName, String columnName, boolean ascending) {
+    @Override
+    public AggregationParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
         if (this.aggregationOrderings == null) {
             this.aggregationOrderings = new ArrayList<>();
         }
         this.aggregationOrderings.add(new AggregationOrdering(aggregationName, columnName, ascending));
+        return this;
     }
 
-    public void addAggregationExpression(String newColumnName, String... columns) {
+    @Override
+    public AggregationParams aggregateColumns(String newColumnName, String... columns) {
         if (this.aggregations == null) {
             this.aggregations = new ArrayList<>();
         }
         this.aggregations.add(new Aggregation(newColumnName, Arrays.asList(columns)));
+        return this;
     }
 
     public Dataset<Row> applyGroupBy(Dataset<Row> dataset) {
