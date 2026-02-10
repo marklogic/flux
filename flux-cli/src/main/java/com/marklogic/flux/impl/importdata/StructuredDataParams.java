@@ -11,13 +11,15 @@ import picocli.CommandLine;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.Aggregation>,
-    StructuredDataImporter.GroupByOptions<AggregationParams> {
+/**
+ * Parameters for transforming rows read from structured data sources, such as JDBC, Parquet, CSV, etc.
+ * Supports filtering rows via WHERE expressions, grouping rows by column values, aggregating related rows into
+ * arrays, and ordering aggregated arrays.
+ */
+class StructuredDataParams implements StructuredDataImporter.GroupByOptions<StructuredDataParams> {
 
     private static final String AGGREGATE_DELIMITER = ",";
 
-    // Adding this for 2.1, which suggests that this class should be renamed to something like
-    // "StructuredDataTransformParams'.
     @CommandLine.Option(
         names = "--where",
         description = "Filter rows using a SQL-like WHERE expression; e.g. --where \"size < 10\" or --where \"status = 'active'\"."
@@ -34,7 +36,7 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         names = "--aggregate",
         description = "Define an aggregation of multiple columns into a new column. Each aggregation must be of the " +
             "form newColumnName=column1,column2,etc. Requires the use of --group-by.",
-        converter = AggregationParams.class
+        converter = Aggregation.class
     )
     private List<Aggregation> aggregations = new ArrayList<>();
 
@@ -48,13 +50,29 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
     )
     private List<AggregationOrdering> aggregationOrderings = new ArrayList<>();
 
-    public static class Aggregation {
+    public static class Aggregation implements CommandLine.ITypeConverter<Aggregation> {
         private String newColumnName;
         private List<String> columnNamesToGroup;
+
+        public Aggregation() {
+            // Needed so that picocli can instantiate in order to call convert().
+        }
 
         public Aggregation(String newColumnName, List<String> columnNamesToGroup) {
             this.newColumnName = newColumnName;
             this.columnNamesToGroup = columnNamesToGroup;
+        }
+
+        @Override
+        public Aggregation convert(String value) {
+            String[] parts = value.split("=");
+            if (parts.length != 2) {
+                throw new FluxException(String.format("Invalid aggregation: %s; must be of " +
+                    "the form newColumnName=columnToGroup1,columnToGroup2,etc.", value));
+            }
+            final String newColumnName = parts[0];
+            String[] columnNamesToAggregate = parts[1].split(AGGREGATE_DELIMITER);
+            return new Aggregation(newColumnName, Arrays.asList(columnNamesToAggregate));
         }
     }
 
@@ -64,6 +82,7 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         private boolean ascending = true;
 
         public AggregationOrdering() {
+            // Needed so that picocli can instantiate in order to call convert().
         }
 
         public AggregationOrdering(String aggregationName, String columnName, boolean ascending) {
@@ -113,29 +132,17 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         }
     }
 
-    @Override
-    public Aggregation convert(String value) {
-        String[] parts = value.split("=");
-        if (parts.length != 2) {
-            throw new FluxException(String.format("Invalid aggregation: %s; must be of " +
-                "the form newColumnName=columnToGroup1,columnToGroup2,etc.", value));
-        }
-        final String newColumnName = parts[0];
-        String[] columnNamesToAggregate = parts[1].split(AGGREGATE_DELIMITER);
-        return new Aggregation(newColumnName, Arrays.asList(columnNamesToAggregate));
-    }
-
     public void setGroupBy(String groupBy) {
         this.groupBy = groupBy;
     }
 
-    public AggregationParams where(String expression) {
+    public StructuredDataParams where(String expression) {
         this.where = expression;
         return this;
     }
 
     @Override
-    public AggregationParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
+    public StructuredDataParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
         if (this.aggregationOrderings == null) {
             this.aggregationOrderings = new ArrayList<>();
         }
@@ -144,7 +151,7 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
     }
 
     @Override
-    public AggregationParams aggregateColumns(String newColumnName, String... columns) {
+    public StructuredDataParams aggregateColumns(String newColumnName, String... columns) {
         if (this.aggregations == null) {
             this.aggregations = new ArrayList<>();
         }

@@ -67,7 +67,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @CommandLine.Mixin
-        private AggregationParams aggregationParams = new AggregationParams();
+        private StructuredDataParams structuredDataParams = new StructuredDataParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -111,21 +111,21 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         @Override
         @Deprecated
         public ReadDelimitedFilesOptions groupBy(String columnName) {
-            aggregationParams.setGroupBy(columnName);
+            structuredDataParams.setGroupBy(columnName);
             return this;
         }
 
         @Override
         @Deprecated
         public ReadDelimitedFilesOptions aggregateColumns(String aggregationName, String... columns) {
-            aggregationParams.aggregateColumns(aggregationName, columns);
+            structuredDataParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
         @Deprecated
         public ReadDelimitedFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            aggregationParams.orderAggregation(aggregationName, columnName, ascending);
+            structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
     }
@@ -136,7 +136,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
 
-        dataset = readParams.aggregationParams.applyTransformations(dataset);
+        dataset = readParams.structuredDataParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -166,14 +166,14 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
 
     @Override
     public DelimitedFilesImporter where(String expression) {
-        readParams.aggregationParams.where(expression);
+        readParams.structuredDataParams.where(expression);
         return this;
     }
 
     @Override
     public DelimitedFilesImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
-        readParams.aggregationParams.setGroupBy(columnName);
-        consumer.accept(readParams.aggregationParams);
+        readParams.structuredDataParams.setGroupBy(columnName);
+        consumer.accept(readParams.structuredDataParams);
         return this;
     }
 }
