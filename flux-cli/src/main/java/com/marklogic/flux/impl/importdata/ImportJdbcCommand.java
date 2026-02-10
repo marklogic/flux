@@ -50,7 +50,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        dataset = readParams.aggregationParams.applyTransformations(dataset);
+        dataset = readParams.structuredDataParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -83,14 +83,14 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     public JdbcImporter where(String expression) {
-        readParams.aggregationParams.where(expression);
+        readParams.structuredDataParams.where(expression);
         return this;
     }
 
     @Override
     public JdbcImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
-        readParams.aggregationParams.setGroupBy(columnName);
-        consumer.accept(readParams.aggregationParams);
+        readParams.structuredDataParams.setGroupBy(columnName);
+        consumer.accept(readParams.structuredDataParams);
         return this;
     }
 
@@ -110,7 +110,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         private QueryOptions queryOptions = new QueryOptions();
 
         @CommandLine.Mixin
-        private AggregationParams aggregationParams = new AggregationParams();
+        private StructuredDataParams structuredDataParams = new StructuredDataParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -135,21 +135,21 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         @Override
         @Deprecated
         public JdbcImporter.ReadJdbcOptions groupBy(String groupBy) {
-            this.aggregationParams.setGroupBy(groupBy);
+            this.structuredDataParams.setGroupBy(groupBy);
             return this;
         }
 
         @Override
         @Deprecated
         public ReadJdbcOptions aggregateColumns(String aggregationName, String... columns) {
-            this.aggregationParams.aggregateColumns(aggregationName, columns);
+            this.structuredDataParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
         @Deprecated
         public ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.orderAggregation(aggregationName, columnName, ascending);
+            this.structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
     }
