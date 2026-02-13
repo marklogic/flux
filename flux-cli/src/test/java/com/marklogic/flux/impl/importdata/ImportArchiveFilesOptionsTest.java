@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -33,6 +33,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
             "--streaming",
+            "--streaming-transform-binary-with-extension", "json,xml",
             "--document-type", "xml"
         );
 
@@ -43,6 +44,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
 
         assertOptions(command.getWriteParams().makeOptions(),
             Options.STREAM_FILES, "true",
+            Options.STREAM_TRANSFORM_BINARY_EXTENSIONS, "json,xml",
             Options.WRITE_DOCUMENT_TYPE, "XML"
         );
     }
