@@ -6,10 +6,11 @@ package com.marklogic.flux.impl.importdata;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportFilesOptionsTest extends AbstractOptionsTest {
 
@@ -211,5 +212,64 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD),
             "As a boolean option, this should not be present when the option is not set so that the feature " +
                 "defaults to false, as of Flux 2.0.0.");
+    }
+
+    @Test
+    void incrementalWriteOptions() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--incremental-write",
+            "--incremental-write-schema", "mySchema",
+            "--incremental-write-view", "myView",
+            "--incremental-write-hash-name", "customHash",
+            "--incremental-write-timestamp-name", "customTimestamp",
+            "--incremental-write-dont-canonicalize-json",
+            "--incremental-write-json-exclusion", "/json1",
+            "--incremental-write-json-exclusion", "/json2",
+            "--incremental-write-xml-exclusion", "/xml1",
+            "--incremental-write-xml-exclusion", "/xml2",
+            "--log-skipped", "789"
+        );
+
+        Map<String, String> options = command.getWriteParams().makeOptions();
+        assertOptions(options,
+            Options.WRITE_INCREMENTAL, "true",
+            Options.WRITE_INCREMENTAL_SCHEMA, "mySchema",
+            Options.WRITE_INCREMENTAL_VIEW, "myView",
+            Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash",
+            Options.WRITE_INCREMENTAL_TIMESTAMP_KEY_NAME, "customTimestamp",
+            Options.WRITE_INCREMENTAL_CANONICALIZE_JSON, "false",
+            Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/json1\n/json2",
+            Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, "/xml1\n/xml2",
+            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "789"
+        );
+    }
+
+    @Test
+    void incrementalWriteViewNoSchema() {
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, () -> getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--incremental-write",
+            "--incremental-write-view", "myView"
+        ));
+
+        assertEquals("Error: Missing required argument(s): --incremental-write-schema=<schema>", ex.getMessage());
+    }
+
+    @Test
+    void incrementalWriteSchemaNoView() {
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, () -> getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--incremental-write",
+            "--incremental-write-schema", "mySchema"
+        ));
+
+        assertEquals("Error: Missing required argument(s): --incremental-write-view=<view>", ex.getMessage());
     }
 }
