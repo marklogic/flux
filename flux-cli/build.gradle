@@ -47,7 +47,7 @@ dependencies {
   implementation "info.picocli:picocli:${picocliVersion}"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
-  compileOnly "com.marklogic:marklogic-client-api:8.0.0"
+  compileOnly "com.marklogic:marklogic-client-api:8.1-SNAPSHOT"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.

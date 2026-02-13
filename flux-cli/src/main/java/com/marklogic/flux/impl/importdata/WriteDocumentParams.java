@@ -59,6 +59,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private String failedDocumentsPath;
 
+    @CommandLine.Mixin
+    private IncrementalWriteParams incrementalWriteParams = new IncrementalWriteParams();
+
     @CommandLine.Option(
         names = "--log-progress",
         description = "Log a count of total documents written every time this many documents are written."
@@ -191,6 +194,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null,
             Options.STREAM_FILES, streaming ? "true" : null
         );
+
+        options.putAll(incrementalWriteParams.makeOptions());
 
         if (metadataValues != null) {
             metadataValues.entrySet().forEach(entry -> options.put(
