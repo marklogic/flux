@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -9,8 +9,10 @@ import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.xml.namespace.QName;
+import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -123,6 +125,62 @@ class ImportArchiveFilesTest extends AbstractTest {
                 "as JSON objects instead of binaries. Without --document-type, MarkLogic will treat the documents as " +
                 "binaries since they don't have an extension.");
         });
+    }
+
+    @Test
+    void importArchiveJsonEntryAsBinary(@TempDir Path tempDir) {
+        // First, copy an existing doc with a transform that turns the new doc into a binary.
+        run(
+            "copy",
+            "--connection-string", makeConnectionString(),
+            "--uris", "/author/author1.json",
+            "--categories", "content,metadata",
+            "--output-uri-prefix", "/binary",
+            "--output-transform", "toBinary",
+            "--output-collections", "binary-test"
+        );
+
+        assertEquals("binary", getDocumentType("/binary/author/author1.json"));
+
+        // Export it to an archive, which should track the format in the metadata entry name as of Flux 2.1.
+        run(
+            "export-archive-files",
+            "--path", tempDir.toAbsolutePath().toString(),
+            "--uris", "/binary/author/author1.json",
+            "--connection-string", makeConnectionString(),
+            "--repartition", "1"
+        );
+
+        // Import it back with a new prefix
+        run(
+            "import-archive-files",
+            "--path", tempDir.toAbsolutePath().toString(),
+            "--uri-prefix", "/imported",
+            "--connection-string", makeConnectionString(),
+            "--streaming",
+            // Still need to use a transform, it's the only way the REST API allows the document to be changed to
+            // a binary. Otherwise, the URI extension will result in JSON being selected by the server.
+            "--transform", "toBinary",
+
+            // Tells Flux to only send ".json" documents to the transform.
+            "--streaming-transform-binary-with-extension", "json"
+        );
+
+        assertEquals("binary", getDocumentType("/imported/binary/author/author1.json"));
+
+        // Now use the transform but without "json" as an extension, in which case the doc won't be sent to the
+        // transform and thus MarkLogic will treat it as JSON based on the URI extension.
+        run(
+            "import-archive-files",
+            "--path", tempDir.toAbsolutePath().toString(),
+            "--uri-prefix", "/imported-no-transform",
+            "--connection-string", makeConnectionString(),
+            "--streaming",
+            "--transform", "toBinary",
+            "--streaming-transform-binary-with-extension", "xml"
+        );
+
+        assertEquals("object", getDocumentType("/imported-no-transform/binary/author/author1.json"));
     }
 
     private void verifyCollections(DocumentMetadataHandle metadata) {
