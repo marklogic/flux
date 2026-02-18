@@ -46,19 +46,22 @@ class IncrementalWriteParams {
 
     @CommandLine.Option(
         names = "--incremental-write-hash-name",
-        description = "Name of the metadata key in which to store the hash value used for detecting changes during incremental writes."
+        description = "Name of the metadata key in which to store the hash value used for detecting changes during incremental writes. " +
+            "If using a schema and view to retrieve hashes, this is also the name of the column in the view containing the hash."
     )
     private String hashKeyName;
 
     @CommandLine.Option(
         names = "--incremental-write-timestamp-name",
-        description = "Name of the metadata key in which to store the timestamp for when the document was written."
+        description = "Name of the optional metadata key in which to store the timestamp for when the document was written. No default value."
     )
     private String timestampKeyName;
 
     @CommandLine.Option(
-        names = "--incremental-write-dont-canonicalize-json",
-        description = "Disables JSON canonicalization during incremental write."
+        names = "--incremental-write-disable-json-canonicalization",
+        description = "Disables JSON canonicalization during incremental write. This should only be used when you " +
+            "are certain that the JSON documents you write to MarkLogic do not require canonicalization - e.g. the " +
+            "order of keys in each document is guaranteed to be the same every time."
     )
     private Boolean dontCanonicalizeJson;
 
@@ -80,7 +83,7 @@ class IncrementalWriteParams {
         names = "--log-skipped",
         description = "Log a count of skipped documents every time this many documents are skipped when incremental writes are enabled."
     )
-    private Integer skippedInterval;
+    private Integer skippedInterval = 10000;
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(

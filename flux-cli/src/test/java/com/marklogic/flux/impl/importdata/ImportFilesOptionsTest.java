@@ -94,7 +94,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_METADATA_VALUES_PREFIX + "meta1", "value1",
             Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
-            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2"
+            Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2",
+            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "10000"
         );
     }
 
@@ -225,11 +226,12 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--incremental-write-view", "myView",
             "--incremental-write-hash-name", "customHash",
             "--incremental-write-timestamp-name", "customTimestamp",
-            "--incremental-write-dont-canonicalize-json",
+            "--incremental-write-disable-json-canonicalization",
             "--incremental-write-json-exclusion", "/json1",
             "--incremental-write-json-exclusion", "/json2",
-            "--incremental-write-xml-exclusion", "/xml1",
+            "--incremental-write-xml-exclusion", "/ex:xml1",
             "--incremental-write-xml-exclusion", "/xml2",
+            "--xpath-namespace", "ex=org:example",
             "--log-skipped", "789"
         );
 
@@ -242,7 +244,8 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_INCREMENTAL_TIMESTAMP_KEY_NAME, "customTimestamp",
             Options.WRITE_INCREMENTAL_CANONICALIZE_JSON, "false",
             Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/json1\n/json2",
-            Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, "/xml1\n/xml2",
+            Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, "/ex:xml1\n/xml2",
+            Options.XPATH_NAMESPACE_PREFIX + "ex", "org:example",
             Options.WRITE_LOG_SKIPPED_DOCUMENTS, "789"
         );
     }
