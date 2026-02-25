@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -64,7 +64,7 @@ public class WriteStructuredDocumentParams extends WriteDocumentParams<WriteStru
      * @return
      */
     public TdeHelper newTdeHelper() {
-        return new TdeHelper(tdeParams, jsonRootName, xmlRootName, xmlNamespace);
+        return new TdeHelper(tdeParams, jsonRootName, xmlRootName, xmlNamespace, getIncrementalWriteHashKeyName());
     }
 
     @Override

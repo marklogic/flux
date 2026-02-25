@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -120,6 +120,63 @@ class ImportJdbcWithTdeTest extends AbstractTest {
 
         assertCollectionSize("customer", 10);
         verifyOpticQueryUsingTdeViewReturnsCustomers();
+    }
+
+    @Test
+    void tdeWithIncrementalWriteColumns() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-collections", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-support-incremental-write"
+        );
+
+        JsonNode columns = schemasDatabaseClient.newJSONDocumentManager()
+            .read(JSON_TDE_URI, new JacksonHandle()).get()
+            .get("template").get("rows").get(0).get("columns");
+
+        JsonNode uriColumn = columns.get(0);
+        assertEquals("uri", uriColumn.get("name").asText());
+        assertEquals("string", uriColumn.get("scalarType").asText());
+        assertEquals("xdmp:node-uri(.)", uriColumn.get("val").asText());
+        assertNull(uriColumn.get("nullable"), "uri column should not be nullable");
+
+        JsonNode hashColumn = columns.get(1);
+        assertEquals("incrementalWriteHash", hashColumn.get("name").asText());
+        assertEquals("unsignedLong", hashColumn.get("scalarType").asText());
+        assertEquals("xdmp:node-metadata-value(., 'incrementalWriteHash')", hashColumn.get("val").asText());
+        assertTrue(hashColumn.get("nullable").asBoolean());
+    }
+
+    @Test
+    void tdeWithCustomIncrementalWriteHashKeyName() {
+        importJdbcWithArgs(
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-collections", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-support-incremental-write",
+            "--incremental-write-hash-name", "myCustomHashKey"
+        );
+
+        JsonNode columns = schemasDatabaseClient.newJSONDocumentManager()
+            .read(JSON_TDE_URI, new JacksonHandle()).get()
+            .get("template").get("rows").get(0).get("columns");
+
+        JsonNode uriColumn = columns.get(0);
+        assertEquals("uri", uriColumn.get("name").asText());
+        assertEquals("string", uriColumn.get("scalarType").asText());
+        assertEquals("xdmp:node-uri(.)", uriColumn.get("val").asText());
+        assertNull(uriColumn.get("nullable"), "uri column should not be nullable");
+
+        JsonNode hashColumn = columns.get(1);
+        assertEquals("myCustomHashKey", hashColumn.get("name").asText(),
+            "The custom hash key name should be used as the column name");
+        assertEquals("unsignedLong", hashColumn.get("scalarType").asText());
+        assertEquals("xdmp:node-metadata-value(., 'myCustomHashKey')", hashColumn.get("val").asText(),
+            "The custom hash key name should be used in the metadata value expression");
+        assertTrue(hashColumn.get("nullable").asBoolean());
     }
 
     @Test

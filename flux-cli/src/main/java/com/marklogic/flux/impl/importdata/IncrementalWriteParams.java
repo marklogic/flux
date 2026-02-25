@@ -49,7 +49,8 @@ class IncrementalWriteParams {
         description = "Name of the metadata key in which to store the hash value used for detecting changes during incremental writes. " +
             "If using a schema and view to retrieve hashes, this is also the name of the column in the view containing the hash."
     )
-    private String hashKeyName;
+    // This is the default in the Java Client as well, but stating here it makes it clear that it's the default.
+    private String hashKeyName = "incrementalWriteHash";
 
     @CommandLine.Option(
         names = "--incremental-write-timestamp-name",
@@ -84,6 +85,11 @@ class IncrementalWriteParams {
         description = "Log a count of skipped documents every time this many documents are skipped when incremental writes are enabled."
     )
     private Integer skippedInterval = 10000;
+
+    // Needed so that TDE generation can determine the correct column for this value.
+    String getHashKeyName() {
+        return hashKeyName;
+    }
 
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
