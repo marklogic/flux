@@ -76,12 +76,6 @@ file with the field and field range index that incremental write requires:
 
 You can use the above as a starting point for your `content-database.json` file, adding any other database configuration your application requires. After deploying to MarkLogic, you will have the necessary indexes in place for incremental write to work properly.
 
-By default, Flux will log a message on every 10,000 skipped documents. You can customize this interval
-via `--log-skipped`. For example, the following will result in Flux logging a message on every 500 skipped 
-documents.
-
-    --log-skipped 500
-
 ## Using a schema and view
 
 If you prefer not to create a metadata field range index, you can instead point Flux at a MarkLogic view — typically
@@ -129,6 +123,19 @@ The above TDE would then be referenced via the following options:
     --incremental-write-schema example 
     --incremental-write-view incrementalWrite
 
+
+## Logging
+
+At the end of a run, Flux logs a `Skipped count: N` message when any documents were skipped, alongside
+the usual `Success count` message. This gives you a final tally of how many documents were skipped during the run.
+
+During a run, Flux also logs periodic `Documents skipped: N` messages showing a running total of skipped documents.
+By default these are logged on every 10,000 skipped documents. You can customize this interval with `--log-skipped`.
+For example, the following will log a progress message on every 500 skipped documents:
+
+    --log-skipped 500
+
+To disable these periodic messages entirely, include `--log-skipped 0` as an option.
 
 ## Customizing the metadata key names
 
