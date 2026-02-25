@@ -386,4 +386,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
         this.documentProperties = documentProperties;
         return (T) this;
     }
+
+    String getIncrementalWriteHashKeyName() {
+        return incrementalWriteParams.getHashKeyName();
+    }
 }

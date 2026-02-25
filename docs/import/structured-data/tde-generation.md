@@ -105,6 +105,55 @@ You can include the `--tde-preview` option to generate and display the TDE templ
 The generated template will be displayed in the console output, allowing you to review and customize it as needed. 
 Additionally, no data will be imported when using this option. 
 
+## Incremental write support
+
+When using [incremental write](../incremental-write.md) to efficiently update documents, you can include 
+the `--tde-support-incremental-write` option to ensure your generated TDE template includes columns for tracking 
+incremental write state. This allows you to use the same TDE template for incremental write and 
+for querying the data in each document via relational queries.
+
+When `--tde-support-incremental-write` is specified, Flux will add two columns to the beginning of the generated TDE template:
+
+1. A `uri` column that captures the document URI.
+2. A hash column (defaulting to `incrementalWriteHash`) that captures the hash value stored in document metadata.
+
+For example, a generated TDE template with incremental write support will include columns similar to:
+
+```json
+"columns" : [ {
+  "name" : "uri",
+  "scalarType" : "string",
+  "val" : "xdmp:node-uri(.)"
+}, {
+  "name" : "incrementalWriteHash",
+  "scalarType" : "unsignedLong",
+  "val" : "xdmp:node-metadata-value(., 'incrementalWriteHash')",
+  "nullable" : true
+}, {
+  // Your data columns...
+```
+
+The `uri` column is not nullable, ensuring every row has a document URI. The hash column is nullable since 
+documents may not have been written with incremental write enabled.
+
+### Custom hash key name
+
+If you have specified a custom hash key name via the `--incremental-write-hash-name` option, the generated 
+TDE template will use that name for both the column name and the metadata key reference. For example, 
+with `--incremental-write-hash-name myCustomHash`, the hash column will be:
+
+```json
+{
+  "name" : "myCustomHash",
+  "scalarType" : "unsignedLong",
+  "val" : "xdmp:node-metadata-value(., 'myCustomHash')",
+  "nullable" : true
+}
+```
+
+See the [incremental write documentation](../incremental-write.md) for more information on using incremental 
+write to efficiently update documents.
+
 ## Template customization
 
 ### Document type
