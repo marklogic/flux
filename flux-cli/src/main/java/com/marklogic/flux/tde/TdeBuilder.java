@@ -17,7 +17,7 @@ public interface TdeBuilder {
 
         String getScalarType();
 
-        default boolean isNullable() { return true; }
+        default boolean isNullable() { return false; }
 
         default boolean isVirtual() { return false; }
 

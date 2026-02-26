@@ -63,7 +63,7 @@ public interface TdeOptions {
 
     /**
      * When set, the generated TDE will include a {@code uri} column (populated via {@code xdmp:node-uri(.)}) and
-     * an {@code incrementalWriteHash} column (populated via {@code xdmp:node-metadata-value}) as the first two columns.
+     * a column containing the incremental write hash.
      * Include these columns if you intend to use the incremental write schema-and-view approach on subsequent imports.
      *
      * @since 2.1.0

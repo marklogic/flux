@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.tde;
 
@@ -116,7 +116,7 @@ public class XmlTdeBuilder implements TdeBuilder {
             addChildWithText(columnElement, "scalar-type", column.getScalarType());
 
             String val = column.getVal();
-            if (contextNamespacePrefix != null) {
+            if (contextNamespacePrefix != null && !val.startsWith("xdmp:")) {
                 val = String.format("%s:%s", contextNamespacePrefix, val);
             }
             addChildWithText(columnElement, "val", val);

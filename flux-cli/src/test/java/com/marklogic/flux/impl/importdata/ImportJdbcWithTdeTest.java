@@ -150,6 +150,37 @@ class ImportJdbcWithTdeTest extends AbstractTest {
     }
 
     @Test
+    void xmlTdeWithIncrementalWriteColumns() {
+        importJdbcWithArgs(
+            "--uri-template", "/customer/{customer_id}.xml",
+            "--xml-root-name", "customer",
+            "--xml-namespace", "org:example",
+            "--tde-document-type", "xml",
+            "--tde-schema", "junit",
+            "--tde-view", "customer",
+            "--tde-collections", "customer",
+            "--tde-permissions", "flux-test-role,read,flux-test-role,update",
+            "--tde-support-incremental-write"
+        );
+
+        assertCollectionSize("customer", 10);
+
+        String xml = schemasDatabaseClient.newJSONDocumentManager()
+            .read(XML_TDE_URI, new StringHandle()).get();
+        XmlNode tde = new XmlNode(xml, Namespace.getNamespace("tde", "http://marklogic.com/xdmp/tde"));
+        // Verify the incremental write columns were added without any namespace prefix, which would cause the TDE to
+        // fail on load.
+        tde.assertElementExists("/tde:template/tde:rows/tde:row/tde:columns/tde:column[1]" +
+            "[tde:name='uri' and tde:scalar-type='string' and tde:val='xdmp:node-uri(.)']");
+        tde.assertElementExists("/tde:template/tde:rows/tde:row/tde:columns/tde:column[2]" +
+            "[tde:name='incrementalWriteHash' and tde:scalar-type='unsignedLong' and tde:val=\"xdmp:node-metadata-value(., 'incrementalWriteHash')\"]");
+
+        // Make sure the namespace prefix is still used for the other columns.
+        tde.assertElementExists("/tde:template/tde:rows/tde:row/tde:columns/tde:column[3]" +
+            "[tde:name='customer_id' and tde:scalar-type='int' and tde:val='ns1:customer_id']");
+    }
+
+    @Test
     void tdeWithCustomIncrementalWriteHashKeyName() {
         importJdbcWithArgs(
             "--tde-schema", "junit",
