@@ -112,6 +112,28 @@ the `--tde-support-incremental-write` option to ensure your generated TDE templa
 incremental write state. This allows you to use the same TDE template for incremental write and 
 for querying the data in each document via relational queries.
 
+### Usage example
+
+When combining TDE generation with incremental write, you will typically specify the schema and view names 
+twice - once for TDE generation and once for incremental write:
+
+```
+--incremental-write \
+--tde-support-incremental-write \
+--tde-schema hr \
+--tde-view employees \
+--incremental-write-schema hr \
+--incremental-write-view employees
+```
+
+The `--tde-schema` and `--tde-view` options control the generated TDE template, while 
+`--incremental-write-schema` and `--incremental-write-view` tell the incremental write feature which 
+TDE view to query for existing document hashes. A future release of Flux may allow for the incremental write 
+feature to default to the schema and view specified for the TDE generation feature when using 
+`--tde-support-incremental-write`.
+
+### Generated columns
+
 When `--tde-support-incremental-write` is specified, Flux will add two columns to the beginning of the generated TDE template:
 
 1. A `uri` column that captures the document URI.
