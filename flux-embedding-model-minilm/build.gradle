@@ -9,10 +9,15 @@ java {
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.10.0-beta18") {
-    // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
-    // will bring in a later version of Jackson that causes Spark to fail.
-    exclude group: "com.fasterxml.jackson.core"
+  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.11.0-beta19"
+}
+
+shadowJar {
+  // Jackson is provided by Flux, so no need to include it in the shadow jar.
+  dependencies {
+    exclude {
+      it.moduleGroup.startsWith('com.fasterxml.jackson')
+    }
   }
 }
 

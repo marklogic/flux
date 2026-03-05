@@ -1,7 +1,6 @@
 buildscript {
   repositories {
     mavenCentral()
-
     // Needed for ml-gradle 6.2-SNAPSHOT
     mavenLocal()
     maven {
