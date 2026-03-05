@@ -9,25 +9,21 @@ java {
 }
 
 dependencies {
-  implementation ("dev.langchain4j:langchain4j-ollama:${langchain4jVersion}") {
-    // Ensures that the version of Jackson preferred by Spark is used instead. Otherwise, this library's pom
-    // will bring in a later version of Jackson that causes Spark to fail.
-    exclude group: "com.fasterxml.jackson.core"
-  }
+  implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
   // Repeating this here so that the Jackson dependencies are included for running tests in this subproject.
   testImplementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
 
-  testRuntimeOnly "org.junit.platform:junit-platform-launcher:6.0.1"
-  testImplementation "org.junit.jupiter:junit-jupiter:6.0.1"
-  testImplementation "ch.qos.logback:logback-classic:1.5.23"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:6.0.3"
+  testImplementation "org.junit.jupiter:junit-jupiter:6.0.3"
+  testImplementation "ch.qos.logback:logback-classic:1.5.32"
 }
 
 shadowJar {
-  // Don't need Jackson dependencies in the shadowJar, as Spark will provide those.
+  // Jackson is provided by Flux, so no need to include it in the shadow jar.
   dependencies {
     exclude {
-      it.moduleGroup == 'com.fasterxml.jackson.core' || it.moduleGroup == 'com.fasterxml.jackson.databind'
+      it.moduleGroup.startsWith('com.fasterxml.jackson')
     }
   }
 }
