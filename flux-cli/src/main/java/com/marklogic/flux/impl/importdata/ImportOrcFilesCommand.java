@@ -104,6 +104,12 @@ public class ImportOrcFilesCommand extends AbstractImportFilesCommand<OrcFilesIm
             this.uriIncludeFilePath = value;
             return this;
         }
+
+        @Override
+        public ReadTabularFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
+            return this;
+        }
     }
 
     @Override

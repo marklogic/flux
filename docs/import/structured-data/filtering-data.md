@@ -1,23 +1,23 @@
 ---
 layout: default
-title: Filtering rows
+title: Filtering data
 parent: Structured data sources
 grand_parent: Importing Data
 nav_order: 1
 ---
 
-When importing from structured data sources, you can filter which rows are imported using SQL-like WHERE expressions. 
-This allows you to selectively import data without modifying your source files or database queries.
+Flux provides two options for controlling which data is included when importing from structured data sources:
+use `--where` to filter rows, and `--drop` to exclude columns.
 
 ## Table of contents
 {: .no_toc .text-delta }
 
 - TOC
-{:toc}
+  {:toc}
 
 ## Supported commands
 
-Row filtering is available for the following commands:
+Row and column filtering are available for the following commands:
 
 - [`import-avro-files`](../import-files/avro.md)
 - [`import-delimited-files`](../import-files/delimited-text.md)
@@ -25,10 +25,10 @@ Row filtering is available for the following commands:
 - [`import-orc-files`](../import-files/orc.md)
 - [`import-parquet-files`](../import-files/parquet.md)
 
-## Usage
+## Filtering rows usage
 
-Use the `--where` option with a SQL-like expression to filter rows. The expression is evaluated against each row, and 
-only rows where the expression evaluates to `true` are imported.
+Use the `--where` option with a SQL-like expression to filter rows. Only rows where the expression evaluates
+to `true` are imported.
 
 For example, to import only customers with a specific status:
 
@@ -108,3 +108,8 @@ Filtering rows with `--where` is processed by Apache Spark after reading the dat
 ## Reference
 
 For complete SQL expression syntax, see the [Apache Spark SQL reference](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-where.html).
+
+## Dropping columns
+
+Use `--drop` to exclude one or more columns from the imported documents. For example:
+`--drop column1 column2`

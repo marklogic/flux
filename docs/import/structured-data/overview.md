@@ -18,7 +18,7 @@ When working with structured data sources, Flux offers several powerful features
 
 ## Common features
 
-- **[Filtering rows](filtering-rows.md)** - Use SQL-like WHERE expressions to select specific rows before importing
+- **[Filtering data](filtering-data.md)** - Filter rows with WHERE expressions or drop specific columns
 - **[Aggregating rows](aggregating-rows.md)** - Combine related rows to create hierarchical JSON or XML documents
 - **[Generating TDE templates](tde-generation.md)** - Automatically create Template Driven Extraction templates to make imported data available for relational queries
 

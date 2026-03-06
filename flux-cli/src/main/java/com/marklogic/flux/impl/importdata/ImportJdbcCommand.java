@@ -152,5 +152,11 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
             this.structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
+
+        @Override
+        public ReadJdbcOptions drop(String... columns) {
+            this.structuredDataParams.drop(columns);
+            return this;
+        }
     }
 }

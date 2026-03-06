@@ -14,6 +14,23 @@ public interface ReadTabularFilesOptions extends ReadFilesOptions<ReadTabularFil
     ReadTabularFilesOptions additionalOptions(Map<String, String> options);
 
     /**
+     * Filter columns from the input data. The specified columns will not be included in the constructed documents.
+     * <p>
+     * Examples:
+     * <ul>
+     * <li>{@code drop("salary")}</li>
+     * <li>{@code drop("status")}</li>
+     * <li>{@code drop("age", "city")}</li>
+     * </ul>
+     * </p>
+     *
+     * @param columns the names of the columns to drop from the input data; these columns will not be included in the constructed documents
+     * @return this importer instance
+     * @since 2.1.0
+     */
+    ReadTabularFilesOptions drop(String... columns);
+
+    /**
      * @deprecated since 2.1.0; use {@link StructuredDataImporter#groupBy(String, java.util.function.Consumer)} instead.
      */
     @Deprecated

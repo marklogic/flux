@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -12,6 +12,29 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImportJdbcTest extends AbstractTest {
+
+    @Test
+    void dropColumns() {
+        run(
+            "import-jdbc",
+            "--jdbc-url", PostgresUtil.URL,
+            "--jdbc-user", PostgresUtil.USER,
+            "--jdbc-password", PostgresUtil.PASSWORD,
+            "--jdbc-driver", PostgresUtil.DRIVER,
+            "--query", "select * from customer where customer_id < 11",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--uri-template", "/customer/{customer_id}.json",
+            "--collections", "customer",
+            "--drop", "first_name", "last_name"
+        );
+
+        assertCollectionSize("customer", 10);
+        JsonNode doc = readJsonDocument("/customer/1.json");
+        assertFalse(doc.has("first_name"), "The 'first_name' column should have been dropped");
+        assertFalse(doc.has("last_name"), "The 'last_name' column should have been dropped");
+        assertTrue(doc.has("customer_id"), "Other columns should still be present");
+    }
 
     @Test
     void tenCustomers() {
