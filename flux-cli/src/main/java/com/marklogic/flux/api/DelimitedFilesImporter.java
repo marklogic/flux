@@ -46,5 +46,7 @@ public interface DelimitedFilesImporter extends StructuredDataImporter<Delimited
         ReadDelimitedFilesOptions encoding(String encoding);
 
         ReadDelimitedFilesOptions uriIncludeFilePath(boolean value);
+
+        ReadDelimitedFilesOptions drop(String... columns);
     }
 }

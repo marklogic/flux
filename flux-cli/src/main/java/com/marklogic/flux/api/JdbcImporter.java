@@ -43,6 +43,8 @@ public interface JdbcImporter extends StructuredDataImporter<JdbcImporter> {
          */
         @Deprecated
         ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending);
+
+        ReadJdbcOptions drop(String... columns);
     }
 
     JdbcImporter from(Consumer<ReadJdbcOptions> consumer);

@@ -151,7 +151,7 @@ it may be important to query for documents that have a particular field with a v
 
 As a structured data source, the `import-jdbc` command also supports the following features:
 
-- [Filtering rows](structured-data/filtering-rows.md) - Use WHERE expressions to selectively import rows
+- [Filtering data](structured-data/filtering-data.md) - Filter rows with WHERE expressions or drop specific columns
 - [Aggregating rows](structured-data/aggregating-rows.md) - Combine related rows to create hierarchical documents
 - [Generating TDE templates](structured-data/tde-generation.md) - Automatically create templates for relational queries
 

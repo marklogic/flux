@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
 
     @CommandLine.Mixin
-    private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams();
+    private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams(); 
 
     @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
@@ -126,6 +126,12 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         @Deprecated
         public ReadDelimitedFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
             structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
+            return this;
+        }
+
+        @Override
+        public ReadDelimitedFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
             return this;
         }
     }

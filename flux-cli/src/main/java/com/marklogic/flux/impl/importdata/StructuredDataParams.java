@@ -21,6 +21,13 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
     private static final String AGGREGATE_DELIMITER = ",";
 
     @CommandLine.Option(
+        names = "--drop",
+        description = "Specify one or more column names to drop from the imported data.",
+        arity = "1..*"
+    )
+    private List<String> columnsToDrop = new ArrayList<>();
+
+    @CommandLine.Option(
         names = "--where",
         description = "Filter rows using a SQL-like WHERE expression; e.g. --where \"size < 10\" or --where \"status = 'active'\"."
     )
@@ -136,6 +143,11 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         this.groupBy = groupBy;
     }
 
+    public StructuredDataParams drop(String... columns) {
+        this.columnsToDrop.addAll(Arrays.asList(columns));
+        return this;
+    }
+
     public StructuredDataParams where(String expression) {
         this.where = expression;
         return this;
@@ -172,7 +184,7 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         }
 
         if (groupBy == null || groupBy.trim().isEmpty()) {
-            return dataset;
+            return applyDrop(dataset);
         }
 
         final RelationalGroupedDataset groupedDataset = dataset.groupBy(this.groupBy);
@@ -191,9 +203,11 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
                 "name will be present in the data read from the data source.", columnNames), e);
         }
 
-        return aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
+        Dataset<Row> sorted = aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
             applySortToAggregatedArrays(result) :
             result;
+
+        return applyDrop(sorted);
     }
 
     /**
@@ -299,5 +313,12 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
             aggregationName, columnToSortBy, columnToSortBy, whenLessThan,
             columnToSortBy, columnToSortBy, whenGreaterThan
         ));
+    }
+
+    private Dataset<Row> applyDrop(Dataset<Row> dataset) {
+        if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
+            dataset = dataset.drop(columnsToDrop.toArray(new String[]{}));
+        }
+        return dataset;
     }
 }

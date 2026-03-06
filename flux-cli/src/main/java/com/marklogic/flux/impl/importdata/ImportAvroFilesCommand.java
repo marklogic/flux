@@ -104,6 +104,12 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
             this.uriIncludeFilePath = value;
             return this;
         }
+
+        @Override
+        public ReadTabularFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
+            return this;
+        }
     }
 
     @Override

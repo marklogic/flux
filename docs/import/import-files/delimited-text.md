@@ -176,7 +176,7 @@ Flux once and processing each file separately.
 
 As a structured data source, the `import-delimited-files` command also supports the following features:
 
-- [Filtering rows](../structured-data/filtering-rows.md) - Use WHERE expressions to selectively import rows
+- [Filtering data](../structured-data/filtering-data.md) - Filter rows with WHERE expressions or drop specific columns
 - [Aggregating rows](../structured-data/aggregating-rows.md) - Combine related rows to create hierarchical documents
 - [Generating TDE templates](../structured-data/tde-generation.md) - Automatically create templates for relational queries
 

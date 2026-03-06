@@ -104,6 +104,12 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
             this.uriIncludeFilePath = value;
             return this;
         }
+
+        @Override
+        public ReadTabularFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
+            return this;
+        }
     }
 
     @Override
