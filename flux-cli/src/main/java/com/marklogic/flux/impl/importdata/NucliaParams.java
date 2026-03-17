@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.api.NucliaOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
@@ -13,24 +12,29 @@ import java.util.Map;
 
 /**
  * Captures all Nuclia-related options for document processing via the Nuclia RAG API.
+ *
+ * Hidden in the 2.1.0 release until it can be further developed. 
  */
-public class NucliaParams implements NucliaOptions {
+public class NucliaParams {
 
     @CommandLine.Option(
         names = "--nuclia-nua-key",
-        description = "Nuclia NUA key for authentication. Required if any Nuclia options are used. See https://docs.rag.progress.cloud/docs/develop/python-sdk/nua/ for more information."
+        description = "Nuclia NUA key for authentication. Required if any Nuclia options are used. See https://docs.rag.progress.cloud/docs/develop/python-sdk/nua/ for more information.",
+        hidden = true
     )
     private String nuaKey;
 
     @CommandLine.Option(
         names = "--nuclia-api-url",
-        description = "Nuclia API URL. Defaults to 'https://aws-us-east-2-1.rag.progress.cloud/api/v1' if not specified."
+        description = "Nuclia API URL. Defaults to 'https://aws-us-east-2-1.rag.progress.cloud/api/v1' if not specified.",
+        hidden = true
     )
     private String apiUrl;
 
     @CommandLine.Option(
         names = "--nuclia-timeout",
-        description = "Maximum number of seconds to wait for Nuclia processing to complete."
+        description = "Maximum number of seconds to wait for Nuclia processing to complete.",
+        hidden = true
     )
     private Integer timeout = 120;
 
@@ -44,23 +48,5 @@ public class NucliaParams implements NucliaOptions {
             );
         }
         return options;
-    }
-
-    @Override
-    public NucliaOptions nuaKey(String nuaKey) {
-        this.nuaKey = nuaKey;
-        return this;
-    }
-
-    @Override
-    public NucliaOptions apiUrl(String apiUrl) {
-        this.apiUrl = apiUrl;
-        return this;
-    }
-
-    @Override
-    public NucliaOptions timeout(int timeout) {
-        this.timeout = timeout;
-        return this;
     }
 }

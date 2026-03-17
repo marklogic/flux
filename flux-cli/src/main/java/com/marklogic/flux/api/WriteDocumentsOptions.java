@@ -68,11 +68,6 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T classifier(Consumer<ClassifierOptions> consumer);
 
     /**
-     * @since 2.1.0
-     */
-    T nuclia(Consumer<NucliaOptions> consumer);
-
-    /**
      * @since 1.3.0
      */
     T metadataValues(Map<String, String> metadataValues);
