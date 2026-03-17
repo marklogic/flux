@@ -5,7 +5,6 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.ClassifierOptions;
 import com.marklogic.flux.api.EmbedderOptions;
-import com.marklogic.flux.api.NucliaOptions;
 import com.marklogic.flux.api.SplitterOptions;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -290,12 +289,6 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @Override
     public T classifier(Consumer<ClassifierOptions> consumer) {
         consumer.accept(classifierParams);
-        return (T) this;
-    }
-
-    @Override
-    public T nuclia(Consumer<NucliaOptions> consumer) {
-        consumer.accept(nucliaParams);
         return (T) this;
     }
 

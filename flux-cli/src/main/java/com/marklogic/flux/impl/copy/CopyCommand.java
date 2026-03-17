@@ -316,12 +316,6 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         }
 
         @Override
-        public CopyWriteDocumentsOptions nuclia(Consumer<NucliaOptions> consumer) {
-            consumer.accept(nucliaParams);
-            return this;
-        }
-
-        @Override
         public CopyWriteDocumentsParams temporalCollection(String temporalCollection) {
             this.temporalCollection = temporalCollection;
             return this;
