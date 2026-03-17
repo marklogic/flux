@@ -102,7 +102,7 @@ dependencies {
   implementation "org.apache.tika:tika-parser-pdf-module:${tikaVersion}"
 
   // For configuring two-way SSL in tests.
-  testImplementation "com.marklogic:ml-app-deployer:6.2-SNAPSHOT"
+  testImplementation "com.marklogic:ml-app-deployer:6.2.0"
 
   // Automatic loading of test framework implementation dependencies is deprecated.
   // https://docs.gradle.org/current/userguide/upgrading_version_8.html#test_framework_implementation_dependencies
