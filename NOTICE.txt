@@ -1,4 +1,4 @@
-Progress MarkLogic Flux 2.0.0
+Progress MarkLogic Flux 2.1.0
 
 Portions of the Products include certain open source and commercial third-party
 components listed below ("Third-Party Components"). The authors of the
@@ -23,7 +23,6 @@ Apache License 1.1:
 
 Apache License 2.0:
   AddThis                          | stream-lib                               | 2.9.8
-  Adrien Grand and contributors    | LZ4 Java Compression                     | 1.10.2
   Airlift Project                  | aircompressor                            | 2.0.2
   Amazon.com, Inc. or its…         | AWS Java SDK :: AWS CRT Core             | 2.29.52
   > affiliates                     |                                          |
@@ -71,15 +70,19 @@ Apache License 2.0:
   > affiliates                     |                                          |
   Apache Software Foundation       | Apache Commons Codec                     | 1.19.0
   Apache Software Foundation       | Apache Commons Collections               | 4.5.0
+  Apache Software Foundation       | Apache Commons Compress                  | 1.28.0
   Apache Software Foundation       | Apache Commons Logging                   | 1.3.5
+  Apache Software Foundation       | Apache Commons Math                      | 3.6.1
+  Apache Software Foundation       | Apache Commons Text                      | 1.14.0
   Apache Software Foundation       | Apache HTTPComponents Core               | 4.4.16
   Apache Software Foundation       | Apache Hadoop Client Runtime             | 3.4.2
   Apache Software Foundation       | Apache Hadoop shaded Guava               | 1.4.0
   Apache Software Foundation       | Apache HttpClient                        | 4.5.13
   Apache Software Foundation       | Apache Ivy                               | 2.5.3
+  Apache Software Foundation       | Apache JempBox                           | 1.8.17
+  Apache Software Foundation       | Apache Thrift                            | 0.22.0
   Apache Software Foundation       | Apache Tika                              | 3.2.3
-  Apache Software Foundation       | Apache ZooKeeper - Jute                  | 3.9.4
-  Apache Software Foundation       | Apache ZooKeeper                         | 3.9.4
+  Apache Software Foundation       | OpenNLP Tools                            | 2.5.4
   Apache Software Foundation       | Spark Avro                               | 4.1.1
   Apache Software Foundation       | Spark Project Catalyst                   | 4.1.1
   Apache Software Foundation       | Spark Project Common Java Utils          | 4.1.1
@@ -99,10 +102,11 @@ Apache License 2.0:
   Apache Software Foundation.      | Apache Hadoop Amazon Web Services…       | 3.4.2
                                    | > support                                |
   Apache Software Foundation.      | Apache Hadoop Azure support              | 3.4.2
-  BEA Systems,.                    | XMLBeans                                 | 5.3.0
+  BEA Systems                      | XMLBeans                                 | 5.3.0
   Ben Manes                        | Caffeine cache                           | 3.2.2
   Bill Pugh and David H. Hovemeyer | FindBugs jsr305                          | 3.0.2
   Brett Wooldridge                 | SparseBitSet                             | 1.3
+  Chronicle Software : Open Source | Zero-allocation Hashing                  | 2026.0
   Coda Hale, Yammer Inc., and…     | Graphite Integration for Metrics         | 4.2.37
   > contributors                   |                                          |
   Coda Hale, Yammer Inc., and…     | JVM Integration for Metrics              | 4.2.37
@@ -117,22 +121,19 @@ Apache License 2.0:
                                    | > tokenizers                             |
   DJL.AI Team (Amazon AI)          | Deep Java Library - api                  | 0.31.1
   EPFL                             | Scala                                    | 2.13.17
+  EPFL                             | Scala                                    | 2.13.18
   Eclipse Foundation               | org.osgi:org.osgi.resource               | 1.0.0
   Eclipse Foundation               | org.osgi:org.osgi.service.serviceloader  | 1.0.0
   Eclipse Jetty Project            | Jetty: Java based HTTP/1.x, HTTP/2,…     | 9.4.58.v20250814
                                    | > Servlet, WebSocket Server              |
-  FasterXML                        | Jackson-Datatype-JSR310                  | 2.20.0
-  FasterXML                        | Jackson-Datatype-JSR310                  | 2.20.1
+  FasterXML                        | Jackson-Datatype-JSR310                  | 2.21.1
   FasterXML                        | Ning-compress-LZF                        | 1.1.2
-  FasterXML                        | jackson-annotations                      | 2.20
-  FasterXML                        | jackson-bom                              | 2.20.0
-  FasterXML                        | jackson-bom                              | 2.20.1
-  FasterXML                        | jackson-core                             | 2.20.0
-  FasterXML                        | jackson-core                             | 2.20.1
-  FasterXML                        | jackson-databind                         | 2.20.0
-  FasterXML                        | jackson-databind                         | 2.20.1
-  FasterXML                        | jackson-dataformat-csv                   | 2.20.0
-  FasterXML                        | jackson-dataformat-xml                   | 2.20.0
+  FasterXML                        | jackson-annotations                      | 2.21
+  FasterXML                        | jackson-bom                              | 2.21.1
+  FasterXML                        | jackson-core                             | 2.21.1
+  FasterXML                        | jackson-databind                         | 2.21.1
+  FasterXML                        | jackson-dataformat-csv                   | 2.21.1
+  FasterXML                        | jackson-dataformat-xml                   | 2.21.1
   FasterXML, LLC                   | Woodstox                                 | 7.1.1
   Filip Kolarik                    | Titanium JCS                             | 1.1.1
   Filip Kolarik                    | Titanium JSON-LD 1.1                     | 1.7.0
@@ -149,57 +150,55 @@ Apache License 2.0:
   JBoss by Red Hat                 | wildfly-openssl                          | 2.1.4.Final
   JNA Development Team             | Java Native Access (JNA)                 | 5.14.0
   Jacob Peddicord Ryan Schmitt     | AWS Event Stream                         | 1.0.1
-  JetBrains                        | Kotlin                                   | 2.2.20
+  JetBrains                        | Kotlin                                   | 2.2.21
   Jetbrains                        | Jetbrains annotations                    | 13.0
   Joe Walnes, Henri Tremblay,…     | easymockobjenesis                        | 3.4
   > Leonardo Mesquita              |                                          |
+  Jonas Konrad                     | LZ4 Java Compression                     | 1.10.4
   Kevin Bourrillion                | JSpecify annotations                     | 1.0.0
-  LangChain                        | LangChain4j :: HTTP Client               | 1.10.0
-  LangChain                        | LangChain4j :: HTTP Client :: JDK…       | 1.10.0
+  LangChain                        | LangChain4j :: HTTP Client               | 1.11.0
+  LangChain                        | LangChain4j :: HTTP Client :: JDK…       | 1.11.0
                                    | > HttpClient                             |
-  LangChain                        | LangChain4j integration with Azure…      | 1.10.0
+  LangChain                        | LangChain4j integration with Azure…      | 1.11.0
                                    | > OpenAI                                 |
-  LangChain                        | LangChain4j integration with Ollama      | 1.10.0
-  LangChain                        | langchain4j                              | 1.10.0
-  LangChain                        | langchain4j-core                         | 1.10.0
-  LangChain                        | langchain4j-embeddings                   | 1.10.0-beta18
-  LangChain                        | langchain4j-embeddings-all-minilm-l6-v2  | 1.10.0-beta18
+  LangChain                        | LangChain4j integration with Ollama      | 1.11.0
+  LangChain                        | langchain4j                              | 1.11.0
+  LangChain                        | langchain4j-core                         | 1.11.0
+  LangChain                        | langchain4j-embeddings                   | 1.11.0-beta19
+  LangChain                        | langchain4j-embeddings-all-minilm-l6-v2  | 1.11.0-beta19
   Les Hazlewood                    | JJWT :: API                              | 0.12.6
   Microsoft                        | Microsoft Windows Azure Storage Client…  | 8.6.6
                                    | > SDK                                    |
+  Nitsan Wakart, kay Doug Lawrie   | JCTTools                                 | 4.0.5
   OSGi Alliance                    | org.osgi:org.osgi.annotation.bundle      | 2.0.0
   OSGi Alliance                    | org.osgi:org.osgi.annotation.versioning  | 1.1.2
   Peter Kriens and the OSGi…       | bnd Annotations Library                  | 7.1.0
   > Alliance                       |                                          |
-  Progress                         | Cloud Client                             | 5.10.0
-  Progress MarkLogic               | MarkLogic Java Client API                | 8.0.0
-  Progress MarkLogic               | com.marklogic:marklogic-spark-connector  | 3.0.0
+  Progress MarkLogic               | MarkLogic Java Client API                | 8.1.0
   Progress Semaphore               | CS Client                                | 5.10.0
+  Progress Software Corporation    | Cloud Client                             | 5.10.0
   QOS.ch Sarl (Switzerland)        | JCL 1.2 Implemented Over SLF4J           | 2.0.17
-  Rafael Winterhalter              | Byte Buddy                               | 1.17.7
   Red Hat Inc.                     | Jakarta Dependency Injection             | 2.0.1
   Red Hat, Inc.                    | jakartaeevalidation                      | 3.0.2
   Remko Popma                      | picocli - a mighty tiny Command Line…    | 4.7.7
                                    | > Interface                              |
   Richard Johnson                  | java-libpst                              | 0.9.3
+  Samuel Erdtman                   | java-json-canonicalization               | 1.1
   Shigeru Chiba and contributors   | Javassist                                | 3.30.2-GA
-  Square                           | OkHttp                                   | 5.2.0
-  Square                           | OkHttp Logging Interceptor               | 5.2.0
-  Square                           | okhttp                                   | 5.2.0
-  Square                           | squareokio                               | 3.16.0
+  Square                           | OkHttp                                   | 5.3.2
+  Square                           | OkHttp Logging Interceptor               | 5.3.2
+  Square                           | OkHttp Server-Sent Events                | 5.3.2
+  Square                           | okhttp                                   | 5.3.2
+  Square                           | squareokio                               | 3.16.4
   The Apache Software Foundation   | ARQ                                      | 5.6.0
   The Apache Software Foundation   | Apache Avro                              | 1.12.1
   The Apache Software Foundation   | Apache Avro IPC                          | 1.12.1
   The Apache Software Foundation   | Apache Avro Mapred API                   | 1.12.1
-  The Apache Software Foundation   | Apache Commons Compress                  | 1.28.0
   The Apache Software Foundation   | Apache Commons Crypto                    | 1.1.0
   The Apache Software Foundation   | Apache Commons IO                        | 2.21.0
   The Apache Software Foundation   | Apache Commons Lang                      | 3.19.0
-  The Apache Software Foundation   | Apache Commons Math                      | 3.6.1
-  The Apache Software Foundation   | Apache Commons Text                      | 1.14.0
   The Apache Software Foundation   | Apache JAMES Mime4j (DOM)                | 0.8.13
   The Apache Software Foundation   | Apache JAMES mime4j                      | 0.8.13
-  The Apache Software Foundation   | Apache JempBox                           | 1.8.17
   The Apache Software Foundation   | Apache Jena - Base Common Environment    | 5.6.0
   The Apache Software Foundation   | Apache Jena - IRI3986                    | 5.6.0
   The Apache Software Foundation   | Apache Jena - Language tags              | 5.6.0
@@ -209,9 +208,9 @@ Apache License 2.0:
   The Apache Software Foundation   | Apache Log4j SLF4J 2.0 Binding           | 2.25.3
   The Apache Software Foundation   | Apache ORC                               | 2.2.1
   The Apache Software Foundation   | Apache ORC Format                        | 1.1.1
-  The Apache Software Foundation   | Apache PDFBox                            | 3.0.5
-  The Apache Software Foundation   | Apache PDFBox io                         | 3.0.5
-  The Apache Software Foundation   | Apache PDFBox tools                      | 3.0.5
+  The Apache Software Foundation   | Apache PDFBox                            | 3.0.7
+  The Apache Software Foundation   | Apache PDFBox io                         | 3.0.7
+  The Apache Software Foundation   | Apache PDFBox tools                      | 3.0.7
   The Apache Software Foundation   | Apache POI                               | 5.4.1
   The Apache Software Foundation   | Apache Parquet Column                    | 1.16.0
   The Apache Software Foundation   | Apache Parquet Common                    | 1.16.0
@@ -219,10 +218,11 @@ Apache License 2.0:
   The Apache Software Foundation   | Apache Parquet Format Structures         | 1.16.0
   The Apache Software Foundation   | Apache Parquet Hadoop                    | 1.16.0
   The Apache Software Foundation   | Apache Parquet Jackson                   | 1.16.0
-  The Apache Software Foundation   | Apache Thrift                            | 0.22.0
   The Apache Software Foundation   | Apache XBean :: ASM shaded (repackaged)  | 4.28
   The Apache Software Foundation   | Apache XmpBox                            | 3.0.5
   The Apache Software Foundation   | Apache Yetus - Audience Annotations      | 0.12.0
+  The Apache Software Foundation   | Apache ZooKeeper - Jute                  | 3.9.5
+  The Apache Software Foundation   | Apache ZooKeeper                         | 3.9.5
   The Apache Software Foundation   | Arrow Compression                        | 18.3.0
   The Apache Software Foundation   | Arrow Format                             | 18.3.0
   The Apache Software Foundation   | Arrow Memory - Core                      | 18.3.0
@@ -238,7 +238,6 @@ Apache License 2.0:
   The Apache Software Foundation   | Log4J Compatibility API                  | 2.25.3
   The Apache Software Foundation   | ORC MapReduce                            | 2.2.1
   The Apache Software Foundation   | ORC Shims                                | 2.2.1
-  The Apache Software Foundation   | OpenNLP Tools                            | 2.5.4
   The Apache Software Foundation   | S3 Analytics Accelerator Library for…    | 1.2.1
                                    | > Amazon S3                              |
   The Apache Software Foundation   | XmlSchema Core                           | 2.3.1
@@ -255,44 +254,43 @@ Apache License 2.0:
   The Apache Software Foundation   | tika-parser-zip-commons                  | 3.2.3
   The Guava Authors                | Guava InternalFutureFailureAccess and…   | 1.0.1
                                    | > InternalFutures                        |
-  The Netty Project                | Netty Project                            | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Base                         | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Classes/Quic                 | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Compression                  | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Http3                        | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Marshalling                  | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Native/Quic                  | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Protobuf                     | 4.2.9.Final
-  The Netty Project                | Netty/Codec/Redis                        | 4.2.9.Final
-  The Netty Project                | Netty/Codec/SMTP                         | 4.2.9.Final
-  The Netty Project                | Netty/Handler/Ssl/Ocsp                   | 4.2.9.Final
-  The Netty Project                | Netty/Resolver/DNS/Classes/MacOS         | 4.2.9.Final
-  The Netty Project                | Netty/Resolver/DNS/MacOS                 | 4.2.9.Final
+  The Netty Project                | HTTP functionality for the Reactor…      | 1.2.13
+                                   | > Netty library                          |
+  The Netty Project                | Netty Project                            | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Base                         | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Classes/Quic                 | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Compression                  | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Http3                        | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Marshalling                  | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Native/Quic                  | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Protobuf                     | 4.2.10.Final
+  The Netty Project                | Netty/Codec/Redis                        | 4.2.10.Final
+  The Netty Project                | Netty/Codec/SMTP                         | 4.2.10.Final
+  The Netty Project                | Netty/Handler/Ssl/Ocsp                   | 4.2.10.Final
+  The Netty Project                | Netty/Resolver/DNS/Classes/MacOS         | 4.2.10.Final
+  The Netty Project                | Netty/Resolver/DNS/MacOS                 | 4.2.10.Final
   The Netty Project                | Netty/TomcatNative [BoringSSL - Static]  | 2.0.74.Final
   The Netty Project                | Netty/TomcatNative [OpenSSL - Classes]   | 2.0.74.Final
-  The Netty Project                | Netty/Transport/Classes/Epoll            | 4.2.9.Final
-  The Netty Project                | Netty/Transport/Classes/KQueue           | 4.2.9.Final
-  The Netty Project                | Netty/Transport/Classes/io_uring         | 4.2.9.Final
-  The Netty Project                | Netty/Transport/Native/KQueue            | 4.2.9.Final
-  The Netty Project                | Netty/Transport/Native/Unix/Common       | 4.2.9.Final
-  The Netty Project                | Netty/Transport/Native/io_uring          | 4.2.9.Final
+  The Netty Project                | Netty/Transport/Classes/Epoll            | 4.2.10.Final
+  The Netty Project                | Netty/Transport/Classes/KQueue           | 4.2.10.Final
+  The Netty Project                | Netty/Transport/Classes/io_uring         | 4.2.10.Final
+  The Netty Project                | Netty/Transport/Native/KQueue            | 4.2.10.Final
+  The Netty Project                | Netty/Transport/Native/Unix/Common       | 4.2.10.Final
+  The Netty Project                | Netty/Transport/Native/io_uring          | 4.2.10.Final
+  The Netty Project                | Reactor Netty                            | 1.2.13
   Univocity Software Pty Ltd       | univocity-parsers                        | 2.9.1
-  VMware, Inc                      | micrometer-observation                   | 1.14.13
   VMware, Inc. and contributors    | HTTP functionality for the Reactor…      | 1.2.10
                                    | > Netty library                          |
   VMware, Inc. and contributors    | Reactor Netty                            | 1.2.10
   VMware, Inc. and contributors    | reactor-core                             | 3.7.11
   and onwards The Apache Software… | Apache Hadoop Client API                 | 3.4.2
   > Foundation.                    |                                          |
-  apiguardian.org                  | org.apiguardian:apiguardian-api          | 1.1.2
-  com.fasterxml.jackson.module     | jackson-module-scala                     | 2.20.0
+  com.fasterxml.jackson.module     | jackson-module-scala                     | 2.21.1
   com.twitter                      | chill                                    | 0.10.0
   com.twitter                      | chill-java                               | 0.10.0
   github.com/rburgst               | okhttp-digest                            | 3.1.1
   jsonwebtoken.io                  | JJWT :: Extensions :: Jackson            | 0.12.6
   jsonwebtoken.io                  | JJWT :: Impl                             | 0.12.6
-  nitsanw Nitsan Wakart, kay Doug… | JCTTools                                 | 4.0.5
-  > Lawrie                         |                                          |
   org.apache.poi                   | Apache POI - OOXML Schemas (lite)        | 5.4.1
   org.json4s                       | json4s-ast                               | 4.0.7
   org.json4s                       | json4s-core                              | 4.0.7
@@ -302,6 +300,7 @@ Apache License 2.0:
   org.scala-lang.modules           | scala-parallel-collections               | 1.2.0
   org.scala-lang.modules           | scala-parser-combinators                 | 2.4.0
   org.scala-lang.modules           | scala-xml                                | 2.4.0
+  projectreactor.io                | reactor-core                             | 3.7.14
   the RoaringBitmap authors        | RoaringBitmap                            | 1.3.0
   xerial.org                       | snappy-java                              | 1.1.10.8
 
@@ -314,7 +313,6 @@ BSD 3-Clause "New" or "Revised" License:
   Arno Unkrig and contributors         | Janino             | 3.1.12
   Barthelemy Dagenais and contributors | Py4J               | 0.10.9.9
   FuseSource Corp. and contributors    | leveldbjni-all     | 1.8
-  Google LLC                           | protobuf-java      | 4.32.1
   Google LLC                           | protobuf-java      | 4.33.0
   Graph Builder                        | curvesapi          | 1.08
   Nathan Sweet                         | Kryo Shaded        | 4.0.3
@@ -332,20 +330,17 @@ Common Development and Distribution License 1.1:
   Oracle and/or its affiliates | javax.annotation API | 1.3.2
 
 Eclipse Distribution License - v 1.0:
-  Eclipse Foundation            | Angus Activation Registries           | 2.0.3
-  Eclipse Foundation            | JAXB CORE                             | 4.0.6
-  Eclipse Foundation            | JAXB Runtime                          | 4.0.6
-  Eclipse Foundation            | Jakarta Activation API                | 2.1.3
-  Eclipse Foundation            | Jakarta Activation API                | 2.1.4
-  Eclipse Foundation            | TXW2 Runtime                          | 4.0.6
-  Eclipse Foundation            | istack common utility code runtime    | 4.1.2
-  Eclipse Foundation            | jakarta.xml.bind:jakarta.xml.bind-api | 4.0.4
-  Oracle and/or its affiliates. | jakarta.xml.bind:jakarta.xml.bind-api | 4.0.2
+  Eclipse Foundation | Angus Activation Registries           | 2.0.3
+  Eclipse Foundation | JAXB CORE                             | 4.0.6
+  Eclipse Foundation | JAXB Runtime                          | 4.0.6
+  Eclipse Foundation | Jakarta Activation API                | 2.1.4
+  Eclipse Foundation | TXW2 Runtime                          | 4.0.6
+  Eclipse Foundation | istack common utility code runtime    | 4.1.2
+  Eclipse Foundation | jakarta.xml.bind:jakarta.xml.bind-api | 4.0.5
 
 Eclipse Public License 2.0:
   Apache Jakarta                   | jakartaee/rest                           | 3.0.0
   Eclipse Foundation               | Jakarta Annotations API                  | 2.1.1
-  Eclipse Foundation               | Jakarta Annotations API                  | 3.0.0
   Eclipse Foundation               | Java Servlet API                         | 5.0.0
   Eclipse Jersey                   | Jersey                                   | 3.0.18
   Eclipse Jersey                   | Jersey Inject HK2                        | 3.0.18
@@ -359,7 +354,7 @@ Eclipse Public License 2.0:
   > affiliates                     |                                          |
   Oracle Corporation and/or its…   | ServiceLocator Default Implementation    | 3.0.6
   > affiliates                     |                                          |
-  Oracle                           | JSR 374 (JSON Processing) Default…       | 2.0.1
+  Oracle Inc.                      | JSR 374 (JSON Processing) Default…       | 2.0.1
                                    | > Provider                               |
   Oracle                           | Jakarta Mail                             | 2.0.2
   Oracle and/or its affiliates.    | OSGi resource locator bundle             | 1.0.3
@@ -368,12 +363,8 @@ GNU General Public License v2.0 w/Classpath exception:
   Oracle Corporation and/or its…   | Aopalliance Version 1.0 Repackaged As A… | 3.0.6
   > affiliates                     | > Module                                 |
 
-Internal Progress Product License: (*)
-  Progress MarkLogic | MarkLogic XCC             | 12.0.0
-  Progress MarkLogic | Marklogic Spark Connector | 3.0.0
-
 Jdom License:
-  Jason Hunter & Brett McLaughlin. | JDOM | 2.0.6.1
+  Jason Hunter & Brett McLaughlin | JDOM | 2.0.6.1
 
 MIT License:
   Andrew O'Malley                  | dexx                                     | 0.7
@@ -382,20 +373,25 @@ MIT License:
   Jonathan Hedley                  | jsoup                                    | 1.21.2
   Knuddels, Philip Müller          | JTokkit                                  | 1.1.0
   Microsoft Corporation            | Microsoft Azure Java Core Library        | 1.57.0
+  Microsoft Corporation            | Microsoft Azure Java Core Library        | 1.57.1
   Microsoft Corporation            | Microsoft Azure Java JSON Library        | 1.5.0
+  Microsoft Corporation            | Microsoft Azure Java JSON Library        | 1.5.1
   Microsoft Corporation            | Microsoft Azure Java XML Library         | 1.2.0
+  Microsoft Corporation            | Microsoft Azure Java XML Library         | 1.2.1
   Microsoft Corporation            | Microsoft Azure Netty HTTP Client…       | 1.16.2
+                                   | > Library                                |
+  Microsoft Corporation            | Microsoft Azure Netty HTTP Client…       | 1.16.3
                                    | > Library                                |
   Microsoft Corporation            | Microsoft Azure SDK for Key Vault        | 1.2.4
   Microsoft Corporation            | Microsoft Azure SDK for OpenAI…          | 1.0.0-beta.16
                                    | > Management                             |
-  Microsoft Corporation            | Microsoft Azure client library for File… | 12.25.0
+  Microsoft Corporation            | Microsoft Azure client library for File… | 12.26.2
                                    | > Storage Data Lake                      |
-  Microsoft Corporation            | Microsoft Azure common module for…       | 12.31.0
+  Microsoft Corporation            | Microsoft Azure common module for…       | 12.32.2
                                    | > Storage                                |
-  Microsoft Corporation            | Microsoft Azure internal Avro module…    | 12.17.0
+  Microsoft Corporation            | Microsoft Azure internal Avro module…    | 12.18.1
                                    | > for Storage                            |
-  Microsoft Corporation            | azure-storage-blob                       | 12.32.0
+  Microsoft Corporation            | azure-storage-blob                       | 12.33.2
   Microsoft ONNX Runtime Team      | onnx-runtime                             | 1.20.0
   QOS.ch                           | JUL to SLF4J bridge                      | 2.0.17
   QOS.ch                           | SLF4J API Module                         | 2.0.17
@@ -419,21 +415,20 @@ Unicode License v3:
 
 ================================================================================
 
-The Product contains Aopalliance Version 1.0 Repackaged As A Module 3.0.6, HK2
-API module 3.0.6, HK2 Implementation Utilities 3.0.6, JSR 374 (JSON Processing)
-Default Provider 2.0.1, Jakarta Annotations API 2.1.1, Jakarta Annotations API
-3.0.0, Jakarta Mail 2.0.2, Java Servlet API 4.0.1, Java Servlet API 5.0.0,
-Jersey 3.0.18, Jersey Inject HK2 3.0.18, OSGi resource locator bundle 1.0.3,
-ServiceLocator Default Implementation 3.0.6, jakartaee/rest 3.0.0,
-javax.annotation API 1.3.2, jersey-container-servlet 3.0.18,
+The Product contains Aopalliance Version 1.0 Repackaged As A Module 3.0.6, Java
+Servlet API 4.0.1, javax.annotation API 1.3.2, juniversalchardet 2.5.0,
+jakartaee/rest 3.0.0, Jakarta Annotations API 2.1.1, Java Servlet API 5.0.0,
+Jersey 3.0.18, Jersey Inject HK2 3.0.18, jersey-container-servlet 3.0.18,
 jersey-container-servlet-core 3.0.18, jersey-core-server 3.0.18,
-juniversalchardet 2.5.0, and org.locationtech.jts:jts-core 1.20.0. These
-third-party technologies are licensed to PSC and User is subject to the terms
-of a third-party license, a copy of which is included herein. PSC will, at
-Licensee's request, provide a copy of the source code for this third-party
-technology, including modifications, if any, made by PSC. PSC may charge
-reasonable shipping and handling charges for such distribution. Licensee may
-also obtain the source code for these third-party technologies through
+org.locationtech.jts:jts-core 1.20.0, HK2 API module 3.0.6, HK2 Implementation
+Utilities 3.0.6, ServiceLocator Default Implementation 3.0.6, JSR 374 (JSON
+Processing) Default Provider 2.0.1, Jakarta Mail 2.0.2, OSGi resource locator
+bundle 1.0.3.  These third-party technologies are licensed to PSC and User is
+subject to the terms of a third-party license, a copy of which is included herein.
+PSC will, at Licensee's request, provide a copy of the source code for this
+third-party technology, including modifications, if any, made by PSC. PSC may
+charge reasonable shipping and handling charges for such distribution. Licensee
+may also obtain the source code for these third-party technologies through
 http://iue.progress.com/3dpartysoftwares/Pages/default.aspx by following the
 instructions set forth therein.
 
@@ -443,7 +438,7 @@ conditions:
 
 (1) Apache License 1.1:
 
-Progress MarkLogic Flux 2.0.0 incorporates Jakarta ORO 2.0.8.
+Progress MarkLogic Flux 2.1.0 incorporates Jakarta ORO 2.0.8.
 
   Apache Software License
   =======================
@@ -506,7 +501,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Jakarta ORO 2.0.8.
 
 (2) Apache License 2.0:
 
-Progress MarkLogic Flux 2.0.0 incorporates ARQ 5.6.0, AWS Event Stream 1.0.1,
+Progress MarkLogic Flux 2.1.0 incorporates ARQ 5.6.0, AWS Event Stream 1.0.1,
 AWS Java SDK :: AWS CRT Core 2.29.52, AWS Java SDK :: Arns 2.29.52, AWS Java
 SDK :: Checksums 2.29.52, AWS Java SDK :: Checksums SPI 2.29.52, AWS Java SDK
 :: Core :: Protocols :: AWS Json Protocol 2.29.52, AWS Java SDK :: Core ::
@@ -531,80 +526,80 @@ JAMES Mime4j (DOM) 0.8.13, Apache JAMES mime4j 0.8.13, Apache JempBox 1.8.17,
 Apache Jena - Base Common Environment 5.6.0, Apache Jena - IRI3986 5.6.0,
 Apache Jena - Language tags 5.6.0, Apache Log4J API 2.25.3, Apache Log4j
 2.25.3, Apache Log4j Layout for JSON template 2.25.3, Apache Log4j SLF4J 2.0
-Binding 2.25.3, Apache ORC 2.2.1, Apache ORC Format 1.1.1, Apache PDFBox 3.0.5,
-Apache PDFBox io 3.0.5, Apache PDFBox tools 3.0.5, Apache POI - OOXML Schemas
+Binding 2.25.3, Apache ORC 2.2.1, Apache ORC Format 1.1.1, Apache PDFBox 3.0.7,
+Apache PDFBox io 3.0.7, Apache PDFBox tools 3.0.7, Apache POI - OOXML Schemas
 (lite) 5.4.1, Apache POI 5.4.1, Apache Parquet Column 1.16.0, Apache Parquet
 Common 1.16.0, Apache Parquet Encodings 1.16.0, Apache Parquet Format
 Structures 1.16.0, Apache Parquet Hadoop 1.16.0, Apache Parquet Jackson 1.16.0,
 Apache Thrift 0.22.0, Apache Tika 3.2.3, Apache XBean :: ASM shaded
 (repackaged) 4.28, Apache XmpBox 3.0.5, Apache Yetus - Audience Annotations
-0.12.0, Apache ZooKeeper - Jute 3.9.4, Apache ZooKeeper 3.9.4, Arrow
+0.12.0, Apache ZooKeeper - Jute 3.9.5, Apache ZooKeeper 3.9.5, Arrow
 Compression 18.3.0, Arrow Format 18.3.0, Arrow Memory - Core 18.3.0, Arrow
 Memory - Netty 18.3.0, Arrow Memory - Netty Buffer 18.3.0, Arrow Vectors
-18.3.0, Byte Buddy 1.17.7, CS Client 5.10.0, Caffeine cache 3.2.2, Cloud Client
-5.10.0, Curator Client 5.9.0, Curator Framework 5.9.0, Curator Recipes 5.9.0,
-DJL NLP utilities for Huggingface tokenizers 0.31.1, Deep Java Library - api
-0.31.1, FindBugs jsr305 3.0.2, FlatBuffers Java API 25.2.10, Graphite
-Integration for Metrics 4.2.37, Guava InternalFutureFailureAccess and
-InternalFutures 1.0.1, Guava ListenableFuture only
-9999.0-empty-to-avoid-conflict-with-guava, HTTP functionality for the Reactor
-Netty library 1.2.10, Hive Storage API 2.8.1, IRI 5.6.0, JCL 1.2 Implemented
-Over SLF4J 2.0.17, JCTTools 4.0.5, JJWT :: API 0.12.6, JJWT :: Extensions ::
-Jackson 0.12.6, JJWT :: Impl 0.12.6, JSpecify annotations 1.0.0, JVM
-Integration for Metrics 4.2.37, Jackson Integration for Metrics 4.2.37,
-Jackson-Datatype-JSR310 2.20.0, Jackson-Datatype-JSR310 2.20.1, Jakarta
-Dependency Injection 2.0.1, Java Native Access (JNA) 5.14.0, Javassist
-3.30.2-GA, Jena 5.6.0, Jetbrains annotations 13.0, Jetty: Java based HTTP/1.x,
-HTTP/2, Servlet, WebSocket Server 9.4.58.v20250814, Kotlin 2.2.20, LZ4 Java
-Compression 1.10.2, LangChain4j :: HTTP Client 1.10.0, LangChain4j :: HTTP
-Client :: JDK HttpClient 1.10.0, LangChain4j integration with Azure OpenAI
-1.10.0, LangChain4j integration with Ollama 1.10.0, Log4J Compatibility API
-2.25.3, MarkLogic Java Client API 8.0.0, Metrics Core 4.2.37, Metrics
-Integration with JMX 4.2.37, Microsoft Windows Azure Storage Client SDK 8.6.6,
-Netty Project 4.2.9.Final, Netty/Codec/Base 4.2.9.Final,
-Netty/Codec/Classes/Quic 4.2.9.Final, Netty/Codec/Compression 4.2.9.Final,
-Netty/Codec/Http3 4.2.9.Final, Netty/Codec/Marshalling 4.2.9.Final,
-Netty/Codec/Native/Quic 4.2.9.Final, Netty/Codec/Protobuf 4.2.9.Final,
-Netty/Codec/Redis 4.2.9.Final, Netty/Codec/SMTP 4.2.9.Final,
-Netty/Handler/Ssl/Ocsp 4.2.9.Final, Netty/Resolver/DNS/Classes/MacOS
-4.2.9.Final, Netty/Resolver/DNS/MacOS 4.2.9.Final, Netty/TomcatNative
+18.3.0, CS Client 5.10.0, Caffeine cache 3.2.2, Cloud Client 5.10.0, Curator
+Client 5.9.0, Curator Framework 5.9.0, Curator Recipes 5.9.0, DJL NLP utilities
+for Huggingface tokenizers 0.31.1, Deep Java Library - api 0.31.1, FindBugs
+jsr305 3.0.2, FlatBuffers Java API 25.2.10, Graphite Integration for Metrics
+4.2.37, Guava InternalFutureFailureAccess and InternalFutures 1.0.1, Guava
+ListenableFuture only 9999.0-empty-to-avoid-conflict-with-guava, HTTP
+functionality for the Reactor Netty library 1.2.10, HTTP functionality for the
+Reactor Netty library 1.2.13, Hive Storage API 2.8.1, IRI 5.6.0, JCL 1.2
+Implemented Over SLF4J 2.0.17, JCTTools 4.0.5, JJWT :: API 0.12.6, JJWT ::
+Extensions :: Jackson 0.12.6, JJWT :: Impl 0.12.6, JSpecify annotations 1.0.0,
+JVM Integration for Metrics 4.2.37, Jackson Integration for Metrics 4.2.37,
+Jackson-Datatype-JSR310 2.21.1, Jakarta Dependency Injection 2.0.1, Java Native
+Access (JNA) 5.14.0, Javassist 3.30.2-GA, Jena 5.6.0, Jetbrains annotations
+13.0, Jetty: Java based HTTP/1.x, HTTP/2, Servlet, WebSocket Server
+9.4.58.v20250814, Kotlin 2.2.21, LZ4 Java Compression 1.10.4, LangChain4j ::
+HTTP Client 1.11.0, LangChain4j :: HTTP Client :: JDK HttpClient 1.11.0,
+LangChain4j integration with Azure OpenAI 1.11.0, LangChain4j integration with
+Ollama 1.11.0, Log4J Compatibility API 2.25.3, MarkLogic Java Client API 8.1.0,
+Metrics Core 4.2.37, Metrics Integration with JMX 4.2.37, Microsoft Windows
+Azure Storage Client SDK 8.6.6, Netty Project 4.2.10.Final, Netty/Codec/Base
+4.2.10.Final, Netty/Codec/Classes/Quic 4.2.10.Final, Netty/Codec/Compression
+4.2.10.Final, Netty/Codec/Http3 4.2.10.Final, Netty/Codec/Marshalling
+4.2.10.Final, Netty/Codec/Native/Quic 4.2.10.Final, Netty/Codec/Protobuf
+4.2.10.Final, Netty/Codec/Redis 4.2.10.Final, Netty/Codec/SMTP 4.2.10.Final,
+Netty/Handler/Ssl/Ocsp 4.2.10.Final, Netty/Resolver/DNS/Classes/MacOS
+4.2.10.Final, Netty/Resolver/DNS/MacOS 4.2.10.Final, Netty/TomcatNative
 [BoringSSL - Static] 2.0.74.Final, Netty/TomcatNative [OpenSSL - Classes]
-2.0.74.Final, Netty/Transport/Classes/Epoll 4.2.9.Final,
-Netty/Transport/Classes/KQueue 4.2.9.Final, Netty/Transport/Classes/io_uring
-4.2.9.Final, Netty/Transport/Native/KQueue 4.2.9.Final,
-Netty/Transport/Native/Unix/Common 4.2.9.Final, Netty/Transport/Native/io_uring
-4.2.9.Final, Ning-compress-LZF 1.1.2, ORC MapReduce 2.2.1, ORC Shims 2.2.1,
-OkHttp 5.2.0, OkHttp Logging Interceptor 5.2.0, OpenNLP Tools 2.5.4, Reactor
-Netty 1.2.10, RoaringBitmap 1.3.0, S3 Analytics Accelerator Library for Amazon
-S3 1.2.1, Scala 2.13.17, Spark Avro 4.1.1, Spark Project Catalyst 4.1.1, Spark
-Project Common Java Utils 4.1.1, Spark Project Common Utils 4.1.1, Spark
-Project Core 4.1.1, Spark Project Launcher 4.1.1, Spark Project Local DB 4.1.1,
-Spark Project Networking 4.1.1, Spark Project SQL 4.1.1, Spark Project SQL API
-4.1.1, Spark Project Shuffle Streaming Service 4.1.1, Spark Project Sketch
-4.1.1, Spark Project Tags 4.1.1, Spark Project Unsafe 4.1.1, Spark Project
-Variant 4.1.1, SparseBitSet 1.3, Tink Cryptography Library for Java 1.16.0,
-Titanium JCS 1.1.1, Titanium JSON-LD 1.1 1.7.0, Titanium RDF API 1.0.0,
-Titanium RDF N-QUADS 1.0.2, Woodstox 7.1.1, XMLBeans 5.3.0, XmlSchema Core
-2.3.1, aircompressor 2.0.2, bnd Annotations Library 7.1.0, chill 0.10.0,
-chill-java 0.10.0, com.marklogic:marklogic-spark-connector 3.0.0, commons-csv
-1.14.1, datasketches-java 6.2.0, easymockobjenesis 3.4, error-prone annotations
-2.41.0, googlegson 2.11.0, googlegson 2.13.2, googleguava 32.0.0-jre, j2objc -
-Java to IOS 2.8, jackson-annotations 2.20, jackson-bom 2.20.0, jackson-bom
-2.20.1, jackson-core 2.20.0, jackson-core 2.20.1, jackson-databind 2.20.0,
-jackson-databind 2.20.1, jackson-dataformat-csv 2.20.0, jackson-dataformat-xml
-2.20.0, jackson-module-scala 2.20.0, jakartaeevalidation 3.0.2, java-libpst
-0.9.3, json4s-ast 4.0.7, json4s-core 4.0.7, json4s-jackson 4.0.7,
-json4s-jackson-core 4.0.7, json4s-scalap 4.0.7, langchain4j 1.10.0,
-langchain4j-core 1.10.0, langchain4j-embeddings 1.10.0-beta18,
-langchain4j-embeddings-all-minilm-l6-v2 1.10.0-beta18, micrometer-observation
-1.14.13, okhttp 5.2.0, okhttp-digest 3.1.1,
+2.0.74.Final, Netty/Transport/Classes/Epoll 4.2.10.Final,
+Netty/Transport/Classes/KQueue 4.2.10.Final, Netty/Transport/Classes/io_uring
+4.2.10.Final, Netty/Transport/Native/KQueue 4.2.10.Final,
+Netty/Transport/Native/Unix/Common 4.2.10.Final,
+Netty/Transport/Native/io_uring 4.2.10.Final, Ning-compress-LZF 1.1.2, ORC
+MapReduce 2.2.1, ORC Shims 2.2.1, OkHttp 5.3.2, OkHttp Logging Interceptor
+5.3.2, OkHttp Server-Sent Events 5.3.2, OpenNLP Tools 2.5.4, Reactor Netty
+1.2.10, Reactor Netty 1.2.13, RoaringBitmap 1.3.0, S3 Analytics Accelerator
+Library for Amazon S3 1.2.1, Scala 2.13.17, Scala 2.13.18, Spark Avro 4.1.1,
+Spark Project Catalyst 4.1.1, Spark Project Common Java Utils 4.1.1, Spark
+Project Common Utils 4.1.1, Spark Project Core 4.1.1, Spark Project Launcher
+4.1.1, Spark Project Local DB 4.1.1, Spark Project Networking 4.1.1, Spark
+Project SQL 4.1.1, Spark Project SQL API 4.1.1, Spark Project Shuffle Streaming
+Service 4.1.1, Spark Project Sketch 4.1.1, Spark Project Tags 4.1.1, Spark
+Project Unsafe 4.1.1, Spark Project Variant 4.1.1, SparseBitSet 1.3, Tink
+Cryptography Library for Java 1.16.0, Titanium JCS 1.1.1, Titanium JSON-LD 1.1
+1.7.0, Titanium RDF API 1.0.0, Titanium RDF N-QUADS 1.0.2, Woodstox 7.1.1,
+XMLBeans 5.3.0, XmlSchema Core 2.3.1, Zero-allocation Hashing 2026.0,
+aircompressor 2.0.2, bnd Annotations Library 7.1.0, chill 0.10.0, chill-java
+0.10.0, commons-csv 1.14.1, datasketches-java 6.2.0, easymockobjenesis 3.4,
+error-prone annotations 2.41.0, googlegson 2.11.0, googlegson 2.13.2,
+googleguava 32.0.0-jre, j2objc - Java to IOS 2.8, jackson-annotations 2.21,
+jackson-bom 2.21.1, jackson-core 2.21.1, jackson-databind 2.21.1,
+jackson-dataformat-csv 2.21.1, jackson-dataformat-xml 2.21.1,
+jackson-module-scala 2.21.1, jakartaeevalidation 3.0.2,
+java-json-canonicalization 1.1, java-libpst 0.9.3, json4s-ast 4.0.7,
+json4s-core 4.0.7, json4s-jackson 4.0.7, json4s-jackson-core 4.0.7,
+json4s-scalap 4.0.7, langchain4j 1.11.0, langchain4j-core 1.11.0,
+langchain4j-embeddings 1.11.0-beta19, langchain4j-embeddings-all-minilm-l6-v2
+1.11.0-beta19, okhttp 5.3.2, okhttp-digest 3.1.1,
 org.apache.datasketches:datasketches-memory 3.0.2,
-org.apiguardian:apiguardian-api 1.1.2, org.osgi:org.osgi.annotation.bundle
-2.0.0, org.osgi:org.osgi.annotation.versioning 1.1.2,
-org.osgi:org.osgi.resource 1.0.0, org.osgi:org.osgi.service.serviceloader
-1.0.0, picocli - a mighty tiny Command Line Interface 4.7.7, reactor-core
-3.7.11, scala-parallel-collections 1.2.0, scala-parser-combinators 2.4.0,
-scala-xml 2.4.0, snappy-java 1.1.10.8, squareokio 3.16.0, stream-lib 2.9.8,
+org.osgi:org.osgi.annotation.bundle 2.0.0,
+org.osgi:org.osgi.annotation.versioning 1.1.2, org.osgi:org.osgi.resource
+1.0.0, org.osgi:org.osgi.service.serviceloader 1.0.0, picocli - a mighty tiny
+Command Line Interface 4.7.7, reactor-core 3.7.11, reactor-core 3.7.14,
+scala-parallel-collections 1.2.0, scala-parser-combinators 2.4.0, scala-xml
+2.4.0, snappy-java 1.1.10.8, squareokio 3.16.4, stream-lib 2.9.8,
 tika-parser-html-module 3.2.3, tika-parser-mail-commons 3.2.3,
 tika-parser-microsoft-module 3.2.3, tika-parser-pdf-module 3.2.3,
 tika-parser-text-module 3.2.3, tika-parser-xml-module 3.2.3,
@@ -800,8 +795,8 @@ tika-parser-xmp-commons 3.2.3, tika-parser-zip-commons 3.2.3, univocity-parsers
     governing permissions and limitations under the License.
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for jackson-annotations 2.20, jackson-databind
-2.20.0, and jackson-databind 2.20.1:
+Contents of NOTICE text file for jackson-annotations 2.21 and jackson-databind
+2.21.1:
 
   # Jackson JSON processor
 
@@ -827,8 +822,8 @@ Contents of NOTICE text file for jackson-annotations 2.20, jackson-databind
   available from the source code management (SCM) system project uses.
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Apache Parquet Jackson 1.16.0, jackson-core
-2.20.0, and jackson-core 2.20.1:
+Contents of NOTICE text file for Apache Parquet Jackson 1.16.0 and jackson-core
+2.21.1:
 
   # Jackson JSON processor
 
@@ -866,8 +861,8 @@ Contents of NOTICE text file for Apache Parquet Jackson 1.16.0, jackson-core
   FastDoubleParser and the licenses and copyrights that apply to that code.
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for jackson-dataformat-csv 2.20.0 and
-jackson-dataformat-xml 2.20.0:
+Contents of NOTICE text file for jackson-dataformat-csv 2.21.1 and
+jackson-dataformat-xml 2.21.1:
 
   # Jackson JSON processor
 
@@ -892,8 +887,7 @@ jackson-dataformat-xml 2.20.0:
   the source code management (SCM) system project uses.
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Jackson-Datatype-JSR310 2.20.0 and
-Jackson-Datatype-JSR310 2.20.1:
+Contents of NOTICE text file for Jackson-Datatype-JSR310 2.21.1:
 
   # Jackson JSON processor
 
@@ -965,68 +959,6 @@ Contents of NOTICE text file for Apache Commons Logging 1.3.5:
 
   This product includes software developed at The Apache Software Foundation
   (https://www.apache.org/).
-
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for micrometer-observation 1.14.13:
-
-  Micrometer
-
-  Copyright (c) 2017-Present VMware, Inc. All Rights Reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy of
-  the License at
-
-     https://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations under
-  the License.
-
-  -------------------------------------------------------------------------------
-
-  This product contains a modified portion of 'io.netty.util.internal.logging',
-  in the Netty/Common library distributed by The Netty Project:
-
-    * Copyright 2013 The Netty Project * License: Apache License v2.0 *
-    Homepage: https://netty.io
-
-  This product contains a modified portion of 'StringUtils.isBlank()', in the
-  Commons Lang library distributed by The Apache Software Foundation:
-
-    * Copyright 2001-2019 The Apache Software Foundation * License: Apache
-    License v2.0 * Homepage: https://commons.apache.org/proper/commons-lang/
-
-  This product contains a modified portion of 'JsonUtf8Writer', in the Moshi
-  library distributed by Square, Inc:
-
-    * Copyright 2010 Google Inc. * License: Apache License v2.0 * Homepage:
-    https://github.com/square/moshi
-
-  This product contains a modified portion of the 'org.springframework.lang'
-  package in the Spring Framework library, distributed by VMware, Inc:
-
-    * Copyright 2002-2019 the original author or authors. * License: Apache
-    License v2.0 * Homepage: https://spring.io/projects/spring-framework
-
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Byte Buddy 1.17.7:
-
-  Copyright 2014 - Present Rafael Winterhalter
-
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy of
-  the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations under
-  the License.
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Contents of NOTICE text file for Arrow Compression 18.3.0:
@@ -1492,9 +1424,9 @@ Contents of NOTICE text file for ORC Shims 2.2.1:
   (http://www.apache.org/).
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Apache PDFBox 3.0.5:
+Contents of NOTICE text file for Apache PDFBox 3.0.7:
 
-  Apache FontBox Copyright 2008-2025 The Apache Software Foundation
+  Apache FontBox Copyright 2008-2026 The Apache Software Foundation
 
 
   This product includes software developed at The Apache Software Foundation
@@ -1516,18 +1448,18 @@ Contents of NOTICE text file for Apache JempBox 1.8.17:
   (c) 2006-2007, www.jempbox.org
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Apache PDFBox io 3.0.5:
+Contents of NOTICE text file for Apache PDFBox io 3.0.7:
 
-  Apache PDFBox io Copyright 2002-2025 The Apache Software Foundation
+  Apache PDFBox io Copyright 2002-2026 The Apache Software Foundation
 
 
   This product includes software developed at The Apache Software Foundation
   (http://www.apache.org/).
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Apache PDFBox tools 3.0.5:
+Contents of NOTICE text file for Apache PDFBox tools 3.0.7:
 
-  Apache PDFBox tools Copyright 2002-2025 The Apache Software Foundation
+  Apache PDFBox tools Copyright 2002-2026 The Apache Software Foundation
 
 
   This product includes software developed at The Apache Software Foundation
@@ -2076,7 +2008,7 @@ org.osgi:org.osgi.annotation.versioning 1.1.2:
    https://github.com/apache/
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Contents of NOTICE text file for Scala 2.13.17:
+Contents of NOTICE text file for Scala 2.13.17 and Scala 2.13.18:
 
   Scala Copyright (c) 2002-2025 EPFL Copyright (c) 2011-2025 Lightbend, Inc.
   dba Akka
@@ -2144,7 +2076,7 @@ Contents of NOTICE text file for S3 Analytics Accelerator Library for Amazon S3
 
 (3) BSD 2-Clause "Simplified" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates stax2-api 4.2.2 and zstd-jni 1.5.7-6.
+Progress MarkLogic Flux 2.1.0 incorporates stax2-api 4.2.2 and zstd-jni 1.5.7-6.
 
   BSD Two Clause License
   ======================
@@ -2153,12 +2085,11 @@ Progress MarkLogic Flux 2.0.0 incorporates stax2-api 4.2.2 and zstd-jni 1.5.7-6.
   modification, are permitted provided that the following conditions are met:
 
     1. Redistributions of source code must retain the above copyright notice,
-    this
-      list of conditions and the following disclaimer.
+    this list of conditions and the following disclaimer.
 
-    2. Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
+    2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
 
   THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
   WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -2173,7 +2104,7 @@ Progress MarkLogic Flux 2.0.0 incorporates stax2-api 4.2.2 and zstd-jni 1.5.7-6.
 
 (4) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates ThreeTen-extra 1.8.0.
+Progress MarkLogic Flux 2.1.0 incorporates ThreeTen-extra 1.8.0.
 
   Copyright (c) , ThreeTen.org All rights reserved.
 
@@ -2207,7 +2138,7 @@ Progress MarkLogic Flux 2.0.0 incorporates ThreeTen-extra 1.8.0.
 
 (5) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates antlr 4.13.1.
+Progress MarkLogic Flux 2.1.0 incorporates antlr 4.13.1.
 
   Copyright (c) , ANTLR All rights reserved.
 
@@ -2241,7 +2172,7 @@ Progress MarkLogic Flux 2.0.0 incorporates antlr 4.13.1.
 
 (6) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Py4J 0.10.9.9.
+Progress MarkLogic Flux 2.1.0 incorporates Py4J 0.10.9.9.
 
   Copyright (c) , Barthelemy Dagenais and contributors All rights reserved.
 
@@ -2275,7 +2206,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Py4J 0.10.9.9.
 
 (7) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Kryo Shaded 4.0.3 and minlog 1.3.0.
+Progress MarkLogic Flux 2.1.0 incorporates Kryo Shaded 4.0.3 and minlog 1.3.0.
 
   Copyright (c) , Nathan Sweet All rights reserved.
 
@@ -2310,7 +2241,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Kryo Shaded 4.0.3 and minlog 1.3.0.
 
 (8) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates leveldbjni-all 1.8.
+Progress MarkLogic Flux 2.1.0 incorporates leveldbjni-all 1.8.
 
   Copyright (c) , FuseSource Corp. and contributors All rights reserved.
 
@@ -2345,7 +2276,7 @@ Progress MarkLogic Flux 2.0.0 incorporates leveldbjni-all 1.8.
 
 (9) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Janino 3.1.12.
+Progress MarkLogic Flux 2.1.0 incorporates Janino 3.1.12.
 
   Copyright (c) , Arno Unkrig and contributors All rights reserved.
 
@@ -2380,7 +2311,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Janino 3.1.12.
 
 (10) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Jakarta Activation 2.0.1.
+Progress MarkLogic Flux 2.1.0 incorporates Jakarta Activation 2.0.1.
 
   Copyright (c) , Oracle and/or its affiliates All rights reserved.
 
@@ -2415,7 +2346,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Jakarta Activation 2.0.1.
 
 (11) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates jaxen 2.0.0.
+Progress MarkLogic Flux 2.1.0 incorporates jaxen 2.0.0.
 
   Copyright (c) , The Werken Company All rights reserved.
 
@@ -2449,7 +2380,7 @@ Progress MarkLogic Flux 2.0.0 incorporates jaxen 2.0.0.
 
 (12) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates ParaNamer Core 2.8.3.
+Progress MarkLogic Flux 2.1.0 incorporates ParaNamer Core 2.8.3.
 
   Copyright (c) , ThoughtWorks All rights reserved.
 
@@ -2484,7 +2415,7 @@ Progress MarkLogic Flux 2.0.0 incorporates ParaNamer Core 2.8.3.
 
 (13) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates curvesapi 1.08.
+Progress MarkLogic Flux 2.1.0 incorporates curvesapi 1.08.
 
   Copyright (c) , Graph Builder All rights reserved.
 
@@ -2519,8 +2450,7 @@ Progress MarkLogic Flux 2.0.0 incorporates curvesapi 1.08.
 
 (14) BSD 3-Clause "New" or "Revised" License:
 
-Progress MarkLogic Flux 2.0.0 incorporates protobuf-java 4.32.1 and
-protobuf-java 4.33.0.
+Progress MarkLogic Flux 2.1.0 incorporates protobuf-java 4.33.0.
 
   Copyright (c) , Google LLC All rights reserved.
 
@@ -2554,7 +2484,7 @@ protobuf-java 4.33.0.
 
 (15) BSD Zero Clause License:
 
-Progress MarkLogic Flux 2.0.0 incorporates XZ for Java 1.10.
+Progress MarkLogic Flux 2.1.0 incorporates XZ for Java 1.10.
 
   BSD Zero Clause License
   =======================
@@ -2574,7 +2504,7 @@ Progress MarkLogic Flux 2.0.0 incorporates XZ for Java 1.10.
 
 (16) Common Development and Distribution License 1.1:
 
-Progress MarkLogic Flux 2.0.0 incorporates Java Servlet API 4.0.1 and
+Progress MarkLogic Flux 2.1.0 incorporates Java Servlet API 4.0.1 and
 javax.annotation API 1.3.2.
 
   COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
@@ -2946,11 +2876,10 @@ javax.annotation API 1.3.2.
 
 (17) Eclipse Distribution License - v 1.0:
 
-Progress MarkLogic Flux 2.0.0 incorporates Angus Activation Registries 2.0.3,
-JAXB CORE 4.0.6, JAXB Runtime 4.0.6, Jakarta Activation API 2.1.3, Jakarta
-Activation API 2.1.4, TXW2 Runtime 4.0.6, istack common utility code runtime
-4.1.2, jakarta.xml.bind:jakarta.xml.bind-api 4.0.2, and
-jakarta.xml.bind:jakarta.xml.bind-api 4.0.4.
+Progress MarkLogic Flux 2.1.0 incorporates Angus Activation Registries 2.0.3,
+JAXB CORE 4.0.6, JAXB Runtime 4.0.6, Jakarta Activation API 2.1.4, TXW2 Runtime
+4.0.6, istack common utility code runtime 4.1.2, and
+jakarta.xml.bind:jakarta.xml.bind-api 4.0.5.
 
   Eclipse Distribution License - v 1.0
   ====================================
@@ -2988,14 +2917,13 @@ jakarta.xml.bind:jakarta.xml.bind-api 4.0.4.
 
 (18) Eclipse Public License 2.0:
 
-Progress MarkLogic Flux 2.0.0 incorporates HK2 API module 3.0.6, HK2
+Progress MarkLogic Flux 2.1.0 incorporates HK2 API module 3.0.6, HK2
 Implementation Utilities 3.0.6, JSR 374 (JSON Processing) Default Provider
-2.0.1, Jakarta Annotations API 2.1.1, Jakarta Annotations API 3.0.0, Jakarta
-Mail 2.0.2, Java Servlet API 5.0.0, Jersey 3.0.18, Jersey Inject HK2 3.0.18,
-OSGi resource locator bundle 1.0.3, ServiceLocator Default Implementation
-3.0.6, jakartaee/rest 3.0.0, jersey-container-servlet 3.0.18,
-jersey-container-servlet-core 3.0.18, jersey-core-server 3.0.18, and
-org.locationtech.jts:jts-core 1.20.0.
+2.0.1, Jakarta Annotations API 2.1.1, Jakarta Mail 2.0.2, Java Servlet API
+5.0.0, Jersey 3.0.18, Jersey Inject HK2 3.0.18, OSGi resource locator bundle
+1.0.3, ServiceLocator Default Implementation 3.0.6, jakartaee/rest 3.0.0,
+jersey-container-servlet 3.0.18, jersey-container-servlet-core 3.0.18,
+jersey-core-server 3.0.18, and org.locationtech.jts:jts-core 1.20.0.
 
   Eclipse Public License - v 2.0
   ==============================
@@ -3269,7 +3197,7 @@ org.locationtech.jts:jts-core 1.20.0.
 
 (19) GNU General Public License v2.0 w/Classpath exception:
 
-Progress MarkLogic Flux 2.0.0 incorporates Aopalliance Version 1.0 Repackaged
+Progress MarkLogic Flux 2.1.0 incorporates Aopalliance Version 1.0 Repackaged
 As A Module 3.0.6.
 
   GNU Classpath License
@@ -3640,7 +3568,7 @@ As A Module 3.0.6.
 
 (20) Jdom License:
 
-Progress MarkLogic Flux 2.0.0 incorporates JDOM 2.0.6.1.
+Progress MarkLogic Flux 2.1.0 incorporates JDOM 2.0.6.1.
 
   jdom License
   ============
@@ -3688,7 +3616,7 @@ Progress MarkLogic Flux 2.0.0 incorporates JDOM 2.0.6.1.
 
 (21) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates JUL to SLF4J bridge 2.0.17.
+Progress MarkLogic Flux 2.1.0 incorporates JUL to SLF4J bridge 2.0.17.
 
   The MIT License
   ===============
@@ -3714,7 +3642,7 @@ Progress MarkLogic Flux 2.0.0 incorporates JUL to SLF4J bridge 2.0.17.
 
 (22) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates onnx-runtime 1.20.0.
+Progress MarkLogic Flux 2.1.0 incorporates onnx-runtime 1.20.0.
 
   The MIT License
   ===============
@@ -3740,7 +3668,7 @@ Progress MarkLogic Flux 2.0.0 incorporates onnx-runtime 1.20.0.
 
 (23) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates jsoup 1.21.2.
+Progress MarkLogic Flux 2.1.0 incorporates jsoup 1.21.2.
 
   The MIT License
   ===============
@@ -3766,7 +3694,7 @@ Progress MarkLogic Flux 2.0.0 incorporates jsoup 1.21.2.
 
 (24) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Bouncy Castle Jakarta S/MIME API
+Progress MarkLogic Flux 2.1.0 incorporates Bouncy Castle Jakarta S/MIME API
 1.81.
 
   The MIT License
@@ -3793,7 +3721,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Bouncy Castle Jakarta S/MIME API
 
 (25) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates JTokkit 1.1.0.
+Progress MarkLogic Flux 2.1.0 incorporates JTokkit 1.1.0.
 
   The MIT License
   ===============
@@ -3819,7 +3747,7 @@ Progress MarkLogic Flux 2.0.0 incorporates JTokkit 1.1.0.
 
 (26) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Checker Qual 3.33.0.
+Progress MarkLogic Flux 2.1.0 incorporates Checker Qual 3.33.0.
 
   The MIT License
   ===============
@@ -3845,7 +3773,7 @@ Progress MarkLogic Flux 2.0.0 incorporates Checker Qual 3.33.0.
 
 (27) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates pickle 1.5.
+Progress MarkLogic Flux 2.1.0 incorporates pickle 1.5.
 
   The MIT License
   ===============
@@ -3871,7 +3799,7 @@ Progress MarkLogic Flux 2.0.0 incorporates pickle 1.5.
 
 (28) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates dexx 0.7.
+Progress MarkLogic Flux 2.1.0 incorporates dexx 0.7.
 
   The MIT License
   ===============
@@ -3897,13 +3825,15 @@ Progress MarkLogic Flux 2.0.0 incorporates dexx 0.7.
 
 (29) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Microsoft Azure Java Core Library
-1.57.0, Microsoft Azure Java JSON Library 1.5.0, Microsoft Azure Java XML
-Library 1.2.0, Microsoft Azure Netty HTTP Client Library 1.16.2, Microsoft
-Azure SDK for Key Vault 1.2.4, Microsoft Azure SDK for OpenAI Management
-1.0.0-beta.16, Microsoft Azure client library for File Storage Data Lake
-12.25.0, Microsoft Azure common module for Storage 12.31.0, Microsoft Azure
-internal Avro module for Storage 12.17.0, and azure-storage-blob 12.32.0.
+Progress MarkLogic Flux 2.1.0 incorporates Microsoft Azure Java Core Library
+1.57.0, Microsoft Azure Java Core Library 1.57.1, Microsoft Azure Java JSON
+Library 1.5.0, Microsoft Azure Java JSON Library 1.5.1, Microsoft Azure Java
+XML Library 1.2.0, Microsoft Azure Java XML Library 1.2.1, Microsoft Azure
+Netty HTTP Client Library 1.16.2, Microsoft Azure Netty HTTP Client Library
+1.16.3, Microsoft Azure SDK for Key Vault 1.2.4, Microsoft Azure SDK for OpenAI
+Management 1.0.0-beta.16, Microsoft Azure client library for File Storage Data
+Lake 12.26.2, Microsoft Azure common module for Storage 12.32.2, Microsoft
+Azure internal Avro module for Storage 12.18.1, and azure-storage-blob 12.33.2.
 
   The MIT License
   ===============
@@ -3929,7 +3859,7 @@ internal Avro module for Storage 12.17.0, and azure-storage-blob 12.32.0.
 
 (30) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates SLF4J API Module 2.0.17.
+Progress MarkLogic Flux 2.1.0 incorporates SLF4J API Module 2.0.17.
 
   The MIT License
   ===============
@@ -3955,7 +3885,7 @@ Progress MarkLogic Flux 2.0.0 incorporates SLF4J API Module 2.0.17.
 
 (31) MIT License:
 
-Progress MarkLogic Flux 2.0.0 incorporates Bouncy Castle 1.81, Bouncy Castle
+Progress MarkLogic Flux 2.1.0 incorporates Bouncy Castle 1.81, Bouncy Castle
 ASN.1 Extension and Utility APIs 1.81, and Bouncy Castle PKIX, CMS, EAC, TSP,
 PKCS, OCSP, CMP, and CRMF APIs 1.81.
 
@@ -3984,7 +3914,7 @@ PKCS, OCSP, CMP, and CRMF APIs 1.81.
 
 (32) MIT No Attribution:
 
-Progress MarkLogic Flux 2.0.0 incorporates reactive-streams-jvm 1.0.4.
+Progress MarkLogic Flux 2.1.0 incorporates reactive-streams-jvm 1.0.4.
 
   MIT No Attribution
   ==================
@@ -4006,7 +3936,7 @@ Progress MarkLogic Flux 2.0.0 incorporates reactive-streams-jvm 1.0.4.
 
 (33) Mozilla Public License 1.1:
 
-Progress MarkLogic Flux 2.0.0 incorporates juniversalchardet 2.5.0.
+Progress MarkLogic Flux 2.1.0 incorporates juniversalchardet 2.5.0.
 
   MOZILLA PUBLIC LICENSE
   ======================
@@ -4440,24 +4370,23 @@ Progress MarkLogic Flux 2.0.0 incorporates juniversalchardet 2.5.0.
 
 (34) Unicode License v3:
 
-Progress MarkLogic Flux 2.0.0 incorporates ICU4J 77.1.
+Progress MarkLogic Flux 2.1.0 incorporates ICU4J 77.1.
 
   UNICODE LICENSE V3
-  ==================
-
 
   COPYRIGHT AND PERMISSION NOTICE
 
-  Copyright © 1991-2023 Unicode, Inc. NOTICE TO USER: Carefully read the
-  following legal agreement. BY DOWNLOADING, INSTALLING, COPYING OR OTHERWISE
-  USING DATA FILES, AND/OR SOFTWARE, YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE
-  BOUND BY, ALL OF THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT
-  AGREE, DO NOT DOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR
-  SOFTWARE.
+  Copyright ©
+
+  NOTICE TO USER: Carefully read the following legal agreement. BY DOWNLOADING,
+  INSTALLING, COPYING OR OTHERWISE USING DATA FILES, AND/OR SOFTWARE, YOU
+  UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE TERMS AND
+  CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT DOWNLOAD, INSTALL,
+  COPY, DISTRIBUTE OR USE THE DATA FILES OR SOFTWARE.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
-  of data files and any associated documentation (the "Data Files") or software
-  and any associated documentation (the "Software") to deal in the Data Files
+  of data files and any associated documentation (the “Data Files”) or software
+  and any associated documentation (the “Software”) to deal in the Data Files
   or Software without restriction, including without limitation the rights to
   use, copy, modify, merge, publish, distribute, and/or sell copies of the Data
   Files or Software, and to permit persons to whom the Data Files or Software
@@ -4465,7 +4394,7 @@ Progress MarkLogic Flux 2.0.0 incorporates ICU4J 77.1.
   permission notice appear with all copies of the Data Files or Software, or
   (b) this copyright and permission notice appear in associated Documentation.
 
-  THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+  THE DATA FILES AND SOFTWARE ARE PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY
   KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF
   THIRD PARTY RIGHTS.
@@ -4481,18 +4410,8 @@ Progress MarkLogic Flux 2.0.0 incorporates ICU4J 77.1.
   dealings in these Data Files or Software without prior written authorization
   of the copyright holder.
 
-2. Special Notices Regarding Progress Product Components incorporated into the
-Product:
-
-(1) Internal Progress Product License:
-
-Progress MarkLogic Flux 2.0.0 incorporates MarkLogic XCC 12.0.0 and Marklogic
-Spark Connector 3.0.0.
-
-  See Progress License
-
 NOTICE FROM PROGRESS SOFTWARE CORPORATION: Additional notices may be included
 in the release notes or other documentation that accompanies updates received
 in connection with support of the Product.
 
-Updated January 21, 2026
+Updated March 17, 2026
