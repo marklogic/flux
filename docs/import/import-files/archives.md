@@ -192,7 +192,7 @@ The following set of options will result in the transform only being applied to 
 
 This option only has an effect when `--streaming` and `--transform` are specified. Note that if `--streaming`
 and `--transform` are specified without this option, then every document will be sent to the transform. This is 
-typically not desirable as it results in each document being ready into memory in MarkLogic, which defeats some of the 
+typically not desirable as it results in each document being read into memory in MarkLogic, which defeats some of the 
 purpose of streaming the data into MarkLogic.
 
 ## Common errors
