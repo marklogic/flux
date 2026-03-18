@@ -239,7 +239,7 @@ information on transforms.
 
 ### JSON documents
 
-By default, Flux will store an embedding in an array named `embedding` that is added to the chunk object. Each value in 
+By default, Flux will store an embedding in an array named `_vector` that is added to the chunk object. Each value in 
 the embedding will be added to this array. 
 
 You can configure a different name for the array via the following option:
@@ -250,9 +250,9 @@ Flux will then create an array with the name provided to the option and store ea
 
 ### XML documents
 
-By default, Flux will store an embedding in a new element named `embedding` that is added to the chunk element. The new
-element will have an empty namespace value. The embedding array is serialized to a string - so that it begins with `[`
-and ends with `]` - and stored as the text node of the `embedding` element. 
+By default, Flux will store an embedding in a new element named `vector` that is added to the chunk element. The new
+element will default to a namespace of `http://marklogic.com/vector`. The embedding array is serialized to a string - so that it begins with `[`
+and ends with `]` - and stored as the text node of the `vector` element. 
 
 You can configure a different name for the embedding element via the following option:
 
