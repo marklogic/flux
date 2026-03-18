@@ -21,6 +21,8 @@ subprojects {
     toolchain {
       languageVersion = JavaLanguageVersion.of(17)
     }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
 
   // Allows for quickly identifying compiler warnings.
@@ -37,6 +39,8 @@ subprojects {
   repositories {
     mavenCentral()
 
+    mavenLocal()
+
     // For temporary dependencies on internal snapshots.
     maven {
       url = "https://bed-artifactory.bedford.progress.com:443/artifactory/ml-maven-snapshots/"
@@ -47,13 +51,23 @@ subprojects {
    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
      // Defining this rule for io.netty here so that it affects both flux-cli and flux-embedding-model-azure-open-ai.
      if (details.requested.group.equals("io.netty") and (details.requested.version.startsWith("4.1.") || details.requested.version.startsWith("4.2."))) {
-       details.useVersion "4.2.9.Final"
-       details.because "Forcing Spark 4.1.x to use 4.2.9.Final to minimize CVEs; this also forces azure-open-ai to use 4.2.9.Final to avoid conflicts."
+       details.useVersion "4.2.10.Final"
+       details.because "Forcing Spark 4.1.x to use latest to minimize CVEs; this also forces azure-open-ai to use latest to avoid conflicts."
      }
 
      if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.equals("2.24.3")) {
        details.useVersion "2.25.3"
        details.because "Forces Spark 4.1.x to use log4j 2.25.3 to address this CVE - https://nvd.nist.gov/vuln/detail/CVE-2025-68161 ."
+     }
+
+     if (details.requested.group.startsWith("com.fasterxml.jackson")) {
+       if (details.requested.name == "jackson-annotations") {
+         // This oddly does not have a 2.21.0 or 2.21.1 release, just 2.21.
+         details.useVersion "2.21"
+       } else {
+         details.useVersion "2.21.1"
+       }
+       details.because "Force Jackson to 2.21.x to align with Java Client 8.1.0."
      }
    }
  }

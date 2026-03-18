@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -60,16 +60,32 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         )
         private DocumentType documentType;
 
+        @CommandLine.Option(
+            names = "--streaming-transform-binary-with-extension",
+            description = "Comma-delimited list of URI extensions that controls which documents with a format of BINARY " +
+                "to send to a REST transform. Only applies when streaming entries to MarkLogic. Supports applying " +
+                "a transform that can convert document to a binary so that the document type is not " +
+                "determined by MarkLogic's mimetype mappings."
+        )
+        private String transformBinaryExtensions;
+
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null
+                Options.WRITE_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
+                Options.STREAM_TRANSFORM_BINARY_EXTENSIONS, transformBinaryExtensions
             );
         }
 
         @Override
         public WriteArchiveDocumentsOptions documentType(DocumentType documentType) {
             this.documentType = documentType;
+            return this;
+        }
+
+        @Override
+        public WriteArchiveDocumentsOptions streamingTransformBinaryWithExtension(String commaDelimitedExtensions) {
+            this.transformBinaryExtensions = commaDelimitedExtensions;
             return this;
         }
     }

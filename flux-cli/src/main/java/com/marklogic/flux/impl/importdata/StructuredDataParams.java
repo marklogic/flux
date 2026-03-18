@@ -1,18 +1,37 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.FluxException;
+import com.marklogic.flux.api.StructuredDataImporter;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.Aggregation> {
+/**
+ * Parameters for transforming rows read from structured data sources, such as JDBC, Parquet, CSV, etc.
+ * Supports filtering rows via WHERE expressions, grouping rows by column values, aggregating related rows into
+ * arrays, and ordering aggregated arrays.
+ */
+class StructuredDataParams implements StructuredDataImporter.GroupByOptions<StructuredDataParams> {
 
     private static final String AGGREGATE_DELIMITER = ",";
+
+    @CommandLine.Option(
+        names = "--drop",
+        description = "Specify one or more column names to drop from the imported data.",
+        arity = "1..*"
+    )
+    private List<String> columnsToDrop = new ArrayList<>();
+
+    @CommandLine.Option(
+        names = "--where",
+        description = "Filter rows using a SQL-like WHERE expression; e.g. --where \"size < 10\" or --where \"status = 'active'\"."
+    )
+    private String where;
 
     @CommandLine.Option(
         names = "--group-by",
@@ -24,7 +43,7 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         names = "--aggregate",
         description = "Define an aggregation of multiple columns into a new column. Each aggregation must be of the " +
             "form newColumnName=column1,column2,etc. Requires the use of --group-by.",
-        converter = AggregationParams.class
+        converter = Aggregation.class
     )
     private List<Aggregation> aggregations = new ArrayList<>();
 
@@ -38,13 +57,29 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
     )
     private List<AggregationOrdering> aggregationOrderings = new ArrayList<>();
 
-    public static class Aggregation {
+    public static class Aggregation implements CommandLine.ITypeConverter<Aggregation> {
         private String newColumnName;
         private List<String> columnNamesToGroup;
+
+        public Aggregation() {
+            // Needed so that picocli can instantiate in order to call convert().
+        }
 
         public Aggregation(String newColumnName, List<String> columnNamesToGroup) {
             this.newColumnName = newColumnName;
             this.columnNamesToGroup = columnNamesToGroup;
+        }
+
+        @Override
+        public Aggregation convert(String value) {
+            String[] parts = value.split("=");
+            if (parts.length != 2) {
+                throw new FluxException(String.format("Invalid aggregation: %s; must be of " +
+                    "the form newColumnName=columnToGroup1,columnToGroup2,etc.", value));
+            }
+            final String newColumnName = parts[0];
+            String[] columnNamesToAggregate = parts[1].split(AGGREGATE_DELIMITER);
+            return new Aggregation(newColumnName, Arrays.asList(columnNamesToAggregate));
         }
     }
 
@@ -54,6 +89,7 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         private boolean ascending = true;
 
         public AggregationOrdering() {
+            // Needed so that picocli can instantiate in order to call convert().
         }
 
         public AggregationOrdering(String aggregationName, String columnName, boolean ascending) {
@@ -103,39 +139,52 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
         }
     }
 
-    @Override
-    public Aggregation convert(String value) {
-        String[] parts = value.split("=");
-        if (parts.length != 2) {
-            throw new FluxException(String.format("Invalid aggregation: %s; must be of " +
-                "the form newColumnName=columnToGroup1,columnToGroup2,etc.", value));
-        }
-        final String newColumnName = parts[0];
-        String[] columnNamesToAggregate = parts[1].split(AGGREGATE_DELIMITER);
-        return new Aggregation(newColumnName, Arrays.asList(columnNamesToAggregate));
-    }
-
     public void setGroupBy(String groupBy) {
         this.groupBy = groupBy;
     }
 
-    public void addAggregationOrdering(String aggregationName, String columnName, boolean ascending) {
+    public StructuredDataParams drop(String... columns) {
+        this.columnsToDrop.addAll(Arrays.asList(columns));
+        return this;
+    }
+
+    public StructuredDataParams where(String expression) {
+        this.where = expression;
+        return this;
+    }
+
+    @Override
+    public StructuredDataParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
         if (this.aggregationOrderings == null) {
             this.aggregationOrderings = new ArrayList<>();
         }
         this.aggregationOrderings.add(new AggregationOrdering(aggregationName, columnName, ascending));
+        return this;
     }
 
-    public void addAggregationExpression(String newColumnName, String... columns) {
+    @Override
+    public StructuredDataParams aggregateColumns(String newColumnName, String... columns) {
         if (this.aggregations == null) {
             this.aggregations = new ArrayList<>();
         }
         this.aggregations.add(new Aggregation(newColumnName, Arrays.asList(columns)));
+        return this;
     }
 
-    public Dataset<Row> applyGroupBy(Dataset<Row> dataset) {
+    public Dataset<Row> applyTransformations(Dataset<Row> dataset) {
+        // Apply where filter first, before groupBy. This allows the user to filter out rows that would otherwise be
+        // included in the groupBy and thus end up in the aggregated arrays.
+        if (where != null && !where.trim().isEmpty()) {
+            try {
+                dataset = dataset.where(where);
+            } catch (Exception ex) {
+                throw new FluxException("Unable to apply 'where' clause: '%s'; cause: %s"
+                    .formatted(where, ex.getMessage()), ex);
+            }
+        }
+
         if (groupBy == null || groupBy.trim().isEmpty()) {
-            return dataset;
+            return applyDrop(dataset);
         }
 
         final RelationalGroupedDataset groupedDataset = dataset.groupBy(this.groupBy);
@@ -154,9 +203,11 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
                 "name will be present in the data read from the data source.", columnNames), e);
         }
 
-        return aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
+        Dataset<Row> sorted = aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
             applySortToAggregatedArrays(result) :
             result;
+
+        return applyDrop(sorted);
     }
 
     /**
@@ -262,5 +313,12 @@ class AggregationParams implements CommandLine.ITypeConverter<AggregationParams.
             aggregationName, columnToSortBy, columnToSortBy, whenLessThan,
             columnToSortBy, columnToSortBy, whenGreaterThan
         ));
+    }
+
+    private Dataset<Row> applyDrop(Dataset<Row> dataset) {
+        if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
+            dataset = dataset.drop(columnsToDrop.toArray(new String[]{}));
+        }
+        return dataset;
     }
 }

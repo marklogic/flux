@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -26,7 +26,8 @@ class JdbcImporterTest extends AbstractTest {
                 .url(PostgresUtil.URL_WITH_AUTH)
                 .driver(PostgresUtil.DRIVER)
                 .query(QUERY)
-                .groupBy("customer_id")
+            )
+            .groupBy("customer_id", options -> options
                 .aggregateColumns("payments", "payment_id", "amount", "payment_date"))
             .connectionString(makeConnectionString())
             .to(options -> options

@@ -50,16 +50,6 @@ def postCleanup(){
   cleanupDocker()
 }
 
-def runSonarScan(String javaVersion){
-    sh label:'test', script: '''#!/bin/bash
-      export JAVA_HOME=$'''+javaVersion+'''
-      export GRADLE_USER_HOME=$WORKSPACE/$GRADLE_DIR
-      export PATH=$GRADLE_USER_HOME:$JAVA_HOME/bin:$PATH
-      cd flux
-     ./gradlew sonar -Dsonar.projectKey='ML-DevExp-marklogic-flux' -Dsonar.projectName='ML-DevExp-marklogic-flux' || true
-    '''
-}
-
 pipeline{
   agent none
 
@@ -84,9 +74,6 @@ pipeline{
       agent{ label 'devExpLinuxPool'}
       steps{
         runtests()
-        withSonarQubeEnv('SONAR_Progress') {
-          runSonarScan('JAVA_HOME_DIR')
-        }
       }
       post{
         always{

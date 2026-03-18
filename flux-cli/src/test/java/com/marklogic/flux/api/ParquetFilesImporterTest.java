@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -63,9 +63,8 @@ class ParquetFilesImporterTest extends AbstractTest {
     void aggregate() {
         Flux.importParquetFiles()
             .connectionString(makeConnectionString())
-            .from(options -> options
-                .paths("src/test/resources/parquet/individual/cars.parquet")
-                .groupBy("cyl")
+            .from("src/test/resources/parquet/individual/cars.parquet")
+            .groupBy("cyl", options -> options
                 .aggregateColumns("models", "model", "mpg")
                 .orderAggregation("models", "mpg", true)
             )

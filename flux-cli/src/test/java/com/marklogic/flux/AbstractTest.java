@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux;
 
@@ -167,5 +167,11 @@ public abstract class AbstractTest extends AbstractMarkLogicTest {
 
     protected final FluxException assertThrowsFluxException(Runnable r) {
         return assertThrows(FluxException.class, r::run);
+    }
+
+    protected final String getDocumentType(String uri) {
+        return getDatabaseClient().newServerEval()
+            .xquery("xdmp:node-kind(fn:doc('%s')/node())".formatted(uri))
+            .evalAs(String.class);
     }
 }

@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
- */
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved. */
 package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +11,25 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImportAvroFilesTest extends AbstractTest {
+
+    @Test
+    void dropColumns() {
+        run(
+            "import-avro-files",
+            "--path", "src/test/resources/avro/colors.avro",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "avro-test",
+            "--uri-template", "/avro/{color}.json",
+            "--drop", "number", "flag"
+        );
+
+        assertCollectionSize("avro-test", 3);
+        JsonNode doc = readJsonDocument("/avro/blue.json");
+        assertFalse(doc.has("number"), "The 'number' column should have been dropped");
+        assertFalse(doc.has("flag"), "The 'flag' column should have been dropped");
+        assertTrue(doc.has("color"), "Other columns should still be present");
+    }
 
     @Test
     void defaultSettingsMultipleFiles() {

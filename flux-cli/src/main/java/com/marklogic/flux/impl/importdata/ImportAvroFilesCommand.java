@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.AvroFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
+import com.marklogic.flux.api.StructuredDataImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.flux.impl.TdeHelper;
@@ -62,7 +63,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @CommandLine.Mixin
-        private AggregationParams aggregationParams = new AggregationParams();
+        private StructuredDataParams structuredDataParams = new StructuredDataParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -78,26 +79,35 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions groupBy(String columnName) {
-            aggregationParams.setGroupBy(columnName);
+            structuredDataParams.setGroupBy(columnName);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions aggregateColumns(String aggregationName, String... columns) {
-            aggregationParams.addAggregationExpression(aggregationName, columns);
+            structuredDataParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadTabularFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
+            structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
             return this;
         }
 
         @Override
         public ReadTabularFilesOptions uriIncludeFilePath(boolean value) {
             this.uriIncludeFilePath = value;
+            return this;
+        }
+
+        @Override
+        public ReadTabularFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
             return this;
         }
     }
@@ -108,7 +118,7 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
 
-        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.structuredDataParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -133,6 +143,19 @@ public class ImportAvroFilesCommand extends AbstractImportFilesCommand<AvroFiles
     @Override
     public AvroFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
+        return this;
+    }
+
+    @Override
+    public AvroFilesImporter where(String expression) {
+        readParams.structuredDataParams.where(expression);
+        return this;
+    }
+
+    @Override
+    public AvroFilesImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
+        readParams.structuredDataParams.setGroupBy(columnName);
+        consumer.accept(readParams.structuredDataParams);
         return this;
     }
 }

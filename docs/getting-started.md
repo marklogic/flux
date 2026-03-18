@@ -15,7 +15,7 @@ This guide describes how to get started with Flux with some examples demonstrati
 ## Setup
 
 You can download the latest release of the Flux application zip from [the latest Flux release page](https://github.com/marklogic/flux/releases). 
-The Flux application zip is titled `marklogic-flux-2.0.0.zip`. You can extract this zip to any location on your 
+The Flux application zip is titled `marklogic-flux-2.1.0.zip`. You can extract this zip to any location on your 
 filesystem that you prefer.
 
 ### Deploying the example application
@@ -50,7 +50,7 @@ structure similar to this (not all files may be shown):
 ./marklogic-flux-getting-started-2.0.0
     build.gradle
     ./data
-    ./marklogic-flux-2.0.0
+    ./marklogic-flux-2.1.0
     ./gradle
     gradle.properties
     gradlew
@@ -63,7 +63,7 @@ structure similar to this (not all files may be shown):
 You can run Flux without any options to see the list of available commands. If you are using Flux to run these examples, 
 first change your current directory to where you extract Flux:
 
-    cd marklogic-flux-2.0.0
+    cd marklogic-flux-2.1.0
 
 And then run the Flux executable without any options:
 

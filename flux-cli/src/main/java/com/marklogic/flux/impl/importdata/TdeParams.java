@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -180,6 +180,13 @@ public class TdeParams implements TdeOptions {
             "This option can be specified multiple times."
     )
     private Map<String, Boolean> columnAnnIndexed;
+
+    @CommandLine.Option(
+        names = "--tde-support-incremental-write",
+        description = "If set, the generated TDE template will include a 'uri' column and a column containing the " +
+            "incremental write hash as the first two columns."
+    )
+    private boolean includeIncrementalWriteColumns;
 
     public boolean hasSchemaAndView() {
         return schema != null && view != null && !schema.isEmpty() && !view.isEmpty();
@@ -379,5 +386,15 @@ public class TdeParams implements TdeOptions {
     public TdeOptions columnAnnIndexed(Map<String, Boolean> columnAnnIndexed) {
         this.columnAnnIndexed = columnAnnIndexed;
         return this;
+    }
+
+    @Override
+    public TdeOptions includeIncrementalWriteColumns() {
+        this.includeIncrementalWriteColumns = true;
+        return this;
+    }
+
+    public boolean isIncludeIncrementalWriteColumns() {
+        return includeIncrementalWriteColumns;
     }
 }

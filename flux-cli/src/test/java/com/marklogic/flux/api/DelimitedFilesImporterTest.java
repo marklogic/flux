@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -46,9 +46,8 @@ class DelimitedFilesImporterTest extends AbstractTest {
     void aggregate() {
         Flux.importDelimitedFiles()
             .connectionString(makeConnectionString())
-            .from(options -> options
-                .paths("src/test/resources/delimited-files/join-rows.csv")
-                .groupBy("number")
+            .from("src/test/resources/delimited-files/join-rows.csv")
+            .groupBy("number", options -> options
                 .aggregateColumns("objects", "color", "flag")
                 .orderAggregation("objects", "color", true)
             )

@@ -1,8 +1,11 @@
 ---
 layout: default
 title: Generating a TDE template
-parent: Importing Data
-nav_order: 6
+parent: Structured data sources
+grand_parent: Importing Data
+nav_order: 3
+redirect_from:
+  - /import/tde-generation.html
 ---
 
 Flux 1.4.0 supports automatically generating [Template Driven Extraction (TDE)](https://docs.marklogic.com/guide/app-dev/TDE) templates during data import operations. TDE templates enable MarkLogic to extract row data from documents, making that data available through
@@ -101,6 +104,77 @@ The above command will:
 You can include the `--tde-preview` option to generate and display the TDE template without loading it into MarkLogic.
 The generated template will be displayed in the console output, allowing you to review and customize it as needed. 
 Additionally, no data will be imported when using this option. 
+
+## Incremental write support
+
+When using [incremental write](../incremental-write.md) to efficiently update documents, you can include 
+the `--tde-support-incremental-write` option to ensure your generated TDE template includes columns for tracking 
+incremental write state. This allows you to use the same TDE template for incremental write and 
+for querying the data in each document via relational queries.
+
+### Usage example
+
+When combining TDE generation with incremental write, you will typically specify the schema and view names 
+twice - once for TDE generation and once for incremental write:
+
+```
+--incremental-write \
+--tde-support-incremental-write \
+--tde-schema hr \
+--tde-view employees \
+--incremental-write-schema hr \
+--incremental-write-view employees
+```
+
+The `--tde-schema` and `--tde-view` options control the generated TDE template, while 
+`--incremental-write-schema` and `--incremental-write-view` tell the incremental write feature which 
+TDE view to query for existing document hashes. A future release of Flux may allow for the incremental write 
+feature to default to the schema and view specified for the TDE generation feature when using 
+`--tde-support-incremental-write`.
+
+### Generated columns
+
+When `--tde-support-incremental-write` is specified, Flux will add two columns to the beginning of the generated TDE template:
+
+1. A `uri` column that captures the document URI.
+2. A hash column (defaulting to `incrementalWriteHash`) that captures the hash value stored in document metadata.
+
+For example, a generated TDE template with incremental write support will include columns similar to:
+
+```json
+"columns" : [ {
+  "name" : "uri",
+  "scalarType" : "string",
+  "val" : "xdmp:node-uri(.)"
+}, {
+  "name" : "incrementalWriteHash",
+  "scalarType" : "unsignedLong",
+  "val" : "xdmp:node-metadata-value(., 'incrementalWriteHash')",
+  "nullable" : true
+}, {
+  // Your data columns...
+```
+
+The `uri` column is not nullable, ensuring every row has a document URI. The hash column is nullable since 
+documents may not have been written with incremental write enabled.
+
+### Custom hash key name
+
+If you have specified a custom hash key name via the `--incremental-write-hash-name` option, the generated 
+TDE template will use that name for both the column name and the metadata key reference. For example, 
+with `--incremental-write-hash-name myCustomHash`, the hash column will be:
+
+```json
+{
+  "name" : "myCustomHash",
+  "scalarType" : "unsignedLong",
+  "val" : "xdmp:node-metadata-value(., 'myCustomHash')",
+  "nullable" : true
+}
+```
+
+See the [incremental write documentation](../incremental-write.md) for more information on using incremental 
+write to efficiently update documents.
 
 ## Template customization
 

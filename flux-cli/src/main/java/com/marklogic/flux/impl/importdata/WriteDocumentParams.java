@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -57,6 +57,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             "The documents in the archive file can then be retried via the 'import-archive-files' command."
     )
     private String failedDocumentsPath;
+
+    @CommandLine.Mixin
+    private IncrementalWriteParams incrementalWriteParams = new IncrementalWriteParams();
 
     @CommandLine.Option(
         names = "--log-progress",
@@ -163,6 +166,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     @CommandLine.Mixin
     private ClassifierParams classifierParams = new ClassifierParams();
 
+    @CommandLine.Mixin
+    private NucliaParams nucliaParams = new NucliaParams();
+
     private boolean streaming;
 
     public Map<String, String> makeOptions() {
@@ -188,6 +194,8 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
             Options.STREAM_FILES, streaming ? "true" : null
         );
 
+        options.putAll(incrementalWriteParams.makeOptions());
+
         if (metadataValues != null) {
             metadataValues.entrySet().forEach(entry -> options.put(
                 Options.WRITE_METADATA_VALUES_PREFIX + entry.getKey(), entry.getValue()
@@ -210,6 +218,10 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
         if (classifierParams != null) {
             options.putAll(classifierParams.makeOptions());
+        }
+
+        if (nucliaParams != null) {
+            options.putAll(nucliaParams.makeOptions());
         }
 
         return options;
@@ -366,5 +378,9 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     public T documentProperties(Map<String, String> documentProperties) {
         this.documentProperties = documentProperties;
         return (T) this;
+    }
+
+    String getIncrementalWriteHashKeyName() {
+        return incrementalWriteParams.getHashKeyName();
     }
 }

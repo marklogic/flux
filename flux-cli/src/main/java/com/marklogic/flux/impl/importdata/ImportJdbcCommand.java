@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.JdbcImporter;
+import com.marklogic.flux.api.StructuredDataImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.*;
 import org.apache.spark.sql.*;
@@ -49,7 +50,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @Override
     protected Dataset<Row> afterDatasetLoaded(Dataset<Row> dataset) {
-        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.structuredDataParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -80,6 +81,19 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         return this;
     }
 
+    @Override
+    public JdbcImporter where(String expression) {
+        readParams.structuredDataParams.where(expression);
+        return this;
+    }
+
+    @Override
+    public JdbcImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
+        readParams.structuredDataParams.setGroupBy(columnName);
+        consumer.accept(readParams.structuredDataParams);
+        return this;
+    }
+
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
         static class QueryOptions {
@@ -96,7 +110,7 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         private QueryOptions queryOptions = new QueryOptions();
 
         @CommandLine.Mixin
-        private AggregationParams aggregationParams = new AggregationParams();
+        private StructuredDataParams structuredDataParams = new StructuredDataParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -119,20 +133,29 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         }
 
         @Override
+        @Deprecated
         public JdbcImporter.ReadJdbcOptions groupBy(String groupBy) {
-            this.aggregationParams.setGroupBy(groupBy);
+            this.structuredDataParams.setGroupBy(groupBy);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadJdbcOptions aggregateColumns(String aggregationName, String... columns) {
-            this.aggregationParams.addAggregationExpression(aggregationName, columns);
+            this.structuredDataParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadJdbcOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
+            this.structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
+            return this;
+        }
+
+        @Override
+        public ReadJdbcOptions drop(String... columns) {
+            this.structuredDataParams.drop(columns);
             return this;
         }
     }

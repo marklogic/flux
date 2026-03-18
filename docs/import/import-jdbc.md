@@ -147,15 +147,13 @@ The decision on whether to include null fields will depend on your application r
 documents have large numbers of null fields, you may find them to be noise and decide to ignore them. In another case,
 it may be important to query for documents that have a particular field with a value of null.
 
-## Aggregating rows
+## See also
 
-The `import-jdbc` command supports aggregating related rows together to produce hierarchical documents. See
-[Aggregating rows](aggregating-rows.md) for more information.
+As a structured data source, the `import-jdbc` command also supports the following features:
 
-## Generating a TDE template
-
-The `import-jdbc` command supports generating TDE templates to make imported data immediately available for relational
-queries. See [TDE template generation](tde-generation.md) for more information.
+- [Filtering data](structured-data/filtering-data.md) - Filter rows with WHERE expressions or drop specific columns
+- [Aggregating rows](structured-data/aggregating-rows.md) - Combine related rows to create hierarchical documents
+- [Generating TDE templates](structured-data/tde-generation.md) - Automatically create templates for relational queries
 
 ## Advanced options
 

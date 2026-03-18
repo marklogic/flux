@@ -142,6 +142,59 @@ will result in a URI of `/my%20file.json`. This is due to an
 [issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in
 a future server release. 
 
+### Applying transforms selectively when streaming
+
+When streaming archive entries to MarkLogic, you may need to apply a REST transform to certain documents but not 
+others. One reason for this is when an archive contains files that appear to be JSON, XML, or text based on their URI 
+extensions (such as `.json`, `.xml`, or `.txt`), but are stored in the archive with a binary format. As noted
+in the [MarkLogic REST API documentation](https://docs.progress.com/bundle/marklogic-server-develop-rest-api-12/page/topics/intro.html#id_53367),
+loading such documents as binaries requires the use of a REST transform that converts each document into a binary. This
+approach prevents MarkLogic from automatically setting the document type based on the URI extension. The following 
+REST transform is one example of how a JSON or XML document can be converted to a binary:
+
+```
+xquery version "1.0-ml";
+
+module namespace transform = "http://marklogic.com/rest-api/transform/toBinary";
+
+declare function transform($context as map:map, $params as map:map, $content as document-node()) as document-node()
+{
+    let $node := $content/node()
+    let $enc := xdmp:base64-encode(xdmp:quote($node))
+    let $bin := xs:hexBinary(xs:base64Binary($enc))
+    return document { binary { $bin } }
+};
+```
+
+The `--streaming-transform-binary-with-extension` option, introduced in Flux 2.1, allows you to specify which 
+documents should be sent to your transform during streaming. This allows you to stream as many documents as possible, 
+with only the documents that need to be converted into binaries being sent to the transform. The option accepts a 
+comma-delimited list of URI extensions. The transform specified via `--transform` will then only be applied if 
+both of the following conditions are met for a document in the archive:
+
+1. The document format in the archive is `BINARY` (requires an archive created with Flux 2.1 or later).
+2. The document URI ends with one of the specified extensions.
+
+For example, consider an archive containing:
+
+- `/data/report.json` with format `BINARY` (needs transform)
+- `/data/config.json` with format `JSON` (no transform needed)
+- `/data/document.xml` with format `BINARY` (needs transform)
+- `/data/image.png` with format `BINARY` (no transform needed)
+
+The following set of options will result in the transform only being applied to  `report.json` and `document.xml`:
+
+```
+--streaming 
+--transform my-transform
+--streaming-transform-binary-with-extension json,xml
+```
+
+This option only has an effect when `--streaming` and `--transform` are specified. Note that if `--streaming`
+and `--transform` are specified without this option, then every document will be sent to the transform. This is 
+typically not desirable as it results in each document being read into memory in MarkLogic, which defeats some of the 
+purpose of streaming the data into MarkLogic.
+
 ## Common errors
 
 If you use Flux 1.0.x to import an archive created by Flux 1.1.x or higher, you may receive an error containing the

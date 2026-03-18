@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.tde;
 
@@ -17,31 +17,31 @@ public interface TdeBuilder {
 
         String getScalarType();
 
-        boolean isNullable();
+        default boolean isNullable() { return false; }
 
-        boolean isVirtual();
+        default boolean isVirtual() { return false; }
 
-        String getDefaultValue();
+        default String getDefaultValue() { return null; }
 
-        String getInvalidValues();
+        default String getInvalidValues() { return null; }
 
-        String getReindexing();
+        default String getReindexing() { return null; }
 
         /**
          * @return a set of role names that define read permissions for the column. A MarkLogic TDE uses the term
          * "permissions" even though it's really a set of role names (while "permission" normally refers to a role
          * name joined with a capability in MarkLogic).
          */
-        Set<String> getPermissions();
+        default Set<String> getPermissions() { return null; }
 
-        String getCollation();
+        default String getCollation() { return null; }
 
-        Integer getDimension();
+        default Integer getDimension() { return null; }
 
-        Float getAnnCompression();
+        default Float getAnnCompression() { return null; }
 
-        String getAnnDistance();
+        default String getAnnDistance() { return null; }
 
-        Boolean isAnnIndexed();
+        default Boolean isAnnIndexed() { return null; }
     }
 }

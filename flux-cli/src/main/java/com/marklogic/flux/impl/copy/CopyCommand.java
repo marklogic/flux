@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
@@ -11,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
 import com.marklogic.flux.impl.importdata.ClassifierParams;
 import com.marklogic.flux.impl.importdata.EmbedderParams;
+import com.marklogic.flux.impl.importdata.NucliaParams;
 import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
 import org.apache.spark.sql.*;
@@ -196,6 +197,9 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @CommandLine.Mixin
         private ClassifierParams classifierParams = new ClassifierParams();
 
+        @CommandLine.Mixin
+        private NucliaParams nucliaParams = new NucliaParams();
+
         protected Map<String, String> makeOptions() {
             Map<String, String> options = splitterParams != null ? splitterParams.makeOptions() : new HashMap<>();
 
@@ -205,6 +209,10 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
             if (classifierParams != null) {
                 options.putAll(classifierParams.makeOptions());
+            }
+
+            if (nucliaParams != null) {
+                options.putAll(nucliaParams.makeOptions());
             }
 
             if (metadataValues != null) {

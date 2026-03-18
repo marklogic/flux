@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -36,6 +36,26 @@ class ImportParquetFilesTest extends AbstractTest {
         verifyCarDoc("/parquet/Datsun 710.json", 22.8, 4, 1);
         verifyCarDoc("/parquet/Ferrari Dino.json", 19.7, 5, 6);
         verifyCarDoc("/parquet/Toyota Corolla.json", 33.9, 4, 1);
+    }
+
+    @Test
+    void dropColumns() {
+        run(
+            "import-parquet-files",
+            "--path", "src/test/resources/parquet/individual/cars.parquet",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "parquet-test",
+            "--uri-template", "/parquet/{model}.json",
+            "--drop", "cyl", "gear"
+        );
+
+        assertCollectionSize("parquet-test", 32);
+        JsonNode doc = readJsonDocument("/parquet/Datsun 710.json");
+        assertFalse(doc.has("cyl"), "The 'cyl' column should have been dropped");
+        assertFalse(doc.has("gear"), "The 'gear' column should have been dropped");
+        assertTrue(doc.has("mpg"), "Other columns should still be present");
+        assertTrue(doc.has("model"), "Other columns should still be present");
     }
 
     @Test

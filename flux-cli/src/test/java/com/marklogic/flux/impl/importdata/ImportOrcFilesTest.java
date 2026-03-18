@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -11,6 +11,27 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImportOrcFilesTest extends AbstractTest {
+
+    @Test
+    void dropColumns() {
+        run(
+            "import-orc-files",
+            "--path", "src/test/resources/orc-files/authors.orc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "orcFile-test",
+            "--uri-template", "/orc-test/{LastName}.json",
+            "--drop", "CitationID", "ForeName"
+        );
+
+        assertCollectionSize("orcFile-test", 15);
+        getUrisInCollection("orcFile-test", 15).forEach(uri -> {
+            JsonNode doc = readJsonDocument(uri);
+            assertFalse(doc.has("CitationID"), "The 'CitationID' column should have been dropped");
+            assertFalse(doc.has("ForeName"), "The 'ForeName' column should have been dropped");
+            assertTrue(doc.has("LastName"), "Other columns should still be present");
+        });
+    }
 
     @Test
     void orcFileTest() {

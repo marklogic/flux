@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.DelimitedFilesImporter;
+import com.marklogic.flux.api.StructuredDataImporter;
 import com.marklogic.flux.api.WriteStructuredDocumentsOptions;
 import com.marklogic.flux.impl.SparkUtil;
 import com.marklogic.flux.impl.TdeHelper;
@@ -24,7 +25,7 @@ import java.util.function.Consumer;
 public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<DelimitedFilesImporter> implements DelimitedFilesImporter {
 
     @CommandLine.Mixin
-    private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams();
+    private ReadDelimitedFilesParams readParams = new ReadDelimitedFilesParams(); 
 
     @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
@@ -66,7 +67,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @CommandLine.Mixin
-        private AggregationParams aggregationParams = new AggregationParams();
+        private StructuredDataParams structuredDataParams = new StructuredDataParams();
 
         @Override
         public Map<String, String> makeOptions() {
@@ -108,20 +109,29 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
         }
 
         @Override
+        @Deprecated
         public ReadDelimitedFilesOptions groupBy(String columnName) {
-            aggregationParams.setGroupBy(columnName);
+            structuredDataParams.setGroupBy(columnName);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadDelimitedFilesOptions aggregateColumns(String aggregationName, String... columns) {
-            aggregationParams.addAggregationExpression(aggregationName, columns);
+            structuredDataParams.aggregateColumns(aggregationName, columns);
             return this;
         }
 
         @Override
+        @Deprecated
         public ReadDelimitedFilesOptions orderAggregation(String aggregationName, String columnName, boolean ascending) {
-            this.aggregationParams.addAggregationOrdering(aggregationName, columnName, ascending);
+            structuredDataParams.orderAggregation(aggregationName, columnName, ascending);
+            return this;
+        }
+
+        @Override
+        public ReadDelimitedFilesOptions drop(String... columns) {
+            structuredDataParams.drop(columns);
             return this;
         }
     }
@@ -132,7 +142,7 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
             dataset = SparkUtil.addFilePathColumn(dataset);
         }
 
-        dataset = readParams.aggregationParams.applyGroupBy(dataset);
+        dataset = readParams.structuredDataParams.applyTransformations(dataset);
 
         TdeHelper.Result result = writeParams.newTdeHelper().logOrLoadTemplate(dataset.schema(), getConnectionParams());
         if (TdeHelper.Result.TEMPLATE_LOGGED.equals(result)) {
@@ -157,6 +167,19 @@ public class ImportDelimitedFilesCommand extends AbstractImportFilesCommand<Deli
     @Override
     public DelimitedFilesImporter to(Consumer<WriteStructuredDocumentsOptions> consumer) {
         consumer.accept(writeParams);
+        return this;
+    }
+
+    @Override
+    public DelimitedFilesImporter where(String expression) {
+        readParams.structuredDataParams.where(expression);
+        return this;
+    }
+
+    @Override
+    public DelimitedFilesImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
+        readParams.structuredDataParams.setGroupBy(columnName);
+        consumer.accept(readParams.structuredDataParams);
         return this;
     }
 }

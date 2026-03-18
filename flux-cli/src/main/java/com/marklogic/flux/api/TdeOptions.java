@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -60,4 +60,13 @@ public interface TdeOptions {
     TdeOptions columnAnnDistances(Map<String, String> columnAnnDistances);
 
     TdeOptions columnAnnIndexed(Map<String, Boolean> columnAnnIndexed);
+
+    /**
+     * When set, the generated TDE will include a {@code uri} column (populated via {@code xdmp:node-uri(.)}) and
+     * a column containing the incremental write hash.
+     * Include these columns if you intend to use the incremental write schema-and-view approach on subsequent imports.
+     *
+     * @since 2.1.0
+     */
+    TdeOptions includeIncrementalWriteColumns();
 }

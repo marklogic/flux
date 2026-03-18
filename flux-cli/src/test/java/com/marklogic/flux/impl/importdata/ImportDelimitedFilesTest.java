@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -15,6 +15,25 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImportDelimitedFilesTest extends AbstractTest {
+
+    @Test
+    void dropColumns() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/three-rows.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "delimited-test",
+            "--uri-template", "/delimited/{number}.json",
+            "--drop", "flag"
+        );
+
+        assertCollectionSize("delimited-test", 3);
+        JsonNode doc = readJsonDocument("/delimited/1.json");
+        assertFalse(doc.has("flag"), "The 'flag' column should have been dropped");
+        assertTrue(doc.has("number"), "Other columns should still be present");
+        assertTrue(doc.has("color"), "Other columns should still be present");
+    }
 
     @Test
     void defaultSettings() {
