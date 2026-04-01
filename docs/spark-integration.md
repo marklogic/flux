@@ -36,7 +36,7 @@ submit a Flux command invocation to a remote Spark cluster. Every Flux command i
 Flux command, along with all of its option, can be invoked via `spark-submit`. 
 
 To use Flux with `spark-submit`, first download the `marklogic-flux-2.1.0-all.jar` file from the 
-[GitHub release page](https://github.com/marklogic/flux/releases/tag/2.0.0). This jar file includes Flux and all of 
+[GitHub release page](https://github.com/marklogic/flux/releases). This jar file includes Flux and all of 
 its dependencies, excluding those of Spark itself, which will be provided via the Spark cluster that you connect to 
 via `spark-submit`. 
 
