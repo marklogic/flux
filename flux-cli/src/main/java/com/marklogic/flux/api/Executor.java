@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -41,6 +41,15 @@ public interface Executor<T extends Executor> {
      * @return instance of this executor
      */
     T connectionString(String connectionString);
+
+    /**
+     * Convenience for configuring a MarkLogic connection via a connection string and forcing basic authentication.
+     *
+     * @param connectionString Defines a connection to MarkLogic via "user:password@host:port/optionalDatabaseName".
+     * @return instance of this executor
+     * @since 2.2.0
+     */
+    T connectionStringBasic(String connectionString);
 
     /**
      * Limit the number of records read from the executor's data source.
