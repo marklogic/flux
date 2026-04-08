@@ -1,0 +1,20 @@
+name: Test PR Workflows (TEMPORARY - DELETE AFTER TESTING)
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  test-jira-check:
+    name: Test JIRA ID Check
+    uses: marklogic/pr-workflows/.github/workflows/jira-id-check.yml@fix/SECCMP-1797-pwn-request-injection
+    with:
+      pr-title: ${{ github.event.pull_request.title }}
+
+  test-copyright-check:
+    name: Test Copyright Check
+    uses: marklogic/pr-workflows/.github/workflows/copyright-check.yml@fix/SECCMP-1797-pwn-request-injection
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
