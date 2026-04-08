@@ -164,6 +164,9 @@ password of `sp@r:k`, you would use the following string:
 
     --connection-string user:sp%40r%3Ak@host:8000
 
+When using `--connection-string`, Flux defaults to digest authentication. If your app server requires basic
+authentication, also include `--auth-type basic`.
+
 For other authentication mechanisms, you must use the `--host` and `--port` options to define the host and port for 
 your MarkLogic app server. 
 

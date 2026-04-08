@@ -106,12 +106,13 @@ The `com.marklogic.flux.api.Flux` class is the entry point to the Flux API. This
 with each Flux CLI command. 
 
 Each method in the `Flux` class returns a subclass of the `com.marklogic.flux.api.Executor` interface. Each instance of 
-`Executor` has two methods for specifying a connection to MarkLogic:
+`Executor` has three methods for specifying a connection to MarkLogic:
 
 - `connectionString(String)` allows you to specify a connection to MarkLogic via a connection string, which requires
-the user of `basic` or `digest` authentication.
+  the use of `digest` authentication.
+- `connectionStringBasic(String)` allows you to specify a connection string and force `basic` authentication.
 - `connection(Consumer<ConnectionOptions>)` allows you to specify a Java lambda expression for configuring the necessary 
-options on the given `com.marklogic.flux.api.ConnectionOptions` object.
+  options on the given `com.marklogic.flux.api.ConnectionOptions` object.
 
 Each subclass of `Executor` has `from` and `to` methods for specifying options that control where data is read from and
 control where data is written to. Similar to the `connection` method above, all `from` and `to` methods allow you to
