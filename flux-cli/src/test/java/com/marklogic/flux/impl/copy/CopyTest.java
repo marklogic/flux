@@ -10,6 +10,7 @@ import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.util.List;
 
@@ -98,6 +99,44 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
+    }
+
+    @Test
+    void runsToCompletionWithBatchWriteFailuresAndAbortOnWriteFailureNotSpecified() {
+        run(CommandLine.ExitCode.OK,
+            "copy",
+            "--collections", "author",
+            "--partitions-per-forest", "1",
+            "--categories", "content,metadata",
+            "--connection-string", makeConnectionString(),
+            "--output-connection-string", makeConnectionString(),
+            // No need to specify permissions since they are included via "--categories".
+            "--output-collections", "author-copies",
+            "--output-uri-prefix", "/copied",
+            "--output-permissions", "invalid-roleZZ,read,rest-writer,update"
+            //^cause batch write err but don't specify --output-abort-on-write-failure
+        );
+
+    }
+
+    @Test
+    void abortsOnWriteFailureOnlyWhenAbortOnWriteFailureSpecified() {
+        assertStderrContains(
+            "Role does not exist: sec:role-name = invalid-roleZZZ",
+            CommandLine.ExitCode.SOFTWARE,
+            "copy",
+            "--collections", "author",
+            "--partitions-per-forest", "1",
+            "--categories", "content,metadata",
+            "--connection-string", makeConnectionString(),
+            "--output-connection-string", makeConnectionString(),
+            // No need to specify permissions since they are included via "--categories".
+            "--output-collections", "author-copies",
+            "--output-uri-prefix", "/copied",
+            "--output-permissions", "invalid-roleZZZ,read,rest-writer,update",
+            "--output-abort-on-write-failure",
+            "--stacktrace"
+        );
     }
 
     @Test
