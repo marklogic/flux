@@ -109,7 +109,7 @@ class CopyTest extends AbstractTest {
                 "--output-database", otherDatabaseName,
                 "--output-collections", "author-copies",
                 "--output-uri-prefix", "/copied",
-                "--output-permissions", "invalid-roleZZ,read,rest-writer,update"
+                "--output-permissions", "invalid-roleZZZ,read,rest-writer,update"
                 //^cause batch write err but don't specify --output-abort-on-write-failure
             );
             assertFalse(stdErr.contains("Role does not exist: sec:role-name = invalid-roleZZZ"));
