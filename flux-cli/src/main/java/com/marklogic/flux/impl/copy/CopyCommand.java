@@ -188,6 +188,13 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         )
         private Map<String, String> documentProperties = new HashMap<>();
 
+        @CommandLine.Option(
+            names = {"--output-write-prop"},
+            hidden = true,
+            description = "Specify one or more arbitrary options to pass to the MarkLogic connector writer."
+        )
+        private Map<String, String> additionalWriteOptions = new HashMap<>();
+
         @CommandLine.Mixin
         private SplitterParams splitterParams = new SplitterParams();
 
@@ -227,7 +234,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 ));
             }
 
-            return OptionsUtil.addOptions(options,
+            Map<String, String> allOptions = OptionsUtil.addOptions(options,
                 Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
@@ -247,6 +254,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_URI_TEMPLATE, uriTemplate,
                 Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null
             );
+
+            if (additionalWriteOptions != null) {
+                allOptions.putAll(additionalWriteOptions);
+            }
+
+            return allOptions;
         }
 
         @Override
