@@ -51,7 +51,9 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--doc-metadata", "meta1=value1",
             "--doc-metadata", "meta2=value2",
             "--doc-prop", "prop1=value1",
-            "--doc-prop", "prop2=value2"
+            "--doc-prop", "prop2=value2",
+            "--write-prop", "spark.someprop=somevalue",
+            "--write-prop", "other.prop=othervalue"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -95,7 +97,9 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2",
-            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "10000"
+            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "10000",
+            "spark.someprop", "somevalue",
+            "other.prop", "othervalue"
         );
     }
 
