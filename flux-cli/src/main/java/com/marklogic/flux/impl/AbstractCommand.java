@@ -256,7 +256,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
      * each path if necessary based on the Azure Storage parameters.
      */
     protected final List<String> applyCloudStorageParams(Configuration conf, CloudStorageParams params, List<String> paths) {
-        applyCloudStorageParams(conf, params);
+        params.getS3Params().addToHadoopConfiguration(conf, paths);
+        params.getAzureStorageParams().addToHadoopConfiguration(conf);
         List<String> transformedPaths = params.getAzureStorageParams().transformPathsIfNecessary(paths);
         if (logger.isInfoEnabled()) {
             if (transformedPaths.size() == 1) {

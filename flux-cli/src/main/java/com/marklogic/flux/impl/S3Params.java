@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -8,13 +8,15 @@ import picocli.CommandLine;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
 /**
  * Intended to be a delegate in any command that can access S3.
  */
 public class S3Params {
 
-    private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
-    private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
     private static final String S3A_CREDENTIALS_PROVIDER = "fs.s3a.aws.credentials.provider";
 
     @CommandLine.Option(
@@ -67,38 +69,95 @@ public class S3Params {
      * @param config the Spark runtime configuration object
      */
     public void addToHadoopConfiguration(Configuration config) {
+        addToHadoopConfiguration(config, (String) null);
+    }
+
+    /**
+     * Extracts the bucket from the first S3 path in the list and delegates to
+     * {@link #addToHadoopConfiguration(Configuration, String)} so that callers do not need to know about
+     * bucket extraction.
+     *
+     * @param config the Hadoop configuration to modify
+     * @param paths  the list of input/output paths; the first S3/S3A/S3N URI in the list is used to determine the bucket
+     */
+    public void addToHadoopConfiguration(Configuration config, List<String> paths) {
+        String bucket = null;
+        if (paths != null) {
+            for (String path : paths) {
+                bucket = extractBucket(path);
+                if (bucket != null) {
+                    break;
+                }
+            }
+        }
+        addToHadoopConfiguration(config, bucket);
+    }
+
+    /**
+     * Adds S3 credentials and options to the Hadoop configuration. When a bucket name is provided, bucket-scoped
+     * keys are used (e.g. {@code fs.s3a.bucket.<name>.access.key}) so that concurrent jobs targeting different
+     * buckets do not interfere with each other. When bucket is null, global keys are used as a fallback.
+     *
+     * @param config the Hadoop configuration to modify
+     * @param bucket the S3 bucket name, or null to set global keys
+     */
+    public void addToHadoopConfiguration(Configuration config, String bucket) {
+        // useProfile has no bucket-scoped equivalent — always set globally.
+        if (useProfile) {
+            config.set(S3A_CREDENTIALS_PROVIDER, "software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider");
+        }
+
+        String prefix = (bucket != null && !bucket.isEmpty()) ? "fs.s3a.bucket." + bucket + "." : "fs.s3a.";
+
+        if (addCredentials) {
+            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.create()) {
+                AwsCredentials credentials = provider.resolveCredentials();
+                config.set(prefix + "access.key", credentials.accessKeyId());
+                config.set(prefix + "secret.key", credentials.secretAccessKey());
+            }
+        }
+
         // See https://sparkbyexamples.com/amazon-aws/write-read-csv-file-from-s3-into-dataframe/ for more
         // information on the keys used below.
 
         // See https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-providers.html for
         // an explanation of how this provider works. The main use case is for enabling SSO auth.
-        if (useProfile) {
-            config.set(S3A_CREDENTIALS_PROVIDER, "software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider");
-        }
-
-        if (addCredentials) {
-            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.create()) {
-                AwsCredentials credentials = provider.resolveCredentials();
-                config.set(S3A_ACCESS_KEY, credentials.accessKeyId());
-                config.set(S3A_SECRET_KEY, credentials.secretAccessKey());
-            }
-        }
 
         if (hasText(accessKeyId)) {
-            config.set(S3A_ACCESS_KEY, accessKeyId);
+            config.set(prefix + "access.key", accessKeyId);
         }
         if (hasText(secretAccessKey)) {
-            config.set(S3A_SECRET_KEY, secretAccessKey);
+            config.set(prefix + "secret.key", secretAccessKey);
         }
         if (hasText(sessionToken)) {
-            config.set("fs.s3a.session.token", sessionToken);
+            config.set(prefix + "session.token", sessionToken);
         }
         if (hasText(endpoint)) {
-            config.set("fs.s3a.endpoint", endpoint);
+            config.set(prefix + "endpoint", endpoint);
         }
         if (hasText(region)) {
-            config.set("fs.s3a.endpoint.region", region);
+            config.set(prefix + "endpoint.region", region);
         }
+    }
+
+    /**
+     * Extracts the bucket name from an S3 path of the form {@code s3a://bucket/...} or {@code s3://bucket/...}.
+     * Returns null if the path is not an S3 URI or the bucket cannot be determined.
+     */
+    protected static String extractBucket(String path) {
+        if (path == null) {
+            return null;
+        }
+        try {
+            URI uri = new URI(path);
+            String scheme = uri.getScheme();
+            if ("s3a".equals(scheme) || "s3".equals(scheme) || "s3n".equals(scheme)) {
+                return uri.getHost();
+            }
+        } catch (URISyntaxException e) {
+            // Not a valid URI — fall through to return null
+        }
+        return null;
     }
 
     private boolean hasText(String value) {
