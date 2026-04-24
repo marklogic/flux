@@ -350,6 +350,16 @@ publishing {
     }
   }
   repositories {
+    if (project.hasProperty("ghToken")) {
+      maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/rjrudin/flux")
+        credentials {
+          username = ghActor
+          password = ghToken
+        }
+      }
+    }
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
