@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -24,6 +24,11 @@ public interface CustomImporter extends Executor<CustomImporter> {
          * @since 2.0.0
          */
         CustomReadOptions s3UseProfile();
+
+        /**
+         * @since 2.2.0
+         */
+        CustomReadOptions s3AnonymousAccess();
 
         CustomReadOptions s3AccessKeyId(String accessKeyId);
 

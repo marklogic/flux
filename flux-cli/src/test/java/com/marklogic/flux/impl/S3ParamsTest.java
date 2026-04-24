@@ -28,6 +28,37 @@ class S3ParamsTest {
     }
 
     @Test
+    void anonymousAccess() {
+        params.setAnonymousAccess(true);
+        assertEquals(
+            "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider",
+            getConfigValue("fs.s3a.aws.credentials.provider")
+        );
+    }
+
+    @Test
+    void anonymousAccessIsAlwaysGlobalEvenWithBucket() {
+        params.setAnonymousAccess(true);
+        Configuration config = new Configuration();
+        params.addToHadoopConfiguration(config, "my-bucket");
+        assertEquals(
+            "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider",
+            config.get("fs.s3a.aws.credentials.provider")
+        );
+    }
+
+    @Test
+    void anonymousAccessTakesPriorityOverUseProfile() {
+        params.setAnonymousAccess(true);
+        params.setUseProfile(true);
+        assertEquals(
+            "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider",
+            getConfigValue("fs.s3a.aws.credentials.provider"),
+            "Anonymous access should take priority when both options are set"
+        );
+    }
+
+    @Test
     void accessKeyId() {
         params.setAccessKeyId("my-access-key");
         assertEquals("my-access-key", getConfigValue("fs.s3a.access.key"));

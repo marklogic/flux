@@ -35,6 +35,12 @@ public class S3Params {
     private boolean useProfile;
 
     @CommandLine.Option(
+        names = "--s3-anonymous",
+        description = "Access S3 without credentials for public buckets that allow anonymous access."
+    )
+    private boolean anonymousAccess;
+
+    @CommandLine.Option(
         names = "--s3-access-key-id",
         description = "Specifies the AWS access key ID to use for accessing S3 paths."
     )
@@ -102,8 +108,10 @@ public class S3Params {
      * @param bucket the S3 bucket name, or null to set global keys
      */
     public void addToHadoopConfiguration(Configuration config, String bucket) {
-        // useProfile has no bucket-scoped equivalent — always set globally.
-        if (useProfile) {
+        // useProfile and anonymousAccess have no bucket-scoped equivalent — always set globally.
+        if (anonymousAccess) {
+            config.set(S3A_CREDENTIALS_PROVIDER, "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider");
+        } else if (useProfile) {
             config.set(S3A_CREDENTIALS_PROVIDER, "software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider");
         }
 
@@ -170,6 +178,10 @@ public class S3Params {
 
     public void setUseProfile(boolean useProfile) {
         this.useProfile = useProfile;
+    }
+
+    public void setAnonymousAccess(boolean anonymousAccess) {
+        this.anonymousAccess = anonymousAccess;
     }
 
     public void setAccessKeyId(String accessKeyId) {
