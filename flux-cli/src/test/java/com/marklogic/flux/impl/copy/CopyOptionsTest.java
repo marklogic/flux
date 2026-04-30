@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
@@ -90,6 +90,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-doc-metadata", "meta2=value2",
             "--output-doc-prop", "prop1=value1",
             "--output-doc-prop", "prop2=value2",
+            "--output-write-prop", "key1=value1",
+            "--output-write-prop", "key2=value2",
             "--classifier-host", "somewhere",
             "--classifier-port", "1234",
             "--classifier-http",
@@ -125,6 +127,8 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_METADATA_VALUES_PREFIX + "meta2", "value2",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop1", "value1",
             Options.WRITE_DOCUMENT_PROPERTIES_PREFIX + "prop2", "value2",
+            "key1", "value1",
+            "key2", "value2",
             Options.WRITE_CLASSIFIER_HOST, "somewhere",
             Options.WRITE_CLASSIFIER_PORT, "1234",
             Options.WRITE_CLASSIFIER_HTTP, "true",

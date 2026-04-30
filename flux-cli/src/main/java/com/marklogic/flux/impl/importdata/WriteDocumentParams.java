@@ -157,6 +157,13 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
     )
     private Map<String, String> documentProperties = new HashMap<>();
 
+    @CommandLine.Option(
+        names = {"--write-prop"},
+        hidden = true,
+        description = "Specify one or more arbitrary options to pass to the MarkLogic connector writer."
+    )
+    private Map<String, String> additionalWriteOptions = new HashMap<>();
+
     @CommandLine.Mixin
     private SplitterParams splitterParams = new SplitterParams();
 
@@ -222,6 +229,10 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
         if (nucliaParams != null) {
             options.putAll(nucliaParams.makeOptions());
+        }
+
+        if (additionalWriteOptions != null) {
+            options.putAll(additionalWriteOptions);
         }
 
         return options;

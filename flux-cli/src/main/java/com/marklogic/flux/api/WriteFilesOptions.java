@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -19,6 +19,11 @@ public interface WriteFilesOptions<T extends WriteFilesOptions>  {
      * @since 2.0.0
      */
     T s3UseProfile();
+
+    /**
+     * @since 2.2.0
+     */
+    T s3AnonymousAccess();
 
     T s3Endpoint(String endpoint);
 
