@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.copy;
 
@@ -10,11 +10,13 @@ import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class CopyTest extends AbstractTest {
 
@@ -41,27 +43,22 @@ class CopyTest extends AbstractTest {
 
     @Test
     void sameConnectionStringButDifferentOutputDatabase() {
-        final String otherTestDatabase = "flux-other-test-content";
-
-        try (DatabaseClient otherTestClient = newDatabaseClient(otherTestDatabase)) {
-            // Clear out the other test database first in case anything is hanging around in there.
-            otherTestClient.newServerEval().xquery("cts:uris((), (), cts:true-query()) ! xdmp:document-delete(.)").evalAs(String.class);
-
+        runCopyToOtherDatabase(otherDbName -> {
             run(
                 "copy",
                 "--collections", "author",
                 "--connection-string", makeConnectionString(),
-                "--output-database", otherTestDatabase
+                "--output-database", otherDbName
             );
-
+        }, otherDbTestClient -> {
             final List<String> originalAuthorUris = getUrisInCollection("author", 15);
 
-            List<String> otherAuthorUris = new ClientHelper(otherTestClient).getUrisInCollection("author", 15);
+            List<String> otherAuthorUris = new ClientHelper(otherDbTestClient).getUrisInCollection("author", 15);
             for (String authorUri : originalAuthorUris) {
                 assertTrue(otherAuthorUris.contains(authorUri),
                     "Did not find expected author URI in other test database: " + authorUri);
             }
-        }
+        });
     }
 
     @Test
@@ -98,6 +95,47 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
+    }
+
+    @Test
+    void runsToCompletionWithBatchWriteFailuresAndAbortOnWriteFailureNotSpecified() {
+        runCopyToOtherDatabase(otherDatabaseName -> {
+            String stdErr = runAndReturnStderr(CommandLine.ExitCode.OK,
+                "copy",
+                "--collections", "author",
+                "--partitions-per-forest", "1",
+                "--categories", "content,metadata",
+                "--connection-string", makeConnectionString(),
+                "--output-database", otherDatabaseName,
+                "--output-collections", "author-copies",
+                "--output-uri-prefix", "/copied",
+                "--output-permissions", "invalid-roleZZZ,read,rest-writer,update"
+                //^cause batch write err but don't specify --output-abort-on-write-failure
+            );
+            assertFalse(stdErr.contains("Role does not exist: sec:role-name = invalid-roleZZZ"));
+        }, otherDbClient -> {
+            assertEquals(0, (new ClientHelper(otherDbClient)).getCollectionSize("author-copies"));
+        });
+    }
+
+    @Test
+    void abortsOnWriteFailureOnlyWhenAbortOnWriteFailureSpecified() {
+        assertStderrContains(
+            "Role does not exist: sec:role-name = invalid-roleZZZ",
+            CommandLine.ExitCode.SOFTWARE,
+            "copy",
+            "--collections", "author",
+            "--partitions-per-forest", "1",
+            "--categories", "content,metadata",
+            "--connection-string", makeConnectionString(),
+            "--output-connection-string", makeConnectionString(),
+            "--output-collections", "author-copiesZ", //different coll name so it does not interfere with other tests
+            "--output-uri-prefix", "/copied",
+            "--output-permissions", "invalid-roleZZZ,read,rest-writer,update",
+            "--output-abort-on-write-failure"
+        );
+
+        assertCollectionSize("author-copiesZ", 0);
     }
 
     @Test
@@ -165,4 +203,17 @@ class CopyTest extends AbstractTest {
         SearchHandle results = queryManager.search(query, new SearchHandle());
         assertEquals(expectedCount, results.getTotalResults());
     }
+
+    private void runCopyToOtherDatabase(Consumer<String> copyCommand, Consumer<DatabaseClient> copyAssertions) {
+        final String otherTestDatabase = "flux-other-test-content";
+
+        try (DatabaseClient otherTestClient = newDatabaseClient(otherTestDatabase)) {
+            // Clear out the other test database first in case anything is hanging around in there.
+            otherTestClient.newServerEval().xquery("cts:uris((), (), cts:true-query()) ! xdmp:document-delete(.)").evalAs(String.class);
+
+            copyCommand.accept(otherTestDatabase);
+            copyAssertions.accept(otherTestClient);
+        }
+    }
 }
+
