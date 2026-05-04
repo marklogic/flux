@@ -129,12 +129,13 @@ class CopyTest extends AbstractTest {
             "--categories", "content,metadata",
             "--connection-string", makeConnectionString(),
             "--output-connection-string", makeConnectionString(),
-            "--output-collections", "author-copies",
+            "--output-collections", "author-copiesZ", //different coll name so it does not interfere with other tests
             "--output-uri-prefix", "/copied",
             "--output-permissions", "invalid-roleZZZ,read,rest-writer,update",
-            "--output-abort-on-write-failure",
-            "--stacktrace"
+            "--output-abort-on-write-failure"
         );
+
+        assertCollectionSize("author-copiesZ", 0);
     }
 
     @Test
