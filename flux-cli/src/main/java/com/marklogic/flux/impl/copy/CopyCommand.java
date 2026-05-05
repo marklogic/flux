@@ -235,7 +235,7 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             }
 
             Map<String, String> allOptions = OptionsUtil.addOptions(options,
-                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : null,
+                Options.WRITE_ABORT_ON_FAILURE, abortOnWriteFailure ? "true" : "false",
                 Options.WRITE_ARCHIVE_PATH_FOR_FAILED_DOCUMENTS, failedDocumentsPath,
                 Options.WRITE_BATCH_SIZE, OptionsUtil.intOption(batchSize),
                 Options.WRITE_PIPELINE_BATCH_SIZE, OptionsUtil.integerOption(pipelineBatchSize),
