@@ -120,6 +120,7 @@ class CopyTest extends AbstractTest {
 
     @Test
     void abortsOnWriteFailureOnlyWhenAbortOnWriteFailureSpecified() {
+        String outputCollName = "author-copiesZ"; //different coll name so it does not interfere with other tests
         assertStderrContains(
             "Role does not exist: sec:role-name = invalid-roleZZZ",
             CommandLine.ExitCode.SOFTWARE,
@@ -129,13 +130,13 @@ class CopyTest extends AbstractTest {
             "--categories", "content,metadata",
             "--connection-string", makeConnectionString(),
             "--output-connection-string", makeConnectionString(),
-            "--output-collections", "author-copiesZ", //different coll name so it does not interfere with other tests
+            "--output-collections", outputCollName,
             "--output-uri-prefix", "/copied",
             "--output-permissions", "invalid-roleZZZ,read,rest-writer,update",
             "--output-abort-on-write-failure"
         );
 
-        assertCollectionSize("author-copiesZ", 0);
+        assertCollectionSize(outputCollName, 0);
     }
 
     @Test
