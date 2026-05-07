@@ -50,6 +50,11 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     @Override
+    public Dataset<Row> read(SparkSession session) throws Exception {
+        return readDataset(session);
+    }
+
+    @Override
     public final void execute(SparkSession session) {
         try {
             if (getConnectionParams().getSelectedHost() != null && logger.isInfoEnabled()) {
