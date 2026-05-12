@@ -30,7 +30,7 @@ Or if you are using Gradle, add the following to your `build.gradle` file:
 
 ```
 dependencies {
-  implementation "com.marklogic:flux-api:2.0.0"
+  implementation "com.marklogic:flux-api:2.1.1"
 }
 ```
 
@@ -161,7 +161,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.marklogic:flux-api:2.0.0"
+    classpath "com.marklogic:flux-api:2.1.1"
   }
 }
 ```
