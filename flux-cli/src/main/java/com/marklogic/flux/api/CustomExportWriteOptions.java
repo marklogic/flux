@@ -24,7 +24,7 @@ public interface CustomExportWriteOptions {
     CustomExportWriteOptions s3UseProfile();
 
     /**
-     * @since 2.2.0
+     * @since 2.1.1
      */
     CustomExportWriteOptions s3AnonymousAccess();
 

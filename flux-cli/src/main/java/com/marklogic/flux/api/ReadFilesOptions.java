@@ -25,7 +25,7 @@ public interface ReadFilesOptions<T extends ReadFilesOptions> {
     T s3UseProfile();
 
     /**
-     * @since 2.2.0
+     * @since 2.1.1
      */
     T s3AnonymousAccess();
 

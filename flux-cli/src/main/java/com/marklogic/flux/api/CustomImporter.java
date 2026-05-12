@@ -26,7 +26,7 @@ public interface CustomImporter extends Executor<CustomImporter> {
         CustomReadOptions s3UseProfile();
 
         /**
-         * @since 2.2.0
+         * @since 2.1.1
          */
         CustomReadOptions s3AnonymousAccess();
 
