@@ -69,6 +69,13 @@ subprojects {
        }
        details.because "Force Jackson to 2.21.x to align with Java Client 8.1.0."
      }
+
+     if (details.requested.group.equals("org.apache.thrift") && details.requested.name.equals("libthrift")) {
+       // This is being done solely for Black Duck's sake, as it seems to be having trouble recognizing that the
+       // internal snapshot build of the MarkLogic Spark connector is already using version 0.23.0.
+       details.useVersion "0.23.0"
+       details.because "Forces Spark 4.1.x to use the latest libthrift, which is needed to avoid CVEs."
+     }
    }
  }
 

@@ -41,12 +41,6 @@ dependencies {
     implementation("org.bouncycastle:bcjmail-jdk18on:1.84") {
       because "Bumping to latest 1.x to eliminate CVEs; this is a transitive dependency of Tika."
     }
-    implementation("org.apache.thrift:libthrift:0.23.0") {
-      // This shouldn't be necessary; it's confirmed that without this, the Flux distribution will use 0.23.0. But
-      // Black Duck seems confused and thinks that 0.22.0 is still present as a dependency from the Spark connector.
-      // So explicitly requires this here solely on account of Black Duck.
-      because "Bumping from 0.22.0 to 0.23.0 to eliminate several CVEs; this is brought in by jena-arq."
-    }
     testImplementation("org.assertj:assertj-core:3.27.7") {
       because "Resolves CVE https://nvd.nist.gov/vuln/detail/CVE-2026-24400"
     }
