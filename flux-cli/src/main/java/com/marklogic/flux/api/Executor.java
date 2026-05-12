@@ -47,7 +47,7 @@ public interface Executor<T extends Executor> {
      *
      * @param connectionString Defines a connection to MarkLogic via "user:password@host:port/optionalDatabaseName".
      * @return instance of this executor
-     * @since 2.2.0
+     * @since 2.1.1
      */
     T connectionStringBasic(String connectionString);
 

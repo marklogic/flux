@@ -21,7 +21,7 @@ public interface WriteFilesOptions<T extends WriteFilesOptions>  {
     T s3UseProfile();
 
     /**
-     * @since 2.2.0
+     * @since 2.1.1
      */
     T s3AnonymousAccess();
 

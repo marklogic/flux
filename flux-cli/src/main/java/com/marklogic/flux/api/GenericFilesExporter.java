@@ -31,7 +31,7 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         WriteGenericFilesOptions s3UseProfile();
 
         /**
-         * @since 2.2.0
+         * @since 2.1.1
          */
         WriteGenericFilesOptions s3AnonymousAccess();
 

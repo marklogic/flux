@@ -160,7 +160,7 @@ can specify a profile via the `AWS_PROFILE` environment variable. See the
 [AWS documentation on configuration and credential files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 
 for more information.
 
-**Anonymous authentication** - As of Flux 2.2.0, you can use `--s3-anonymous` to access public S3 buckets that do not
+**Anonymous authentication** - As of Flux 2.1.1, you can use `--s3-anonymous` to access public S3 buckets that do not
 require authentication.
 
 ### Configuring the S3 connection
