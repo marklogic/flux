@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -193,6 +193,12 @@ public class ExportFilesCommand extends AbstractCommand<GenericFilesExporter> im
         @Override
         public WriteGenericFilesOptions s3UseProfile() {
             s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
+        public WriteGenericFilesOptions s3AnonymousAccess() {
+            s3Params.setAnonymousAccess(true);
             return this;
         }
 

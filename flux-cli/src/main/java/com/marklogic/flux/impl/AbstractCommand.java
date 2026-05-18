@@ -1,8 +1,9 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
+import com.marklogic.flux.api.AuthenticationType;
 import com.marklogic.flux.api.Executor;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.spark.ConnectorException;
@@ -223,6 +224,13 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
     }
 
     @Override
+    public T connectionStringBasic(String connectionString) {
+        getConnectionParams().authenticationType(AuthenticationType.BASIC);
+        getConnectionParams().connectionString(connectionString);
+        return (T) this;
+    }
+
+    @Override
     public T limit(int limit) {
         commonParams.setLimit(limit);
         return (T) this;
@@ -248,7 +256,8 @@ public abstract class AbstractCommand<T extends Executor> implements Command, Ex
      * each path if necessary based on the Azure Storage parameters.
      */
     protected final List<String> applyCloudStorageParams(Configuration conf, CloudStorageParams params, List<String> paths) {
-        applyCloudStorageParams(conf, params);
+        params.getS3Params().addToHadoopConfiguration(conf, paths);
+        params.getAzureStorageParams().addToHadoopConfiguration(conf);
         List<String> transformedPaths = params.getAzureStorageParams().transformPathsIfNecessary(paths);
         if (logger.isInfoEnabled()) {
             if (transformedPaths.size() == 1) {

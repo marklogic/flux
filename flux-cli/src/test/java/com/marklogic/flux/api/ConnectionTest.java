@@ -1,13 +1,17 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.spark.ConnectorException;
+import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * we can provide an error message that doesn't include "--connection-string" in it.
  */
 class ConnectionTest extends AbstractTest {
+
+    @Test
+    void connectionStringBasic() {
+        String connectionString = makeConnectionString();
+
+        GenericFilesImporter importer = Flux.importGenericFiles()
+            .connectionStringBasic(connectionString);
+
+        Map<String, String> options = ((AbstractCommand<?>) importer).getConnectionParams().makeOptions();
+        assertEquals(connectionString, options.get(Options.CLIENT_URI));
+        assertEquals("basic", options.get(Options.CLIENT_AUTH_TYPE));
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {

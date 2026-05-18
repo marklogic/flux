@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.custom;
 
@@ -85,6 +85,12 @@ abstract class AbstractCustomExportCommand<T extends Executor<T>> extends Abstra
         @Override
         public CustomExportWriteOptions s3UseProfile() {
             this.s3Params.setUseProfile(true);
+            return this;
+        }
+
+        @Override
+        public CustomExportWriteOptions s3AnonymousAccess() {
+            this.s3Params.setAnonymousAccess(true);
             return this;
         }
 

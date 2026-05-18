@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -22,6 +22,14 @@ public interface CustomExportWriteOptions {
      * @since 2.0.0
      */
     CustomExportWriteOptions s3UseProfile();
+
+    /**
+     * @since 2.1.1
+     */
+    default CustomExportWriteOptions s3AnonymousAccess() {
+        // Default implementation for backwards compatibility.
+        throw new UnsupportedOperationException("S3 anonymous access is not supported in this implementation");
+    }
 
     CustomExportWriteOptions s3AccessKeyId(String accessKeyId);
 

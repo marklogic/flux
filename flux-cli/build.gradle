@@ -35,6 +35,12 @@ dependencies {
     implementation("org.eclipse.jetty:jetty-util-ajax:9.4.58.v20250814") {
       because "Bumping to latest 9.x to eliminate CVEs; this is brought in by hadoop-azure."
     }
+    implementation("org.bouncycastle:bcprov-jdk18on:1.84") {
+      because "Bumping to latest 1.x to eliminate CVEs; this is a transitive dependency of Tika."
+    }
+    implementation("org.bouncycastle:bcjmail-jdk18on:1.84") {
+      because "Bumping to latest 1.x to eliminate CVEs; this is a transitive dependency of Tika."
+    }
     testImplementation("org.assertj:assertj-core:3.27.7") {
       because "Resolves CVE https://nvd.nist.gov/vuln/detail/CVE-2026-24400"
     }
@@ -350,6 +356,16 @@ publishing {
     }
   }
   repositories {
+    if (project.hasProperty("ghToken")) {
+      maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/rjrudin/flux")
+        credentials {
+          username = ghActor
+          password = ghToken
+        }
+      }
+    }
     maven {
       if (project.hasProperty("mavenUser")) {
         credentials {
