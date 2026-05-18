@@ -28,7 +28,10 @@ public interface CustomImporter extends Executor<CustomImporter> {
         /**
          * @since 2.1.1
          */
-        CustomReadOptions s3AnonymousAccess();
+        default CustomReadOptions s3AnonymousAccess() {
+            // Default implementation for backwards compatibility.
+            throw new UnsupportedOperationException("S3 anonymous access is not supported in this implementation");
+        }
 
         CustomReadOptions s3AccessKeyId(String accessKeyId);
 

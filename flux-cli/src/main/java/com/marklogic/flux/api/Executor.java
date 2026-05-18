@@ -49,7 +49,10 @@ public interface Executor<T extends Executor> {
      * @return instance of this executor
      * @since 2.1.1
      */
-    T connectionStringBasic(String connectionString);
+    default T connectionStringBasic(String connectionString) {
+        // Default implementation for backwards compatibility.
+        return connectionString(connectionString);
+    }
 
     /**
      * Limit the number of records read from the executor's data source.

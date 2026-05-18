@@ -33,7 +33,10 @@ public interface GenericFilesExporter extends Executor<GenericFilesExporter> {
         /**
          * @since 2.1.1
          */
-        WriteGenericFilesOptions s3AnonymousAccess();
+        default WriteGenericFilesOptions s3AnonymousAccess() {
+            // Default implementation for backwards compatibility.
+            throw new UnsupportedOperationException("S3 anonymous access is not supported in this implementation");
+        }
 
         WriteGenericFilesOptions s3AccessKeyId(String accessKeyId);
 
