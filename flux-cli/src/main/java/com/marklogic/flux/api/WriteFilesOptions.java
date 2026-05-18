@@ -23,7 +23,10 @@ public interface WriteFilesOptions<T extends WriteFilesOptions>  {
     /**
      * @since 2.1.1
      */
-    T s3AnonymousAccess();
+    default T s3AnonymousAccess() {
+        // Default implementation for backwards compatibility.
+        throw new UnsupportedOperationException("S3 anonymous access is not supported in this implementation");
+    }
 
     T s3Endpoint(String endpoint);
 

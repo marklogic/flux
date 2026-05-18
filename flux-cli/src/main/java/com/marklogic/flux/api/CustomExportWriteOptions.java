@@ -26,7 +26,10 @@ public interface CustomExportWriteOptions {
     /**
      * @since 2.1.1
      */
-    CustomExportWriteOptions s3AnonymousAccess();
+    default CustomExportWriteOptions s3AnonymousAccess() {
+        // Default implementation for backwards compatibility.
+        throw new UnsupportedOperationException("S3 anonymous access is not supported in this implementation");
+    }
 
     CustomExportWriteOptions s3AccessKeyId(String accessKeyId);
 
