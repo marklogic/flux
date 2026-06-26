@@ -92,7 +92,7 @@ dependencies {
   // For Blob Storage
   implementation "com.microsoft.azure:azure-storage:8.6.6"
   // For Data Lake Storage Gen2
-  implementation "com.azure:azure-storage-file-datalake:12.26.2"
+  implementation "com.azure:azure-storage-file-datalake:12.28.0"
 
   // Spark doesn't include Avro support by default, so need to bring this in.
   implementation "org.apache.spark:spark-avro_2.13:${sparkVersion}"
