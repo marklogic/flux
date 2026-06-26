@@ -118,7 +118,7 @@ public class S3Params {
         String prefix = (bucket != null && !bucket.isEmpty()) ? "fs.s3a.bucket." + bucket + "." : "fs.s3a.";
 
         if (addCredentials) {
-            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.create()) {
+            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.builder().build()) {
                 AwsCredentials credentials = provider.resolveCredentials();
                 config.set(prefix + "access.key", credentials.accessKeyId());
                 config.set(prefix + "secret.key", credentials.secretAccessKey());

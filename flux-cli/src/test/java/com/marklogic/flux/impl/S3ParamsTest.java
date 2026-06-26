@@ -4,6 +4,8 @@
 package com.marklogic.flux.impl;
 
 import org.apache.hadoop.conf.Configuration;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,6 +19,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class S3ParamsTest {
 
     private S3Params params = new S3Params();
+
+    @BeforeEach
+    void setFakeAwsCredentials() {
+        System.setProperty("aws.accessKeyId", "fakeAccessKeyId");
+        System.setProperty("aws.secretAccessKey", "fakeSecretKey");
+    }
+
+    @AfterEach
+    void clearFakeAwsCredentials() {
+        System.clearProperty("aws.accessKeyId");
+        System.clearProperty("aws.secretAccessKey");
+    }
 
     @Test
     void useProfile() {

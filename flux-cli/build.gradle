@@ -77,8 +77,11 @@ dependencies {
   }
 
   // Based on testing so far, this appears to suffice for allowing hadoop-aws to read from and write to S3.
-  // Using 2.29.52, which is what Hadoop 3.4.2 depends on.
   implementation "software.amazon.awssdk:s3-transfer-manager:${awssdkVersion}"
+
+  // Required by hadoop-aws for its HTTP client; must be declared explicitly because software.amazon.awssdk is
+  // excluded from hadoop-aws to avoid the 558mb bundle.
+  implementation "software.amazon.awssdk:apache-client:${awssdkVersion}"
 
   // Needed for S3 authentication with an SSO profile.
   implementation "software.amazon.awssdk:sso:${awssdkVersion}"
