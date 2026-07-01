@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.langchain4j.embedding;
 
@@ -48,6 +48,15 @@ class ConfigTest {
     }
 
     @Test
+    void tokenWithMissingEndpoint() {
+        expectError(
+            "endpoint cannot be null or blank",
+            "token", "my-oauth2-bearer-token",
+            "deployment-name", "anything"
+        );
+    }
+
+    @Test
     void missingDeploymentName() {
         expectError(
             // We have to translate the internal Azure error, as it will say "deploymentName" instead of "deployment-name".
@@ -70,8 +79,50 @@ class ConfigTest {
     @Test
     void endpointAndNoApiKey() {
         expectError(
-            "Must specify either api-key or non-azure-api-key.",
+            "Must specify exactly one of: api-key, non-azure-api-key, or token.",
             "endpoint", "https://gpt-testing-custom-data1.openai.azure.com"
+        );
+    }
+
+    @Test
+    void tokenCredential() {
+        EmbeddingModel model = apply(
+            "token", "my-oauth2-bearer-token",
+            "endpoint", "https://gpt-testing-custom-data1.openai.azure.com",
+            "deployment-name", "anything"
+        );
+        assertNotNull(model);
+    }
+
+    @Test
+    void tokenConflictsWithApiKey() {
+        expectError(
+            "Must specify exactly one of: api-key, non-azure-api-key, or token.",
+            "token", "my-oauth2-bearer-token",
+            "api-key", "abc123",
+            "endpoint", "https://gpt-testing-custom-data1.openai.azure.com",
+            "deployment-name", "anything"
+        );
+    }
+
+    @Test
+    void tokenConflictsWithNonAzureApiKey() {
+        expectError(
+            "Must specify exactly one of: api-key, non-azure-api-key, or token.",
+            "token", "my-oauth2-bearer-token",
+            "non-azure-api-key", "abc123",
+            "deployment-name", "anything"
+        );
+    }
+
+    @Test
+    void allThreeAuthOptionsConflict() {
+        expectError(
+            "Must specify exactly one of: api-key, non-azure-api-key, or token.",
+            "api-key", "abc123",
+            "non-azure-api-key", "def456",
+            "token", "my-oauth2-bearer-token",
+            "deployment-name", "anything"
         );
     }
 
