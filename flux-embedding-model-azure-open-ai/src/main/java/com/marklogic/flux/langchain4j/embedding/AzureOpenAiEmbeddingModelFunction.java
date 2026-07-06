@@ -1,14 +1,19 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.langchain4j.embedding;
 
+import com.azure.core.credential.AccessToken;
+import com.azure.core.credential.TokenCredential;
 import dev.langchain4j.model.azure.AzureOpenAiEmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, String>, EmbeddingModel> {
 
@@ -17,8 +22,12 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
         // See https://docs.langchain4j.dev/integrations/embedding-models/azure-open-ai/#spring-boot-1 for reference
         // of all properties that should be configurable.
         final String nonAzureKey = "non-azure-api-key";
-        if (!options.containsKey("api-key") && !options.containsKey(nonAzureKey)) {
-            throw new IllegalArgumentException(String.format("Must specify either api-key or %s.", nonAzureKey));
+        final String tokenKey = "token";
+        long authCount = Stream.of("api-key", nonAzureKey, tokenKey)
+            .filter(options::containsKey)
+            .count();
+        if (authCount != 1) {
+            throw new IllegalArgumentException("Must specify exactly one of: api-key, non-azure-api-key, or token.");
         }
 
         final String deploymentName = options.get("deployment-name");
@@ -35,6 +44,12 @@ public class AzureOpenAiEmbeddingModelFunction implements Function<Map<String, S
 
         if (options.containsKey(nonAzureKey)) {
             builder.nonAzureApiKey(options.get(nonAzureKey));
+        }
+
+        if (options.containsKey(tokenKey)) {
+            final String token = options.get(tokenKey);
+            TokenCredential credential = request -> Mono.just(new AccessToken(token, OffsetDateTime.MAX));
+            builder.tokenCredential(credential);
         }
 
         if (options.containsKey("log-requests-and-responses")) {
