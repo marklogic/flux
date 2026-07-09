@@ -46,7 +46,7 @@ public interface ClassifierOptions {
     ClassifierOptions batchSize(int batchSize);
 
     /**
-     * @param socketTimeoutMs Socket timeout in milliseconds for classification requests.
+     * @param socketTimeoutMs Socket timeout in milliseconds for classification requests; must be > 0.
      *                        Defaults to 10000 (10 seconds) when not specified.
      * @since 2.1.2
      */
