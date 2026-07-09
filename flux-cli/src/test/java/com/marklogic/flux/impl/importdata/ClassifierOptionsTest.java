@@ -29,7 +29,8 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
                     .apiKey("MyApiKey")
                     .tokenPath("token/endpoint")
                     .batchSize(30)
-                    .socketTimeout(30000);
+                    .socketTimeout(30)
+                    .connectionTimeout(15);
                 reference.set(classifierOptions);
             }));
 
@@ -42,8 +43,24 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_APIKEY, "MyApiKey",
             Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint",
             Options.WRITE_CLASSIFIER_BATCH_SIZE, "30",
-            Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "30000"
+            Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "30",
+            Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "15"
         );
+    }
+
+    @Test
+    void defaultConnectionTimeoutNotIncludedWhenNotSet() {
+        AtomicReference<ClassifierOptions> reference = new AtomicReference<>();
+
+        Flux.importGenericFiles()
+            .to(options -> options.classifier(classifierOptions -> {
+                classifierOptions.host("h");
+                reference.set(classifierOptions);
+            }));
+
+        ClassifierParams params = (ClassifierParams) reference.get();
+        assertFalse(params.makeOptions().containsKey(Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT),
+            "When no connection timeout is configured, the option key should be absent so the Spark connector uses its default.");
     }
 
     @Test
