@@ -41,8 +41,8 @@ The table below lists each of the options used to configure how the classifier i
 | `--classifier-api-key`     | Provide the API key for accessing the classifier service when hosted in Progress Data Cloud. |
 | `--classifier-token-path`  | Specify the path to the token generator for the classifier service when hosted in Progress Data Cloud. |
 | `--classifier-batch-size`  | Set the number of documents or text chunks to send in a single request to the classifier. Defaults to 20. |
-| `--classifier-socket-timeout`     | Set the socket timeout in seconds for classification requests. |
-| `--classifier-connection-timeout` | Set the connection timeout in seconds for classification requests. |
+| `--classifier-socket-timeout`     | Set the socket timeout in seconds for classification requests. Defaults to 10. |
+| `--classifier-connection-timeout` | Set the connection timeout in seconds for classification requests. Defaults to 10. |
 | `--classifier-prop key=value` | Specify additional options for configuring the behavior of the classifier service. |
 
 As an example, the following options - applicable to any import command - would result in the text of each document
