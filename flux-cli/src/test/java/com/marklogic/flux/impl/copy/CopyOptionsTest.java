@@ -99,6 +99,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--classifier-api-key", "apikey",
             "--classifier-token-path", "/token/path",
             "--classifier-batch-size", "50",
+            "--classifier-timeout", "60000",
             "--classifier-prop", "key1=value1"
         );
 
@@ -136,6 +137,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_APIKEY, "apikey",
             Options.WRITE_CLASSIFIER_TOKEN_PATH, "/token/path",
             Options.WRITE_CLASSIFIER_BATCH_SIZE, "50",
+            Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "60000",
             Options.WRITE_CLASSIFIER_OPTION_PREFIX + "key1", "value1"
         );
     }
