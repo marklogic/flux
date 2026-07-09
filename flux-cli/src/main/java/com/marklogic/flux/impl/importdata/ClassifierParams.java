@@ -57,7 +57,7 @@ public class ClassifierParams implements ClassifierOptions {
 
     @CommandLine.Option(
         names = "--classifier-timeout",
-        description = "Socket timeout in milliseconds for classification requests. Defaults to 10000 (10 seconds)."
+        description = "Socket timeout in milliseconds for classification requests. Must be > 0. Defaults to 10000 (10 seconds) when not specified."
     )
     private Integer socketTimeoutMs;
 
