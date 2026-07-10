@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -56,6 +56,18 @@ public class ClassifierParams implements ClassifierOptions {
     private Integer batchSize = 20;
 
     @CommandLine.Option(
+        names = "--classifier-socket-timeout",
+        description = "Socket timeout in seconds for classification requests."
+    )
+    private Integer socketTimeoutSeconds;
+
+    @CommandLine.Option(
+        names = "--classifier-connection-timeout",
+        description = "Connection timeout in seconds for classification requests."
+    )
+    private Integer connectionTimeoutSeconds;
+
+    @CommandLine.Option(
         names = "--classifier-prop",
         description = "Specify additional options for configuring the behavior of the classifier service."
     )
@@ -71,7 +83,9 @@ public class ClassifierParams implements ClassifierOptions {
                 Options.WRITE_CLASSIFIER_PATH, path,
                 Options.WRITE_CLASSIFIER_APIKEY, apikey,
                 Options.WRITE_CLASSIFIER_TOKEN_PATH, tokenPath,
-                Options.WRITE_CLASSIFIER_BATCH_SIZE, OptionsUtil.integerOption(batchSize)
+                Options.WRITE_CLASSIFIER_BATCH_SIZE, OptionsUtil.integerOption(batchSize),
+                Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, OptionsUtil.integerOption(socketTimeoutSeconds),
+                Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, OptionsUtil.integerOption(connectionTimeoutSeconds)
             );
             if (additionalOptions != null) {
                 additionalOptions.entrySet().forEach(entry -> options.put(
@@ -120,6 +134,18 @@ public class ClassifierParams implements ClassifierOptions {
     @Override
     public ClassifierOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
+        return this;
+    }
+
+    @Override
+    public ClassifierOptions socketTimeout(int socketTimeoutSeconds) {
+        this.socketTimeoutSeconds = socketTimeoutSeconds;
+        return this;
+    }
+
+    @Override
+    public ClassifierOptions connectionTimeout(int connectionTimeoutSeconds) {
+        this.connectionTimeoutSeconds = connectionTimeoutSeconds;
         return this;
     }
 

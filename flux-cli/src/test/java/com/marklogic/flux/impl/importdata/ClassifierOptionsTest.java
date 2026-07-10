@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -10,6 +10,8 @@ import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ClassifierOptionsTest extends AbstractOptionsTest {
 
@@ -26,7 +28,9 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
                     .path("/cls/endpoint")
                     .apiKey("MyApiKey")
                     .tokenPath("token/endpoint")
-                    .batchSize(30);
+                    .batchSize(30)
+                    .socketTimeout(30)
+                    .connectionTimeout(15);
                 reference.set(classifierOptions);
             }));
 
@@ -38,7 +42,39 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_PATH, "/cls/endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "MyApiKey",
             Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint",
-            Options.WRITE_CLASSIFIER_BATCH_SIZE, "30"
+            Options.WRITE_CLASSIFIER_BATCH_SIZE, "30",
+            Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "30",
+            Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "15"
         );
+    }
+
+    @Test
+    void defaultConnectionTimeoutNotIncludedWhenNotSet() {
+        AtomicReference<ClassifierOptions> reference = new AtomicReference<>();
+
+        Flux.importGenericFiles()
+            .to(options -> options.classifier(classifierOptions -> {
+                classifierOptions.host("h");
+                reference.set(classifierOptions);
+            }));
+
+        ClassifierParams params = (ClassifierParams) reference.get();
+        assertFalse(params.makeOptions().containsKey(Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT),
+            "When no connection timeout is configured, the option key should be absent so the Spark connector uses its default.");
+    }
+
+    @Test
+    void defaultTimeoutNotIncludedWhenNotSet() {
+        AtomicReference<ClassifierOptions> reference = new AtomicReference<>();
+
+        Flux.importGenericFiles()
+            .to(options -> options.classifier(classifierOptions -> {
+                classifierOptions.host("h");
+                reference.set(classifierOptions);
+            }));
+
+        ClassifierParams params = (ClassifierParams) reference.get();
+        assertFalse(params.makeOptions().containsKey(Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT),
+            "When no socket timeout is configured, the option key should be absent so the Spark connector uses its default.");
     }
 }
