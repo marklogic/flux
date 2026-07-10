@@ -50,9 +50,9 @@ subprojects {
  configurations.configureEach {
    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
      // Defining this rule for io.netty here so that it affects both flux-cli and flux-embedding-model-azure-open-ai.
-     if (details.requested.group.equals("io.netty") and (details.requested.version.startsWith("4.1.") || details.requested.version.startsWith("4.2."))) {
-       details.useVersion "4.2.13.Final"
-       details.because "Forcing Spark 4.1.x to use latest to minimize CVEs; this also forces azure-open-ai to use latest to avoid conflicts."
+     if (details.requested.group.equals("io.netty") && (details.requested.version.startsWith("4.1.") || details.requested.version.startsWith("4.2."))) {
+       details.useVersion "${nettyVersion}"
+       details.because "Force all io.netty 4.x to ${nettyVersion} to address CVEs including CVE-2026-44249, CVE-2026-50010, and CVE-2026-45416 in netty-handler."
      }
 
      if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.24")) {
@@ -65,7 +65,7 @@ subprojects {
          // This oddly does not have a 2.21.0 or 2.21.1 release, just 2.21.
          details.useVersion "2.21"
        } else {
-         details.useVersion "2.21.1"
+         details.useVersion "2.21.4"
        }
        details.because "Force Jackson to 2.21.x to align with Java Client 8.1.0."
      }

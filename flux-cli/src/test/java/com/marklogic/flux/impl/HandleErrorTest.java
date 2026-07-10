@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -247,7 +247,8 @@ class HandleErrorTest extends AbstractTest {
             "--path", "s3a://doesnt-matter-for-this-test/",
             "--preview", "1",
             "--connection-string", makeConnectionString(),
-            "--s3-add-credentials",
+            "--s3-access-key-id", "fakeAccessKeyId",
+            "--s3-secret-access-key", "fakeSecretKey",
 
             // Copilot-recommended URL for failing as quickly as possible with a connection error.
             "--s3-endpoint", "http://localhost:9999",
