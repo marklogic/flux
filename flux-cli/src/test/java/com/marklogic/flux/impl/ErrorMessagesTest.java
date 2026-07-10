@@ -15,8 +15,8 @@ class ErrorMessagesTest {
     @Test
     void verifyEachKeyIsOverridden() {
         ResourceBundle bundle = ResourceBundle.getBundle("marklogic-spark-messages");
-        assertEquals(21, bundle.keySet().size(),
-            "Expecting 21 keys as of the upcoming 2.0.0 release. Bump this up as more keys are added. Each key should " +
+        assertEquals(23, bundle.keySet().size(),
+            "Expecting 23 keys as of the upcoming 2.0.0 release. Bump this up as more keys are added. Each key should " +
                 "also be verified in an assertion below.");
 
         assertEquals("--connection-string", bundle.getString(Options.CLIENT_URI));
@@ -40,5 +40,7 @@ class ErrorMessagesTest {
         assertEquals("--embedder-chunks-json-pointer", bundle.getString(Options.WRITE_EMBEDDER_CHUNKS_JSON_POINTER));
         assertEquals("--embedder-chunks-xpath", bundle.getString(Options.WRITE_EMBEDDER_CHUNKS_XPATH));
         assertEquals("--embedder-batch-size", bundle.getString(Options.WRITE_EMBEDDER_BATCH_SIZE));
+        assertEquals("--classifier-socket-timeout", bundle.getString(Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT));
+        assertEquals("--classifier-connection-timeout", bundle.getString(Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT));
     }
 }
