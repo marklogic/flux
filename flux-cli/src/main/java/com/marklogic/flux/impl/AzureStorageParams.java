@@ -27,19 +27,25 @@ public class AzureStorageParams implements AzureStorageOptions {
 
     @CommandLine.Option(
         names = "--azure-access-key",
-        description = "Access key for Blob Storage authentication."
+        description = "Access key for Blob Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String accessKey;
 
     @CommandLine.Option(
         names = "--azure-sas-token",
-        description = "Azure SAS token for Blob Storage authentication."
+        description = "Azure SAS token for Blob Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String sasToken;
 
     @CommandLine.Option(
         names = "--azure-shared-key",
-        description = "Azure shared key for Data Lake Storage authentication."
+        description = "Azure shared key for Data Lake Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String sharedKey;
 

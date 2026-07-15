@@ -7,6 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.util.List;
 
@@ -211,6 +212,24 @@ class S3ParamsTest {
         params.addToHadoopConfiguration(config);
         assertNotNull(config.get("fs.s3a.access.key"), "Global access key should be set when no bucket");
         assertNotNull(config.get("fs.s3a.secret.key"), "Global secret key should be set when no bucket");
+    }
+
+    @Test
+    void secretAccessKeyIsInteractive() throws NoSuchFieldException {
+        CommandLine.Option ann = S3Params.class
+            .getDeclaredField("secretAccessKey")
+            .getAnnotation(CommandLine.Option.class);
+        assertTrue(ann.interactive(), "--s3-secret-access-key must have interactive = true");
+        assertEquals("0..1", ann.arity(), "--s3-secret-access-key must have arity = \"0..1\"");
+    }
+
+    @Test
+    void sessionTokenIsInteractive() throws NoSuchFieldException {
+        CommandLine.Option ann = S3Params.class
+            .getDeclaredField("sessionToken")
+            .getAnnotation(CommandLine.Option.class);
+        assertTrue(ann.interactive(), "--s3-session-token must have interactive = true");
+        assertEquals("0..1", ann.arity(), "--s3-session-token must have arity = \"0..1\"");
     }
 
     private String getConfigValue(String key) {
