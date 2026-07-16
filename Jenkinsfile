@@ -85,10 +85,6 @@ pipeline{
       when {
         branch 'develop'
       }
-      environment{
-        DMC_USER     = credentials('MLBUILD_USER')
-        DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
-      }
       steps{
         sh label:'publishApi', script: '''#!/bin/bash
           export JAVA_HOME=`eval echo "$JAVA_HOME_DIR"`;
@@ -106,6 +102,10 @@ pipeline{
       agent{ label 'devExpLinuxPool'}
       when {
         branch 'develop'
+      }
+      environment{
+        DMC_USER     = credentials('MLBUILD_USER')
+        DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
       }
       steps{
         script{
