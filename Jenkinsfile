@@ -61,8 +61,6 @@ pipeline{
   environment{
     JAVA_HOME_DIR="/home/builder/java/jdk-17.0.2"
     GRADLE_DIR   =".gradle"
-    DMC_USER     = credentials('MLBUILD_USER')
-    DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
   }
 
   stages{
@@ -104,6 +102,10 @@ pipeline{
       agent{ label 'devExpLinuxPool'}
       when {
         branch 'develop'
+      }
+      environment{
+        DMC_USER     = credentials('MLBUILD_USER')
+        DMC_PASSWORD = credentials('MLBUILD_PASSWORD')
       }
       steps{
         script{
