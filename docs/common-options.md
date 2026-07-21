@@ -276,9 +276,17 @@ is not able to trust the certificate associated with your MarkLogic app server. 
 `--truststore-path`, or the default JVM truststore if using `--ssl-protocol default`, contains the required app server 
 certificate. 
 
-If you receive an error message containing `Hostname (the hostname) not verified`, this is typically due to the 
-certificate authority associated with your app server certificate not being a trusted certificate authority. You can 
-consider the use of `--ssl-hostname-verifier ANY` to disable hostname verification.
+If you receive an error message containing `Hostname (the hostname) not verified`, this is typically due to the
+certificate authority associated with your app server certificate not being a trusted certificate authority.
+
+> ⚠️ **Security Warning:** Using `--ssl-hostname-verifier ANY` disables hostname verification entirely and makes
+> your connection vulnerable to man-in-the-middle attacks. An attacker positioned on the network path between Flux
+> and your MarkLogic server could intercept all credentials and document data. **Do not use this option in
+> production.** The correct resolution is to configure `--truststore-path` to point to a truststore that contains
+> the certificate authority for your MarkLogic app server certificate.
+
+If you have verified the risks and need to bypass hostname verification in a non-production environment only, you
+can use `--ssl-hostname-verifier ANY`.
 
 If you receive an error message containing `No trusted certificate found`, check to see if your MarkLogic app server
 has a value of `true` for the "SSL Client Issuer Authority Validation" field. If so, verify that the list of selected
