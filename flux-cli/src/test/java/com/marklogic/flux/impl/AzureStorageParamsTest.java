@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -9,6 +9,7 @@ import com.marklogic.flux.impl.importdata.ReadFilesParams;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import picocli.CommandLine;
 
 import java.util.Arrays;
 import java.util.List;
@@ -571,5 +572,32 @@ class AzureStorageParamsTest {
         assertEquals(2, result.size());
         assertEquals("data/big-file.parquet", result.get(0));  // NOT transformed
         assertEquals("abfss://other@different.dfs.core.windows.net/existing.parquet", result.get(1));
+    }
+
+    @Test
+    void accessKeyIsInteractive() throws NoSuchFieldException {
+        CommandLine.Option ann = AzureStorageParams.class
+            .getDeclaredField("accessKey")
+            .getAnnotation(CommandLine.Option.class);
+        assertTrue(ann.interactive(), "--azure-access-key must have interactive = true");
+        assertEquals("0..1", ann.arity(), "--azure-access-key must have arity = \"0..1\"");
+    }
+
+    @Test
+    void sasTokenIsInteractive() throws NoSuchFieldException {
+        CommandLine.Option ann = AzureStorageParams.class
+            .getDeclaredField("sasToken")
+            .getAnnotation(CommandLine.Option.class);
+        assertTrue(ann.interactive(), "--azure-sas-token must have interactive = true");
+        assertEquals("0..1", ann.arity(), "--azure-sas-token must have arity = \"0..1\"");
+    }
+
+    @Test
+    void sharedKeyIsInteractive() throws NoSuchFieldException {
+        CommandLine.Option ann = AzureStorageParams.class
+            .getDeclaredField("sharedKey")
+            .getAnnotation(CommandLine.Option.class);
+        assertTrue(ann.interactive(), "--azure-shared-key must have interactive = true");
+        assertEquals("0..1", ann.arity(), "--azure-shared-key must have arity = \"0..1\"");
     }
 }

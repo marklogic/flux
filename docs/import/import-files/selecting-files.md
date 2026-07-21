@@ -86,27 +86,27 @@ You can restrict which files are read from a directory by specifying a standard
 
 
 Depending on your shell environment, you may need to include the value of `--filter` in double quotes as shown above to
-ensure that each asterisk is interpreted correctly. However, if you include `--filter` in an options file as 
-described in [Common Options](../../common-options.md), you do not need double quotes around the value. 
+ensure that each asterisk is interpreted correctly. However, if you include `--filter` in an options file as
+described in [Common Options](../../common-options.md), you do not need double quotes around the value.
 
 ## Working with large numbers of files
 
-In general, Flux performs better with smaller numbers of large files versus large numbers of small files. Having a 
-large number of small files in a directory, such as 1 million or more files, is a pattern that causes performance 
+In general, Flux performs better with smaller numbers of large files versus large numbers of small files. Having a
+large number of small files in a directory, such as 1 million or more files, is a pattern that causes performance
 issues across many systems. With Flux, you may encounter out-of-memory errors in this scenario due to the need to
-create a list of all file paths. 
+create a list of all file paths.
 
 If you have large numbers of files to import, consider one of the following approaches:
 
-- **Combine files into archives**: Zip your files into larger archive files before importing. This significantly 
-  reduces the number of file handles that need to be managed. Use the `--compression zip` option when importing zip files.  
-- **Use JSON Lines format**: If your files contain structured data, combine them into one or more 
-  [JSON Lines](https://jsonlines.org/) files where each line is a separate JSON document. Flux can efficiently process 
+- **Combine files into archives**: Zip your files into larger archive files before importing. This significantly
+  reduces the number of file handles that need to be managed. Use the `--compression zip` option when importing zip files.
+- **Use JSON Lines format**: If your files contain structured data, combine them into one or more
+  [JSON Lines](https://jsonlines.org/) files where each line is a separate JSON document. Flux can efficiently process
   JSON Lines files of any size via the `import-aggregate-json-files` command.
 - **Process in batches**: Break your import into multiple smaller operations, each processing a manageable subset of files.
 
-Additionally, for commands that support the `--partitions` option, specify a value such as `--partitions 10` to 
-limit the number of partitions created by Flux. This addresses a bug that will be fixed in Flux 2.0. Without this, 
+Additionally, for commands that support the `--partitions` option, specify a value such as `--partitions 10` to
+limit the number of partitions created by Flux. This addresses a bug that will be fixed in Flux 2.0. Without this,
 the import command will succeed but will perform much worse than with a fixed, small number of partitions.
 
 ## Ignoring child directories
@@ -124,8 +124,8 @@ Flux can read files from S3 via a path expression of the form `s3a://bucket-name
 
 In most cases, Flux must use your AWS credentials to access an S3 bucket. Flux supports several authentication methods:
 
-**Automatic credential retrieval** - Flux uses the AWS SDK to fetch credentials from 
-[locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html). 
+**Automatic credential retrieval** - Flux uses the AWS SDK to fetch credentials from
+[locations supported by the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-short-term.html).
 To enable this, include the `--s3-add-credentials` option:
 
 {% tabs log %}
@@ -134,7 +134,7 @@ To enable this, include the `--s3-add-credentials` option:
 ./bin/flux import-files \
     --path "s3a://my-bucket/some/path" \
     --s3-add-credentials \
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -142,22 +142,26 @@ To enable this, include the `--s3-add-credentials` option:
 bin\flux import-files ^
     --path "s3a://my-bucket/some/path" ^
     --s3-add-credentials ^
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% endtabs %}
 
-**Explicit credentials** - You can explicitly define your AWS credentials via `--s3-access-key-id` and 
-`--s3-secret-access-key`. To avoid typing these in plaintext, you may want to store these in a file and reference 
-the file via an options file. See [Common Options](../../common-options.md) for more information on how to use 
-options files. As of Flux 2.0.0, you may also specify an AWS session token via the `--s3-session-token` option. 
+**Explicit credentials** - You can explicitly define your AWS credentials via `--s3-access-key-id` and
+`--s3-secret-access-key`. To avoid typing these in plaintext, you may want to store these in a file and reference
+the file via an options file. See [Common Options](../../common-options.md) for more information on how to use
+options files. As of Flux 2.0.0, you may also specify an AWS session token via the `--s3-session-token` option.
 This token will be used with your access key ID and secret access key values when authenticating with S3.
 
-**Profile-based authentication** - As of Flux 2.0.0, you can use `--s3-use-profile` to authenticate with AWS profile 
-credentials from `~/.aws/config` and `~/.aws/credentials`. This supports SSO profiles (configured via `aws sso login`), 
-standard profiles with access keys, and any other profile types. By default, the `[default]` profile is used, or you 
-can specify a profile via the `AWS_PROFILE` environment variable. See the 
-[AWS documentation on configuration and credential files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 
+As of Flux 2.1.2, `--s3-secret-access-key` and `--s3-session-token` support masked interactive input: specify
+the option name without a value and Flux will prompt you to enter the value with no-echo input, keeping the
+credential out of your shell history and process listings.
+
+**Profile-based authentication** - As of Flux 2.0.0, you can use `--s3-use-profile` to authenticate with AWS profile
+credentials from `~/.aws/config` and `~/.aws/credentials`. This supports SSO profiles (configured via `aws sso login`),
+standard profiles with access keys, and any other profile types. By default, the `[default]` profile is used, or you
+can specify a profile via the `AWS_PROFILE` environment variable. See the
+[AWS documentation on configuration and credential files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 for more information.
 
 **Anonymous authentication** - As of Flux 2.1.1, you can use `--s3-anonymous` to access public S3 buckets that do not
@@ -165,12 +169,12 @@ require authentication.
 
 ### Configuring the S3 connection
 
-When running Flux within AWS and accessing an S3 bucket in a different region, you may need to configure the S3 
-connection explicitly. Use `--s3-endpoint` to specify the S3 endpoint URL, and as of Flux 2.0.0, use `--s3-region` 
+When running Flux within AWS and accessing an S3 bucket in a different region, you may need to configure the S3
+connection explicitly. Use `--s3-endpoint` to specify the S3 endpoint URL, and as of Flux 2.0.0, use `--s3-region`
 to specify the AWS region of the S3 bucket to access.
 
-For advanced S3 configuration, you can use `--spark-conf` to set 
-[Hadoop S3 properties](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#General_S3A_Client_configuration). 
+For advanced S3 configuration, you can use `--spark-conf` to set
+[Hadoop S3 properties](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#General_S3A_Client_configuration).
 For example, the following sets the connection timeout:
 
 `--spark-conf spark.hadoop.fs.s3a.connection.timeout=300000`
@@ -179,13 +183,13 @@ See [Common Options](../common-options.md) for more information on using `--spar
 
 ## Importing from Azure Storage
 
-Flux can read files from [Azure Storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-introduction) using either [Azure Blob Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction) or [Azure Data Lake Storage Gen2](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction).  
+Flux can read files from [Azure Storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-introduction) using either [Azure Blob Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction) or [Azure Data Lake Storage Gen2](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction).
 
-The first step is configuring authentication to your Azure Storage account. Once authenticated, you can use simple 
+The first step is configuring authentication to your Azure Storage account. Once authenticated, you can use simple
 relative file paths and Flux will automatically construct the full Azure Storage URLs for you.
 
-The examples below use notional values for options that contain credentials. To avoid typing credentials in plaintext, 
-consider storing them in [an options file](../../common-options.md). 
+The examples below use notional values for options that contain credentials. To avoid typing credentials in plaintext,
+consider storing them in [an options file](../../common-options.md).
 
 ### Blob Storage Authentication
 
@@ -193,8 +197,10 @@ Azure Blob Storage supports two authentication methods:
 
 **Access Key Authentication**
 
-If you are using [access key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage), 
-you can define a key via the `--azure-access-key` option:
+If you are using [access key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage),
+you can define a key via the `--azure-access-key` option. As of Flux 2.1.2, `--azure-access-key` supports masked
+interactive input: specify the option name without a value and Flux will prompt you to enter the value with
+no-echo input.
 
 {% tabs log %}
 {% tab log Unix %}
@@ -204,7 +210,7 @@ you can define a key via the `--azure-access-key` option:
     --azure-storage-account "mystorage" \
     --azure-container-name "mycontainer" \
     --azure-access-key "your-access-key" \
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -214,15 +220,17 @@ bin\flux import-files ^
     --azure-storage-account "mystorage" ^
     --azure-container-name "mycontainer" ^
     --azure-access-key "your-access-key" ^
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% endtabs %}
 
 **SAS Token Authentication**
 
-If you are using [SAS (Shared Access Signature) tokens](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview), 
-you can define a token via the `--azure-sas-token` option:
+If you are using [SAS (Shared Access Signature) tokens](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview),
+you can define a token via the `--azure-sas-token` option. As of Flux 2.1.2, `--azure-sas-token` supports masked
+interactive input: specify the option name without a value and Flux will prompt you to enter the value with
+no-echo input.
 
 {% tabs log %}
 {% tab log Unix %}
@@ -232,7 +240,7 @@ you can define a token via the `--azure-sas-token` option:
     --azure-storage-account "mystorage" \
     --azure-container-name "mycontainer" \
     --azure-sas-token "your-sas-token" \
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -242,7 +250,7 @@ bin\flux import-files ^
     --azure-storage-account "mystorage" ^
     --azure-container-name "mycontainer" ^
     --azure-sas-token "your-sas-token" ^
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% endtabs %}
@@ -251,9 +259,11 @@ bin\flux import-files ^
 
 ### Data Lake Storage Authentication
 
-Azure Data Lake Storage uses [shared key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage). 
-You can define a shared key via the `--azure-shared-key` option. You must also include `--azure-storage-type DATA_LAKE`
-to indicate that you are using Data Lake Storage instead of Blob Storage:
+Azure Data Lake Storage uses [shared key authentication](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage).
+You can define a shared key via the `--azure-shared-key` option, and must also include `--azure-storage-type DATA_LAKE`
+to indicate that you are using Data Lake Storage instead of Blob Storage. As of Flux 2.1.2, `--azure-shared-key` supports
+masked interactive input: specify the option name without a value and Flux will prompt you to enter the value with
+no-echo input.
 
 {% tabs log %}
 {% tab log Unix %}
@@ -264,7 +274,7 @@ to indicate that you are using Data Lake Storage instead of Blob Storage:
     --azure-container-name "analytics" \
     --azure-storage-type "DATA_LAKE" \
     --azure-shared-key "your-shared-key" \
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -275,7 +285,7 @@ bin\flux import-files ^
     --azure-container-name "analytics" ^
     --azure-storage-type "DATA_LAKE" ^
     --azure-shared-key "your-shared-key" ^
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% endtabs %}
@@ -284,7 +294,7 @@ bin\flux import-files ^
 
 Flux provides two ways to specify file paths. First, when both `--azure-storage-account` and `--azure-container-name`
 are specified and the path is relative - i.e. it does not contain a protocol like `wasbs://` or `abfss://` - Flux will
-construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides 
+construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides
 the underlying Azure protocols from you.
 
 For example:
@@ -292,7 +302,7 @@ For example:
 - `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
 - `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
 
-If you instead need to mix Azure Storage paths with other types of paths (such as S3 or local file paths), you must 
+If you instead need to mix Azure Storage paths with other types of paths (such as S3 or local file paths), you must
 provide the complete Azure Storage URLs yourself. In this case, Flux will not perform any path transformation:
 
 {% tabs log %}
@@ -304,7 +314,7 @@ provide the complete Azure Storage URLs yourself. In this case, Flux will not pe
     --path "/local/file/path" \
     --azure-storage-account "mystorage" \
     --azure-access-key "your-access-key" \
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% tab log Windows %}
@@ -315,7 +325,7 @@ bin\flux import-files ^
     --path "C:\local\file\path" ^
     --azure-storage-account "mystorage" ^
     --azure-access-key "your-access-key" ^
-    --connection-string etc... 
+    --connection-string etc...
 ```
 {% endtab %}
 {% endtabs %}
