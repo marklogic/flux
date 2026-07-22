@@ -329,10 +329,12 @@ publishing {
     }
   }
   repositories {
-    if (project.hasProperty("ghToken")) {
+    // Supports publishing to a GH packages repository for GH Action workflows that are not able to access our
+    // internal repository.
+    if (project.hasProperty("ghPackagesUrl")) {
       maven {
         name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/rjrudin/flux")
+        url = uri(ghPackagesUrl)
         credentials {
           username = ghActor
           password = ghToken
