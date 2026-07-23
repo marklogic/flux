@@ -1,8 +1,9 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.MlcpArchiveFilesImporter;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -54,14 +55,47 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private int partitions;
 
+        @CommandLine.Option(
+            names = "--zip-max-entry-bytes",
+            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Long zipMaxEntryBytes;
+
+        @CommandLine.Option(
+            names = "--zip-max-entry-count",
+            description = "Maximum number of entries to process from a single zip archive. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Integer zipMaxEntryCount;
+
         @Override
         public Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(super.makeOptions(),
+            if (zipMaxEntryBytes != null) {
+                if (zipMaxEntryBytes == 0 || (zipMaxEntryBytes < 0 && zipMaxEntryBytes != -1L)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-bytes: must be -1 (disabled) or a positive integer.", zipMaxEntryBytes));
+                }
+            }
+            if (zipMaxEntryCount != null) {
+                if (zipMaxEntryCount == 0 || (zipMaxEntryCount < 0 && zipMaxEntryCount != -1)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-count: must be -1 (disabled) or a positive integer.", zipMaxEntryCount));
+                }
+            }
+            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "mlcp_archive",
                 Options.READ_ARCHIVES_CATEGORIES, categories,
                 Options.READ_FILES_ENCODING, encoding,
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
             );
+            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
+                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
+            }
+            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
+                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
+            }
+            return options;
         }
 
         @Override
@@ -79,6 +113,18 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         @Override
         public ReadMlcpArchiveFilesOptions partitions(int partitions) {
             this.partitions = partitions;
+            return this;
+        }
+
+        @Override
+        public ReadMlcpArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
+            this.zipMaxEntryBytes = bytes;
+            return this;
+        }
+
+        @Override
+        public ReadMlcpArchiveFilesOptions zipMaxEntryCount(int count) {
+            this.zipMaxEntryCount = count;
             return this;
         }
     }

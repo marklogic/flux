@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.CompressionType;
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.GenericFilesImporter;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -86,6 +87,20 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private int partitions;
 
+        @CommandLine.Option(
+            names = "--zip-max-entry-bytes",
+            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Long zipMaxEntryBytes;
+
+        @CommandLine.Option(
+            names = "--zip-max-entry-count",
+            description = "Maximum number of entries to process from a single zip archive. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Integer zipMaxEntryCount;
+
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
@@ -100,16 +115,47 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @Override
         public Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(super.makeOptions(),
+            if (zipMaxEntryBytes != null) {
+                if (zipMaxEntryBytes == 0 || (zipMaxEntryBytes < 0 && zipMaxEntryBytes != -1L)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-bytes: must be -1 (disabled) or a positive integer.", zipMaxEntryBytes));
+                }
+            }
+            if (zipMaxEntryCount != null) {
+                if (zipMaxEntryCount == 0 || (zipMaxEntryCount < 0 && zipMaxEntryCount != -1)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-count: must be -1 (disabled) or a positive integer.", zipMaxEntryCount));
+                }
+            }
+            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.READ_FILES_ENCODING, encoding
             );
+            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
+                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
+            }
+            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
+                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
+            }
+            return options;
         }
 
         @Override
         public ReadGenericFilesOptions partitions(int partitions) {
             this.partitions = partitions;
+            return this;
+        }
+
+        @Override
+        public ReadGenericFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
+            this.zipMaxEntryBytes = bytes;
+            return this;
+        }
+
+        @Override
+        public ReadGenericFilesOptions zipMaxEntryCount(int count) {
+            this.zipMaxEntryCount = count;
             return this;
         }
     }

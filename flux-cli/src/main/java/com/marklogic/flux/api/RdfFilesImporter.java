@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -13,6 +13,16 @@ public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
     interface ReadRdfFilesOptions extends ReadFilesOptions<ReadRdfFilesOptions> {
         ReadRdfFilesOptions compressionType(CompressionType compressionType);
         ReadRdfFilesOptions partitions(int partitions);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadRdfFilesOptions zipMaxUncompressedEntryBytes(long bytes);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadRdfFilesOptions zipMaxEntryCount(int count);
     }
 
     interface WriteTriplesDocumentsOptions extends WriteDocumentsOptions<WriteTriplesDocumentsOptions> {

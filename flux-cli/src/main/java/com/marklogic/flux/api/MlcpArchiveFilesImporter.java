@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -14,6 +14,16 @@ public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImpor
         ReadMlcpArchiveFilesOptions categories(String... categories);
         ReadMlcpArchiveFilesOptions encoding(String encoding);
         ReadMlcpArchiveFilesOptions partitions(int partitions);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadMlcpArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadMlcpArchiveFilesOptions zipMaxEntryCount(int count);
     }
 
     MlcpArchiveFilesImporter from(Consumer<ReadMlcpArchiveFilesOptions> consumer);

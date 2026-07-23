@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.AggregateXmlFilesImporter;
 import com.marklogic.flux.api.CompressionType;
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.WriteDocumentsOptions;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -75,9 +76,35 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
         private int partitions;
 
+        @CommandLine.Option(
+            names = "--zip-max-entry-bytes",
+            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Long zipMaxEntryBytes;
+
+        @CommandLine.Option(
+            names = "--zip-max-entry-count",
+            description = "Maximum number of entries to process from a single zip archive. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Integer zipMaxEntryCount;
+
         @Override
         public Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(
+            if (zipMaxEntryBytes != null) {
+                if (zipMaxEntryBytes == 0 || (zipMaxEntryBytes < 0 && zipMaxEntryBytes != -1L)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-bytes: must be -1 (disabled) or a positive integer.", zipMaxEntryBytes));
+                }
+            }
+            if (zipMaxEntryCount != null) {
+                if (zipMaxEntryCount == 0 || (zipMaxEntryCount < 0 && zipMaxEntryCount != -1)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-count: must be -1 (disabled) or a positive integer.", zipMaxEntryCount));
+                }
+            }
+            Map<String, String> options = OptionsUtil.addOptions(
                 super.makeOptions(),
                 Options.READ_FILES_ENCODING, encoding,
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
@@ -87,6 +114,13 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
                 Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace,
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
             );
+            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
+                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
+            }
+            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
+                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
+            }
+            return options;
         }
 
         @Override
@@ -128,6 +162,18 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @Override
         public ReadXmlFilesOptions partitions(int partitions) {
             this.partitions = partitions;
+            return this;
+        }
+
+        @Override
+        public ReadXmlFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
+            this.zipMaxEntryBytes = bytes;
+            return this;
+        }
+
+        @Override
+        public ReadXmlFilesOptions zipMaxEntryCount(int count) {
+            this.zipMaxEntryCount = count;
             return this;
         }
     }

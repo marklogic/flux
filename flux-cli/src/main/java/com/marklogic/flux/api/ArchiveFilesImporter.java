@@ -16,6 +16,16 @@ public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
         ReadArchiveFilesOptions partitions(int partitions);
 
         ReadArchiveFilesOptions encoding(String encoding);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes);
+
+        /**
+         * @since 2.1.2
+         */
+        ReadArchiveFilesOptions zipMaxEntryCount(int count);
     }
 
     /**

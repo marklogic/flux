@@ -5,6 +5,7 @@ package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.ArchiveFilesImporter;
 import com.marklogic.flux.api.DocumentType;
+import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
@@ -103,14 +104,47 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
+        @CommandLine.Option(
+            names = "--zip-max-entry-bytes",
+            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Long zipMaxEntryBytes;
+
+        @CommandLine.Option(
+            names = "--zip-max-entry-count",
+            description = "Maximum number of entries to process from a single zip archive. " +
+                "Accepts a positive integer. Protection is not enabled when this option is not set."
+        )
+        private Integer zipMaxEntryCount;
+
         @Override
         public Map<String, String> makeOptions() {
-            return OptionsUtil.addOptions(super.makeOptions(),
+            if (zipMaxEntryBytes != null) {
+                if (zipMaxEntryBytes == 0 || (zipMaxEntryBytes < 0 && zipMaxEntryBytes != -1L)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-bytes: must be -1 (disabled) or a positive integer.", zipMaxEntryBytes));
+                }
+            }
+            if (zipMaxEntryCount != null) {
+                if (zipMaxEntryCount == 0 || (zipMaxEntryCount < 0 && zipMaxEntryCount != -1)) {
+                    throw new FluxException(String.format(
+                        "Invalid value %d for --zip-max-entry-count: must be -1 (disabled) or a positive integer.", zipMaxEntryCount));
+                }
+            }
+            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "archive",
                 Options.READ_FILES_ENCODING, encoding,
                 Options.READ_ARCHIVES_CATEGORIES, categories,
                 Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
             );
+            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
+                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
+            }
+            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
+                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
+            }
+            return options;
         }
 
         @Override
@@ -128,6 +162,18 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @Override
         public ReadArchiveFilesOptions partitions(int partitions) {
             this.partitions = partitions;
+            return this;
+        }
+
+        @Override
+        public ReadArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
+            this.zipMaxEntryBytes = bytes;
+            return this;
+        }
+
+        @Override
+        public ReadArchiveFilesOptions zipMaxEntryCount(int count) {
+            this.zipMaxEntryCount = count;
             return this;
         }
     }
