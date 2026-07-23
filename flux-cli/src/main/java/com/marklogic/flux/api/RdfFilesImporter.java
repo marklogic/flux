@@ -10,19 +10,9 @@ import java.util.function.Consumer;
  */
 public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
 
-    interface ReadRdfFilesOptions extends ReadFilesOptions<ReadRdfFilesOptions> {
+    interface ReadRdfFilesOptions extends ReadCompressibleFilesOptions<ReadRdfFilesOptions> {
         ReadRdfFilesOptions compressionType(CompressionType compressionType);
-        ReadRdfFilesOptions partitions(int partitions);
 
-        /**
-         * @since 2.1.2
-         */
-        ReadRdfFilesOptions zipMaxUncompressedEntryBytes(long bytes);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadRdfFilesOptions zipMaxEntryCount(int count);
     }
 
     interface WriteTriplesDocumentsOptions extends WriteDocumentsOptions<WriteTriplesDocumentsOptions> {

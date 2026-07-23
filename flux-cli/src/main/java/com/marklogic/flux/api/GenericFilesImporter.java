@@ -10,22 +10,10 @@ import java.util.function.Consumer;
  */
 public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
-    interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
+    interface ReadGenericFilesOptions extends ReadCompressibleFilesOptions<ReadGenericFilesOptions> {
         ReadGenericFilesOptions compressionType(CompressionType compressionType);
 
-        ReadGenericFilesOptions partitions(int partitions);
-
         ReadGenericFilesOptions encoding(String encoding);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadGenericFilesOptions zipMaxUncompressedEntryBytes(long bytes);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadGenericFilesOptions zipMaxEntryCount(int count);
     }
 
     interface WriteGenericDocumentsOptions extends WriteDocumentsOptions<WriteGenericDocumentsOptions> {

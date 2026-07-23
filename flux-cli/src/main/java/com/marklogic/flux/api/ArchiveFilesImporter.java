@@ -10,22 +10,10 @@ import java.util.function.Consumer;
  */
 public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
 
-    interface ReadArchiveFilesOptions extends ReadFilesOptions<ReadArchiveFilesOptions> {
+    interface ReadArchiveFilesOptions extends ReadCompressibleFilesOptions<ReadArchiveFilesOptions> {
         ReadArchiveFilesOptions categories(String... categories);
 
-        ReadArchiveFilesOptions partitions(int partitions);
-
         ReadArchiveFilesOptions encoding(String encoding);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadArchiveFilesOptions zipMaxEntryCount(int count);
     }
 
     /**

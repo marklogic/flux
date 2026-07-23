@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImporter> {
 
-    interface ReadXmlFilesOptions extends ReadFilesOptions<ReadXmlFilesOptions> {
+    interface ReadXmlFilesOptions extends ReadCompressibleFilesOptions<ReadXmlFilesOptions> {
         ReadXmlFilesOptions element(String element);
 
         ReadXmlFilesOptions namespace(String namespace);
@@ -22,18 +22,6 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
         ReadXmlFilesOptions compressionType(CompressionType compressionType);
 
         ReadXmlFilesOptions encoding(String encoding);
-
-        ReadXmlFilesOptions partitions(int partitions);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadXmlFilesOptions zipMaxUncompressedEntryBytes(long bytes);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadXmlFilesOptions zipMaxEntryCount(int count);
     }
 
     AggregateXmlFilesImporter from(Consumer<ReadXmlFilesOptions> consumer);

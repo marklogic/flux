@@ -60,7 +60,7 @@ class ImportRdfFilesOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
-    void zipZeroAndNegativeValuesAreIgnored() {
+    void zipZeroAndNegativeValuesAreForwarded() {
         ImportRdfFilesCommand command = (ImportRdfFilesCommand) getCommand(
             "import-rdf-files",
             "--connection-string", makeConnectionString(),
@@ -69,7 +69,7 @@ class ImportRdfFilesOptionsTest extends AbstractOptionsTest {
             "--zip-max-entry-count", "-1"
         );
         Map<String, String> options = command.getReadParams().makeOptions();
-        assertFalse(options.containsKey(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES));
-        assertFalse(options.containsKey(Options.READ_ZIP_MAX_ENTRY_COUNT));
+        assertEquals("0", options.get(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES));
+        assertEquals("-1", options.get(Options.READ_ZIP_MAX_ENTRY_COUNT));
     }
 }

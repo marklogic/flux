@@ -74,7 +74,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         return this;
     }
 
-    public static class ReadGenericFilesParams extends ReadFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
+    public static class ReadGenericFilesParams extends ReadCompressibleFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
 
         @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
@@ -82,23 +82,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
-
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
-        @CommandLine.Option(
-            names = "--zip-max-entry-bytes",
-            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Long zipMaxEntryBytes;
-
-        @CommandLine.Option(
-            names = "--zip-max-entry-count",
-            description = "Maximum number of entries to process from a single zip archive. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Integer zipMaxEntryCount;
 
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
@@ -114,36 +97,10 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @Override
         public Map<String, String> makeOptions() {
-            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
+            return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.READ_FILES_ENCODING, encoding
             );
-            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
-                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
-            }
-            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
-                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
-            }
-            return options;
-        }
-
-        @Override
-        public ReadGenericFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
-            return this;
-        }
-
-        @Override
-        public ReadGenericFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
-            this.zipMaxEntryBytes = bytes;
-            return this;
-        }
-
-        @Override
-        public ReadGenericFilesOptions zipMaxEntryCount(int count) {
-            this.zipMaxEntryCount = count;
-            return this;
         }
     }
 

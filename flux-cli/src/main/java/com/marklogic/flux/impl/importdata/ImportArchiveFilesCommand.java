@@ -90,48 +90,23 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         }
     }
 
-    public static class ReadArchiveFilesParams extends ReadFilesParams<ReadArchiveFilesOptions> implements ReadArchiveFilesOptions {
+    public static class ReadArchiveFilesParams extends ReadCompressibleFilesParams<ReadArchiveFilesOptions> implements ReadArchiveFilesOptions {
 
         @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
             "If not specified, all types of metadata are included. " +
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
         private String categories;
 
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
-        @CommandLine.Option(
-            names = "--zip-max-entry-bytes",
-            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Long zipMaxEntryBytes;
-
-        @CommandLine.Option(
-            names = "--zip-max-entry-count",
-            description = "Maximum number of entries to process from a single zip archive. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Integer zipMaxEntryCount;
-
         @Override
         public Map<String, String> makeOptions() {
-            Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
+            return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "archive",
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_ARCHIVES_CATEGORIES, categories,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
+                Options.READ_ARCHIVES_CATEGORIES, categories
             );
-            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
-                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
-            }
-            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
-                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
-            }
-            return options;
         }
 
         @Override
@@ -143,24 +118,6 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @Override
         public ReadArchiveFilesOptions categories(String... categories) {
             this.categories = Stream.of(categories).collect(Collectors.joining(","));
-            return this;
-        }
-
-        @Override
-        public ReadArchiveFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
-            return this;
-        }
-
-        @Override
-        public ReadArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
-            this.zipMaxEntryBytes = bytes;
-            return this;
-        }
-
-        @Override
-        public ReadArchiveFilesOptions zipMaxEntryCount(int count) {
-            this.zipMaxEntryCount = count;
             return this;
         }
     }

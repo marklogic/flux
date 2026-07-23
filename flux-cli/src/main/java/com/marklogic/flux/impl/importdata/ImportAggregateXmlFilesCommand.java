@@ -42,7 +42,7 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         return writeParams;
     }
 
-    public static class ReadXmlFilesParams extends ReadFilesParams<ReadXmlFilesOptions> implements ReadXmlFilesOptions {
+    public static class ReadXmlFilesParams extends ReadCompressibleFilesParams<ReadXmlFilesOptions> implements ReadXmlFilesOptions {
 
         @CommandLine.Option(required = true, names = "--element",
             description = "Specifies the local name of the element to use as the root of each document."
@@ -72,42 +72,17 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
-        @CommandLine.Option(
-            names = "--zip-max-entry-bytes",
-            description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Long zipMaxEntryBytes;
-
-        @CommandLine.Option(
-            names = "--zip-max-entry-count",
-            description = "Maximum number of entries to process from a single zip archive. " +
-                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
-        )
-        private Integer zipMaxEntryCount;
-
         @Override
         public Map<String, String> makeOptions() {
-            Map<String, String> options = OptionsUtil.addOptions(
+            return OptionsUtil.addOptions(
                 super.makeOptions(),
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_AGGREGATES_XML_ELEMENT, element,
                 Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
                 Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement,
                 Options.READ_AGGREGATES_XML_URI_NAMESPACE, uriNamespace,
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
             );
-            if (zipMaxEntryBytes != null && zipMaxEntryBytes > 0) {
-                options.put(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, String.valueOf(zipMaxEntryBytes));
-            }
-            if (zipMaxEntryCount != null && zipMaxEntryCount > 0) {
-                options.put(Options.READ_ZIP_MAX_ENTRY_COUNT, String.valueOf(zipMaxEntryCount));
-            }
-            return options;
         }
 
         @Override
@@ -143,24 +118,6 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @Override
         public ReadXmlFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
-            return this;
-        }
-
-        @Override
-        public ReadXmlFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
-            return this;
-        }
-
-        @Override
-        public ReadXmlFilesOptions zipMaxUncompressedEntryBytes(long bytes) {
-            this.zipMaxEntryBytes = bytes;
-            return this;
-        }
-
-        @Override
-        public ReadXmlFilesOptions zipMaxEntryCount(int count) {
-            this.zipMaxEntryCount = count;
             return this;
         }
     }

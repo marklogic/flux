@@ -85,8 +85,8 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
-    void zipZeroAndNegativeValuesAreIgnored() {
-        // Any value < 1 (including 0, -1, -5) disables the limit; the option should not appear in the map.
+    void zipZeroAndNegativeValuesAreForwarded() {
+        // Any value < 1 (including 0, -1, -5) is forwarded to the connector so it can explicitly disable protection.
         ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
             "import-archive-files",
             "--connection-string", makeConnectionString(),
@@ -95,9 +95,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
             "--zip-max-entry-count", "-5"
         );
         Map<String, String> options = command.getReadParams().makeOptions();
-        assertFalse(options.containsKey(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES),
-            "A value of 0 should be treated as disabled.");
-        assertFalse(options.containsKey(Options.READ_ZIP_MAX_ENTRY_COUNT),
-            "A value of -5 should be treated as disabled.");
+        assertEquals("0", options.get(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES), "A value of 0 is forwarded so the connector can explicitly disable.");
+        assertEquals("-5", options.get(Options.READ_ZIP_MAX_ENTRY_COUNT), "A negative value is forwarded so the connector can explicitly disable.");
     }
 }

@@ -10,20 +10,10 @@ import java.util.function.Consumer;
  */
 public interface MlcpArchiveFilesImporter extends Executor<MlcpArchiveFilesImporter> {
 
-    interface ReadMlcpArchiveFilesOptions extends ReadFilesOptions<ReadMlcpArchiveFilesOptions> {
+    interface ReadMlcpArchiveFilesOptions extends ReadCompressibleFilesOptions<ReadMlcpArchiveFilesOptions> {
         ReadMlcpArchiveFilesOptions categories(String... categories);
         ReadMlcpArchiveFilesOptions encoding(String encoding);
-        ReadMlcpArchiveFilesOptions partitions(int partitions);
 
-        /**
-         * @since 2.1.2
-         */
-        ReadMlcpArchiveFilesOptions zipMaxUncompressedEntryBytes(long bytes);
-
-        /**
-         * @since 2.1.2
-         */
-        ReadMlcpArchiveFilesOptions zipMaxEntryCount(int count);
     }
 
     MlcpArchiveFilesImporter from(Consumer<ReadMlcpArchiveFilesOptions> consumer);
