@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
@@ -86,50 +85,19 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
-    void zipMaxEntryBytesZeroThrowsFluxException() {
+    void zipZeroAndNegativeValuesAreIgnored() {
+        // Any value < 1 (including 0, -1, -5) disables the limit; the option should not appear in the map.
         ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
             "import-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
-            "--zip-max-entry-bytes", "0"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-bytes"));
-    }
-
-    @Test
-    void zipMaxEntryBytesNegativeThrowsFluxException() {
-        ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
-            "import-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources/archive-files",
-            "--zip-max-entry-bytes", "-5"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-bytes"));
-    }
-
-    @Test
-    void zipMaxEntryCountZeroThrowsFluxException() {
-        ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
-            "import-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources/archive-files",
-            "--zip-max-entry-count", "0"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-count"));
-    }
-
-    @Test
-    void zipMaxEntryCountNegativeThrowsFluxException() {
-        ImportArchiveFilesCommand command = (ImportArchiveFilesCommand) getCommand(
-            "import-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources/archive-files",
+            "--zip-max-entry-bytes", "0",
             "--zip-max-entry-count", "-5"
         );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-count"));
+        Map<String, String> options = command.getReadParams().makeOptions();
+        assertFalse(options.containsKey(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES),
+            "A value of 0 should be treated as disabled.");
+        assertFalse(options.containsKey(Options.READ_ZIP_MAX_ENTRY_COUNT),
+            "A value of -5 should be treated as disabled.");
     }
 }

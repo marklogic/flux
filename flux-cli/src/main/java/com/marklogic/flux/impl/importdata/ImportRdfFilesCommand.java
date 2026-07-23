@@ -4,7 +4,6 @@
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.api.CompressionType;
-import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.RdfFilesImporter;
 import com.marklogic.flux.impl.AbstractCommand;
 import com.marklogic.flux.impl.OptionsUtil;
@@ -54,31 +53,19 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
         @CommandLine.Option(
             names = "--zip-max-entry-bytes",
             description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
-                "Accepts a positive integer. Protection is not enabled when this option is not set."
+                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
         )
         private Long zipMaxEntryBytes;
 
         @CommandLine.Option(
             names = "--zip-max-entry-count",
             description = "Maximum number of entries to process from a single zip archive. " +
-                "Accepts a positive integer. Protection is not enabled when this option is not set."
+                "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
         )
         private Integer zipMaxEntryCount;
 
         @Override
         public Map<String, String> makeOptions() {
-            if (zipMaxEntryBytes != null) {
-                if (zipMaxEntryBytes == 0 || (zipMaxEntryBytes < 0 && zipMaxEntryBytes != -1L)) {
-                    throw new FluxException(String.format(
-                        "Invalid value %d for --zip-max-entry-bytes: must be -1 (disabled) or a positive integer.", zipMaxEntryBytes));
-                }
-            }
-            if (zipMaxEntryCount != null) {
-                if (zipMaxEntryCount == 0 || (zipMaxEntryCount < 0 && zipMaxEntryCount != -1)) {
-                    throw new FluxException(String.format(
-                        "Invalid value %d for --zip-max-entry-count: must be -1 (disabled) or a positive integer.", zipMaxEntryCount));
-                }
-            }
             Map<String, String> options = OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "rdf",
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,

@@ -3,7 +3,6 @@
  */
 package com.marklogic.flux.impl.importdata;
 
-import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
@@ -63,50 +62,16 @@ class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
     }
 
     @Test
-    void zipMaxEntryBytesZeroThrowsFluxException() {
+    void zipZeroAndNegativeValuesAreIgnored() {
         ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
             "import-mlcp-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources",
-            "--zip-max-entry-bytes", "0"
+            "--zip-max-entry-bytes", "0",
+            "--zip-max-entry-count", "-1"
         );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-bytes"));
-    }
-
-    @Test
-    void zipMaxEntryBytesNegativeThrowsFluxException() {
-        ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
-            "import-mlcp-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources",
-            "--zip-max-entry-bytes", "-5"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-bytes"));
-    }
-
-    @Test
-    void zipMaxEntryCountZeroThrowsFluxException() {
-        ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
-            "import-mlcp-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources",
-            "--zip-max-entry-count", "0"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-count"));
-    }
-
-    @Test
-    void zipMaxEntryCountNegativeThrowsFluxException() {
-        ImportMlcpArchiveFilesCommand command = (ImportMlcpArchiveFilesCommand) getCommand(
-            "import-mlcp-archive-files",
-            "--connection-string", makeConnectionString(),
-            "--path", "src/test/resources",
-            "--zip-max-entry-count", "-5"
-        );
-        FluxException ex = assertThrows(FluxException.class, () -> command.getReadParams().makeOptions());
-        assertTrue(ex.getMessage().contains("--zip-max-entry-count"));
+        Map<String, String> options = command.getReadParams().makeOptions();
+        assertFalse(options.containsKey(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES));
+        assertFalse(options.containsKey(Options.READ_ZIP_MAX_ENTRY_COUNT));
     }
 }
