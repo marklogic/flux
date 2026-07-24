@@ -13,6 +13,11 @@ package com.marklogic.flux.api;
 @SuppressWarnings("unchecked")
 public interface ReadCompressibleFilesOptions<T extends ReadCompressibleFilesOptions> extends ReadFilesOptions<T> {
 
+    /**
+     * Specifies the number of Spark partitions used for reading files. More partitions increase parallelism
+     * but also increase overhead. When not set, the connector determines the number of partitions automatically
+     * based on the number of files found.
+     */
     T partitions(int partitions);
 
     /**
