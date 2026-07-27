@@ -36,7 +36,7 @@ class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
             "import-mlcp-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources",
-            "--zip-max-entry-bytes", "268435456",
+            "--zip-max-uncompressed-entry-bytes", "268435456",
             "--zip-max-entry-count", "100000"
         );
 
@@ -67,7 +67,7 @@ class ImportMlcpArchiveFilesOptionsTest extends AbstractOptionsTest {
             "import-mlcp-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources",
-            "--zip-max-entry-bytes", "0",
+            "--zip-max-uncompressed-entry-bytes", "0",
             "--zip-max-entry-count", "-1"
         );
         Map<String, String> options = command.getReadParams().makeOptions();

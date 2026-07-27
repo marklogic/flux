@@ -54,7 +54,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--doc-prop", "prop2=value2",
             "--write-prop", "spark.someprop=somevalue",
             "--write-prop", "other.prop=othervalue",
-            "--zip-max-entry-bytes", "268435456",
+            "--zip-max-uncompressed-entry-bytes", "268435456",
             "--zip-max-entry-count", "100000"
         );
 
@@ -291,7 +291,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "import-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/mixed-files",
-            "--zip-max-entry-bytes", "0",
+            "--zip-max-uncompressed-entry-bytes", "0",
             "--zip-max-entry-count", "-1"
         );
         Map<String, String> options = command.getReadParams().makeOptions();

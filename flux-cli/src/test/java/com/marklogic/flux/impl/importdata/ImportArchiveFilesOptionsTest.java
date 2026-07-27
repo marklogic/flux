@@ -59,7 +59,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
             "import-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
-            "--zip-max-entry-bytes", "268435456",
+            "--zip-max-uncompressed-entry-bytes", "268435456",
             "--zip-max-entry-count", "100000"
         );
 
@@ -91,7 +91,7 @@ class ImportArchiveFilesOptionsTest extends AbstractOptionsTest {
             "import-archive-files",
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources/archive-files",
-            "--zip-max-entry-bytes", "0",
+            "--zip-max-uncompressed-entry-bytes", "0",
             "--zip-max-entry-count", "-5"
         );
         Map<String, String> options = command.getReadParams().makeOptions();

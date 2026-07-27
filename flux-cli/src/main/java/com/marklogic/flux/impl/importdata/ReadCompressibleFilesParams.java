@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Base params class for all import commands that support reading zip-compressed files.
- * Declares the shared {@code --partitions}, {@code --zip-max-entry-bytes}, and
+ * Declares the shared {@code --partitions}, {@code --zip-max-uncompressed-entry-bytes}, and
  * {@code --zip-max-entry-count} CLI options and handles them in {@code makeOptions()}.
  */
 @SuppressWarnings("unchecked")
@@ -24,7 +24,7 @@ public abstract class ReadCompressibleFilesParams<T extends ReadCompressibleFile
     private int partitions;
 
     @CommandLine.Option(
-        names = "--zip-max-entry-bytes",
+        names = "--zip-max-uncompressed-entry-bytes",
         description = "Maximum number of uncompressed bytes to read from a single zip entry. " +
             "Set to a positive integer to enable protection. Any value less than 1 (including 0) disables the limit."
     )

@@ -37,7 +37,7 @@ class ImportAggregateXmlFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources",
             "--element", "anything",
-            "--zip-max-entry-bytes", "268435456",
+            "--zip-max-uncompressed-entry-bytes", "268435456",
             "--zip-max-entry-count", "100000"
         );
 
@@ -70,7 +70,7 @@ class ImportAggregateXmlFilesOptionsTest extends AbstractOptionsTest {
             "--connection-string", makeConnectionString(),
             "--path", "src/test/resources",
             "--element", "anything",
-            "--zip-max-entry-bytes", "0",
+            "--zip-max-uncompressed-entry-bytes", "0",
             "--zip-max-entry-count", "-1"
         );
         Map<String, String> options = command.getReadParams().makeOptions();
