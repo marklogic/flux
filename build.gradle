@@ -77,7 +77,7 @@ subprojects {
          // This oddly does not have a 2.21.0 or 2.21.1 release, just 2.21.
          details.useVersion "2.21"
        } else {
-         details.useVersion "2.21.4"
+         details.useVersion jacksonVersion
        }
        details.because "Force Jackson to 2.21.x to align with Java Client 8.1.0."
      }

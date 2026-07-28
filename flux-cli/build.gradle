@@ -14,6 +14,9 @@ configurations {
     resolutionStrategy {
       // Resolves a medium CVE that comes from json-unit-assertj .
       force "net.minidev:json-smart:2.5.2"
+
+      // Resolves a CVE in 1.11.0
+      force "at.yawk.lz4:lz4-java:1.11.1"
     }
   }
 }
@@ -22,14 +25,7 @@ dependencies {
   implementation("org.apache.spark:spark-sql_2.13:${sparkVersion}") {
     // The rocksdbjni dependency weighs in at 50mb and so far does not appear necessary for our use of Spark.
     exclude module: "rocksdbjni"
-
-    // As of Spark 4.1.1, Spark is depending on a 1.8.x version of lz4-java that has two
-    // CVEs. According to https://github.com/yawkat/lz4-java, patched versions should now be obtained from
-    // that repository. Once Spark uses a patched version, this exclusion can be removed.
-    exclude module: "lz4-java"
   }
-
-  implementation "at.yawk.lz4:lz4-java:1.10.4"
 
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:${picocliVersion}"
@@ -50,7 +46,6 @@ dependencies {
   }
 
   // Based on testing so far, this appears to suffice for allowing hadoop-aws to read from and write to S3.
-  // Using 2.29.52, which is what Hadoop 3.4.2 depends on.
   implementation "software.amazon.awssdk:s3-transfer-manager:${awssdkVersion}"
 
   // Needed for S3 authentication with an SSO profile.
