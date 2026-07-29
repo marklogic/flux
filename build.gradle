@@ -72,6 +72,12 @@ subprojects {
        details.because "Forces Spark 4.1.x to use latest log4j 2.x to eliminate CVEs."
      }
 
+     if (details.requested.group.equals("org.apache.zookeeper") &&
+       (details.requested.name.equals("zookeeper") || details.requested.name.equals("zookeeper-jute"))) {
+       details.useVersion "${zookeeperVersion}"
+       details.because "Force Apache ZooKeeper to ${zookeeperVersion} to remediate CVE-2026-24281."
+     }
+
      if (details.requested.group.startsWith("com.fasterxml.jackson")) {
        if (details.requested.name == "jackson-annotations") {
          // This oddly does not have a 2.21.0 or 2.21.1 release, just 2.21.
