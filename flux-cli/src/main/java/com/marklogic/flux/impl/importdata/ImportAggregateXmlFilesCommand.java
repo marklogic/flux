@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -42,7 +42,7 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         return writeParams;
     }
 
-    public static class ReadXmlFilesParams extends ReadFilesParams<ReadXmlFilesOptions> implements ReadXmlFilesOptions {
+    public static class ReadXmlFilesParams extends ReadCompressibleFilesParams<ReadXmlFilesOptions> implements ReadXmlFilesOptions {
 
         @CommandLine.Option(required = true, names = "--element",
             description = "Specifies the local name of the element to use as the root of each document."
@@ -72,15 +72,11 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(
                 super.makeOptions(),
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_AGGREGATES_XML_ELEMENT, element,
                 Options.READ_AGGREGATES_XML_NAMESPACE, namespace,
                 Options.READ_AGGREGATES_XML_URI_ELEMENT, uriElement,
@@ -122,12 +118,6 @@ public class ImportAggregateXmlFilesCommand extends AbstractImportFilesCommand<A
         @Override
         public ReadXmlFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
-            return this;
-        }
-
-        @Override
-        public ReadXmlFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
             return this;
         }
     }

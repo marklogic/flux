@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -74,7 +74,7 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         return this;
     }
 
-    public static class ReadGenericFilesParams extends ReadFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
+    public static class ReadGenericFilesParams extends ReadCompressibleFilesParams<ReadGenericFilesOptions> implements ReadGenericFilesOptions {
 
         @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
@@ -82,9 +82,6 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
-
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
 
         @Override
         public ReadGenericFilesOptions compressionType(CompressionType compressionType) {
@@ -101,16 +98,9 @@ public class ImportFilesCommand extends AbstractImportFilesCommand<GenericFilesI
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions),
                 Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
                 Options.READ_FILES_ENCODING, encoding
             );
-        }
-
-        @Override
-        public ReadGenericFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
-            return this;
         }
     }
 

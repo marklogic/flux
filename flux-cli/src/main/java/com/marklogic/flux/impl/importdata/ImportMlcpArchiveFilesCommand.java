@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -41,7 +41,7 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         return MARKLOGIC_CONNECTOR;
     }
 
-    public static class ReadMlcpArchiveFilesParams extends ReadFilesParams<ReadMlcpArchiveFilesOptions> implements ReadMlcpArchiveFilesOptions {
+    public static class ReadMlcpArchiveFilesParams extends ReadCompressibleFilesParams<ReadMlcpArchiveFilesOptions> implements ReadMlcpArchiveFilesOptions {
 
         @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
             "If not specified, all types of metadata are included. " +
@@ -51,16 +51,12 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
 
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "mlcp_archive",
                 Options.READ_ARCHIVES_CATEGORIES, categories,
-                Options.READ_FILES_ENCODING, encoding,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
+                Options.READ_FILES_ENCODING, encoding
             );
         }
 
@@ -73,12 +69,6 @@ public class ImportMlcpArchiveFilesCommand extends AbstractImportFilesCommand<Ml
         @Override
         public ReadMlcpArchiveFilesOptions categories(String... categories) {
             this.categories = Stream.of(categories).collect(Collectors.joining(","));
-            return this;
-        }
-
-        @Override
-        public ReadMlcpArchiveFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
             return this;
         }
     }

@@ -90,15 +90,12 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         }
     }
 
-    public static class ReadArchiveFilesParams extends ReadFilesParams<ReadArchiveFilesOptions> implements ReadArchiveFilesOptions {
+    public static class ReadArchiveFilesParams extends ReadCompressibleFilesParams<ReadArchiveFilesOptions> implements ReadArchiveFilesOptions {
 
         @CommandLine.Option(names = "--categories", description = "Comma-delimited sequence of categories of metadata to include. " +
             "If not specified, all types of metadata are included. " +
             "Valid choices are: collections, permissions, quality, properties, and metadatavalues.")
         private String categories;
-
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
 
         @CommandLine.Option(names = "--encoding", description = "Specify an encoding when reading files.")
         private String encoding;
@@ -108,8 +105,7 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "archive",
                 Options.READ_FILES_ENCODING, encoding,
-                Options.READ_ARCHIVES_CATEGORIES, categories,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
+                Options.READ_ARCHIVES_CATEGORIES, categories
             );
         }
 
@@ -122,12 +118,6 @@ public class ImportArchiveFilesCommand extends AbstractImportFilesCommand<Archiv
         @Override
         public ReadArchiveFilesOptions categories(String... categories) {
             this.categories = Stream.of(categories).collect(Collectors.joining(","));
-            return this;
-        }
-
-        @Override
-        public ReadArchiveFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
             return this;
         }
     }
