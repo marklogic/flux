@@ -88,6 +88,11 @@ subprojects {
        details.useVersion "0.23.0"
        details.because "Forces Spark 4.1.x to use the latest libthrift, which is needed to avoid CVEs."
      }
+
+     if (details.requested.group.equals("org.codehaus.janino")) {
+       details.useVersion "${janinoVersion}"
+       details.because "Forces Janino to ${janinoVersion} to address CVE-2023-33546."
+     }
    }
  }
 
