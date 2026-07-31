@@ -10,9 +10,9 @@ java {
 
 dependencies {
   constraints {
-    implementation("com.azure:azure-core-http-netty:1.16.2") {
-      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.8 " +
-        "or higher to address CVE-2025-22227."
+    implementation("com.azure:azure-core-http-netty:1.16.5") {
+      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.18 " +
+        "or higher to address BDSA-2026-13714."
     }
   }
 
