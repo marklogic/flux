@@ -251,11 +251,6 @@ buildToolForGettingStarted.dependsOn installDist
 
 test {
   finalizedBy jacocoTestReport
-  // On Windows, Spark uses Hadoop's NativeIO.Windows.access0(), a native method implemented in hadoop.dll.
-  // Without hadoop.dll on the library path, the JVM throws UnsatisfiedLinkError at runtime.
-  // hadoop.home.dir is also required so Hadoop can locate its home directory.
-  jvmArgs "-Djava.library.path=${projectDir}/hadoop"
-  systemProperty 'hadoop.home.dir', "${projectDir}/hadoop"
 }
 
 jacocoTestReport {
