@@ -18,6 +18,11 @@ configurations {
       // Resolves a CVE in 1.11.0
       force "at.yawk.lz4:lz4-java:1.11.1"
     }
+
+    // apache-client transitively pulls in org.apache.httpcomponents:httpcore:4.4.16, which has BDSA-2026-17734
+    // and BDSA-2026-17708. httpcore 4.4.x is EOL with no patched release available. url-connection-client uses
+    // Java's built-in HttpURLConnection and has no httpcore dependency, so it is used instead.
+    exclude group: "software.amazon.awssdk", module: "apache-client"
   }
 }
 
@@ -53,10 +58,18 @@ dependencies {
   implementation "software.amazon.awssdk:ssooidc:${awssdkVersion}"
   implementation "software.amazon.awssdk:sts:${awssdkVersion}"
 
+  // Required because apache-client is excluded globally (see configurations block above); url-connection-client
+  // uses Java's built-in HttpURLConnection and has no dependency on Apache httpclient or httpcore.
+  implementation "software.amazon.awssdk:url-connection-client:${awssdkVersion}"
+
   // Adds support for Azure Storage. We may want these to be expressed using variants instead so that at least a
   // Gradle user of the API can ask for e.g. S3 or Azure Storage support without those dependencies being included
   // by default.
-  implementation "org.apache.hadoop:hadoop-azure:${hadoopVersion}"
+  implementation("org.apache.hadoop:hadoop-azure:${hadoopVersion}") {
+    // httpclient:4.5.x requires httpcore:4.4.x which is EOL; ABFS driver uses Azure SDK HTTP client.
+    exclude group: "org.apache.httpcomponents", module: "httpclient"
+    exclude group: "org.apache.httpcomponents", module: "httpcore"
+  }
   // For Blob Storage
   implementation "com.azure:azure-storage-blob:12.35.0"
   // For Data Lake Storage Gen2
@@ -247,6 +260,11 @@ buildToolForGettingStarted.dependsOn installDist
 
 test {
   finalizedBy jacocoTestReport
+  // On Windows, Spark uses Hadoop's NativeIO.Windows.access0(), a native method implemented in hadoop.dll.
+  // Without hadoop.dll on the library path, the JVM throws UnsatisfiedLinkError at runtime.
+  // hadoop.home.dir is also required so Hadoop can locate its home directory.
+  jvmArgs "-Djava.library.path=${projectDir}/hadoop"
+  systemProperty 'hadoop.home.dir', "${projectDir}/hadoop"
 }
 
 jacocoTestReport {
