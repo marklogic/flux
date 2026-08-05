@@ -131,6 +131,17 @@ As of Flux 1.3.0, text can be extracted from files via [Apache Tika](https://tik
 documents in MarkLogic. This is typically useful when importing binary content such as PDF and Word files, where both
 the binary file and extracted text can be stored in MarkLogic.
 
+### Behavior change in Flux 2.1.2: Microsoft Office file extraction
+
+Flux 2.1.2 upgrades Apache Tika from 3.3.1 to 3.3.2. Tika 3.3.2 changes the default parser for Microsoft Office OOXML
+files (`.docx`, `.pptx`, `.xlsx`, `.vsdx`) from a DOM-based extractor to a SAX-based extractor. The SAX parser is
+faster and more memory-efficient, but may produce slightly different whitespace in extracted text compared to previous
+Flux versions — for example, paragraph separators may differ.
+
+If your application depends on the exact text output from Office files and you need the previous DOM-based behavior,
+you can restore it by providing a [Tika configuration file](https://tika.apache.org/3.3.2/configuring.html) that
+sets `useSAXDocxExtractor` and/or `useSAXPptxExtractor` to `false` on the `OfficeParserConfig`.
+
 Text extraction is enabled by including the following option when executing the `import-files` command:
 
     --extract-text

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -55,7 +55,7 @@ class ExtractTextTest extends AbstractTest {
         assertCollectionSize(collection, 2);
         JsonNode doc = readJsonDocument("/extraction-files/hello-world.docx-extracted-text.json", collection);
         assertEquals("/extraction-files/hello-world.docx", doc.get("source-uri").asText());
-        assertEquals("Hello world.\n\nThis file is used for testing text extraction.\n", doc.get("content").asText());
+        assertEquals("Hello world.\nThis file is used for testing text extraction.\n", doc.get("content").asText());
         assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             doc.get("extracted-metadata").get("Content-Type").asText());
     }
