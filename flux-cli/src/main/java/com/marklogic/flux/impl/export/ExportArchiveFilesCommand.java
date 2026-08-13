@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -95,10 +95,12 @@ public class ExportArchiveFilesCommand extends AbstractCommand<ArchiveFilesExpor
 
         @Override
         public Map<String, String> get() {
-            return OptionsUtil.makeOptions(
+            Map<String, String> options = OptionsUtil.makeOptions(
                 Options.WRITE_FILES_COMPRESSION, "zip",
                 Options.WRITE_FILES_ENCODING, encoding
             );
+            options.putAll(getAdditionalWriteOptions());
+            return options;
         }
     }
 

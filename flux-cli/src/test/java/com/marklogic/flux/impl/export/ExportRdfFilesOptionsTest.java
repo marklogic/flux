@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -31,7 +31,9 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
             "--path", "anywhere",
             "--format", "trig",
             "--graph-override", "use-this-graph",
-            "--no-snapshot"
+            "--no-snapshot",
+            "--write-prop", "spark.someprop=somevalue",
+            "--write-prop", "other.prop=othervalue"
         );
 
         Map<String, String> options = command.readParams.get();
@@ -50,5 +52,7 @@ class ExportRdfFilesOptionsTest extends AbstractOptionsTest {
         options = command.writeParams.get();
         assertEquals("trig", options.get(Options.WRITE_RDF_FILES_FORMAT));
         assertEquals("use-this-graph", options.get(Options.WRITE_RDF_FILES_GRAPH));
+        assertEquals("somevalue", options.get("spark.someprop"));
+        assertEquals("othervalue", options.get("other.prop"));
     }
 }
