@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -25,6 +25,24 @@ class ExportArchiveFilesOptionsTest extends AbstractOptionsTest {
 
         Map<String, String> options = command.writeParams.get();
         assertEquals("ISO-8859-1", options.get(Options.WRITE_FILES_ENCODING));
+    }
+
+    @Test
+    void writeProp() {
+        ExportArchiveFilesCommand command = (ExportArchiveFilesCommand) getCommand(
+            "export-archive-files",
+            "--connection-string", "test:test@host:8000",
+            "--collections", "anything",
+            "--path", "anywhere",
+            "--encoding", "ISO-8859-1",
+            "--write-prop", "spark.someprop=somevalue",
+            "--write-prop", "other.prop=othervalue"
+        );
+
+        Map<String, String> options = command.writeParams.get();
+        assertEquals("ISO-8859-1", options.get(Options.WRITE_FILES_ENCODING));
+        assertEquals("somevalue", options.get("spark.someprop"));
+        assertEquals("othervalue", options.get("other.prop"));
     }
 
     @Test

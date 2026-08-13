@@ -11,6 +11,7 @@ import com.marklogic.flux.impl.CloudStorageParams;
 import com.marklogic.flux.impl.S3Params;
 import picocli.CommandLine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -29,6 +30,13 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
 
     @CommandLine.Option(names = "--file-count", description = "Specifies how many files should be written; also an alias for '--repartition'.")
     protected int fileCount;
+
+    @CommandLine.Option(
+        names = {"--write-prop"},
+        hidden = true,
+        description = "Specify one or more arbitrary options to pass to the MarkLogic connector writer."
+    )
+    private Map<String, String> additionalWriteOptions = new HashMap<>();
 
     public String getPath() {
         return path;
@@ -91,8 +99,22 @@ public abstract class WriteFilesParams<T extends WriteFilesOptions> implements S
     }
 
     @Override
-    public Map<String, String> get() {
-        return Map.of();
+    public final Map<String, String> get() {
+        Map<String, String> options = new HashMap<>();
+        addWriteOptions(options);
+        if (additionalWriteOptions != null) {
+            options.putAll(additionalWriteOptions);
+        }
+        return options;
+    }
+
+    /**
+     * Allows subclasses to provide additional write options.
+     *
+     * @param options
+     */
+    protected void addWriteOptions(Map<String, String> options) {
+
     }
 
     @Override

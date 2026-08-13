@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
 import com.marklogic.flux.api.DelimitedFilesExporter;
 import com.marklogic.flux.api.ReadRowsOptions;
-import com.marklogic.flux.impl.OptionsUtil;
 import picocli.CommandLine;
 
 import java.util.HashMap;
@@ -44,13 +43,14 @@ public class ExportDelimitedFilesCommand extends AbstractExportRowsToFilesComman
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @Override
-        public Map<String, String> get() {
-            Map<String, String> options = OptionsUtil.makeOptions("header", "true");
+        protected void addWriteOptions(Map<String, String> options) {
+            options.put("header", "true");
             if (encoding != null) {
                 options.put("encoding", encoding);
             }
-            options.putAll(additionalOptions);
-            return options;
+            if (additionalOptions != null) {
+                options.putAll(additionalOptions);
+            }
         }
 
         @Override

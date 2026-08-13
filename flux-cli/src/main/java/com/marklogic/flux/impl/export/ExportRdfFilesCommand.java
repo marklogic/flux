@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -213,8 +213,8 @@ public class ExportRdfFilesCommand extends AbstractCommand<RdfFilesExporter> imp
         private boolean gzip;
 
         @Override
-        public Map<String, String> get() {
-            return OptionsUtil.makeOptions(
+        protected void addWriteOptions(Map<String, String> options) {
+            OptionsUtil.addOptions(options,
                 Options.WRITE_RDF_FILES_FORMAT, format,
                 Options.WRITE_RDF_FILES_GRAPH, graphOverride,
                 Options.WRITE_FILES_COMPRESSION, gzip ? "gzip" : null

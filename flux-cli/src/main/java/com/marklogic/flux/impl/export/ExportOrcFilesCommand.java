@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -42,8 +42,10 @@ public class ExportOrcFilesCommand extends AbstractExportRowsToFilesCommand<OrcF
         private Map<String, String> additionalOptions = new HashMap<>();
 
         @Override
-        public Map<String, String> get() {
-            return additionalOptions;
+        protected void addWriteOptions(Map<String, String> options) {
+            if (additionalOptions != null) {
+                options.putAll(additionalOptions);
+            }
         }
 
         @Override
