@@ -133,7 +133,7 @@ distributions {
     distributionBaseName = "marklogic-flux"
     contents {
       from("..") {
-        include "LICENSE"
+        include "LICENSE.txt"
         include "NOTICE.txt"
       }
       from("hadoop") {
