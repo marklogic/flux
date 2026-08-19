@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImporter> {
 
-    interface ReadXmlFilesOptions extends ReadFilesOptions<ReadXmlFilesOptions> {
+    interface ReadXmlFilesOptions extends ReadCompressibleFilesOptions<ReadXmlFilesOptions> {
         ReadXmlFilesOptions element(String element);
 
         ReadXmlFilesOptions namespace(String namespace);
@@ -22,8 +22,6 @@ public interface AggregateXmlFilesImporter extends Executor<AggregateXmlFilesImp
         ReadXmlFilesOptions compressionType(CompressionType compressionType);
 
         ReadXmlFilesOptions encoding(String encoding);
-
-        ReadXmlFilesOptions partitions(int partitions);
     }
 
     AggregateXmlFilesImporter from(Consumer<ReadXmlFilesOptions> consumer);

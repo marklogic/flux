@@ -171,7 +171,7 @@ class ImportOrcFilesTest extends AbstractTest {
             "--permissions", DEFAULT_PERMISSIONS
         );
 
-        assertTrue(stderr.contains("Command failed") && stderr.contains("Could not read footer"),
+        assertTrue(stderr.contains("Command failed") && stderr.contains("footer is too large"),
             "The command should have failed because Spark could not read the footer of the invalid Avro file; " +
                 "stderr: " + stderr);
     }

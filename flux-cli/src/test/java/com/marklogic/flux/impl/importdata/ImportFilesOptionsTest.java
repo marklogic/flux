@@ -53,7 +53,9 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--doc-prop", "prop1=value1",
             "--doc-prop", "prop2=value2",
             "--write-prop", "spark.someprop=somevalue",
-            "--write-prop", "other.prop=othervalue"
+            "--write-prop", "other.prop=othervalue",
+            "--zip-max-uncompressed-entry-bytes", "268435456",
+            "--zip-max-entry-count", "100000"
         );
 
         assertOptions(command.getConnectionParams().makeOptions(),
@@ -66,7 +68,9 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
         assertOptions(command.getReadParams().makeOptions(),
             Options.READ_NUM_PARTITIONS, "6",
             Options.READ_FILES_ENCODING, "UTF-16",
-            Options.STREAM_FILES, "true"
+            Options.STREAM_FILES, "true",
+            Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES, "268435456",
+            Options.READ_ZIP_MAX_ENTRY_COUNT, "100000"
         );
 
         assertOptions(command.getWriteParams().makeOptions(),
@@ -278,5 +282,20 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
         ));
 
         assertEquals("Error: Missing required argument(s): --incremental-write-view=<view>", ex.getMessage());
+    }
+
+    @Test
+    void zipZeroAndNegativeValuesAreForwarded() {
+        // Any value < 1 disables the limit; the option should not appear in the map.
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", makeConnectionString(),
+            "--path", "src/test/resources/mixed-files",
+            "--zip-max-uncompressed-entry-bytes", "0",
+            "--zip-max-entry-count", "-1"
+        );
+        Map<String, String> options = command.getReadParams().makeOptions();
+        assertEquals("0", options.get(Options.READ_ZIP_MAX_UNCOMPRESSED_ENTRY_BYTES), "A value of 0 is forwarded so the connector can explicitly disable.");
+        assertEquals("-1", options.get(Options.READ_ZIP_MAX_ENTRY_COUNT), "A negative value is forwarded so the connector can explicitly disable.");
     }
 }

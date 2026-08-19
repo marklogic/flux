@@ -1,4 +1,4 @@
-To contribute to this project, complete these steps to setup a MarkLogic instance via Docker with a test 
+To contribute to this project, complete these steps to setup a MarkLogic instance via Docker with a test
 application installed:
 
 1. Ensure you have Java 17 installed.
@@ -16,8 +16,8 @@ Some of the tests depend on the Postgres instance deployed via Docker. Follow th
 into it:
 
 1. Go to [this Postgres tutorial](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/).
-2. Scroll down to the section titled "Download the PostgreSQL sample database". Follow the instructions there for 
-downloading the `dvdrental.zip` and extracting it to produce a file named `dvdrental.tar` (one option is to use Java - 
+2. Scroll down to the section titled "Download the PostgreSQL sample database". Follow the instructions there for
+downloading the `dvdrental.zip` and extracting it to produce a file named `dvdrental.tar` (one option is to use Java -
 `jar -xvf dvdrental.zip`).
 3. Copy `dvdrental.tar` to `./docker/postgres/dvdrental.tar` in this project.
 
@@ -28,8 +28,8 @@ docker exec -it docker-tests-flux-postgres-1 psql -U postgres -c "CREATE DATABAS
 docker exec -it docker-tests-flux-postgres-1 pg_restore -U postgres -d dvdrental /opt/dvdrental.tar
 ```
 
-The Docker file includes a pgadmin instance which can be accessed at <http://localhost:5480/>. 
-If you wish to login to this, do so with "postgres@pgadmin.com" and 
+The Docker file includes a pgadmin instance which can be accessed at <http://localhost:5480/>.
+If you wish to login to this, do so with "postgres@pgadmin.com" and
 a password of "postgres". For logging into Postgres itself, use "postgres" as the username and password. You can then
 register a server that connects to the "postgres" server.
 
@@ -39,23 +39,23 @@ If you would like to test our the Flux distribution - as either a tar or zip - p
 
 1. Run either `./gradlew distTar` or `./gradlew distZip`.
 2. Move the file created at `./flux-cli/build/distributions` to a desired location.
-3. Extract the file. 
+3. Extract the file.
 4. `cd` into the extracted directory.
 
-You can now run `./bin/flux` to test out various commands. 
+You can now run `./bin/flux` to test out various commands.
 
-If you're testing with the project at `./examples/getting-started`, you can run the following to install Flux in that 
+If you're testing with the project at `./examples/getting-started`, you can run the following to install Flux in that
 directory, thus allowing you to test out the examples in that project:
 
     ./gradlew buildToolForGettingStarted
 
-If you wish to build the Flux zip with all the embedding model integration JARs included, you must first run the 
+If you wish to build the Flux zip with all the embedding model integration JARs included, you must first run the
 `copyEmbeddingModelJarsIntoDistribution` task. That name is intentionally verbose, but it's a lot to type, so take
 advantage of Gradle's ability to extrapolate task names:
 
     ./gradlew copyemb distZip
 
-You can also do the following include the integration JARs in the Flux installation in the `examples/getting-started` 
+You can also do the following include the integration JARs in the Flux installation in the `examples/getting-started`
 project (again taking advantage of Gradle's ability to extrapolate task names):
 
     ./gradlew copyemb buildtoolfor
@@ -68,7 +68,7 @@ You can specify a version for Flux when building Flux via any of the following:
     ./gradlew distZip -Pversion=changeme
     ./gradlew installDist -Pversion=changeme
 
-The version can then be viewed by running `./bin/flux version`. 
+The version can then be viewed by running `./bin/flux version`.
 
 ## Running the tests
 
@@ -81,23 +81,23 @@ If you are running the tests in Intellij, you will need to perform the following
 
 1. Go to Run -> Edit Configurations in the Intellij toolbar.
 2. Click on "Edit configuration templates".
-3. Select "JUnit". 
+3. Select "JUnit".
 4. In the text box containing JVM arguments, add the text below:
 
 ```
---add-opens java.base/sun.nio.ch=ALL-UNNAMED 
---add-opens java.base/sun.util.calendar=ALL-UNNAMED 
---add-opens java.base/java.io=ALL-UNNAMED 
+--add-opens java.base/sun.nio.ch=ALL-UNNAMED
+--add-opens java.base/sun.util.calendar=ALL-UNNAMED
+--add-opens java.base/java.io=ALL-UNNAMED
 --add-opens java.base/sun.nio.cs=ALL-UNNAMED
 --add-opens java.base/sun.security.action=ALL-UNNAMED
 ```
 
-When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to 
-pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to 
+When you run one or more tests, the above configuration template settings will be used, allowing all Flux tests to
+pass on Java 17. If you are running a test configuration that you ran prior to making the changes, you will need to
 delete that configuration first via the "Run -> Edit Configurations" panel.
 
-If you are running tests in Intellij via Intellij and not via the Gradle wrapper, you will also need to run 
-`./gradlew shadowJar` first to ensure a couple shadow jars are created that are required by some of the `flux-cli` 
+If you are running tests in Intellij via Intellij and not via the Gradle wrapper, you will also need to run
+`./gradlew shadowJar` first to ensure a couple shadow jars are created that are required by some of the `flux-cli`
 tests. You do not need to do this if you have Intellij configured to use Gradle to run tests in Intellij.
 
 ## Generating code quality reports with SonarQube
@@ -106,8 +106,8 @@ Please see our internal Wiki page - search for "Developer Experience SonarQube" 
 for information on setting up SonarQube and using it with this repository.
 
 You can run `./gradlew clean testCodeCoverageReport` to run the tests and generate code coverage data. The output will
-be written to `code-coverage-report/build`. Unfortunately though, Sonarqube does not appear to consume this data 
-correctly. For example, as of 2025-04-23, the Jacoco test report will show 84% coverage but Sonarqube will only report 
+be written to `code-coverage-report/build`. Unfortunately though, Sonarqube does not appear to consume this data
+correctly. For example, as of 2025-04-23, the Jacoco test report will show 84% coverage but Sonarqube will only report
 76% coverage.
 
 ## Testing the documentation locally
@@ -127,7 +127,7 @@ though you don't need to perform all of those steps since some of the files gene
 4. Run `bundle install` (this may not be necessary due to Gemfile.lock being in version control).
 5. Run `bundle exec jekyll serve`.
 
-You can then go to http://localhost:4000 to view the docs. 
+You can then go to http://localhost:4000 to view the docs.
 
 ## Updating the published Javadoc
 
@@ -138,13 +138,13 @@ files after changing any of the classes in the `com.marklogic.flux.api` package,
 
 ## Testing with a load balancer
 
-The `docker-compose.yml` file includes an instance of a 
-[Caddy load balancer](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). This is useful for any kind 
-of performance testing, as you typically want Flux (and our Spark connector) to connect to a load balancer that can 
-both distribute load and handle retrying failed connections. 
+The `docker-compose.yml` file includes an instance of a
+[Caddy load balancer](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy). This is useful for any kind
+of performance testing, as you typically want Flux (and our Spark connector) to connect to a load balancer that can
+both distribute load and handle retrying failed connections.
 
 The `./caddy/config/Caddyfile` configuration file has some default config in it for communicating with a 3-node cluster
-owned by the performance team. Feel free to adjust this config locally as needed. 
+owned by the performance team. Feel free to adjust this config locally as needed.
 
 Example of using the existing config to copy from port 8015 to port 8016 in the performance cluster:
 
@@ -198,7 +198,7 @@ are all synonyms):
 
     ./gradlew shadowJar
 
-This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-2.2-SNAPSHOT-all.jar`.
+This will produce an assembly jar at `./flux-cli/build/libs/marklogic-flux-<version>-all.jar`.
 
 You can now run any CLI command via spark-submit. This is an example of previewing an import of files - change the value
 of `--path`, as an absolute path is needed, and of course change the value of `--master` to match that of your Spark
@@ -206,7 +206,7 @@ cluster:
 
 ```
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
---master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-2.2-SNAPSHOT-all.jar \
+--master spark://NYWHYC3G0W:7077 flux-cli/build/libs/marklogic-flux-<version>-all.jar \
 import-files --path /Users/rudin/workspace/flux/flux-cli/src/test/resources/mixed-files \
 --connection-string "admin:admin@localhost:8000" \
 --preview 5 --preview-drop content
@@ -223,7 +223,7 @@ to something you can access):
 $SPARK_HOME/bin/spark-submit --class com.marklogic.flux.spark.Submit \
 --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-client:3.3.4 \
 --master spark://NYWHYC3G0W:7077 \
-flux-cli/build/libs/marklogic-flux-2.2-SNAPSHOT-all.jar \
+flux-cli/build/libs/marklogic-flux-<version>-all.jar \
 import-files --path "s3a://changeme/" \
 --connection-string "admin:admin@localhost:8000" \
 --s3-add-credentials \

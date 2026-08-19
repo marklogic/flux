@@ -80,14 +80,15 @@ supports the following options:
 
 | Option | Description | 
 | --- | --- |
-| api-key | Required, unless using `non-azure-api-key`; used to authenticate with Azure OpenAI. |
+| api-key | Used to authenticate with Azure OpenAI. Mutually exclusive with `non-azure-api-key` and `token`; exactly one must be provided. |
 | deployment-name | Required; the name of the Azure OpenAI deployment to use for embeddings. |
-| endpoint | Required, unless using `non-azure-api-key`; the Azure OpenAI endpoint in the format: `https://{resource}.openai.azure.com/`. |
+| endpoint | Required when using `api-key` or `token`; the Azure OpenAI endpoint in the format: `https://{resource}.openai.azure.com/`. |
 | dimensions | The number of dimensions in a generated embedding. |
 | duration | Maximum duration, in seconds, of a request before timing out. |
 | log-requests-and-responses | If set to `true`, enables logging of requests and responses. |
 | max-retries | The number of retries to attempt when generating an embedding fails. |
-| non-azure-api-key | Used to authenticate with the OpenAI service instead of Azure OpenAI. If set, the endpoint is automatically set to `https://api.openai.com/v1`. |
+| non-azure-api-key | Used to authenticate with the OpenAI service instead of Azure OpenAI. If set, the endpoint is automatically set to `https://api.openai.com/v1`. Mutually exclusive with `api-key` and `token`. |
+| token | An OAuth2 bearer token used to authenticate via Azure Active Directory / Entra ID. If set, `api-key` must not be provided and the `endpoint` must be specified. Mutually exclusive with `api-key` and `non-azure-api-key`. |
 
 The following shows an example of configuring the Azure OpenAI embedding model with what are likely the most common
 options to be used (the deployment names and endpoints are notional):

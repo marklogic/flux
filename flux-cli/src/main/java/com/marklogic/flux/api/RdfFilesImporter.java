@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -10,9 +10,9 @@ import java.util.function.Consumer;
  */
 public interface RdfFilesImporter extends Executor<RdfFilesImporter> {
 
-    interface ReadRdfFilesOptions extends ReadFilesOptions<ReadRdfFilesOptions> {
+    interface ReadRdfFilesOptions extends ReadCompressibleFilesOptions<ReadRdfFilesOptions> {
         ReadRdfFilesOptions compressionType(CompressionType compressionType);
-        ReadRdfFilesOptions partitions(int partitions);
+
     }
 
     interface WriteTriplesDocumentsOptions extends WriteDocumentsOptions<WriteTriplesDocumentsOptions> {

@@ -6,7 +6,7 @@ grand_parent: Importing Data
 nav_order: 2
 ---
 
-Flux can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term 
+Flux can import any type of file as-is, with the contents of the file becoming a new document in MarkLogic. The term
 "generic files" is used in this context to refer to files that do not require any special processing
 other than potentially decompressing the files.
 
@@ -44,10 +44,10 @@ bin\flux import-files ^
 
 ## Controlling document URIs
 
-Each document will have an initial URI based on the absolute path of the associated file. See 
-[common import features](../common-import-features.md) for details on adjusting this URI. In particular, the 
+Each document will have an initial URI based on the absolute path of the associated file. See
+[common import features](../common-import-features.md) for details on adjusting this URI. In particular, the
 `--uri-replace` option is often useful for removing most of the absolute path to produce a concise, self-describing
-URI. 
+URI.
 
 ## Specifying a document type
 
@@ -66,7 +66,7 @@ the content can be correctly translated to UTF-8 when written to MarkLogic:
 {% tab log Unix %}
 ```
 ./bin/flux import-files \
-    --path source \ 
+    --path source \
     --encoding ISO-8859-1 \
     --connection-string "flux-example-user:password@localhost:8004" \
     --permissions flux-example-role,read,flux-example-role,update
@@ -89,12 +89,12 @@ bin\flux import-files ^
 Flux can leverage MarkLogic's [support for large binary documents](https://docs.marklogic.com/guide/app-dev/binaries#id_93203)
 by importing binary files of any size. To ensure that binary files of any size can be loaded, consider using the
 `--streaming` option introduced in Flux 1.1.0. When this option is set, Flux will stream the contents of each file from
-its source directly into MarkLogic, thereby avoiding reading the contents of a file into memory. 
+its source directly into MarkLogic, thereby avoiding reading the contents of a file into memory.
 
 As streaming a file requires Flux to only send one document at a time to MarkLogic, you should not use this option when
 importing smaller files that easily fit into the memory available to Flux.
 
-When using `--streaming`, the following options will have no effect due to Flux not reading the file contents into 
+When using `--streaming`, the following options will have no effect due to Flux not reading the file contents into
 memory and always sending one file per request to MarkLogic:
 
 - `--batch-size`
@@ -102,13 +102,13 @@ memory and always sending one file per request to MarkLogic:
 - `--failed-documents-path`
 - `--uri-template`
 
-You typically will also not want to use the `--transform` option as applying a REST transform in MarkLogic to a very 
+You typically will also not want to use the `--transform` option as applying a REST transform in MarkLogic to a very
 large binary document may exhaust the amount of memory available to MarkLogic.
 
-In addition, when streaming documents to MarkLogic, URIs will be encoded. For example, a file named `my file.json` 
-will result in a URI of `/my%20file.json`. This is due to an 
-[issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in 
-a future server release. 
+In addition, when streaming documents to MarkLogic, URIs will be encoded. For example, a file named `my file.json`
+will result in a URI of `/my%20file.json`. This is due to an
+[issue in the MarkLogic REST API endpoint](https://docs.marklogic.com/REST/PUT/v1/documents) that will be resolved in
+a future server release.
 
 ## Importing gzip files
 
@@ -120,16 +120,27 @@ that may not fit into the memory available to Flux or to MarkLogic.
 ## Importing ZIP files
 
 To import each entry in a ZIP file as a separate document, include the `--compression` option with a value of `ZIP`.
-Each document will have an initial URI based on both the absolute path of the ZIP file and the name of the ZIP entry. 
+Each document will have an initial URI based on both the absolute path of the ZIP file and the name of the ZIP entry.
 You can also use the `--document-type` option as described above to force a document type for any entry that has a file
 extension not recognized by MarkLogic. The `--streaming` option introduced in Flux 1.1.0 can also be used for ZIP files
 containing very large binary files that may not fit into the memory available to Flux or to MarkLogic.
 
 ## Extracting text
 
-As of Flux 1.3.0, text can be extracted from files via [Apache Tika](https://tika.apache.org/) and written as separate 
-documents in MarkLogic. This is typically useful when importing binary content such as PDF and Word files, where both 
+As of Flux 1.3.0, text can be extracted from files via [Apache Tika](https://tika.apache.org/) and written as separate
+documents in MarkLogic. This is typically useful when importing binary content such as PDF and Word files, where both
 the binary file and extracted text can be stored in MarkLogic.
+
+### Behavior change in Flux 2.1.2: Microsoft Office file extraction
+
+Flux 2.1.2 upgrades Apache Tika from 3.3.1 to 3.3.2. Tika 3.3.2 changes the default parser for Microsoft Office OOXML
+files (`.docx`, `.pptx`, `.xlsx`, `.vsdx`) from a DOM-based extractor to a SAX-based extractor. The SAX parser is
+faster and more memory-efficient, but may produce slightly different whitespace in extracted text compared to previous
+Flux versions — for example, paragraph separators may differ.
+
+If your application depends on the exact text output from Office files and you need the previous DOM-based behavior,
+you can restore it by providing a [Tika configuration file](https://tika.apache.org/3.3.2/configuring.html) that
+sets `useSAXDocxExtractor` and/or `useSAXPptxExtractor` to `false` on the `OfficeParserConfig`.
 
 Text extraction is enabled by including the following option when executing the `import-files` command:
 
@@ -141,12 +152,12 @@ behavior:
 1. The document will be JSON with a URI equalling that of the binary document URI plus `-extracted-text.json`.
 2. The document will inherit any permissions assigned to the binary document.
 3. The document will not inherit any collections assigned to the binary document.
-4. The document will have keys of `source-uri`, `content`, and `extracted-metadata`. 
+4. The document will have keys of `source-uri`, `content`, and `extracted-metadata`.
 
 The `content` in the document contains the extracted text. The `extracted-metadata` contains each metadata key and value
-produced by Apache Tika. 
+produced by Apache Tika.
 
-If you do not want Flux to write the file to a separate document but only want the extracted text document written, 
+If you do not want Flux to write the file to a separate document but only want the extracted text document written,
 include the following option:
 
     --extracted-text-drop-source
@@ -158,18 +169,38 @@ Extracted text documents can be written as XML instead of JSON by including the 
     --extracted-text-document-type XML
 
 When writing Tika metadata to the extracted text document, Flux will attempt to determine a well-known namespace based
-on the name of the metadata key. For example, a Tika metadata key that begins with `pdf:` will result in an element 
+on the name of the metadata key. For example, a Tika metadata key that begins with `pdf:` will result in an element
 assigned to the `http://ns.adobe.com/pdf/1.3/` namespace.
 
 ### Assigning metadata to extracted text documents
 
-Collections can be assigned to extracted text documents via the following option, which accepts a comma-delimited list 
+Collections can be assigned to extracted text documents via the following option, which accepts a comma-delimited list
 of collection names:
 
     --extracted-text-collections collection1,collection2
 
-Permissions can be assigned to extracted text documents via the following options, which accepts a comma-delimited 
+Permissions can be assigned to extracted text documents via the following options, which accepts a comma-delimited
 sequence of MarkLogic role names and capabilities:
 
     --extracted-text-permissions role1,read,role2,update
+
+## Zip bomb protection
+
+When importing ZIP files from untrusted sources, you can protect against
+[zip bombs](https://en.wikipedia.org/wiki/Zip_bomb) — archives crafted to expand to an enormous amount of data
+and potentially exhaust the memory available to Flux. Both options below are disabled by default.
+
+To limit the maximum number of uncompressed bytes read from any single ZIP entry:
+
+    --zip-max-uncompressed-entry-bytes 268435456
+
+A value of `268435456` (256 MB) is a reasonable starting point for most use cases. If a single entry exceeds
+this limit, an error is thrown. Set to `0` or any value less than `1` to disable.
+
+To limit the maximum number of entries processed from a single ZIP file:
+
+    --zip-max-entry-count 100000
+
+A value of `100000` is a reasonable starting point for most use cases. Set to `0` or any value less than `1` to
+disable.
 

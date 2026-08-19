@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
@@ -91,7 +92,11 @@ class GenericFilesImporterTest extends AbstractTest {
                 .abortOnWriteFailure(true)
                 .permissionsString("not-a-real-role,update"));
 
-        FluxException ex = assertThrows(FluxException.class, command::execute);
+        // This is currently catching a ConnectorException instead of a FluxException due to a change in the Spark
+        // connector via PR 683 for the Spark connector. That change should be undone with the real fix being that
+        // FailedRequest should become serializable in the Java Client.
+//        FluxException ex = assertThrows(FluxException.class, command::execute);
+        ConnectorException ex = assertThrows(ConnectorException.class, command::execute);
         assertTrue(ex.getMessage().contains("Role does not exist"), "Unexpected error: " + ex.getMessage());
     }
 

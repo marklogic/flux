@@ -20,6 +20,9 @@ tasks.register("fluxTwoWaySSL", Exec) {
     "--keystore-password", "password",
     "--truststore-path", "../mlcp-testing/trustStore.jks",
     "--truststore-password", "password",
+    // NOTE: "--ssl-hostname-verifier any" is acceptable here ONLY because this task runs
+    // against an isolated local Docker container with a self-signed certificate.
+    // Do NOT use this flag in production configurations.
     "--ssl-hostname-verifier", "any",
     "--preview", "10"
 }

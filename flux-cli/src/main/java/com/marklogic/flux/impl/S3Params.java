@@ -48,13 +48,17 @@ public class S3Params {
 
     @CommandLine.Option(
         names = "--s3-secret-access-key",
-        description = "Specifies the AWS secret key to use for accessing S3 paths."
+        description = "Specifies the AWS secret key to use for accessing S3 paths.",
+        interactive = true,
+        arity = "0..1"
     )
     private String secretAccessKey;
 
     @CommandLine.Option(
         names = "--s3-session-token",
-        description = "Specifies the AWS session token to use, along with the access key ID and secret access key, for accessing S3 paths."
+        description = "Specifies the AWS session token to use, along with the access key ID and secret access key, for accessing S3 paths.",
+        interactive = true,
+        arity = "0..1"
     )
     private String sessionToken;
 
@@ -118,7 +122,7 @@ public class S3Params {
         String prefix = (bucket != null && !bucket.isEmpty()) ? "fs.s3a.bucket." + bucket + "." : "fs.s3a.";
 
         if (addCredentials) {
-            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.create()) {
+            try (DefaultCredentialsProvider provider = DefaultCredentialsProvider.builder().build()) {
                 AwsCredentials credentials = provider.resolveCredentials();
                 config.set(prefix + "access.key", credentials.accessKeyId());
                 config.set(prefix + "secret.key", credentials.secretAccessKey());

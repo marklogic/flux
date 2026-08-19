@@ -9,7 +9,10 @@ java {
 }
 
 dependencies {
-  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.11.0-beta19"
+  // Pinned to 1.14.1-beta24 (uses ai.djl.huggingface:tokenizers:0.31.1) rather than ${langchain4jVersion}-beta27
+  // (uses tokenizers:0.36.0) because 0.36.0's libtokenizers.so requires GLIBC 2.29, which is not available on
+  // the CI build server. 1.15.0-beta25 was the first version to require GLIBC 2.29.
+  implementation "dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:1.14.1-beta24"
 }
 
 shadowJar {

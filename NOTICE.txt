@@ -1,5 +1,5 @@
-
- Progress MarkLogic Flux 2.1.1                                                                         Updated May 2026
+﻿
+  Progress MarkLogic Flux 2.1.2                                                                         Updated August 2026
 
  ----------------------------------------------------------------------------------------------------------------------------
  NOTICES REPORT
@@ -25,19 +25,20 @@
 
  ----------------------------------------------------------------------------------------------------------------------------
 
- GENERATIVE ARTIFICIAL INTELLIGENCE INTEGRATION
- If the Software documentation specifies integration with some form of generative artificial intelligence (AI), then the Software
- will include a configuration to connect to AI. You acknowledge that a separate license or subscription access to AI governed by
- the terms and conditions of a license agreement from AI licensor will be required for use and access of AI capabilities
- integrated with the Software. You will be responsible to comply with the terms of such license agreement for a valid use of AI.
- You acknowledge and accept that Progress is not a party to the license agreement between You and AI licensor for AI use,
- and as a result Progress does not have any control over AI and its availability, and Progress disclaims any and all liabilities for
- any output, error, damages, loss, etc., or any other result of Your use of AI integrated with the Software.
+  GENERATIVE ARTIFICIAL INTELLIGENCE INTEGRATION
+  If the Software documentation specifies integration with some form of generative artificial intelligence (AI), then the
+  Software will include a configuration to connect to AI. You acknowledge that a separate license or subscription access
+  to AI governed by the terms and conditions of a license agreement from AI licensor will be required for use and access of
+  AI capabilities integrated with the Software. You will be responsible to comply with the terms of such license agreement
+  for a valid use of AI. You acknowledge and accept that Progress is not a party to the license agreement between You
+  and AI licensor for AI use, and as a result Progress does not have any control over AI and its availability, and Progress
+  disclaims any and all liabilities for any output, error, damages, loss, etc., or any other result of Your use of AI
+  integrated with the Software.
 
  ----------------------------------------------------------------------------------------------------------------------------
 
  NOTICE FROM PROGRESS SOFTWARE CORPORATION: Additional notices may be included in the release notes or other
- documentation that accompanies updates  received in connection with support of the Product.
+ documentation that accompanies updates received in connection with support of the Product.
 
  ----------------------------------------------------------------------------------------------------------------------------
 
@@ -53,15 +54,11 @@
   HK2 Implementation Utilities | 3.0.6
   Jakarta Annotations API | 2.1.1
   Jakarta Mail | 2.0.2
-  jakartaee/rest | 3.0.0
+  jakartaee/rest | 3.1.0
   Java Servlet API | 4.0.1
-  Java Servlet API | 5.0.0
+  Java Servlet API | 6.0.0
   javax.annotation API | 1.3.2
-  Jersey | 3.0.18
-  Jersey Inject HK2 | 3.0.18
-  jersey-container-servlet | 3.0.18
-  jersey-container-servlet-core | 3.0.18
-  jersey-core-server | 3.0.18
+  Jersey | 3.1.11
   JSR 374 (JSON Processing) Default Provider | 2.0.1
   juniversalchardet | 2.5.0
   org.locationtech.jts:jts-core | 1.20.0
@@ -70,12 +67,12 @@
 
  ----------------------------------------------------------------------------------------------------------------------------
 
-Components:
+Components: 
 
 | -------------------------------------- | ------------------------------------- | ---------------------------------------- |
 |               Component                |                Origin                 |                 License                  |
 | -------------------------------------- | ------------------------------------- | ---------------------------------------- |
-| aircompressor 2.0.2                    | http://github.com/airlift/aircompress | Apache License 2.0                       |
+| aircompressor 2.0.3                    | http://github.com/airlift/aircompress | Apache License 2.0                       |
 |                                        |   or/                                 |                                          |
 | Angus Activation Registries 2.0.3      |                                       | Eclipse Distribution License - v 1.0     |
 | antlr 4.13.1                           | http://antlr.org                      | BSD 3-clause "New" or "Revised" License  |
@@ -88,6 +85,8 @@ Components:
 |                                        |   ec                                  |                                          |
 | Apache Commons Codec 1.19.0            | https://github.com/apache/commons-cod | Apache License 2.0                       |
 |                                        |   ec                                  |                                          |
+| Apache Commons Codec 1.22.0            | https://github.com/apache/commons-cod | Apache License 2.0                       |
+|                                        |   ec                                  |                                          |
 | Apache Commons Collections 4.5.0       | http://commons.apache.org/proper/comm | Apache License 2.0                       |
 |                                        |   ons-collections/                    |                                          |
 | Apache Commons Compress 1.27.1         | http://commons.apache.org/proper/comm | Apache License 2.0                       |
@@ -97,21 +96,22 @@ Components:
 | Apache Commons Crypto 1.1.0            | https://github.com/apache/commons-cry | Apache License 2.0                       |
 |                                        |   pto/archive/CRYPTO-1.0.0.tar.gz     |                                          |
 | Apache Commons IO 2.16.1               | http://commons.apache.org/io/         | Apache License 2.0                       |
-| Apache Commons IO 2.20.0               | http://commons.apache.org/io/         | Apache License 2.0                       |
-| Apache Commons IO 2.21.0               | http://commons.apache.org/io/         | Apache License 2.0                       |
+| Apache Commons IO 2.22.0               | http://commons.apache.org/io/         | Apache License 2.0                       |
 | Apache Commons Lang 3.19.0             | https://github.com/apache/commons-lan | Apache License 2.0                       |
 |                                        |   g                                   |                                          |
-| Apache Commons Logging 1.3.5           | http://commons.apache.org/proper/comm | Apache License 2.0                       |
+| Apache Commons Lang 3.20.0             | https://github.com/apache/commons-lan | Apache License 2.0                       |
+|                                        |   g                                   |                                          |
+| Apache Commons Logging 1.4.0           | http://commons.apache.org/proper/comm | Apache License 2.0                       |
 |                                        |   ons-logging/                        |                                          |
 | Apache Commons Math 3.6.1              | http://commons.apache.org/math/       | Apache License 2.0                       |
-| Apache Commons Text 1.14.0             | https://github.com/apache/commons-tex | Apache License 2.0                       |
+| Apache Commons Text 1.15.0             | https://github.com/apache/commons-tex | Apache License 2.0                       |
 |                                        |   t                                   |                                          |
 | Apache Hadoop Amazon Web Services      |                                       | Apache License 2.0                       |
-|   support 3.4.2                        |                                       |                                          |
-| Apache Hadoop Azure support 3.4.2      |                                       | Apache License 2.0                       |
-| Apache Hadoop Client API 3.4.2         |                                       | Apache License 2.0                       |
-| Apache Hadoop Client Runtime 3.4.2     |                                       | Apache License 2.0                       |
-| Apache Hadoop shaded Guava 1.4.0       |                                       | Apache License 2.0                       |
+|   support 3.5.0                        |                                       |                                          |
+| Apache Hadoop Azure support 3.5.0      |                                       | Apache License 2.0                       |
+| Apache Hadoop Client API 3.5.0         |                                       | Apache License 2.0                       |
+| Apache Hadoop Client Runtime 3.5.0     |                                       | Apache License 2.0                       |
+| Apache Hadoop shaded Guava 1.5.0       |                                       | Apache License 2.0                       |
 | Apache HttpClient 4.5.13               | https://github.com/apache/httpcompone | Apache License 2.0                       |
 |                                        |   nts-client                          |                                          |
 | Apache HTTPComponents Core 4.4.13      | https://github.com/apache/httpcompone | Apache License 2.0                       |
@@ -119,9 +119,9 @@ Components:
 | Apache HTTPComponents Core 4.4.16      | https://github.com/apache/httpcompone | Apache License 2.0                       |
 |                                        |   nts-core                            |                                          |
 | Apache Ivy 2.5.3                       | http://ant.apache.org/ivy/            | Apache License 2.0                       |
-| Apache JAMES mime4j 0.8.13             | http://james.apache.org/mime4j/index. | Apache License 2.0                       |
+| Apache JAMES mime4j 0.8.14             | http://james.apache.org/mime4j/index. | Apache License 2.0                       |
 |                                        |   html                                |                                          |
-| Apache JAMES Mime4j (DOM) 0.8.13       | http://james.apache.org/mime4j/apache | Apache License 2.0                       |
+| Apache JAMES Mime4j (DOM) 0.8.14       | http://james.apache.org/mime4j/apache | Apache License 2.0                       |
 |                                        |   -mime4j-dom                         |                                          |
 | Apache JempBox 1.8.17                  | http://www.apache.org/pdfbox-parent/j | Apache License 2.0                       |
 |                                        |   empbox/                             |                                          |
@@ -129,94 +129,91 @@ Components:
 |   5.6.0                                |                                       |                                          |
 | Apache Jena - IRI3986 5.6.0            |                                       | Apache License 2.0                       |
 | Apache Jena - Language tags 5.6.0      |                                       | Apache License 2.0                       |
-| Apache Log4j 2.26.0                    | http://logging.apache.org/log4j/      | Apache License 2.0                       |
+| Apache Log4j 2.25.4                    | http://logging.apache.org/log4j/      | Apache License 2.0                       |
 | Apache Log4J API 2.26.0                | http://logging.apache.org/log4j/2.x/l | Apache License 2.0                       |
 |                                        |   og4j-api/                           |                                          |
 | Apache Log4j Layout for JSON template  |                                       | Apache License 2.0                       |
-|   2.26.0                               |                                       |                                          |
-| Apache Log4j SLF4J 2.0 Binding 2.26.0  |                                       | Apache License 2.0                       |
-| Apache ORC 2.2.1                       | http://github.com/apache/orc          | Apache License 2.0                       |
-| Apache ORC Format 1.1.1                | https://orc.apache.org                | Apache License 2.0                       |
-| Apache Parquet Column 1.16.0           |                                       | Apache License 2.0                       |
-| Apache Parquet Common 1.16.0           |                                       | Apache License 2.0                       |
-| Apache Parquet Encodings 1.16.0        |                                       | Apache License 2.0                       |
+|   2.25.4                               |                                       |                                          |
+| Apache Log4j SLF4J 2.0 Binding 2.25.4  |                                       | Apache License 2.0                       |
+| Apache ORC 2.3.0                       | http://github.com/apache/orc          | Apache License 2.0                       |
+| Apache ORC Format 1.1.1                |                                       | Apache License 2.0                       |
+| Apache Parquet Column 1.17.0           |                                       | Apache License 2.0                       |
+| Apache Parquet Common 1.17.0           |                                       | Apache License 2.0                       |
+| Apache Parquet Encodings 1.17.0        |                                       | Apache License 2.0                       |
 | Apache Parquet Format Structures       |                                       | Apache License 2.0                       |
-|   1.16.0                               |                                       |                                          |
-| Apache Parquet Hadoop 1.16.0           |                                       | Apache License 2.0                       |
-| Apache Parquet Jackson 1.16.0          |                                       | Apache License 2.0                       |
-| Apache PDFBox 3.0.7                    | https://pdfbox.apache.org/            | Apache License 2.0                       |
-| Apache PDFBox io 3.0.7                 |                                       | Apache License 2.0                       |
-| Apache PDFBox tools 3.0.7              | https://www.apache.org/pdfbox-parent/ | Apache License 2.0                       |
+|   1.17.0                               |                                       |                                          |
+| Apache Parquet Hadoop 1.17.0           |                                       | Apache License 2.0                       |
+| Apache Parquet Jackson 1.17.0          |                                       | Apache License 2.0                       |
+| Apache PDFBox 3.0.8                    | https://pdfbox.apache.org/            | Apache License 2.0                       |
+| Apache PDFBox io 3.0.8                 |                                       | Apache License 2.0                       |
+| Apache PDFBox tools 3.0.8              | https://www.apache.org/pdfbox-parent/ | Apache License 2.0                       |
 |                                        |   pdfbox-tools/                       |                                          |
-| Apache POI 5.4.1                       | http://poi.apache.org/                | Apache License 2.0                       |
-| Apache POI - OOXML Schemas (lite)      |                                       | Apache License 2.0                       |
-|   5.4.1                                |                                       |                                          |
-| Apache Thrift 0.23.0                   | http://thrift.apache.org/             | Apache License 2.0                       |
-| Apache Tika 3.2.3                      | http://tika.apache.org/               | Apache License 2.0                       |
-| Apache XBean :                         | ASM shaded (repackaged) 4.28          | Apache License 2.0                       |
-| Apache XmpBox 3.0.5                    | http://www.apache.org/pdfbox-parent/x | Apache License 2.0                       |
+| Apache POI 5.5.1                       | http://poi.apache.org/                | Apache License 2.0                       |
+| Apache POI - OOXML schemas (full)      |                                       | Apache License 2.0                       |
+|   5.5.1                                |                                       |                                          |
+| Apache Thrift 0.24.0                   | http://thrift.apache.org/             | Apache License 2.0                       |
+| Apache Tika 3.3.2                      | http://tika.apache.org/               | Apache License 2.0                       |
+| Apache XBean :                         | ASM shaded (repackaged) 4.30          | (Apache License 2.0 AND BSD 3-clause     |
+|                                        |                                       |   "New" or "Revised" License)            |
+| Apache XmpBox 3.0.8                    | http://www.apache.org/pdfbox-parent/x | Apache License 2.0                       |
 |                                        |   mpbox/                              |                                          |
 | Apache Yetus - Audience Annotations    |                                       | Apache License 2.0                       |
 |   0.12.0                               |                                       |                                          |
 | Apache ZooKeeper 3.9.5                 | http://zookeeper.apache.org/          | Apache License 2.0                       |
 | Apache ZooKeeper - Jute 3.9.5          |                                       | Apache License 2.0                       |
 | ARQ 5.6.0                              | http://jena.apache.org/jena-arq/      | Apache License 2.0                       |
-| Arrow Compression 18.3.0               |                                       | Apache License 2.0                       |
-| Arrow Format 18.3.0                    |                                       | Apache License 2.0                       |
-| Arrow Memory - Core 18.3.0             |                                       | Apache License 2.0                       |
-| Arrow Memory - Netty 18.3.0            |                                       | Apache License 2.0                       |
-| Arrow Memory - Netty Buffer 18.3.0     |                                       | Apache License 2.0                       |
-| Arrow Vectors 18.3.0                   |                                       | Apache License 2.0                       |
+| Arrow Compression 19.0.0               |                                       | Apache License 2.0                       |
+| Arrow Format 19.0.0                    |                                       | Apache License 2.0                       |
+| Arrow Memory - Core 19.0.0             |                                       | Apache License 2.0                       |
+| Arrow Memory - Netty 19.0.0            |                                       | Apache License 2.0                       |
+| Arrow Memory - Netty Buffer 19.0.0     |                                       | Apache License 2.0                       |
+| Arrow Vectors 19.0.0                   |                                       | Apache License 2.0                       |
 | ASM 9.8                                | http://asm.ow2.org/                   | BSD 3-clause "New" or "Revised" License  |
 | ASM Commons 9.8                        | http://asm.ow2.io/                    | BSD 3-clause "New" or "Revised" License  |
 | ASM Tree 9.8                           | http://asm.ow2.io/                    | BSD 3-clause "New" or "Revised" License  |
 | AWS Event Stream 1.0.1                 |                                       | Apache License 2.0                       |
-| AWS Java SDK :                         | Arns 2.29.52                          | Apache License 2.0                       |
-| AWS Java SDK :                         | AWS CRT Core 2.29.52                  | Apache License 2.0                       |
-| AWS Java SDK :                         | Checksums 2.29.52                     | Apache License 2.0                       |
-| AWS Java SDK :                         | Checksums SPI 2.29.52                 | Apache License 2.0                       |
-| AWS Java SDK :                         | Core :                                | Protocols :: AWS Json Protocol 2.29.52   |
-|                                        |                                       |   : Apache License 2.0                   |
-| AWS Java SDK :                         | Core :                                | Protocols :: AWS Xml Protocol 2.29.52 :  |
+| AWS Java SDK :                         | Arns 2.35.4                           | Apache License 2.0                       |
+| AWS Java SDK :                         | AWS CRT Core 2.35.4                   | Apache License 2.0                       |
+| AWS Java SDK :                         | Checksums 2.35.4                      | Apache License 2.0                       |
+| AWS Java SDK :                         | Checksums SPI 2.35.4                  | Apache License 2.0                       |
+| AWS Java SDK :                         | Core :                                | Protocols :: AWS Json Protocol 2.35.4 :  |
 |                                        |                                       |   Apache License 2.0                     |
-| AWS Java SDK :                         | Core :                                | Protocols :: Json Utils 2.29.52 :        |
+| AWS Java SDK :                         | Core :                                | Protocols :: AWS Xml Protocol 2.35.4 :   |
 |                                        |                                       |   Apache License 2.0                     |
-| AWS Java SDK :                         | Endpoints SPI 2.29.52                 | Apache License 2.0                       |
-| AWS Java SDK :                         | HTTP Auth 2.29.52                     | Apache License 2.0                       |
-| AWS Java SDK :                         | HTTP Auth AWS 2.29.52                 | Apache License 2.0                       |
-| AWS Java SDK :                         | HTTP Auth Event Stream 2.29.52        | Apache License 2.0                       |
-| AWS Java SDK :                         | HTTP Auth SPI 2.29.52                 | Apache License 2.0                       |
-| AWS Java SDK :                         | Identity SPI 2.29.52                  | Apache License 2.0                       |
-| AWS Java SDK :                         | Metrics Interface 2.29.52             | Apache License 2.0                       |
-| AWS Java SDK :                         | Retries 2.29.52                       | Apache License 2.0                       |
-| AWS Java SDK :                         | Retries API 2.29.52                   | Apache License 2.0                       |
-| AWS Java SDK :                         | S3 :                                  | Transfer Manager 2.29.52 : Apache        |
+| AWS Java SDK :                         | Core :                                | Protocols :: Json Utils 2.35.4 : Apache  |
 |                                        |                                       |   License 2.0                            |
-| AWS Java SDK :                         | Services :                            | Amazon S3 2.29.52 : Apache License 2.0   |
-| AWS Java SDK :                         | Services :                            | SSO 2.29.52 : Apache License 2.0         |
-| AWS Java SDK :                         | Services :                            | SSO OIDC 2.29.52 : Apache License 2.0    |
-| AWS Java SDK :                         | Third Party :                         | Jackson-core 2.29.52 : Apache License    |
-|                                        |                                       |   2.0                                    |
-| AWS SDK for Java 2.29.52               | http://aws.amazon.com/sdkforjava      | Apache License 2.0                       |
-| azure-storage-blob 12.33.2             | https://github.com/Azure/azure-storag | MIT License                              |
+| AWS Java SDK :                         | Endpoints SPI 2.35.4                  | Apache License 2.0                       |
+| AWS Java SDK :                         | HTTP Auth 2.35.4                      | Apache License 2.0                       |
+| AWS Java SDK :                         | HTTP Auth AWS 2.35.4                  | Apache License 2.0                       |
+| AWS Java SDK :                         | HTTP Auth Event Stream 2.35.4         | Apache License 2.0                       |
+| AWS Java SDK :                         | HTTP Auth SPI 2.35.4                  | Apache License 2.0                       |
+| AWS Java SDK :                         | Identity SPI 2.35.4                   | Apache License 2.0                       |
+| AWS Java SDK :                         | Metrics Interface 2.35.4              | Apache License 2.0                       |
+| AWS Java SDK :                         | Retries 2.35.4                        | Apache License 2.0                       |
+| AWS Java SDK :                         | Retries API 2.35.4                    | Apache License 2.0                       |
+| AWS Java SDK :                         | S3 :                                  | Transfer Manager 2.35.4 : Apache         |
+|                                        |                                       |   License 2.0                            |
+| AWS Java SDK :                         | Services :                            | Amazon S3 2.35.4 : Apache License 2.0    |
+| AWS Java SDK :                         | Services :                            | SSO 2.35.4 : Apache License 2.0          |
+| AWS Java SDK :                         | Services :                            | SSO OIDC 2.35.4 : Apache License 2.0     |
+| AWS Java SDK :                         | Third Party :                         | Jackson-core 2.35.4 : Apache License 2.0 |
+| AWS Java SDK :                         | Utils Lite 2.35.4                     | Apache License 2.0                       |
+| AWS SDK for Java 2.35.4                | http://aws.amazon.com/sdkforjava      | Apache License 2.0                       |
+| azure-storage-blob 12.35.0             | https://github.com/Azure/azure-storag | MIT License                              |
 |                                        |   e-python                            |                                          |
 | bnd Annotations Library 7.1.0          | http://www.aQute.biz/Code/Bnd         | Apache License 2.0                       |
-| Bouncy Castle 1.84                     | http://www.bouncycastle.org           | MIT License                              |
+| Bouncy Castle 1.85                     | http://www.bouncycastle.org           | MIT License                              |
 | Bouncy Castle ASN.1 Extension and      |                                       | MIT License                              |
-|   Utility APIs 1.84                    |                                       |                                          |
-| Bouncy Castle Jakarta S/MIME API 1.84  |                                       | MIT License                              |
+|   Utility APIs 1.85                    |                                       |                                          |
+| Bouncy Castle Jakarta S/MIME API 1.85  |                                       | MIT License                              |
 | Bouncy Castle PKIX, CMS, EAC, TSP,     | http://www.bouncycastle.org/java.html | MIT License                              |
-|   PKCS, OCSP, CMP, and CRMF APIs 1.84  |                                       |                                          |
+|   PKCS, OCSP, CMP, and CRMF APIs 1.85  |                                       |                                          |
 | Caffeine cache 3.2.2                   |                                       | Apache License 2.0                       |
 | Checker Qual 3.33.0                    | https://checkerframework.org          | MIT License                              |
 | chill 0.10.0                           |                                       | Apache License 2.0                       |
 | chill-java 0.10.0                      | https://github.com/twitter/chill      | Apache License 2.0                       |
 | Cloud Client 5.10.0                    |                                       | Apache License 2.0                       |
 | com.marklogic:flux-api 2.1.0           |                                       | Apache License 2.0                       |
-| com.marklogic:flux-embedding-model-azu |                                       | Apache License 2.0                       |
-|   re-open-ai 2.0.0                     |                                       |                                          |
-| com.marklogic:flux-embedding-model-oll |                                       | Apache License 2.0                       |
-|   ama 2.1.0                            |                                       |                                          |
 | commons-csv 1.14.1                     | http://commons.apache.org/proper/comm | Apache License 2.0                       |
 |                                        |   ons-csv/index.html                  |                                          |
 | CS Client 5.10.0                       |                                       | Apache License 2.0                       |
@@ -231,7 +228,7 @@ Components:
 | dexx 0.7                               |                                       | MIT License                              |
 | DJL NLP utilities for Huggingface      |                                       | Apache License 2.0                       |
 |   tokenizers 0.31.1                    |                                       |                                          |
-| easymockobjenesis 3.4                  | http://objenesis.org                  | Apache License 2.0                       |
+| easymockobjenesis 3.5                  | http://objenesis.org                  | Apache License 2.0                       |
 | error-prone annotations 2.27.0         | https://github.com/google/error-prone | Apache License 2.0                       |
 |                                        |   /tree/master/annotations            |                                          |
 | error-prone annotations 2.38.0         | https://github.com/google/error-prone | Apache License 2.0                       |
@@ -250,46 +247,46 @@ Components:
 | Guava ListenableFuture only            | https://mvnrepository.com/artifact/co | Apache License 2.0                       |
 |   9999.0-empty-to-avoid-conflict-with- |   m.google.guava/listenablefuture     |                                          |
 |   guava                                |                                       |                                          |
+| HdrHistogram 2.1.12                    | https://github.com/HdrHistogram/HdrHi | BSD 2-clause "Simplified" License        |
+|                                        |   stogram                             |                                          |
 | Hive Storage API 2.8.1                 | https://www.apache.org/hive-storage-a | Apache License 2.0                       |
 |                                        |   pi/                                 |                                          |
 | HK2 API module 3.0.6                   | https://hk2.java.net/hk2-api          | Eclipse Public License 2.0               |
 | HK2 Implementation Utilities 3.0.6     | https://hk2.java.net/hk2-utils        | Eclipse Public License 2.0               |
 | HTTP functionality for the Reactor     |                                       | Apache License 2.0                       |
-|   Netty library 1.2.10                 |                                       |                                          |
-| HTTP functionality for the Reactor     |                                       | Apache License 2.0                       |
-|   Netty library 1.2.13                 |                                       |                                          |
-| ICU4J 77.1                             | http://icu-project.org                | Unicode License v3                       |
+|   Netty library 1.2.18                 |                                       |                                          |
+| ICU4J 78.3                             | http://icu-project.org                | Unicode License v3                       |
 | IRI 5.6.0                              | http://jena.apache.org/jena-iri/      | Apache License 2.0                       |
 | istack common utility code runtime     | http://java.net/istack-commons/istack | Eclipse Distribution License - v 1.0     |
 |   4.1.2                                |   -commons-runtime/                   |                                          |
 | j2objc - Java to IOS 2.8               | http://j2objc.org                     | Apache License 2.0                       |
 | jackson-annotations 2.21               | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
 |                                        |   annotations                         |                                          |
-| jackson-bom 2.21.1                     |                                       | Apache License 2.0                       |
-| jackson-core 2.21.1                    | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
+| jackson-bom 2.21.5                     |                                       | Apache License 2.0                       |
+| jackson-core 2.21.5                    | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
 |                                        |   core                                |                                          |
-| jackson-databind 2.21.1                | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
+| jackson-databind 2.21.5                | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
 |                                        |   databind                            |                                          |
-| jackson-dataformat-csv 2.21.1          | http://wiki.fasterxml.com/JacksonExte | Apache License 2.0                       |
+| jackson-dataformat-csv 2.21.5          | http://wiki.fasterxml.com/JacksonExte | Apache License 2.0                       |
 |                                        |   nsionCSV                            |                                          |
-| jackson-dataformat-xml 2.21.1          | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
+| jackson-dataformat-xml 2.21.5          | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
 |                                        |   dataformat-xml                      |                                          |
-| Jackson-Datatype-JSR310 2.21.1         | http://wiki.fasterxml.com/JacksonModu | Apache License 2.0                       |
+| jackson-dataformat-yaml 2.21.5         | https://github.com/FasterXML/jackson- | Apache License 2.0                       |
+|                                        |   dataformat-yaml                     |                                          |
+| Jackson-Datatype-JSR310 2.21.5         | http://wiki.fasterxml.com/JacksonModu | Apache License 2.0                       |
 |                                        |   leJSR310                            |                                          |
 | Jackson Integration for Metrics 4.2.37 | http://metrics.codahale.com/metrics-j | Apache License 2.0                       |
 |                                        |   son/                                |                                          |
-| jackson-module-scala 2.21.1            |                                       | Apache License 2.0                       |
+| jackson-module-scala 2.21.5            |                                       | Apache License 2.0                       |
+| JaCoCo 0.8.13                          | http://www.eclemma.org/jacoco/        | Eclipse Public License 2.0               |
 | Jakarta Activation 2.0.1               | https://eclipse-ee4j.github.io/jaf/   | BSD 3-clause "New" or "Revised" License  |
-| Jakarta Activation API 2.1.3           | https://eclipse-ee4j.github.io/jaf/   | Eclipse Distribution License - v 1.0     |
 | Jakarta Activation API 2.1.4           | https://eclipse-ee4j.github.io/jaf/   | Eclipse Distribution License - v 1.0     |
 | Jakarta Annotations API 2.1.1          |                                       | Eclipse Public License 2.0               |
 | Jakarta Dependency Injection 2.0.1     |                                       | Apache License 2.0                       |
-| jakartaee/rest 3.0.0                   | https://github.com/jakartaee/rest     | Eclipse Public License 2.0               |
+| jakartaee/rest 3.1.0                   | https://github.com/jakartaee/rest     | Eclipse Public License 2.0               |
 | jakartaeevalidation 3.0.2              | http://beanvalidation.org             | Apache License 2.0                       |
 | Jakarta Mail 2.0.2                     | https://javaee.github.io/javamail/    | Eclipse Public License 2.0               |
 | Jakarta ORO 2.0.8                      | http://jakarta.apache.org/oro/        | Apache License 1.1                       |
-| jakarta.xml.bind:jakarta.xml.bind-api  | https://github.com/jakartaee/jaxb-api | Eclipse Distribution License - v 1.0     |
-|   4.0.2                                |                                       |                                          |
 | jakarta.xml.bind:jakarta.xml.bind-api  | https://github.com/jakartaee/jaxb-api | Eclipse Distribution License - v 1.0     |
 |   4.0.5                                |                                       |                                          |
 | Janino 3.1.12                          | https://janino-compiler.github.io/jan | BSD 3-clause "New" or "Revised" License  |
@@ -300,42 +297,38 @@ Components:
 | Java Native Access (JNA) 5.14.0        | https://github.com/twall/jna          | Apache License 2.0                       |
 | Java Servlet API 4.0.1                 | http://servlet-spec.java.net          | Common Development and Distribution      |
 |                                        |                                       |   License 1.1                            |
-| Java Servlet API 5.0.0                 | http://servlet-spec.java.net          | Eclipse Public License 2.0               |
+| Java Servlet API 6.0.0                 | http://servlet-spec.java.net          | Eclipse Public License 2.0               |
 | Javassist 3.30.2                       | http://jboss-javassist.github.io/java | Apache License 2.0                       |
 |                                        |   ssist/                              |                                          |
 | javax.annotation API 1.3.2             | http://jcp.org/en/jsr/detail?id=250   | Common Development and Distribution      |
 |                                        |                                       |   License 1.1                            |
-| JAXB CORE 4.0.5                        | http://jaxb.java.net/                 | Eclipse Distribution License - v 1.0     |
 | JAXB CORE 4.0.6                        | http://jaxb.java.net/                 | Eclipse Distribution License - v 1.0     |
-| JAXB Runtime 4.0.5                     |                                       | Eclipse Distribution License - v 1.0     |
+| JAXB CORE 4.0.9                        | http://jaxb.java.net/                 | Eclipse Distribution License - v 1.0     |
 | JAXB Runtime 4.0.6                     |                                       | Eclipse Distribution License - v 1.0     |
+| JAXB Runtime 4.0.9                     |                                       | Eclipse Distribution License - v 1.0     |
 | jaxen 2.0.0                            | https://github.com/jaxen-xpath/jaxen  | BSD 3-clause "New" or "Revised" License  |
 | JCL 1.2 Implemented Over SLF4J 2.0.17  | http://www.slf4j.org                  | Apache License 2.0                       |
-| JCTTools 4.0.6                         | http://jctools.github.io/JCTools      | Apache License 2.0                       |
 | JDOM 2.0.6.1                           | http://www.jdom.org/                  | Jdom License                             |
 | Jena 5.6.0                             | http://jena.apache.org/               | Apache License 2.0                       |
-| Jersey 3.0.18                          | https://projects.eclipse.org/projects | Eclipse Public License 2.0               |
+| Jersey 3.1.11                          | https://projects.eclipse.org/projects | Eclipse Public License 2.0               |
 |                                        |   /ee4j.jersey                        |                                          |
-| jersey-container-servlet 3.0.18        | https://jersey.java.net/project/jerse | Eclipse Public License 2.0               |
+| jersey-container-servlet 3.1.11        | https://jersey.java.net/project/jerse | Apache License 2.0                       |
 |                                        |   y-container-servlet/                |                                          |
-| jersey-container-servlet-core 3.0.18   | https://jersey.java.net/project/jerse | Eclipse Public License 2.0               |
+| jersey-container-servlet-core 3.1.11   | https://jersey.java.net/project/jerse | Apache License 2.0                       |
 |                                        |   y-container-servlet-core/           |                                          |
-| jersey-core-server 3.0.18              | https://jersey.java.net/jersey-server | Eclipse Public License 2.0               |
+| jersey-core-server 3.1.11              | https://jersey.java.net/jersey-server | Apache License 2.0                       |
 |                                        |   /                                   |                                          |
-| Jersey Inject HK2 3.0.18               |                                       | Eclipse Public License 2.0               |
+| Jersey Inject HK2 3.1.11               |                                       | Apache License 2.0                       |
 | Jetbrains annotations 13.0             | http://www.jetbrains.org              | Apache License 2.0                       |
-| Jetty                                  | Java based HTTP/1.x, HTTP/2,          | http://www.eclipse.org/jetty/ : Apache   |
-|                                        |   Servlet, WebSocket Server           |   License 2.0                            |
-|                                        |   9.4.58.v20250814                    |                                          |
-| JJWT :                                 | API 0.12.6                            | Apache License 2.0                       |
-| JJWT :                                 | Extensions :                          | Jackson 0.12.6 : Apache License 2.0      |
-| JJWT :                                 | Impl 0.12.6                           | Apache License 2.0                       |
-| json4s-ast 4.0.7                       | https://github.com/json4s/json4s      | Apache License 2.0                       |
+| JJWT :                                 | API 0.13.0                            | Apache License 2.0                       |
+| JJWT :                                 | Extensions :                          | Jackson 0.13.0 : Apache License 2.0      |
+| JJWT :                                 | Impl 0.13.0                           | Apache License 2.0                       |
+| json4s-ast 4.0.7                       |                                       | Apache License 2.0                       |
 | json4s-core 4.0.7                      |                                       | Apache License 2.0                       |
 | json4s-jackson 4.0.7                   |                                       | Apache License 2.0                       |
-| json4s-jackson-core 4.0.7              | https://github.com/json4s/json4s      | Apache License 2.0                       |
-| json4s-scalap 4.0.7                    | https://github.com/json4s/json4s      | Apache License 2.0                       |
-| jsoup 1.21.2                           | http://jsoup.org                      | MIT License                              |
+| json4s-jackson-core 4.0.7              |                                       | Apache License 2.0                       |
+| json4s-scalap 4.0.7                    |                                       | Apache License 2.0                       |
+| jsoup 1.22.2                           | http://jsoup.org                      | MIT License                              |
 | JSpecify annotations 1.0.0             |                                       | Apache License 2.0                       |
 | JSR 374 (JSON Processing) Default      |                                       | Eclipse Public License 2.0               |
 |   Provider 2.0.1                       |                                       |                                          |
@@ -347,96 +340,79 @@ Components:
 |                                        |   vm/                                 |                                          |
 | Kotlin 2.2.21                          | http://kotlin.jetbrains.org           | Apache License 2.0                       |
 | Kryo Shaded 4.0.3                      |                                       | BSD 3-clause "New" or "Revised" License  |
-| langchain4j 1.11.0                     |                                       | Apache License 2.0                       |
-| langchain4j-core 1.11.0                |                                       | Apache License 2.0                       |
-| langchain4j-embeddings 1.11.0-beta19   |                                       | Apache License 2.0                       |
+| langchain4j 1.17.2                     |                                       | Apache License 2.0                       |
+| langchain4j-core 1.14.1                |                                       | Apache License 2.0                       |
+| langchain4j-core 1.17.2                |                                       | Apache License 2.0                       |
+| langchain4j-embeddings 1.14.1-beta24   |                                       | Apache License 2.0                       |
 | langchain4j-embeddings-all-minilm-l6-v |                                       | Apache License 2.0                       |
-|   2 1.11.0-beta19                      |                                       |                                          |
-| LangChain4j :                          | HTTP Client 1.11.0                    | Apache License 2.0                       |
-| LangChain4j :                          | HTTP Client :                         | JDK HttpClient 1.11.0 : Apache License   |
+|   2 1.14.1-beta24                      |                                       |                                          |
+| LangChain4j :                          | HTTP Client 1.17.2                    | Apache License 2.0                       |
+| LangChain4j :                          | HTTP Client :                         | JDK HttpClient 1.17.2 : Apache License   |
 |                                        |                                       |   2.0                                    |
 | LangChain4j integration with Azure     |                                       | Apache License 2.0                       |
-|   OpenAI 1.11.0                        |                                       |                                          |
+|   OpenAI 1.17.2                        |                                       |                                          |
 | LangChain4j integration with Ollama    |                                       | Apache License 2.0                       |
-|   1.11.0                               |                                       |                                          |
+|   1.17.2                               |                                       |                                          |
 | leveldbjni-all 1.8                     | http://leveldbjni.fusesource.org/leve | BSD 3-clause "New" or "Revised" License  |
 |                                        |   ldbjni-all                          |                                          |
-| Log4J Compatibility API 2.26.0         | http://logging.apache.org/log4j/2.x/l | Apache License 2.0                       |
+| Log4J Compatibility API 2.25.4         | http://logging.apache.org/log4j/2.x/l | Apache License 2.0                       |
 |                                        |   og4j-1.2-api/                       |                                          |
-| LZ4 Java Compression 1.10.4            |                                       | Apache License 2.0                       |
+| lz4java 1.11.1                         | https://github.com/lz4/lz4-java       | Apache License 2.0                       |
 | MarkLogic Java Client API 8.1.0        |                                       | Apache License 2.0                       |
-| Marklogic Spark Connector 3.1.1        |                                       | Apache License 2.0                       |
+| Marklogic Spark Connector 3.0.0        |                                       | PSC Product License                      |
 | Metrics Core 4.2.37                    | http://metrics.codahale.com/metrics-c | Apache License 2.0                       |
 |                                        |   ore/                                |                                          |
 | Metrics Integration with JMX 4.2.37    |                                       | Apache License 2.0                       |
 | Microsoft Azure client library for     |                                       | MIT License                              |
-|   File Storage Data Lake 12.26.2       |                                       |                                          |
+|   File Storage Data Lake 12.28.0       |                                       |                                          |
 | Microsoft Azure common module for      |                                       | MIT License                              |
-|   Storage 12.32.2                      |                                       |                                          |
+|   Storage 12.34.0                      |                                       |                                          |
 | Microsoft Azure internal Avro module   |                                       | MIT License                              |
-|   for Storage 12.18.1                  |                                       |                                          |
+|   for Storage 12.20.0                  |                                       |                                          |
 | Microsoft Azure Java Core Library      |                                       | MIT License                              |
-|   1.57.0                               |                                       |                                          |
-| Microsoft Azure Java Core Library      |                                       | MIT License                              |
-|   1.57.1                               |                                       |                                          |
-| Microsoft Azure Java JSON Library      |                                       | MIT License                              |
-|   1.5.0                                |                                       |                                          |
+|   1.58.1                               |                                       |                                          |
 | Microsoft Azure Java JSON Library      |                                       | MIT License                              |
 |   1.5.1                                |                                       |                                          |
-| Microsoft Azure Java XML Library 1.2.0 |                                       | MIT License                              |
 | Microsoft Azure Java XML Library 1.2.1 |                                       | MIT License                              |
 | Microsoft Azure Netty HTTP Client      |                                       | MIT License                              |
-|   Library 1.16.2                       |                                       |                                          |
-| Microsoft Azure Netty HTTP Client      |                                       | MIT License                              |
-|   Library 1.16.3                       |                                       |                                          |
+|   Library 1.16.5                       |                                       |                                          |
 | Microsoft Azure SDK for Key Vault      |                                       | MIT License                              |
-|   1.2.4                                |                                       |                                          |
+|   1.0.0                                |                                       |                                          |
 | Microsoft Azure SDK for OpenAI         |                                       | MIT License                              |
 |   Management 1.0.0-beta.16             |                                       |                                          |
 | Microsoft Windows Azure Storage        | http://nexus.sonatype.org/oss-reposit | Apache License 2.0                       |
-|   Client SDK 8.6.6                     |   ory-hosting.html/parent/modules/plu |                                          |
+|   Client SDK 7.0.1                     |   ory-hosting.html/parent/modules/plu |                                          |
 |                                        |   gins/cloud-azure                    |                                          |
 | minlog 1.3.0                           | http://code.google.com/p/minlog/      | BSD 3-clause "New" or "Revised" License  |
-| Netty/Codec/Base 4.2.13.Final          |                                       | Apache License 2.0                       |
-| Netty/Codec/Classes/Quic 4.2.13.Final  |                                       | Apache License 2.0                       |
-| Netty/Codec/Compression 4.2.13.Final   |                                       | Apache License 2.0                       |
-| Netty/Codec/Http3 4.2.13.Final         |                                       | Apache License 2.0                       |
-| Netty/Codec/Marshalling 4.2.13.Final   |                                       | Apache License 2.0                       |
-| Netty/Codec/Native/Quic 4.2.13.Final   |                                       | Apache License 2.0                       |
-| Netty/Codec/Protobuf 4.2.13.Final      |                                       | Apache License 2.0                       |
-| Netty/Codec/Redis 4.2.13.Final         |                                       | Apache License 2.0                       |
-| Netty/Codec/SMTP 4.2.13.Final          |                                       | Apache License 2.0                       |
-| Netty/Handler/Ssl/Ocsp 4.2.13.Final    |                                       | Apache License 2.0                       |
-| Netty Project 4.2.13.Final             | http://netty.io/                      | Apache License 2.0                       |
+| Netty/Codec/Base 4.2.16.Final          |                                       | Apache License 2.0                       |
+| Netty/Codec/Compression 4.2.16.Final   |                                       | Apache License 2.0                       |
+| Netty/Codec/Marshalling 4.2.16.Final   |                                       | Apache License 2.0                       |
+| Netty Project 4.2.16.Final             | http://netty.io/                      | Apache License 2.0                       |
 | Netty/Resolver/DNS/Classes/MacOS       |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
-| Netty/Resolver/DNS/MacOS 4.2.13.Final  |                                       | Apache License 2.0                       |
+|   4.2.16.Final                         |                                       |                                          |
+| Netty/Resolver/DNS/MacOS 4.2.16.Final  |                                       | Apache License 2.0                       |
 | Netty/TomcatNative [BoringSSL -        |                                       | Apache License 2.0                       |
-|   Static] 2.0.74.Final                 |                                       |                                          |
+|   Static] 2.0.78.Final                 |                                       |                                          |
 | Netty/TomcatNative [OpenSSL -          |                                       | Apache License 2.0                       |
-|   Classes] 2.0.74.Final                |                                       |                                          |
+|   Classes] 2.0.78.Final                |                                       |                                          |
 | Netty/Transport/Classes/Epoll          |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
-| Netty/Transport/Classes/io_uring       |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
+|   4.2.16.Final                         |                                       |                                          |
 | Netty/Transport/Classes/KQueue         |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
-| Netty/Transport/Native/io_uring        |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
+|   4.2.16.Final                         |                                       |                                          |
 | Netty/Transport/Native/KQueue          |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
+|   4.2.16.Final                         |                                       |                                          |
 | Netty/Transport/Native/Unix/Common     |                                       | Apache License 2.0                       |
-|   4.2.13.Final                         |                                       |                                          |
-| Ning-compress-LZF 1.1.2                | http://github.com/ning/compress       | Apache License 2.0                       |
-| okhttp 5.3.2                           |                                       | Apache License 2.0                       |
-| OkHttp 5.3.2                           | https://github.com/square/okhttp      | Apache License 2.0                       |
+|   4.2.16.Final                         |                                       |                                          |
+| Ning-compress-LZF 1.2.0                | http://github.com/ning/compress       | Apache License 2.0                       |
+| okhttp 5.4.0                           |                                       | Apache License 2.0                       |
+| OkHttp 5.4.0                           | https://github.com/square/okhttp      | Apache License 2.0                       |
 | okhttp-digest 3.1.1                    |                                       | Apache License 2.0                       |
 | OkHttp Logging Interceptor 5.3.2       |                                       | Apache License 2.0                       |
-| OkHttp Server-Sent Events 5.3.2        |                                       | Apache License 2.0                       |
+| OkHttp Server-Sent Events 5.4.0        |                                       | Apache License 2.0                       |
 | onnx-runtime 1.20.0                    |                                       | MIT License                              |
-| OpenNLP Tools 2.5.4                    | http://www.apache.org/opennlp-tools/  | Apache License 2.0                       |
-| ORC MapReduce 2.2.1                    |                                       | Apache License 2.0                       |
-| ORC Shims 2.2.1                        |                                       | Apache License 2.0                       |
+| OpenNLP Tools 2.5.9                    | http://www.apache.org/opennlp-tools/  | Apache License 2.0                       |
+| ORC MapReduce 2.3.0                    |                                       | Apache License 2.0                       |
+| ORC Shims 2.3.0                        |                                       | Apache License 2.0                       |
 | org.apache.datasketches:datasketches-m |                                       | Apache License 2.0                       |
 |   emory 3.0.2                          |                                       |                                          |
 | org.locationtech.jts:jts-core 1.20.0   |                                       | Eclipse Public License 2.0               |
@@ -455,20 +431,18 @@ Components:
 | picocli - a mighty tiny Command Line   |                                       | Apache License 2.0                       |
 |   Interface 4.7.7                      |                                       |                                          |
 | protobuf-java 4.32.1                   | http://code.google.com/p/protobuf     | BSD 3-clause "New" or "Revised" License  |
-| protobuf-java 4.33.0                   | http://code.google.com/p/protobuf     | BSD 3-clause "New" or "Revised" License  |
+| protobuf-java 4.33.5                   | http://code.google.com/p/protobuf     | BSD 3-clause "New" or "Revised" License  |
 | Py4J 0.10.9.9                          | https://www.py4j.org/                 | BSD 3-clause "New" or "Revised" License  |
 | reactive-streams-jvm 1.0.4             | http://www.reactive-streams.org/      | MIT No Attribution                       |
-| reactor-core 3.7.11                    | https://github.com/reactor/reactor-co | Apache License 2.0                       |
+| reactor-core 3.7.19                    | https://github.com/reactor/reactor-co | Apache License 2.0                       |
 |                                        |   re                                  |                                          |
-| reactor-core 3.7.14                    | https://github.com/reactor/reactor-co | Apache License 2.0                       |
-|                                        |   re                                  |                                          |
-| Reactor Netty 1.2.10                   | http://projectreactor.io              | Apache License 2.0                       |
-| Reactor Netty 1.2.13                   | http://projectreactor.io              | Apache License 2.0                       |
+| Reactor Netty 1.2.18                   | http://projectreactor.io              | Apache License 2.0                       |
 | RoaringBitmap 1.3.0                    | https://github.com/RoaringBitmap/Roar | Apache License 2.0                       |
 |                                        |   ingBitmap                           |                                          |
+| RoaringBitmap 1.6.10                   | https://github.com/RoaringBitmap/Roar | Apache License 2.0                       |
+|                                        |   ingBitmap                           |                                          |
 | S3 Analytics Accelerator Library for   |                                       | Apache License 2.0                       |
-|   Amazon S3 1.2.1                      |                                       |                                          |
-| Scala 2.13.17                          | http://www.scala-lang.org/            | Apache License 2.0                       |
+|   Amazon S3 1.3.1                      |                                       |                                          |
 | Scala 2.13.18                          | http://www.scala-lang.org/            | Apache License 2.0                       |
 | scala-parallel-collections 1.2.0       |                                       | Apache License 2.0                       |
 | scala-parser-combinators 2.4.0         |                                       | Apache License 2.0                       |
@@ -476,59 +450,58 @@ Components:
 | ServiceLocator Default Implementation  | https://hk2.java.net/hk2-locator      | Eclipse Public License 2.0               |
 |   3.0.6                                |                                       |                                          |
 | SLF4J API Module 2.0.17                | http://www.slf4j.org                  | MIT License                              |
+| SLF4J API Module 2.0.18                | http://www.slf4j.org                  | MIT License                              |
+| SnakeYAML 2.5                          | http://code.google.com/p/snakeyaml/   | Apache License 2.0                       |
 | snappy-java 1.1.10.8                   | https://github.com/xerial/snappy-java | Apache License 2.0                       |
-| Spark Avro 4.1.1                       |                                       | Apache License 2.0                       |
-| Spark Project Catalyst 4.1.1           |                                       | Apache License 2.0                       |
-| Spark Project Common Java Utils 4.1.1  |                                       | Apache License 2.0                       |
-| Spark Project Common Utils 4.1.1       |                                       | Apache License 2.0                       |
-| Spark Project Core 4.1.1               |                                       | Apache License 2.0                       |
-| Spark Project Launcher 4.1.1           |                                       | Apache License 2.0                       |
-| Spark Project Local DB 4.1.1           |                                       | Apache License 2.0                       |
-| Spark Project Networking 4.1.1         |                                       | Apache License 2.0                       |
+| Spark Project Catalyst 4.2.0           |                                       | Apache License 2.0                       |
+| Spark Project Common Java Utils 4.2.0  |                                       | Apache License 2.0                       |
+| Spark Project Common Utils 4.2.0       |                                       | Apache License 2.0                       |
+| Spark Project Core 4.2.0               |                                       | Apache License 2.0                       |
+| Spark Project Launcher 4.2.0           |                                       | Apache License 2.0                       |
+| Spark Project Local DB 4.2.0           |                                       | Apache License 2.0                       |
+| Spark Project Networking 4.2.0         |                                       | Apache License 2.0                       |
 | Spark Project Shuffle Streaming        |                                       | Apache License 2.0                       |
-|   Service 4.1.1                        |                                       |                                          |
-| Spark Project Sketch 4.1.1             |                                       | Apache License 2.0                       |
-| Spark Project SQL 4.1.1                |                                       | Apache License 2.0                       |
-| Spark Project SQL API 4.1.1            |                                       | Apache License 2.0                       |
-| Spark Project Tags 4.1.1               |                                       | Apache License 2.0                       |
-| Spark Project Unsafe 4.1.1             |                                       | Apache License 2.0                       |
-| Spark Project Variant 4.1.1            |                                       | Apache License 2.0                       |
+|   Service 4.2.0                        |                                       |                                          |
+| Spark Project Sketch 4.2.0             |                                       | Apache License 2.0                       |
+| Spark Project SQL 4.2.0                |                                       | Apache License 2.0                       |
+| Spark Project SQL API 4.2.0            |                                       | Apache License 2.0                       |
+| Spark Project Tags 4.2.0               |                                       | Apache License 2.0                       |
+| Spark Project Unsafe 4.2.0             |                                       | Apache License 2.0                       |
+| Spark Project Variant 4.2.0            |                                       | Apache License 2.0                       |
 | SparseBitSet 1.3                       |                                       | Apache License 2.0                       |
-| squareokio 3.16.4                      | https://github.com/square/OkIO        | Apache License 2.0                       |
+| squareokio 3.17.0                      | https://github.com/square/OkIO        | Apache License 2.0                       |
 | stax2-api 4.2.2                        | https://github.com/FasterXML/stax2-ap | BSD 2-clause "Simplified" License        |
 |                                        |   i                                   |                                          |
 | stream-lib v2.9.8                      | https://github.com/clearspring/stream | Apache License 2.0                       |
 |                                        |   -lib                                |                                          |
 | ThreeTen-extra 1.8.0                   | https://www.threeten.org/threeten-ext | BSD 3-clause "New" or "Revised" License  |
 |                                        |   ra                                  |                                          |
-| tika-parser-html-module 3.2.3          |                                       | Apache License 2.0                       |
-| tika-parser-mail-commons 3.2.3         |                                       | Apache License 2.0                       |
-| tika-parser-microsoft-module 3.2.3     |                                       | Apache License 2.0                       |
-| tika-parser-pdf-module 3.2.3           |                                       | Apache License 2.0                       |
-| tika-parser-text-module 3.2.3          |                                       | Apache License 2.0                       |
-| tika-parser-xml-module 3.2.3           |                                       | Apache License 2.0                       |
-| tika-parser-xmp-commons 3.2.3          |                                       | Apache License 2.0                       |
-| tika-parser-zip-commons 3.2.3          |                                       | Apache License 2.0                       |
+| tika-parser-html-module 3.3.2          |                                       | Apache License 2.0                       |
+| tika-parser-mail-commons 3.3.2         |                                       | Apache License 2.0                       |
+| tika-parser-microsoft-module 3.3.2     |                                       | Apache License 2.0                       |
+| tika-parser-pdf-module 3.3.2           |                                       | Apache License 2.0                       |
+| tika-parser-text-module 3.3.2          |                                       | Apache License 2.0                       |
+| tika-parser-xml-module 3.3.2           |                                       | Apache License 2.0                       |
+| tika-parser-xmp-commons 3.3.2          |                                       | Apache License 2.0                       |
+| tika-parser-zip-commons 3.3.2          |                                       | Apache License 2.0                       |
 | Tink Cryptography Library for Java     |                                       | Apache License 2.0                       |
-|   1.16.0                               |                                       |                                          |
+|   1.20.0                               |                                       |                                          |
 | Titanium JCS 1.1.1                     |                                       | Apache License 2.0                       |
 | Titanium JSON-LD 1.1 1.7.0             |                                       | Apache License 2.0                       |
-| Titanium RDF API 1.0.0                 | https://github.com/filip26/titanium-r | Apache License 2.0                       |
-|                                        |   df-api                              |                                          |
-| Titanium RDF N-QUADS 1.0.2             | https://github.com/filip26/titanium-r | Apache License 2.0                       |
-|                                        |   df-n-quads                          |                                          |
-| TXW2 Runtime 4.0.5                     |                                       | Eclipse Distribution License - v 1.0     |
+| Titanium RDF API 1.0.0                 |                                       | Apache License 2.0                       |
+| Titanium RDF N-QUADS 1.0.2             |                                       | Apache License 2.0                       |
 | TXW2 Runtime 4.0.6                     |                                       | Eclipse Distribution License - v 1.0     |
+| TXW2 Runtime 4.0.9                     |                                       | Eclipse Distribution License - v 1.0     |
 | univocity-parsers 2.9.1                | http://github.com/univocity/univocity | Apache License 2.0                       |
 |                                        |   -parsers                            |                                          |
-| wildfly-openssl 2.1.4.Final            |                                       | Apache License 2.0                       |
+| wildfly-openssl 2.2.5.Final            |                                       | Apache License 2.0                       |
 | Woodstox 7.1.1                         | https://github.com/FasterXML/woodstox | Apache License 2.0                       |
 | XMLBeans 5.3.0                         | http://xmlbeans.apache.org/           | Apache License 2.0                       |
 | XmlSchema Core 2.3.1                   | http://ws.apache.org/commons/xmlschem | Apache License 2.0                       |
 |                                        |   a20/xmlschema-core/                 |                                          |
-| XZ for Java 1.10                       | http://tukaani.org/xz/java.html       | BSD Zero Clause License                  |
+| XZ for Java 1.12                       | http://tukaani.org/xz/java.html       | BSD Zero Clause License                  |
 | Zero-allocation Hashing 2026.0         |                                       | Apache License 2.0                       |
-| zstd-jni 1.5.7-6                       |                                       | BSD 2-clause "Simplified" License        |
+| zstd-jni 1.5.7-7                       |                                       | BSD 2-clause "Simplified" License        |
 | -------------------------------------- | ------------------------------------- | ---------------------------------------- |
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -597,7 +570,7 @@ Illinois, Urbana-Champaign.
 ---
 
 Apache License 2.0
-(aircompressor 2.0.2, Apache Avro 1.12.1, Apache Avro IPC 1.12.1, Apache Avro Mapred API 1.12.1, Apache Commons Codec 1.17.1, Apache Commons Codec 1.19.0, Apache Commons Collections 4.5.0, Apache Commons Compress 1.27.1, Apache Commons Compress 1.28.0, Apache Commons Crypto 1.1.0, Apache Commons IO 2.16.1, Apache Commons IO 2.20.0, Apache Commons IO 2.21.0, Apache Commons Lang 3.19.0, Apache Commons Logging 1.3.5, Apache Commons Math 3.6.1, Apache Commons Text 1.14.0, Apache Hadoop Amazon Web Services support 3.4.2, Apache Hadoop Azure support 3.4.2, Apache Hadoop Client API 3.4.2, Apache Hadoop Client Runtime 3.4.2, Apache Hadoop shaded Guava 1.4.0, Apache HttpClient 4.5.13, Apache HTTPComponents Core 4.4.13, Apache HTTPComponents Core 4.4.16, Apache Ivy 2.5.3, Apache JAMES mime4j 0.8.13, Apache JAMES Mime4j (DOM) 0.8.13, Apache JempBox 1.8.17, Apache Jena - Base Common Environment 5.6.0, Apache Jena - IRI3986 5.6.0, Apache Jena - Language tags 5.6.0, Apache Log4j 2.26.0, Apache Log4J API 2.26.0, Apache Log4j Layout for JSON template 2.26.0, Apache Log4j SLF4J 2.0 Binding 2.26.0, Apache ORC 2.2.1, Apache ORC Format 1.1.1, Apache Parquet Column 1.16.0, Apache Parquet Common 1.16.0, Apache Parquet Encodings 1.16.0, Apache Parquet Format Structures 1.16.0, Apache Parquet Hadoop 1.16.0, Apache Parquet Jackson 1.16.0, Apache PDFBox 3.0.7, Apache PDFBox io 3.0.7, Apache PDFBox tools 3.0.7, Apache POI 5.4.1, Apache POI - OOXML Schemas (lite) 5.4.1, Apache Thrift 0.23.0, Apache Tika 3.2.3, Apache XBean :: ASM shaded (repackaged) 4.28, Apache XmpBox 3.0.5, Apache Yetus - Audience Annotations 0.12.0, Apache ZooKeeper 3.9.5, Apache ZooKeeper - Jute 3.9.5, ARQ 5.6.0, Arrow Compression 18.3.0, Arrow Format 18.3.0, Arrow Memory - Core 18.3.0, Arrow Memory - Netty 18.3.0, Arrow Memory - Netty Buffer 18.3.0, Arrow Vectors 18.3.0, AWS Event Stream 1.0.1, AWS Java SDK :: Arns 2.29.52, AWS Java SDK :: AWS CRT Core 2.29.52, AWS Java SDK :: Checksums 2.29.52, AWS Java SDK :: Checksums SPI 2.29.52, AWS Java SDK :: Core :: Protocols :: AWS Json Protocol 2.29.52, AWS Java SDK :: Core :: Protocols :: AWS Xml Protocol 2.29.52, AWS Java SDK :: Core :: Protocols :: Json Utils 2.29.52, AWS Java SDK :: Endpoints SPI 2.29.52, AWS Java SDK :: HTTP Auth 2.29.52, AWS Java SDK :: HTTP Auth AWS 2.29.52, AWS Java SDK :: HTTP Auth Event Stream 2.29.52, AWS Java SDK :: HTTP Auth SPI 2.29.52, AWS Java SDK :: Identity SPI 2.29.52, AWS Java SDK :: Metrics Interface 2.29.52, AWS Java SDK :: Retries 2.29.52, AWS Java SDK :: Retries API 2.29.52, AWS Java SDK :: S3 :: Transfer Manager 2.29.52, AWS Java SDK :: Services :: Amazon S3 2.29.52, AWS Java SDK :: Services :: SSO 2.29.52, AWS Java SDK :: Services :: SSO OIDC 2.29.52, AWS Java SDK :: Third Party :: Jackson-core 2.29.52, AWS SDK for Java 2.29.52, bnd Annotations Library 7.1.0, Caffeine cache 3.2.2, chill 0.10.0, chill-java 0.10.0, Cloud Client 5.10.0, com.marklogic:flux-api 2.1.0, com.marklogic:flux-embedding-model-azure-open-ai 2.0.0, com.marklogic:flux-embedding-model-ollama 2.1.0, commons-csv 1.14.1, CS Client 5.10.0, Curator Client 5.9.0, Curator Framework 5.9.0, Curator Recipes 5.9.0, datasketches-java 6.2.0, Deep Java Library - api 0.31.1, DJL NLP utilities for Huggingface tokenizers 0.31.1, easymockobjenesis 3.4, error-prone annotations 2.27.0, error-prone annotations 2.38.0, error-prone annotations 2.41.0, FindBugs jsr305 3.0.2, FlatBuffers Java API 25.2.10, googlegson 2.11.0, googlegson 2.13.2, googleguava v32.0.0, Graphite Integration for Metrics 4.2.37, Guava InternalFutureFailureAccess and InternalFutures 1.0.1, Guava ListenableFuture only 9999.0-empty-to-avoid-conflict-with-guava, Hive Storage API 2.8.1, HTTP functionality for the Reactor Netty library 1.2.10, HTTP functionality for the Reactor Netty library 1.2.13, IRI 5.6.0, j2objc - Java to IOS 2.8, Jackson Integration for Metrics 4.2.37, jackson-annotations 2.21, jackson-bom 2.21.1, jackson-core 2.21.1, jackson-databind 2.21.1, jackson-dataformat-csv 2.21.1, jackson-dataformat-xml 2.21.1, Jackson-Datatype-JSR310 2.21.1, jackson-module-scala 2.21.1, Jakarta Dependency Injection 2.0.1, jakartaeevalidation 3.0.2, Java Native Access (JNA) 5.14.0, java-json-canonicalization 1.1, java-libpst 0.9.3, Javassist 3.30.2, JCL 1.2 Implemented Over SLF4J 2.0.17, JCTTools 4.0.6, Jena 5.6.0, Jetbrains annotations 13.0, Jetty: Java based HTTP/1.x, HTTP/2, Servlet, WebSocket Server 9.4.58.v20250814, JJWT :: API 0.12.6, JJWT :: Extensions :: Jackson 0.12.6, JJWT :: Impl 0.12.6, json4s-ast 4.0.7, json4s-core 4.0.7, json4s-jackson 4.0.7, json4s-jackson-core 4.0.7, json4s-scalap 4.0.7, JSpecify annotations 1.0.0, JVM Integration for Metrics 4.2.37, Kotlin 2.2.21, langchain4j 1.11.0, LangChain4j :: HTTP Client 1.11.0, LangChain4j :: HTTP Client :: JDK HttpClient 1.11.0, LangChain4j integration with Azure OpenAI 1.11.0, LangChain4j integration with Ollama 1.11.0, langchain4j-core 1.11.0, langchain4j-embeddings 1.11.0-beta19, langchain4j-embeddings-all-minilm-l6-v2 1.11.0-beta19, Log4J Compatibility API 2.26.0, LZ4 Java Compression 1.10.4, MarkLogic Java Client API 8.1.0, Marklogic Spark Connector 3.1.1, Metrics Core 4.2.37, Metrics Integration with JMX 4.2.37, Microsoft Windows Azure Storage Client SDK 8.6.6, Netty Project 4.2.13.Final, Netty/Codec/Base 4.2.13.Final, Netty/Codec/Classes/Quic 4.2.13.Final, Netty/Codec/Compression 4.2.13.Final, Netty/Codec/Http3 4.2.13.Final, Netty/Codec/Marshalling 4.2.13.Final, Netty/Codec/Native/Quic 4.2.13.Final, Netty/Codec/Protobuf 4.2.13.Final, Netty/Codec/Redis 4.2.13.Final, Netty/Codec/SMTP 4.2.13.Final, Netty/Handler/Ssl/Ocsp 4.2.13.Final, Netty/Resolver/DNS/Classes/MacOS 4.2.13.Final, Netty/Resolver/DNS/MacOS 4.2.13.Final, Netty/TomcatNative [BoringSSL - Static] 2.0.74.Final, Netty/TomcatNative [OpenSSL - Classes] 2.0.74.Final, Netty/Transport/Classes/Epoll 4.2.13.Final, Netty/Transport/Classes/io_uring 4.2.13.Final, Netty/Transport/Classes/KQueue 4.2.13.Final, Netty/Transport/Native/io_uring 4.2.13.Final, Netty/Transport/Native/KQueue 4.2.13.Final, Netty/Transport/Native/Unix/Common 4.2.13.Final, Ning-compress-LZF 1.1.2, OkHttp 5.3.2, OkHttp Logging Interceptor 5.3.2, OkHttp Server-Sent Events 5.3.2, okhttp-digest 3.1.1, OpenNLP Tools 2.5.4, ORC MapReduce 2.2.1, ORC Shims 2.2.1, org.apache.datasketches:datasketches-memory 3.0.2, org.osgi:org.osgi.annotation.bundle 2.0.0, org.osgi:org.osgi.annotation.versioning 1.1.2, org.osgi:org.osgi.resource 1.0.0, org.osgi:org.osgi.service.serviceloader 1.0.0, picocli - a mighty tiny Command Line Interface 4.7.7, Reactor Netty 1.2.10, Reactor Netty 1.2.13, reactor-core 3.7.11, reactor-core 3.7.14, RoaringBitmap 1.3.0, S3 Analytics Accelerator Library for Amazon S3 1.2.1, Scala 2.13.17, Scala 2.13.18, scala-parallel-collections 1.2.0, scala-parser-combinators 2.4.0, scala-xml 2.4.0, snappy-java 1.1.10.8, Spark Avro 4.1.1, Spark Project Catalyst 4.1.1, Spark Project Common Java Utils 4.1.1, Spark Project Common Utils 4.1.1, Spark Project Core 4.1.1, Spark Project Launcher 4.1.1, Spark Project Local DB 4.1.1, Spark Project Networking 4.1.1, Spark Project Shuffle Streaming Service 4.1.1, Spark Project Sketch 4.1.1, Spark Project SQL 4.1.1, Spark Project SQL API 4.1.1, Spark Project Tags 4.1.1, Spark Project Unsafe 4.1.1, Spark Project Variant 4.1.1, SparseBitSet 1.3, squareokio 3.16.4, stream-lib v2.9.8, tika-parser-html-module 3.2.3, tika-parser-mail-commons 3.2.3, tika-parser-microsoft-module 3.2.3, tika-parser-pdf-module 3.2.3, tika-parser-text-module 3.2.3, tika-parser-xml-module 3.2.3, tika-parser-xmp-commons 3.2.3, tika-parser-zip-commons 3.2.3, Tink Cryptography Library for Java 1.16.0, Titanium JCS 1.1.1, Titanium JSON-LD 1.1 1.7.0, Titanium RDF API 1.0.0, Titanium RDF N-QUADS 1.0.2, univocity-parsers 2.9.1, wildfly-openssl 2.1.4.Final, Woodstox 7.1.1, XMLBeans 5.3.0, XmlSchema Core 2.3.1, Zero-allocation Hashing 2026.0)
+(aircompressor 2.0.3, Apache Avro 1.12.1, Apache Avro IPC 1.12.1, Apache Avro Mapred API 1.12.1, Apache Commons Codec 1.17.1, Apache Commons Codec 1.19.0, Apache Commons Codec 1.22.0, Apache Commons Collections 4.5.0, Apache Commons Compress 1.27.1, Apache Commons Compress 1.28.0, Apache Commons Crypto 1.1.0, Apache Commons IO 2.16.1, Apache Commons IO 2.22.0, Apache Commons Lang 3.19.0, Apache Commons Lang 3.20.0, Apache Commons Logging 1.4.0, Apache Commons Math 3.6.1, Apache Commons Text 1.15.0, Apache Hadoop Amazon Web Services support 3.5.0, Apache Hadoop Azure support 3.5.0, Apache Hadoop Client API 3.5.0, Apache Hadoop Client Runtime 3.5.0, Apache Hadoop shaded Guava 1.5.0, Apache HttpClient 4.5.13, Apache HTTPComponents Core 4.4.13, Apache HTTPComponents Core 4.4.16, Apache Ivy 2.5.3, Apache JAMES mime4j 0.8.14, Apache JAMES Mime4j (DOM) 0.8.14, Apache JempBox 1.8.17, Apache Jena - Base Common Environment 5.6.0, Apache Jena - IRI3986 5.6.0, Apache Jena - Language tags 5.6.0, Apache Log4j 2.25.4, Apache Log4J API 2.26.0, Apache Log4j Layout for JSON template 2.25.4, Apache Log4j SLF4J 2.0 Binding 2.25.4, Apache ORC 2.3.0, Apache ORC Format 1.1.1, Apache Parquet Column 1.17.0, Apache Parquet Common 1.17.0, Apache Parquet Encodings 1.17.0, Apache Parquet Format Structures 1.17.0, Apache Parquet Hadoop 1.17.0, Apache Parquet Jackson 1.17.0, Apache PDFBox 3.0.8, Apache PDFBox io 3.0.8, Apache PDFBox tools 3.0.8, Apache POI 5.5.1, Apache POI - OOXML schemas (full) 5.5.1, Apache Thrift 0.24.0, Apache Tika 3.3.2, Apache XBean :: ASM shaded (repackaged) 4.30, Apache XmpBox 3.0.8, Apache Yetus - Audience Annotations 0.12.0, Apache ZooKeeper 3.9.5, Apache ZooKeeper - Jute 3.9.5, ARQ 5.6.0, Arrow Compression 19.0.0, Arrow Format 19.0.0, Arrow Memory - Core 19.0.0, Arrow Memory - Netty 19.0.0, Arrow Memory - Netty Buffer 19.0.0, Arrow Vectors 19.0.0, AWS Event Stream 1.0.1, AWS Java SDK :: Arns 2.35.4, AWS Java SDK :: AWS CRT Core 2.35.4, AWS Java SDK :: Checksums 2.35.4, AWS Java SDK :: Checksums SPI 2.35.4, AWS Java SDK :: Core :: Protocols :: AWS Json Protocol 2.35.4, AWS Java SDK :: Core :: Protocols :: AWS Xml Protocol 2.35.4, AWS Java SDK :: Core :: Protocols :: Json Utils 2.35.4, AWS Java SDK :: Endpoints SPI 2.35.4, AWS Java SDK :: HTTP Auth 2.35.4, AWS Java SDK :: HTTP Auth AWS 2.35.4, AWS Java SDK :: HTTP Auth Event Stream 2.35.4, AWS Java SDK :: HTTP Auth SPI 2.35.4, AWS Java SDK :: Identity SPI 2.35.4, AWS Java SDK :: Metrics Interface 2.35.4, AWS Java SDK :: Retries 2.35.4, AWS Java SDK :: Retries API 2.35.4, AWS Java SDK :: S3 :: Transfer Manager 2.35.4, AWS Java SDK :: Services :: Amazon S3 2.35.4, AWS Java SDK :: Services :: SSO 2.35.4, AWS Java SDK :: Services :: SSO OIDC 2.35.4, AWS Java SDK :: Third Party :: Jackson-core 2.35.4, AWS Java SDK :: Utils Lite 2.35.4, AWS SDK for Java 2.35.4, bnd Annotations Library 7.1.0, Caffeine cache 3.2.2, chill 0.10.0, chill-java 0.10.0, Cloud Client 5.10.0, com.marklogic:flux-api 2.1.0, commons-csv 1.14.1, CS Client 5.10.0, Curator Client 5.9.0, Curator Framework 5.9.0, Curator Recipes 5.9.0, datasketches-java 6.2.0, Deep Java Library - api 0.31.1, DJL NLP utilities for Huggingface tokenizers 0.31.1, easymockobjenesis 3.5, error-prone annotations 2.27.0, error-prone annotations 2.38.0, error-prone annotations 2.41.0, FindBugs jsr305 3.0.2, FlatBuffers Java API 25.2.10, googlegson 2.11.0, googlegson 2.13.2, googleguava v32.0.0, Graphite Integration for Metrics 4.2.37, Guava InternalFutureFailureAccess and InternalFutures 1.0.1, Guava ListenableFuture only 9999.0-empty-to-avoid-conflict-with-guava, Hive Storage API 2.8.1, HTTP functionality for the Reactor Netty library 1.2.18, IRI 5.6.0, j2objc - Java to IOS 2.8, Jackson Integration for Metrics 4.2.37, jackson-annotations 2.21, jackson-bom 2.21.5, jackson-core 2.21.5, jackson-databind 2.21.5, jackson-dataformat-csv 2.21.5, jackson-dataformat-xml 2.21.5, jackson-dataformat-yaml 2.21.5, Jackson-Datatype-JSR310 2.21.5, jackson-module-scala 2.21.5, Jakarta Dependency Injection 2.0.1, jakartaeevalidation 3.0.2, Java Native Access (JNA) 5.14.0, java-json-canonicalization 1.1, java-libpst 0.9.3, Javassist 3.30.2, JCL 1.2 Implemented Over SLF4J 2.0.17, Jena 5.6.0, Jersey Inject HK2 3.1.11, jersey-container-servlet 3.1.11, jersey-container-servlet-core 3.1.11, jersey-core-server 3.1.11, Jetbrains annotations 13.0, JJWT :: API 0.13.0, JJWT :: Extensions :: Jackson 0.13.0, JJWT :: Impl 0.13.0, json4s-ast 4.0.7, json4s-core 4.0.7, json4s-jackson 4.0.7, json4s-jackson-core 4.0.7, json4s-scalap 4.0.7, JSpecify annotations 1.0.0, JVM Integration for Metrics 4.2.37, Kotlin 2.2.21, langchain4j 1.17.2, LangChain4j :: HTTP Client 1.17.2, LangChain4j :: HTTP Client :: JDK HttpClient 1.17.2, LangChain4j integration with Azure OpenAI 1.17.2, LangChain4j integration with Ollama 1.17.2, langchain4j-core 1.14.1, langchain4j-core 1.17.2, langchain4j-embeddings 1.14.1-beta24, langchain4j-embeddings-all-minilm-l6-v2 1.14.1-beta24, Log4J Compatibility API 2.25.4, lz4java 1.11.1, MarkLogic Java Client API 8.1.0, Metrics Core 4.2.37, Metrics Integration with JMX 4.2.37, Microsoft Windows Azure Storage Client SDK 7.0.1, Netty Project 4.2.16.Final, Netty/Codec/Base 4.2.16.Final, Netty/Codec/Compression 4.2.16.Final, Netty/Codec/Marshalling 4.2.16.Final, Netty/Resolver/DNS/Classes/MacOS 4.2.16.Final, Netty/Resolver/DNS/MacOS 4.2.16.Final, Netty/TomcatNative [BoringSSL - Static] 2.0.78.Final, Netty/TomcatNative [OpenSSL - Classes] 2.0.78.Final, Netty/Transport/Classes/Epoll 4.2.16.Final, Netty/Transport/Classes/KQueue 4.2.16.Final, Netty/Transport/Native/KQueue 4.2.16.Final, Netty/Transport/Native/Unix/Common 4.2.16.Final, Ning-compress-LZF 1.2.0, OkHttp 5.4.0, OkHttp Logging Interceptor 5.3.2, OkHttp Server-Sent Events 5.4.0, okhttp-digest 3.1.1, OpenNLP Tools 2.5.9, ORC MapReduce 2.3.0, ORC Shims 2.3.0, org.apache.datasketches:datasketches-memory 3.0.2, org.osgi:org.osgi.annotation.bundle 2.0.0, org.osgi:org.osgi.annotation.versioning 1.1.2, org.osgi:org.osgi.resource 1.0.0, org.osgi:org.osgi.service.serviceloader 1.0.0, picocli - a mighty tiny Command Line Interface 4.7.7, Reactor Netty 1.2.18, reactor-core 3.7.19, RoaringBitmap 1.3.0, RoaringBitmap 1.6.10, S3 Analytics Accelerator Library for Amazon S3 1.3.1, Scala 2.13.18, scala-parallel-collections 1.2.0, scala-parser-combinators 2.4.0, scala-xml 2.4.0, SnakeYAML 2.5, snappy-java 1.1.10.8, Spark Project Catalyst 4.2.0, Spark Project Common Java Utils 4.2.0, Spark Project Common Utils 4.2.0, Spark Project Core 4.2.0, Spark Project Launcher 4.2.0, Spark Project Local DB 4.2.0, Spark Project Networking 4.2.0, Spark Project Shuffle Streaming Service 4.2.0, Spark Project Sketch 4.2.0, Spark Project SQL 4.2.0, Spark Project SQL API 4.2.0, Spark Project Tags 4.2.0, Spark Project Unsafe 4.2.0, Spark Project Variant 4.2.0, SparseBitSet 1.3, squareokio 3.17.0, stream-lib v2.9.8, tika-parser-html-module 3.3.2, tika-parser-mail-commons 3.3.2, tika-parser-microsoft-module 3.3.2, tika-parser-pdf-module 3.3.2, tika-parser-text-module 3.3.2, tika-parser-xml-module 3.3.2, tika-parser-xmp-commons 3.3.2, tika-parser-zip-commons 3.3.2, Tink Cryptography Library for Java 1.20.0, Titanium JCS 1.1.1, Titanium JSON-LD 1.1 1.7.0, Titanium RDF API 1.0.0, Titanium RDF N-QUADS 1.0.2, univocity-parsers 2.9.1, wildfly-openssl 2.2.5.Final, Woodstox 7.1.1, XMLBeans 5.3.0, XmlSchema Core 2.3.1, Zero-allocation Hashing 2026.0)
 
 Apache License
 Version 2.0, January 2004
@@ -783,7 +756,7 @@ third-party archives.
 ---
 
 BSD 2-clause "Simplified" License
-(stax2-api 4.2.2, zstd-jni 1.5.7-6)
+(HdrHistogram 2.1.12, stax2-api 4.2.2, zstd-jni 1.5.7-7)
 
 BSD Two Clause License
 ======================
@@ -809,7 +782,7 @@ DAMAGE.
 ---
 
 BSD 3-clause "New" or "Revised" License
-(antlr 4.13.1, ASM 9.8, ASM Commons 9.8, ASM Tree 9.8, curvesapi 1.08, Jakarta Activation 2.0.1, Janino 3.1.12, jaxen 2.0.0, Kryo Shaded 4.0.3, leveldbjni-all 1.8, minlog 1.3.0, ParaNamer Core 2.8.3, protobuf-java 4.32.1, protobuf-java 4.33.0, Py4J 0.10.9.9, ThreeTen-extra 1.8.0)
+(antlr 4.13.1, Apache XBean :: ASM shaded (repackaged) 4.30, ASM 9.8, ASM Commons 9.8, ASM Tree 9.8, curvesapi 1.08, Jakarta Activation 2.0.1, Janino 3.1.12, jaxen 2.0.0, Kryo Shaded 4.0.3, leveldbjni-all 1.8, minlog 1.3.0, ParaNamer Core 2.8.3, protobuf-java 4.32.1, protobuf-java 4.33.5, Py4J 0.10.9.9, ThreeTen-extra 1.8.0)
 
 [Copyright notice for each component version subject to this license can be located via the origin url provided in the Component Summary above]
 
@@ -841,7 +814,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 BSD Zero Clause License
-(XZ for Java 1.10)
+(XZ for Java 1.12)
 
 BSD Zero Clause License
 =======================
@@ -1204,7 +1177,7 @@ COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 ---
 
 Eclipse Distribution License - v 1.0
-(Angus Activation Registries 2.0.3, istack common utility code runtime 4.1.2, Jakarta Activation API 2.1.3, Jakarta Activation API 2.1.4, jakarta.xml.bind:jakarta.xml.bind-api 4.0.2, jakarta.xml.bind:jakarta.xml.bind-api 4.0.5, JAXB CORE 4.0.5, JAXB CORE 4.0.6, JAXB Runtime 4.0.5, JAXB Runtime 4.0.6, TXW2 Runtime 4.0.5, TXW2 Runtime 4.0.6)
+(Angus Activation Registries 2.0.3, istack common utility code runtime 4.1.2, Jakarta Activation API 2.1.4, jakarta.xml.bind:jakarta.xml.bind-api 4.0.5, JAXB CORE 4.0.6, JAXB CORE 4.0.9, JAXB Runtime 4.0.6, JAXB Runtime 4.0.9, TXW2 Runtime 4.0.6, TXW2 Runtime 4.0.9)
 
 Eclipse Distribution License - v 1.0
 ====================================
@@ -1241,7 +1214,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 Eclipse Public License 2.0
-(HK2 API module 3.0.6, HK2 Implementation Utilities 3.0.6, Jakarta Annotations API 2.1.1, Jakarta Mail 2.0.2, jakartaee/rest 3.0.0, Java Servlet API 5.0.0, Jersey 3.0.18, Jersey Inject HK2 3.0.18, jersey-container-servlet 3.0.18, jersey-container-servlet-core 3.0.18, jersey-core-server 3.0.18, JSR 374 (JSON Processing) Default Provider 2.0.1, org.locationtech.jts:jts-core 1.20.0, OSGi resource locator bundle 1.0.3, ServiceLocator Default Implementation 3.0.6)
+(HK2 API module 3.0.6, HK2 Implementation Utilities 3.0.6, JaCoCo 0.8.13, Jakarta Annotations API 2.1.1, Jakarta Mail 2.0.2, jakartaee/rest 3.1.0, Java Servlet API 6.0.0, Jersey 3.1.11, JSR 374 (JSON Processing) Default Provider 2.0.1, org.locationtech.jts:jts-core 1.20.0, OSGi resource locator bundle 1.0.3, ServiceLocator Default Implementation 3.0.6)
 
 Eclipse Public License - v 2.0
 ==============================
@@ -1913,7 +1886,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 MIT License
-(azure-storage-blob 12.33.2, Bouncy Castle 1.84, Bouncy Castle ASN.1 Extension and Utility APIs 1.84, Bouncy Castle Jakarta S/MIME API 1.84, Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs 1.84, Checker Qual 3.33.0, dexx 0.7, jsoup 1.21.2, JTokkit 1.1.0, JUL to SLF4J bridge 2.0.17, Microsoft Azure client library for File Storage Data Lake 12.26.2, Microsoft Azure common module for Storage 12.32.2, Microsoft Azure internal Avro module for Storage 12.18.1, Microsoft Azure Java Core Library 1.57.0, Microsoft Azure Java Core Library 1.57.1, Microsoft Azure Java JSON Library 1.5.0, Microsoft Azure Java JSON Library 1.5.1, Microsoft Azure Java XML Library 1.2.0, Microsoft Azure Java XML Library 1.2.1, Microsoft Azure Netty HTTP Client Library 1.16.2, Microsoft Azure Netty HTTP Client Library 1.16.3, Microsoft Azure SDK for Key Vault 1.2.4, Microsoft Azure SDK for OpenAI Management 1.0.0-beta.16, onnx-runtime 1.20.0, pickle 1.5, SLF4J API Module 2.0.17)
+(azure-storage-blob 12.35.0, Bouncy Castle 1.85, Bouncy Castle ASN.1 Extension and Utility APIs 1.85, Bouncy Castle Jakarta S/MIME API 1.85, Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs 1.85, Checker Qual 3.33.0, dexx 0.7, jsoup 1.22.2, JTokkit 1.1.0, JUL to SLF4J bridge 2.0.17, Microsoft Azure client library for File Storage Data Lake 12.28.0, Microsoft Azure common module for Storage 12.34.0, Microsoft Azure internal Avro module for Storage 12.20.0, Microsoft Azure Java Core Library 1.58.1, Microsoft Azure Java JSON Library 1.5.1, Microsoft Azure Java XML Library 1.2.1, Microsoft Azure Netty HTTP Client Library 1.16.5, Microsoft Azure SDK for Key Vault 1.0.0, Microsoft Azure SDK for OpenAI Management 1.0.0-beta.16, onnx-runtime 1.20.0, pickle 1.5, SLF4J API Module 2.0.17, SLF4J API Module 2.0.18)
 
 The MIT License
 ===============
@@ -2381,8 +2354,15 @@ EXHIBIT A -Mozilla Public License.
 
 ---
 
+PSC Product License
+(Marklogic Spark Connector 3.0.0)
+
+See Progress License
+
+---
+
 Unicode License v3
-(ICU4J 77.1)
+(ICU4J 78.3)
 
 UNICODE LICENSE V3
 

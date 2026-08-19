@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
@@ -41,33 +41,23 @@ public class ImportRdfFilesCommand extends AbstractImportFilesCommand<RdfFilesIm
         return writeParams;
     }
 
-    public static class ReadRdfFilesParams extends ReadFilesParams<ReadRdfFilesOptions> implements ReadRdfFilesOptions {
+    public static class ReadRdfFilesParams extends ReadCompressibleFilesParams<ReadRdfFilesOptions> implements ReadRdfFilesOptions {
 
         @CommandLine.Option(names = "--compression", description = "When importing compressed files, specify the type of compression used. "
             + OptionsUtil.VALID_VALUES_DESCRIPTION)
         private CompressionType compressionType;
 
-        @CommandLine.Option(names = "--partitions", description = "Specifies the number of partitions used for reading files.")
-        private int partitions;
-
         @Override
         public Map<String, String> makeOptions() {
             return OptionsUtil.addOptions(super.makeOptions(),
                 Options.READ_FILES_TYPE, "rdf",
-                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null,
-                Options.READ_NUM_PARTITIONS, OptionsUtil.intOption(partitions)
+                Options.READ_FILES_COMPRESSION, compressionType != null ? compressionType.name() : null
             );
         }
 
         @Override
         public ReadRdfFilesOptions compressionType(CompressionType compressionType) {
             this.compressionType = compressionType;
-            return this;
-        }
-
-        @Override
-        public ReadRdfFilesOptions partitions(int partitions) {
-            this.partitions = partitions;
             return this;
         }
     }

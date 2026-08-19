@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl;
 
@@ -27,19 +27,25 @@ public class AzureStorageParams implements AzureStorageOptions {
 
     @CommandLine.Option(
         names = "--azure-access-key",
-        description = "Access key for Blob Storage authentication."
+        description = "Access key for Blob Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String accessKey;
 
     @CommandLine.Option(
         names = "--azure-sas-token",
-        description = "Azure SAS token for Blob Storage authentication."
+        description = "Azure SAS token for Blob Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String sasToken;
 
     @CommandLine.Option(
         names = "--azure-shared-key",
-        description = "Azure shared key for Data Lake Storage authentication."
+        description = "Azure shared key for Data Lake Storage authentication.",
+        interactive = true,
+        arity = "0..1"
     )
     private String sharedKey;
 
@@ -89,7 +95,7 @@ public class AzureStorageParams implements AzureStorageOptions {
      * Transforms simple file paths into full Azure Storage URLs when Azure storage is configured.
      * Uses an "all-or-nothing" approach: if ANY path contains a protocol (://), then NO paths are transformed.
      * This allows users to either use all simple paths (auto-transformed) or all full URLs (user-controlled).
-     * For example: "Hogwarts.csv" becomes "wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv"
+     * For example: "Hogwarts.csv" becomes "abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv"
      *
      * @param paths List of file paths to transform
      * @return List of transformed paths (full URLs for Azure, unchanged for non-Azure or mixed scenarios)
@@ -114,7 +120,7 @@ public class AzureStorageParams implements AzureStorageOptions {
 
         return AzureStorageType.DATA_LAKE.equals(storageType) ?
             String.format("abfss://%s@%s.dfs.core.windows.net/%s", containerName, storageAccount, cleanPath) :
-            String.format("wasbs://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
+            String.format("abfss://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
     }
 
     @Override

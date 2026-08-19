@@ -10,10 +10,8 @@ import java.util.function.Consumer;
  */
 public interface ArchiveFilesImporter extends Executor<ArchiveFilesImporter> {
 
-    interface ReadArchiveFilesOptions extends ReadFilesOptions<ReadArchiveFilesOptions> {
+    interface ReadArchiveFilesOptions extends ReadCompressibleFilesOptions<ReadArchiveFilesOptions> {
         ReadArchiveFilesOptions categories(String... categories);
-
-        ReadArchiveFilesOptions partitions(int partitions);
 
         ReadArchiveFilesOptions encoding(String encoding);
     }

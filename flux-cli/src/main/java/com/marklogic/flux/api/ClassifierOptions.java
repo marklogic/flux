@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -44,6 +44,18 @@ public interface ClassifierOptions {
      * @param batchSize Number of documents and/or chunks of text to send to the classifier service in a single request.
      */
     ClassifierOptions batchSize(int batchSize);
+
+    /**
+     * @param socketTimeoutSeconds Socket timeout in seconds for classification requests.
+     * @since 2.1.2
+     */
+    ClassifierOptions socketTimeout(int socketTimeoutSeconds);
+
+    /**
+     * @param connectionTimeoutSeconds Connection timeout in seconds for classification requests.
+     * @since 2.1.2
+     */
+    ClassifierOptions connectionTimeout(int connectionTimeoutSeconds);
 
     /**
      * @param additionalOptions Additional options for configuring the behavior of the classifier service.

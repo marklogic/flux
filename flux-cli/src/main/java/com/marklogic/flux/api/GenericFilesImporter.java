@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -10,10 +10,8 @@ import java.util.function.Consumer;
  */
 public interface GenericFilesImporter extends Executor<GenericFilesImporter> {
 
-    interface ReadGenericFilesOptions extends ReadFilesOptions<ReadGenericFilesOptions> {
+    interface ReadGenericFilesOptions extends ReadCompressibleFilesOptions<ReadGenericFilesOptions> {
         ReadGenericFilesOptions compressionType(CompressionType compressionType);
-
-        ReadGenericFilesOptions partitions(int partitions);
 
         ReadGenericFilesOptions encoding(String encoding);
     }

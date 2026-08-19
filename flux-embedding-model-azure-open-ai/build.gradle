@@ -10,9 +10,9 @@ java {
 
 dependencies {
   constraints {
-    implementation("com.azure:azure-core-http-netty:1.16.2") {
-      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.8 " +
-        "or higher to address CVE-2025-22227."
+    implementation("com.azure:azure-core-http-netty:1.16.5") {
+      because "Bumping from 1.15.11 so that io.projectreactor.netty:reactor-netty-http gets bumped to 1.2.18 " +
+        "or higher to address BDSA-2026-13714."
     }
   }
 
@@ -23,7 +23,7 @@ dependencies {
 
   testRuntimeOnly "org.junit.platform:junit-platform-launcher:6.0.3"
   testImplementation "org.junit.jupiter:junit-jupiter:6.0.3"
-  testImplementation "ch.qos.logback:logback-classic:1.5.32"
+  testImplementation "ch.qos.logback:logback-classic:1.5.36"
 }
 
 shadowJar {

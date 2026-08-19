@@ -13,7 +13,7 @@ use `--where` to filter rows, and `--drop` to exclude columns.
 {: .no_toc .text-delta }
 
 - TOC
-  {:toc}
+{:toc}
 
 ## Supported commands
 
