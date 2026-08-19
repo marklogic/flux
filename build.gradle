@@ -1,5 +1,5 @@
 plugins {
-  id 'net.saliman.properties' version '1.6.0'
+  id 'net.saliman.properties' version '1.5.2'
   id "org.sonarqube" version "7.0.1.6134"
 }
 
@@ -67,9 +67,9 @@ subprojects {
        details.because "Force all io.netty 4.x to ${nettyVersion} to address CVEs including CVE-2026-44249, CVE-2026-50010, and CVE-2026-45416 in netty-handler."
      }
 
-     if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.")) {
-       details.useVersion "${log4jVersion}"
-       details.because "Forces all log4j 2.x artifacts that Spark brings in to ${log4jVersion} to address BDSA-2026-22385 / CVE-2026-49844 and other CVEs."
+     if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.24")) {
+       details.useVersion "2.26.0"
+       details.because "Forces Spark 4.1.x to use latest log4j 2.x to eliminate CVEs."
      }
 
      if (details.requested.group.startsWith("com.fasterxml.jackson")) {
@@ -81,14 +81,11 @@ subprojects {
        }
        details.because "Force Jackson to 2.21.x to align with Java Client 8.1.0."
      }
-      if (details.requested.group.equals("org.xerial.snappy") && details.requested.name.equals("snappy-java")) {
-        details.useVersion "${snappyVersion}"
-        details.because "Forces snappy-java to ${snappyVersion} to remediate 1.1.10.8 CVEs per MLE-33626."
-      }
+
      if (details.requested.group.equals("org.apache.thrift") && details.requested.name.equals("libthrift")) {
        // This is being done solely for Black Duck's sake, as it seems to be having trouble recognizing that the
        // internal snapshot build of the MarkLogic Spark connector is already using version 0.24.0.
-       details.useVersion "0.25.0"
+       details.useVersion "0.24.0"
        details.because "Forces Spark 4.2.x to use the latest libthrift, which is needed to avoid CVEs."
      }
 
@@ -105,10 +102,6 @@ subprojects {
       events = ['started', 'passed', 'skipped', 'failed']
       exceptionFormat = 'full'
     }
-    // Explicitly setting this instead of relying on JVM ergonomics, as Spark's tests (e.g. those involving
-    // broadcast serialization) can trigger a heap OOM when the default max heap ends up too small under
-    // memory pressure from other processes on the machine.
-    maxHeapSize = "4g"
     jvmArgs = [
       // Needed for all Java 17 testing.
       "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",

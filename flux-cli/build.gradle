@@ -1,5 +1,5 @@
 plugins {
-  id 'net.saliman.properties' version '1.6.0'
+  id 'net.saliman.properties' version '1.5.2'
   id "application"
   id "jacoco"
   id 'com.gradleup.shadow' version '9.2.1'
@@ -15,7 +15,8 @@ configurations {
       // Resolves a medium CVE that comes from json-unit-assertj .
       force "net.minidev:json-smart:2.5.2"
 
-      force "at.yawk.lz4:lz4-java:1.12.1"
+      // Resolves a CVE in 1.11.0
+      force "at.yawk.lz4:lz4-java:1.11.1"
     }
   }
 }
@@ -30,7 +31,7 @@ dependencies {
   implementation "info.picocli:picocli:${picocliVersion}"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
-  compileOnly "com.marklogic:marklogic-client-api:8.3-SNAPSHOT"
+  compileOnly "com.marklogic:marklogic-client-api:8.1.0"
 
   // The shadow jar intended for usage with spark-submit needs the above "core" libraries as well, but not the Spark
   // API since spark-submit provides that.
@@ -132,7 +133,7 @@ distributions {
     distributionBaseName = "marklogic-flux"
     contents {
       from("..") {
-        include "LICENSE.txt"
+        include "LICENSE"
         include "NOTICE.txt"
       }
       from("hadoop") {

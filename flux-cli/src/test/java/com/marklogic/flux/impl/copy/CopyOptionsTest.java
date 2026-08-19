@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CopyOptionsTest extends AbstractOptionsTest {
@@ -83,10 +82,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-suffix", ".xml",
             "--output-uri-template", "/{example}.xml",
             "--output-uri-template-warn-on-missing-field",
-            "--output-uri-template-hash-values",
             "--splitter-text",
-            "--splitter-sidecar-inherit-collections",
-            "--splitter-sidecar-inherit-permissions",
             "--embedder", "doesnt-matter",
             "--embedder-prompt", "Hello: ",
             "--embedder-prop", "e1=v1",
@@ -105,7 +101,6 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--classifier-batch-size", "50",
             "--classifier-socket-timeout", "60",
             "--classifier-connection-timeout", "30",
-            "--classifier-skip-document",
             "--classifier-prop", "key1=value1"
         );
 
@@ -126,10 +121,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_SUFFIX, ".xml",
             Options.WRITE_URI_TEMPLATE, "/{example}.xml",
             Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
-            Options.WRITE_URI_TEMPLATE_HASH_VALUES, "true",
             Options.WRITE_SPLITTER_TEXT, "true",
-            Options.WRITE_SPLITTER_SIDECAR_INHERIT_COLLECTIONS, "true",
-            Options.WRITE_SPLITTER_SIDECAR_INHERIT_PERMISSIONS, "true",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
             Options.WRITE_EMBEDDER_PROMPT, "Hello: ",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_OPTION_PREFIX + "e1", "v1",
@@ -148,7 +140,6 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_BATCH_SIZE, "50",
             Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "60",
             Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "30",
-            Options.WRITE_CLASSIFIER_SKIP_DOCUMENT, "true",
             Options.WRITE_CLASSIFIER_OPTION_PREFIX + "key1", "value1"
         );
     }
@@ -295,71 +286,5 @@ class CopyOptionsTest extends AbstractOptionsTest {
         } finally {
             systemProps.keySet().forEach(System::clearProperty);
         }
-    }
-
-    @Test
-    void outputUriTemplateHashValuesNotSet() {
-        CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connection-string", "test:test@host:8000"
-        );
-        Map<String, String> options = command.writeParams.makeOptions();
-        assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_HASH_VALUES),
-            "WRITE_URI_TEMPLATE_HASH_VALUES must not be present when --output-uri-template-hash-values is not specified.");
-    }
-
-    @Test
-    void incrementalWriteCliOptions() {
-        CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connection-string", "test:test@host:8000",
-            "--incremental-write",
-            "--incremental-write-schema", "mySchema",
-            "--incremental-write-view", "myView",
-            "--incremental-write-hash-name", "customHash",
-            "--incremental-write-timestamp-name", "customTimestamp",
-            "--incremental-write-disable-json-canonicalization",
-            "--incremental-write-json-exclusion", "/json1",
-            "--incremental-write-xml-exclusion", "/xml1",
-            "--log-skipped", "789"
-        );
-
-        assertOptions(command.writeParams.makeOptions(),
-            Options.WRITE_INCREMENTAL, "true",
-            Options.WRITE_INCREMENTAL_SCHEMA, "mySchema",
-            Options.WRITE_INCREMENTAL_VIEW, "myView",
-            Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash",
-            Options.WRITE_INCREMENTAL_TIMESTAMP_KEY_NAME, "customTimestamp",
-            Options.WRITE_INCREMENTAL_CANONICALIZE_JSON, "false",
-            Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/json1",
-            Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, "/xml1",
-            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "789"
-        );
-    }
-
-    @Test
-    void incrementalWriteApiOptions() {
-        CopyCommand command = new CopyCommand();
-        command.to(options -> options.incrementalWrite(iw -> iw
-            .enable()
-            .hashName("customHash")
-            .jsonExclusions("/a", "/b")
-            .logSkipped(0)));
-
-        Map<String, String> options = command.writeParams.makeOptions();
-        assertOptions(options,
-            Options.WRITE_INCREMENTAL, "true",
-            Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash",
-            Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/a\n/b"
-        );
-        assertFalse(options.containsKey(Options.WRITE_INCREMENTAL_SCHEMA));
-        assertFalse(options.containsKey(Options.WRITE_LOG_SKIPPED_DOCUMENTS),
-            "A value of 0 is omitted so that the connector's default of 0 - which disables logging - is used.");
-    }
-
-    @Test
-    void incrementalWriteNotEnabledByDefault() {
-        CopyCommand command = (CopyCommand) getCommand("copy",
-            "--connection-string", "test:test@host:8000"
-        );
-        assertFalse(command.writeParams.makeOptions().containsKey(Options.WRITE_INCREMENTAL));
     }
 }
