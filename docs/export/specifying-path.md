@@ -201,13 +201,13 @@ bin\flux export-files ^
 ### Path Handling
 
 Flux provides two ways to specify an export path. First, when both `--azure-storage-account` and `--azure-container-name`
-are specified and the path is relative - i.e. it does not contain a protocol like `wasbs://` or `abfss://` - Flux will
+are specified and the path is relative - i.e. it does not contain a scheme like `abfs://` or `abfss://` - Flux will
 construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides
 the underlying Azure protocols from you.
 
 For example:
 
-- `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
+- `"data/myfile.csv"` becomes `"abfss://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
 - `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
 
 Alternatively, you can provide the complete storage URL yourself:
@@ -216,7 +216,7 @@ Alternatively, you can provide the complete storage URL yourself:
 {% tab log Unix %}
 ```
 ./bin/flux export-files \
-    --path "wasbs://exports@mystorage.blob.core.windows.net/reports/" \
+    --path "abfss://exports@mystorage.blob.core.windows.net/reports/" \
     --azure-storage-account "mystorage" \
     --azure-access-key "your-access-key" \
     --connection-string etc...
@@ -225,7 +225,7 @@ Alternatively, you can provide the complete storage URL yourself:
 {% tab log Windows %}
 ```
 bin\flux export-files ^
-    --path "wasbs://exports@mystorage.blob.core.windows.net/reports/" ^
+    --path "abfss://exports@mystorage.blob.core.windows.net/reports/" ^
     --azure-storage-account "mystorage" ^
     --azure-access-key "your-access-key" ^
     --connection-string etc...

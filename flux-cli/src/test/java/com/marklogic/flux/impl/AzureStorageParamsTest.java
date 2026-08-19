@@ -316,8 +316,8 @@ class AzureStorageParamsTest {
         List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
     }
 
     @Test
@@ -344,8 +344,8 @@ class AzureStorageParamsTest {
         List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Dumbledore.json", result.get(1));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/Dumbledore.json", result.get(1));
     }
 
     @Test
@@ -403,8 +403,8 @@ class AzureStorageParamsTest {
         List<String> result = params.transformPathsIfNecessary(paths);
 
         assertEquals(2, result.size());
-        assertEquals("wasbs://container-name_test@real-genius_123.blob.core.windows.net/folder/file-name_test.csv", result.get(0));
-        assertEquals("wasbs://container-name_test@real-genius_123.blob.core.windows.net/special chars & symbols.json", result.get(1));
+        assertEquals("abfss://container-name_test@real-genius_123.blob.core.windows.net/folder/file-name_test.csv", result.get(0));
+        assertEquals("abfss://container-name_test@real-genius_123.blob.core.windows.net/special chars & symbols.json", result.get(1));
     }
 
     @Test
@@ -496,9 +496,9 @@ class AzureStorageParamsTest {
 
         // Simple mode: ALL relative paths get transformed
         assertEquals(3, result.size());
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/potions/Felix_Felicis.json", result.get(2));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/potions/Felix_Felicis.json", result.get(2));
     }
 
     @Test
@@ -516,9 +516,9 @@ class AzureStorageParamsTest {
 
         // Simple mode: ALL relative paths get transformed (leading slashes removed)
         assertEquals(3, result.size());
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
-        assertEquals("wasbs://container1@realgenius1.blob.core.windows.net/no-slash.json", result.get(2));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv", result.get(0));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/spells/Expelliarmus.txt", result.get(1));
+        assertEquals("abfss://container1@realgenius1.blob.core.windows.net/no-slash.json", result.get(2));
     }
 
     @Test

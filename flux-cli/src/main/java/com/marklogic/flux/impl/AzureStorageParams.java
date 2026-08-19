@@ -95,7 +95,7 @@ public class AzureStorageParams implements AzureStorageOptions {
      * Transforms simple file paths into full Azure Storage URLs when Azure storage is configured.
      * Uses an "all-or-nothing" approach: if ANY path contains a protocol (://), then NO paths are transformed.
      * This allows users to either use all simple paths (auto-transformed) or all full URLs (user-controlled).
-     * For example: "Hogwarts.csv" becomes "wasbs://container1@realgenius1.blob.core.windows.net/Hogwarts.csv"
+     * For example: "Hogwarts.csv" becomes "abfss://container1@realgenius1.blob.core.windows.net/Hogwarts.csv"
      *
      * @param paths List of file paths to transform
      * @return List of transformed paths (full URLs for Azure, unchanged for non-Azure or mixed scenarios)
@@ -120,7 +120,7 @@ public class AzureStorageParams implements AzureStorageOptions {
 
         return AzureStorageType.DATA_LAKE.equals(storageType) ?
             String.format("abfss://%s@%s.dfs.core.windows.net/%s", containerName, storageAccount, cleanPath) :
-            String.format("wasbs://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
+            String.format("abfss://%s@%s.blob.core.windows.net/%s", containerName, storageAccount, cleanPath);
     }
 
     @Override
