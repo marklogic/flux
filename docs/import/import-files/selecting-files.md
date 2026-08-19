@@ -293,13 +293,13 @@ bin\flux import-files ^
 ### Path handling
 
 Flux provides two ways to specify file paths. First, when both `--azure-storage-account` and `--azure-container-name`
-are specified and the path is relative - i.e. it does not contain a protocol like `wasbs://` or `abfss://` - Flux will
+are specified and the path is relative - i.e. it does not contain a scheme like `abfs://` or `abfss://` - Flux will
 construct the full Azure Storage URL for you. This is the most convenient way to work with Azure Storage, as it hides
 the underlying Azure protocols from you.
 
 For example:
 
-- `"data/myfile.csv"` becomes `"wasbs://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
+- `"data/myfile.csv"` becomes `"abfss://mycontainer@mystorage.blob.core.windows.net/data/myfile.csv"` (for Blob Storage).
 - `"analytics/sales-data.orc"` becomes `"abfss://analytics@mydatalake.dfs.core.windows.net/analytics/sales-data.orc"` (for Data Lake Storage Gen2).
 
 If you instead need to mix Azure Storage paths with other types of paths (such as S3 or local file paths), you must
@@ -309,7 +309,7 @@ provide the complete Azure Storage URLs yourself. In this case, Flux will not pe
 {% tab log Unix %}
 ```
 ./bin/flux import-files \
-    --path "wasbs://mycontainer@mystorage.blob.core.windows.net/data/" \
+    --path "abfss://mycontainer@mystorage.blob.core.windows.net/data/" \
     --path "s3a://my-bucket/other-data/" \
     --path "/local/file/path" \
     --azure-storage-account "mystorage" \
@@ -320,7 +320,7 @@ provide the complete Azure Storage URLs yourself. In this case, Flux will not pe
 {% tab log Windows %}
 ```
 bin\flux import-files ^
-    --path "wasbs://mycontainer@mystorage.blob.core.windows.net/data/" ^
+    --path "abfss://mycontainer@mystorage.blob.core.windows.net/data/" ^
     --path "s3a://my-bucket/other-data/" ^
     --path "C:\local\file\path" ^
     --azure-storage-account "mystorage" ^

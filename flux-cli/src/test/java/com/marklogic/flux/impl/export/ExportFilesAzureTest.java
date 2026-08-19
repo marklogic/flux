@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.export;
 
@@ -28,8 +28,10 @@ class ExportFilesAzureTest {
 
         List<String> transformedPaths = command.writeParams.getAzureStorageParams().transformPathsIfNecessary(Arrays.asList("output-files"));
         assertEquals(1, transformedPaths.size());
-        assertEquals("wasbs://testcontainer@testaccount.blob.core.windows.net/output-files", transformedPaths.get(0),
-            "Simple path should be transformed to full Azure blob URL");
+        assertEquals("abfss://testcontainer@testaccount.blob.core.windows.net/output-files", transformedPaths.get(0),
+            "Simple path should be transformed to full Azure blob URL. Note that after Hadoop 3.4.2 was upgraded to " +
+                "Hadoop 3.5.0, support for 'wasbs' was removed and 'abfss' should now be used for both Blob and " +
+                "Data Lake storage. See https://issues.apache.org/jira/browse/HADOOP-19778 for more information.");
     }
 
     @Test
