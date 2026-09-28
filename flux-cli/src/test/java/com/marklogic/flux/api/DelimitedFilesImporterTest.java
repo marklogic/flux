@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DelimitedFilesImporterTest extends AbstractTest {
 
@@ -40,6 +41,24 @@ class DelimitedFilesImporterTest extends AbstractTest {
 
         FluxException ex = assertThrowsFluxException(importer::execute);
         assertEquals("Must specify one or more file paths", ex.getMessage());
+    }
+
+    @Test
+    void columnNameStrategySimple() {
+        Flux.importDelimitedFiles()
+            .connectionString(makeConnectionString())
+            .columnNameStrategy(ColumnNameStrategy.SIMPLE)
+            .from("src/test/resources/delimited-files/funky-column-names.csv")
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("column-sanitization-api-test")
+                .uriTemplate("/sanitized-api/{id}.json"))
+            .execute();
+
+        assertCollectionSize("column-sanitization-api-test", 2);
+        JsonNode doc = readJsonDocument("/sanitized-api/1.json");
+        assertTrue(doc.has("single_quote"), "single'quote should become single_quote.");
+        assertTrue(doc.has("has_slash"), "has/slash should become has_slash.");
     }
 
     @Test

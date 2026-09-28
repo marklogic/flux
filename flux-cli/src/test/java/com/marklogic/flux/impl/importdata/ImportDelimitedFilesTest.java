@@ -17,6 +17,46 @@ import static org.junit.jupiter.api.Assertions.*;
 class ImportDelimitedFilesTest extends AbstractTest {
 
     @Test
+    void columnNameSanitization() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/funky-column-names.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "column-sanitization-test",
+            "--uri-template", "/sanitized/{id}.json",
+            "--column-name-strategy", "simple"
+        );
+
+        assertCollectionSize("column-sanitization-test", 2);
+        JsonNode doc = readJsonDocument("/sanitized/1.json");
+        assertTrue(doc.has("id"), "A column name that's already valid should be unaffected.");
+        assertTrue(doc.has("single_quote"), "single'quote should become single_quote.");
+        assertTrue(doc.has("has_slash"), "has/slash should become has_slash.");
+        assertFalse(doc.has("single'quote"), "The original punctuation-laden name should not remain.");
+        assertFalse(doc.has("has/slash"), "The original punctuation-laden name should not remain.");
+    }
+
+    @Test
+    void columnNameStrategyDefaultsToNoneSoOriginalNamesArePreserved() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/funky-column-names.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "column-sanitization-default-test",
+            "--uri-template", "/sanitized-default/{id}.json"
+        );
+
+        assertCollectionSize("column-sanitization-default-test", 2);
+        JsonNode doc = readJsonDocument("/sanitized-default/1.json");
+        assertTrue(doc.has("single'quote"), "Without --column-name-strategy, the original column name should " +
+            "be preserved by default.");
+        assertTrue(doc.has("has/slash"), "Without --column-name-strategy, the original column name should " +
+            "be preserved by default.");
+    }
+
+    @Test
     void dropColumns() {
         run(
             "import-delimited-files",
