@@ -53,6 +53,12 @@ class IncrementalWriteParams {
     private String hashKeyName = "incrementalWriteHash";
 
     @CommandLine.Option(
+        names = "--incremental-write-source-uri-name",
+        description = "Name of the optional metadata key in which to store the source URI of the document being written. No default value."
+    )
+    private String sourceUriKeyName;
+
+    @CommandLine.Option(
         names = "--incremental-write-timestamp-name",
         description = "Name of the optional metadata key in which to store the timestamp for when the document was written. No default value."
     )
@@ -97,6 +103,7 @@ class IncrementalWriteParams {
             Options.WRITE_INCREMENTAL_SCHEMA, schemaView != null ? schemaView.schema : null,
             Options.WRITE_INCREMENTAL_VIEW, schemaView != null ? schemaView.view : null,
             Options.WRITE_INCREMENTAL_HASH_KEY_NAME, hashKeyName,
+            Options.WRITE_INCREMENTAL_SOURCE_URI_KEY_NAME, sourceUriKeyName,
             Options.WRITE_INCREMENTAL_TIMESTAMP_KEY_NAME, timestampKeyName,
             Options.WRITE_INCREMENTAL_CANONICALIZE_JSON, dontCanonicalizeJson != null ? (!dontCanonicalizeJson ? "true" : "false") : null,
             Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, jsonExclusions.isEmpty() ? null : String.join("\n", jsonExclusions),
