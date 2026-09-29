@@ -3,8 +3,10 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.ColumnNameStrategy;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.StructuredDataImporter;
+import com.marklogic.flux.impl.OptionsUtil;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Parameters for transforming rows read from structured data sources, such as JDBC, Parquet, CSV, etc.
  * Supports filtering rows via WHERE expressions, grouping rows by column values, aggregating related rows into
- * arrays, and ordering aggregated arrays.
+ * arrays, ordering aggregated arrays, and sanitizing top-level column names.
  */
 class StructuredDataParams implements StructuredDataImporter.GroupByOptions<StructuredDataParams> {
 
@@ -56,6 +58,13 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         converter = AggregationOrdering.class
     )
     private List<AggregationOrdering> aggregationOrderings = new ArrayList<>();
+
+    @CommandLine.Option(
+        names = "--column-name-strategy",
+        description = "Strategy for sanitizing top-level column names before constructing documents. " +
+            OptionsUtil.VALID_VALUES_DESCRIPTION
+    )
+    private ColumnNameStrategy columnNameStrategy = ColumnNameStrategy.NONE;
 
     public static class Aggregation implements CommandLine.ITypeConverter<Aggregation> {
         private String newColumnName;
@@ -153,6 +162,18 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         return this;
     }
 
+    public StructuredDataParams columnNameStrategy(ColumnNameStrategy strategy) {
+        this.columnNameStrategy = strategy != null ? strategy : ColumnNameStrategy.NONE;
+        return this;
+    }
+
+    /**
+     * Package-private, intended solely for tests that verify how {@code --column-name-strategy} is parsed.
+     */
+    ColumnNameStrategy getColumnNameStrategy() {
+        return columnNameStrategy;
+    }
+
     @Override
     public StructuredDataParams orderAggregation(String aggregationName, String columnName, boolean ascending) {
         if (this.aggregationOrderings == null) {
@@ -184,7 +205,7 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         }
 
         if (groupBy == null || groupBy.trim().isEmpty()) {
-            return applyDrop(dataset);
+            return sanitizeColumnNames(applyDrop(dataset));
         }
 
         final RelationalGroupedDataset groupedDataset = dataset.groupBy(this.groupBy);
@@ -207,7 +228,7 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
             applySortToAggregatedArrays(result) :
             result;
 
-        return applyDrop(sorted);
+        return sanitizeColumnNames(applyDrop(sorted));
     }
 
     /**
@@ -320,5 +341,10 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
             dataset = dataset.drop(columnsToDrop.toArray(new String[]{}));
         }
         return dataset;
+    }
+
+    private Dataset<Row> sanitizeColumnNames(Dataset<Row> dataset) {
+        ColumnNameSanitizer sanitizer = ColumnNameSanitizer.forStrategy(columnNameStrategy);
+        return sanitizer != null ? dataset.toDF(sanitizer.sanitize(dataset.schema().names())) : dataset;
     }
 }
