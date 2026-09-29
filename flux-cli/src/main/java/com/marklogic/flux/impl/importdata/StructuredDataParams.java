@@ -10,7 +10,6 @@ import com.marklogic.flux.impl.OptionsUtil;
 import org.apache.spark.sql.*;
 import picocli.CommandLine;
 
-import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,8 +61,8 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
 
     @CommandLine.Option(
         names = "--column-name-strategy",
-        description = "Strategy for sanitizing top-level column names before constructing documents; applied " +
-            "after any '--where', '--group-by', '--aggregate', and '--drop' options. " + OptionsUtil.VALID_VALUES_DESCRIPTION
+        description = "Strategy for sanitizing top-level column names before constructing documents. " +
+            OptionsUtil.VALID_VALUES_DESCRIPTION
     )
     private ColumnNameStrategy columnNameStrategy = ColumnNameStrategy.NONE;
 
@@ -344,94 +343,8 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         return dataset;
     }
 
-    /**
-     * Sanitizes the top-level column names in the dataset based on the configured {@link ColumnNameStrategy}. Names
-     * are computed for every column first and then applied in a single positional rename via {@code toDF}, so that
-     * columns whose sanitized name matches another column's original name do not produce an intermediate collision.
-     */
     private Dataset<Row> sanitizeColumnNames(Dataset<Row> dataset) {
-        if (columnNameStrategy == null || ColumnNameStrategy.NONE.equals(columnNameStrategy)) {
-            return dataset;
-        }
-
-        String[] originalNames = dataset.schema().names();
-        String[] newNames = new String[originalNames.length];
-        Map<String, String> originalNameByNewName = new LinkedHashMap<>();
-
-        for (int i = 0; i < originalNames.length; i++) {
-            String originalName = originalNames[i];
-            String newName = sanitizeColumnName(originalName);
-            if (newName.isEmpty()) {
-                throw new FluxException(String.format(
-                    "Unable to apply the '%s' column name strategy to column '%s'; the resulting column name is empty.",
-                    columnNameStrategy, originalName));
-            }
-            String conflictingOriginalName = originalNameByNewName.putIfAbsent(newName, originalName);
-            if (conflictingOriginalName != null && !conflictingOriginalName.equals(originalName)) {
-                throw new FluxException(String.format(
-                    "Unable to apply the '%s' column name strategy; columns '%s' and '%s' both sanitize to '%s'.",
-                    columnNameStrategy, conflictingOriginalName, originalName, newName));
-            }
-            newNames[i] = newName;
-        }
-
-        return dataset.toDF(newNames);
-    }
-
-    /**
-     * Explicit mappings for Western European Latin letters that Unicode does not decompose into a base letter plus
-     * a combining mark, so they must be folded to ASCII by hand. This is language-neutral folding - e.g. "ö"
-     * becomes "o", not the German digraph "oe" - to keep behavior predictable across languages that use these
-     * letters differently.
-     */
-    private static final Map<Integer, String> NON_DECOMPOSABLE_LATIN_LETTERS = Map.ofEntries(
-        Map.entry((int) 'æ', "ae"), Map.entry((int) 'Æ', "AE"),
-        Map.entry((int) 'œ', "oe"), Map.entry((int) 'Œ', "OE"),
-        Map.entry((int) 'ß', "ss"), Map.entry((int) 'ẞ', "SS"),
-        Map.entry((int) 'ø', "o"), Map.entry((int) 'Ø', "O"),
-        Map.entry((int) 'ð', "d"), Map.entry((int) 'Ð', "D"),
-        Map.entry((int) 'þ', "th"), Map.entry((int) 'Þ', "Th"),
-        // Precomposed accented forms of the above; NFD would decompose these into a mapped letter plus a mark, but
-        // only after the map lookup has already run, so they need their own entries.
-        Map.entry((int) 'ǿ', "o"), Map.entry((int) 'Ǿ', "O"),
-        Map.entry((int) 'ǽ', "ae"), Map.entry((int) 'Ǽ', "AE"),
-        Map.entry((int) 'ǣ', "ae"), Map.entry((int) 'Ǣ', "AE")
-    );
-
-    /**
-     * Implements the "simple" strategy. First, {@link #foldWesternEuropeanLetters(String)} converts accented and
-     * other Western European Latin letters to their closest ASCII letter(s) - e.g. "é" becomes "e" and "ß" becomes
-     * "ss". Then, any leading or trailing run of characters that is not an ASCII letter, digit, or underscore is
-     * removed, and each remaining such run is replaced with a single underscore - e.g. "first. name" becomes
-     * "first_name" instead of "first__name". Underscores in the original name are always preserved, as they may be
-     * meaningful - e.g. "_id" and "a__b" are left unchanged.
-     */
-    private String sanitizeColumnName(String name) {
-        return foldWesternEuropeanLetters(name)
-            .replaceAll("^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$", "")
-            .replaceAll("[^A-Za-z0-9_]+", "_");
-    }
-
-    /**
-     * Folds Western European Latin letters to their closest ASCII equivalent(s). Uses Unicode NFD normalization to
-     * split precomposed accented letters - such as "é" - into a base letter plus one or more combining marks, which
-     * are then stripped; this handles accented letters regardless of whether the source text used the precomposed
-     * or already-decomposed form. Letters that do not decompose this way - such as "æ" and "ß" - are handled via
-     * {@link #NON_DECOMPOSABLE_LATIN_LETTERS}. Characters with no ASCII equivalent, including non-Latin scripts,
-     * are left as-is so that the caller's subsequent underscore replacement applies to them.
-     */
-    private String foldWesternEuropeanLetters(String name) {
-        StringBuilder result = new StringBuilder(name.length());
-        name.codePoints().forEach(codePoint -> {
-            String mapped = NON_DECOMPOSABLE_LATIN_LETTERS.get(codePoint);
-            if (mapped != null) {
-                result.append(mapped);
-            } else {
-                result.appendCodePoint(codePoint);
-            }
-        });
-
-        String normalized = Normalizer.normalize(result, Normalizer.Form.NFD);
-        return normalized.replaceAll("\\p{M}+", "");
+        ColumnNameSanitizer sanitizer = ColumnNameSanitizer.forStrategy(columnNameStrategy);
+        return sanitizer != null ? dataset.toDF(sanitizer.sanitize(dataset.schema().names())) : dataset;
     }
 }
