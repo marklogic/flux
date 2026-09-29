@@ -91,8 +91,10 @@ instead replaced with an underscore, along with any other unsupported characters
 
 Column name sanitization is applied last, after [`--where`](filtering-data.md), [`--drop`](filtering-data.md#dropping-columns),
 and [`--group-by` / `--aggregate` / `--aggregate-order-by`](aggregating-rows.md). This means that `--where`, `--drop`,
-`--group-by`, `--aggregate`, and `--aggregate-order-by` must all reference the **original**, unsanitized column
-names. Only features that operate on the final set of documents - such as `--uri-template` and
+`--group-by`, `--aggregate`, and `--aggregate-order-by` must all reference column names **as they exist before
+sanitization** - that is, source column names, plus any aggregation names you define via `--aggregate`, which can be
+referenced by `--drop` and `--aggregate-order-by`. Aggregation names are themselves sanitized along with the other
+top-level column names. Only features that operate on the final set of documents - such as `--uri-template` and
 [TDE template generation](tde-generation.md) - see the sanitized column names.
 
 ## Limitations
