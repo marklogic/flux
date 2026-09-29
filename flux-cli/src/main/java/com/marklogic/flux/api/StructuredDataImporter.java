@@ -91,5 +91,8 @@ public interface StructuredDataImporter<T extends StructuredDataImporter<T>> ext
      * @return this importer instance
      * @since 2.2.0
      */
-    T columnNameStrategy(ColumnNameStrategy strategy);
+    default T columnNameStrategy(ColumnNameStrategy strategy) {
+        // Default implementation for backwards compatibility with implementations of this interface created before 2.2.0.
+        throw new UnsupportedOperationException("columnNameStrategy is not supported by this importer");
+    }
 }
