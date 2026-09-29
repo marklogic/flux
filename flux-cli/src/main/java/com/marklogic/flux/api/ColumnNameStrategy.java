@@ -22,12 +22,12 @@ public enum ColumnNameStrategy {
      * Western European Latin letters are first folded to their closest ASCII letter(s) - e.g. {@code "é"} becomes
      * {@code "e"}, {@code "ö"} becomes {@code "o"}, and {@code "ß"} becomes {@code "ss"}. This is language-neutral
      * folding rather than a language-specific spelling convention; for example, {@code "ö"} does not become the
-     * German digraph {@code "oe"}. Then, each run of one or more characters that is still not an ASCII letter or
-     * digit - including existing underscores - is replaced with a single underscore, and any leading or trailing
-     * underscores are then removed. For example, {@code "first. name"} becomes {@code "first_name"},
-     * {@code "a__b"} becomes {@code "a_b"}, {@code "_id"} becomes {@code "id"}, and {@code "prénom"} becomes
-     * {@code "prenom"}. Characters with no ASCII equivalent, including non-Latin scripts, are replaced with an
-     * underscore just like other unsupported characters.
+     * German digraph {@code "oe"}. Then, any leading or trailing run of characters that is not an ASCII letter,
+     * digit, or underscore is removed, and each remaining such run is replaced with a single underscore. Underscores
+     * in the original name are always preserved, as they may be meaningful. For example, {@code "first. name"}
+     * becomes {@code "first_name"}, {@code " name "} becomes {@code "name"}, {@code "_id"} and {@code "a__b"} are
+     * unchanged, and {@code "prénom"} becomes {@code "prenom"}. Characters with no ASCII equivalent, including
+     * non-Latin scripts, are replaced with an underscore just like other unsupported characters.
      */
     SIMPLE
 }

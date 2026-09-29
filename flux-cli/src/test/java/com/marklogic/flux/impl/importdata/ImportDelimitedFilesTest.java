@@ -38,6 +38,35 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void columnNameSanitizationPreservesOriginalUnderscores() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/underscore-column-names.csv",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "column-sanitization-underscore-test",
+            "--uri-template", "/sanitized-underscore/{id}.json",
+            "--column-name-strategy", "simple"
+        );
+
+        assertCollectionSize("column-sanitization-underscore-test", 1);
+        JsonNode doc = readJsonDocument("/sanitized-underscore/1.json");
+        assertEquals("a", doc.get("_key_").asText(), "Leading and trailing underscores should be preserved.");
+        assertEquals("b", doc.get("a__b").asText(), "Consecutive underscores should be preserved.");
+        assertEquals("c", doc.get("x__y").asText(), "The original underscore should be preserved, with the '.' " +
+            "replaced by an additional underscore.");
+        assertEquals("d", doc.get("_prenom_").asText(), "Accented letters should be folded while leading and " +
+            "trailing underscores are preserved.");
+        assertEquals("e", doc.get("strasse__nr").asText(), "'ß' should fold to 'ss' while consecutive " +
+            "underscores are preserved.");
+        assertEquals("f", doc.get("AE_o").asText(), "'Æ' and 'ø' should fold via explicit mappings while the " +
+            "underscore between them is preserved.");
+        assertEquals("g", doc.get("_Muller_name").asText(), "The leading underscore should be preserved, 'ü' " +
+            "folded, and '.' replaced with an underscore.");
+        assertEquals(8, doc.size(), "Every column should be present under its sanitized name.");
+    }
+
+    @Test
     void columnNameStrategyDefaultsToNoneSoOriginalNamesArePreserved() {
         run(
             "import-delimited-files",

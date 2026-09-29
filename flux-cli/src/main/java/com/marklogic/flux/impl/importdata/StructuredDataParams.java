@@ -401,15 +401,15 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
     /**
      * Implements the "simple" strategy. First, {@link #foldWesternEuropeanLetters(String)} converts accented and
      * other Western European Latin letters to their closest ASCII letter(s) - e.g. "é" becomes "e" and "ß" becomes
-     * "ss". Then, each run of one or more characters that is still not an ASCII letter or digit (including existing
-     * underscores) is replaced with a single underscore, and any leading/trailing underscores are trimmed. Using a
-     * "+" in the second regex both converts non-alphanumeric characters to underscores and collapses consecutive
-     * underscores in a single pass - e.g. "first. name" becomes "first_name" instead of "first__name", and "a__b"
-     * becomes "a_b".
+     * "ss". Then, any leading or trailing run of characters that is not an ASCII letter, digit, or underscore is
+     * removed, and each remaining such run is replaced with a single underscore - e.g. "first. name" becomes
+     * "first_name" instead of "first__name". Underscores in the original name are always preserved, as they may be
+     * meaningful - e.g. "_id" and "a__b" are left unchanged.
      */
     private String sanitizeColumnName(String name) {
-        String result = foldWesternEuropeanLetters(name).replaceAll("[^A-Za-z0-9]+", "_");
-        return result.replaceAll("^_+|_+$", "");
+        return foldWesternEuropeanLetters(name)
+            .replaceAll("^[^A-Za-z0-9_]+|[^A-Za-z0-9_]+$", "")
+            .replaceAll("[^A-Za-z0-9_]+", "_");
     }
 
     /**

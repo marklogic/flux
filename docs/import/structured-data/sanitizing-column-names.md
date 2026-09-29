@@ -35,10 +35,10 @@ The `--column-name-strategy` option is available for the following commands:
 - `none` (the default) - column names are left unchanged, preserving existing behavior.
 - `simple` - first, Western European Latin letters are folded to their closest ASCII letter(s) - e.g. `é` becomes
   `e`, `ö` becomes `o`, and `ß` becomes `ss` - see [Folding Western European letters](#folding-western-european-letters)
-  below for details. Then, each run of one or more characters that is still not an ASCII letter or digit - including
-  existing underscores - is replaced with a single underscore, and any leading or trailing underscores are then
-  removed. For example, `first. name` becomes `first_name`, `a__b` becomes `a_b`, `_id` becomes `id`, and `prénom`
-  becomes `prenom`.
+  below for details. Then, any leading or trailing run of characters that is not an ASCII letter, digit, or
+  underscore is removed, and each remaining such run is replaced with a single underscore. Underscores in the
+  original column name are always preserved, as they may be meaningful. For example, `first. name` becomes
+  `first_name`, ` name ` becomes `name`, `_id` and `a__b` are unchanged, and `prénom` becomes `prenom`.
 
 For example, to sanitize column names when importing a CSV file:
 
@@ -99,16 +99,16 @@ names. Only features that operate on the final set of documents - such as `--uri
 
 - Only top-level column names are sanitized. Field names nested inside a struct or array - such as the fields within
   a column produced by `--aggregate` - are not modified.
-- The `simple` strategy only preserves ASCII letters and digits, after first folding Western European Latin letters
-  as described above. Characters with no ASCII equivalent, including non-Latin scripts, are replaced, so a column
-  name consisting entirely of such characters sanitizes to an empty name and results in an error.
-- Because leading and trailing underscores are removed, a column such as `_id` becomes `id`. If the source also has
-  a column named `id`, the two names collide and Flux raises an error.
+- The `simple` strategy only preserves ASCII letters, digits, and underscores, after first folding Western European
+  Latin letters as described above. Characters with no ASCII equivalent, including non-Latin scripts, are replaced,
+  so a column name consisting entirely of such characters sanitizes to an empty name and results in an error.
+- Because leading and trailing unsupported characters are removed, a column such as ` id ` becomes `id`. If the
+  source also has a column named `id`, the two names collide and Flux raises an error.
 - The `simple` strategy does not guarantee that a resulting name is a valid XML element name. For example, a column
   name of `123abc` sanitizes to `123abc`, which is not a valid XML element name because it starts with a digit. If
   you are generating XML documents, ensure your source column names will not sanitize to a name starting with a
   digit.
-- If the `simple` strategy would produce an empty column name (for example, a column named `___`) or would produce
+- If the `simple` strategy would produce an empty column name (for example, a column named `...`) or would produce
   the same name for two different columns (a collision), Flux raises an error rather than writing documents with
   ambiguous or missing field names. Rename the offending source columns, or use `--drop` to remove them, before
   reapplying the strategy.

@@ -74,23 +74,34 @@ class StructuredDataParamsTest {
     }
 
     @Test
-    void simpleStrategyCollapsesConsecutivePunctuationAndUnderscores() {
+    void simpleStrategyCollapsesConsecutivePunctuation() {
         StructuredDataParams params = new StructuredDataParams().columnNameStrategy(ColumnNameStrategy.SIMPLE);
-        Dataset<Row> dataset = newDataset("a__b", "c...d", "e - f");
+        Dataset<Row> dataset = newDataset("c...d", "e - f");
 
         Dataset<Row> result = params.applyTransformations(dataset);
 
-        assertArrayEquals(new String[]{"a_b", "c_d", "e_f"}, result.schema().names());
+        assertArrayEquals(new String[]{"c_d", "e_f"}, result.schema().names());
     }
 
     @Test
-    void simpleStrategyTrimsLeadingAndTrailingUnderscores() {
+    void simpleStrategyPreservesOriginalUnderscores() {
         StructuredDataParams params = new StructuredDataParams().columnNameStrategy(ColumnNameStrategy.SIMPLE);
-        Dataset<Row> dataset = newDataset("_id_", "  spaced  ");
+        Dataset<Row> dataset = newDataset("_id_", "a__b", "___", "x_.y", "._z");
 
         Dataset<Row> result = params.applyTransformations(dataset);
 
-        assertArrayEquals(new String[]{"id", "spaced"}, result.schema().names());
+        assertArrayEquals(new String[]{"_id_", "a__b", "___", "x__y", "_z"}, result.schema().names(),
+            "Underscores in the original name may be meaningful and must never be removed or collapsed.");
+    }
+
+    @Test
+    void simpleStrategyRemovesLeadingAndTrailingUnsupportedCharacters() {
+        StructuredDataParams params = new StructuredDataParams().columnNameStrategy(ColumnNameStrategy.SIMPLE);
+        Dataset<Row> dataset = newDataset("  spaced  ", "(name)");
+
+        Dataset<Row> result = params.applyTransformations(dataset);
+
+        assertArrayEquals(new String[]{"spaced", "name"}, result.schema().names());
     }
 
     @Test
