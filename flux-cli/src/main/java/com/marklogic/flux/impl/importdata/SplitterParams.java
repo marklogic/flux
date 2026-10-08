@@ -97,10 +97,22 @@ public class SplitterParams implements SplitterOptions {
     private String collections;
 
     @CommandLine.Option(
+        names = "--splitter-sidecar-inherit-collections",
+        description = "Whether sidecar chunk documents should inherit the collections of their source document."
+    )
+    private boolean inheritCollections;
+
+    @CommandLine.Option(
         names = "--splitter-sidecar-permissions",
         description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to each chunk document - e.g. role1,read,role2,update,role3,execute."
     )
     private String permissions;
+
+    @CommandLine.Option(
+        names = "--splitter-sidecar-inherit-permissions",
+        description = "Whether sidecar chunk documents should inherit the permissions of their source document."
+    )
+    private boolean inheritPermissions;
 
     @CommandLine.Option(
         names = "--splitter-sidecar-root-name",
@@ -143,7 +155,9 @@ public class SplitterParams implements SplitterOptions {
 
             Options.WRITE_SPLITTER_SIDECAR_DOCUMENT_TYPE, documentType != null ? documentType.name() : null,
             Options.WRITE_SPLITTER_SIDECAR_COLLECTIONS, collections,
+            Options.WRITE_SPLITTER_SIDECAR_INHERIT_COLLECTIONS, inheritCollections ? "true" : null,
             Options.WRITE_SPLITTER_SIDECAR_PERMISSIONS, permissions,
+            Options.WRITE_SPLITTER_SIDECAR_INHERIT_PERMISSIONS, inheritPermissions ? "true" : null,
             Options.WRITE_SPLITTER_SIDECAR_ROOT_NAME, rootName,
             Options.WRITE_SPLITTER_SIDECAR_URI_PREFIX, uriPrefix,
             Options.WRITE_SPLITTER_SIDECAR_URI_SUFFIX, uriSuffix
@@ -253,8 +267,20 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
+    public SplitterOptions outputInheritCollections(boolean inheritCollections) {
+        this.inheritCollections = inheritCollections;
+        return this;
+    }
+
+    @Override
     public SplitterOptions outputPermissionsString(String rolesAndCapabilities) {
         this.permissions = rolesAndCapabilities;
+        return this;
+    }
+
+    @Override
+    public SplitterOptions outputInheritPermissions(boolean inheritPermissions) {
+        this.inheritPermissions = inheritPermissions;
         return this;
     }
 

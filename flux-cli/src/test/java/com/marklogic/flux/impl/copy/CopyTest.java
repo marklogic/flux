@@ -5,10 +5,12 @@ package com.marklogic.flux.impl.copy;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.ext.helper.ClientHelper;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.SearchHandle;
 import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.PermissionsTester;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -39,6 +41,70 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
+    }
+
+    @Test
+    void copyInheritCollectionsAndPermissions() {
+        try {
+            run(
+                "copy",
+                "--uris", "/author/author1.json",
+                "--connection-string", makeConnectionString(),
+                "--output-uri-prefix", "/copied-author",
+                "--splitter-json-pointer", "/LastName",
+                "--splitter-sidecar-max-chunks", "1",
+                "--splitter-sidecar-inherit-collections",
+                "--splitter-sidecar-inherit-permissions"
+            );
+
+            String chunkUri = "/copied-author/author/author1.json-chunks-1.json";
+            DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager().readMetadata(chunkUri, new DocumentMetadataHandle());
+            assertTrue(meta.getCollections().contains("author"), "Chunk should inherit 'author' collection");
+            assertTrue(meta.getCollections().contains("test-data"), "Chunk should inherit 'test-data' collection");
+
+            PermissionsTester tester = readDocumentPermissions(chunkUri);
+            tester.assertReadPermissionExists("flux-test-role");
+            tester.assertUpdatePermissionExists("admin");
+        } finally {
+            deleteCopiedDocuments("/copied-author");
+        }
+    }
+
+    @Test
+    void copyInheritCollectionsAndPermissionsUnionWithExplicit() {
+        try {
+            run(
+                "copy",
+                "--uris", "/author/author1.json",
+                "--connection-string", makeConnectionString(),
+                "--output-uri-prefix", "/copied-author-union",
+                "--splitter-json-pointer", "/LastName",
+                "--splitter-sidecar-max-chunks", "1",
+                "--splitter-sidecar-collections", "explicit-chunk-col,author",
+                "--splitter-sidecar-permissions", "flux-test-role,update,qconsole-user,read",
+                "--splitter-sidecar-inherit-collections",
+                "--splitter-sidecar-inherit-permissions"
+            );
+
+            String chunkUri = "/copied-author-union/author/author1.json-chunks-1.json";
+            DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager().readMetadata(chunkUri, new DocumentMetadataHandle());
+            assertEquals(3, meta.getCollections().size(), "Deduplicated union of author, test-data, explicit-chunk-col");
+            assertTrue(meta.getCollections().contains("author"));
+            assertTrue(meta.getCollections().contains("test-data"));
+            assertTrue(meta.getCollections().contains("explicit-chunk-col"));
+
+            PermissionsTester tester = readDocumentPermissions(chunkUri);
+            tester.assertReadPermissionExists("flux-test-role");
+            tester.assertUpdatePermissionExists("flux-test-role");
+            tester.assertUpdatePermissionExists("admin");
+            tester.assertReadPermissionExists("qconsole-user");
+        } finally {
+            deleteCopiedDocuments("/copied-author-union");
+        }
+    }
+
+    private void deleteCopiedDocuments(String prefix) {
+        getDatabaseClient().newServerEval().xquery(String.format("cts:uris('%s*') ! xdmp:document-delete(.)", prefix)).evalAs(String.class);
     }
 
     @Test
