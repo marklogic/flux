@@ -382,14 +382,29 @@ The above options will result in documents having URIs of `/chunk/(UUID).json`.
 
 #### Controlling document metadata
 
-Each sidecar document defaults to the same permissions as its source document and no collections assigned to it. 
-You can assign different permissions via the following, where each "role" is the name of a MarkLogic and each 
+By default, each sidecar document has no collections assigned to it and defaults to the permissions specified via 
+`--permissions` (or your user default permissions if `--permissions` is omitted). Sidecar documents do not inherit 
+collections or permissions from their source document by default.
+
+You can explicitly assign permissions to each sidecar document via the following, where each "role" is the name of a MarkLogic role and each 
 "capability" is one of "read", "update", "insert", or "execute":
 
     --splitter-sidecar-permissions role,capability,role,capability,etc.
 
-You can assign collections to each sidecar document via the following, which accepts a comma-delimited sequence of 
+You can explicitly assign collections to each sidecar document via the following, which accepts a comma-delimited sequence of 
 collection names:
 
     --splitter-sidecar-collections collection1,collection2,etc
+
+To have sidecar chunk documents inherit the collections of their source document, include:
+
+    --splitter-sidecar-inherit-collections
+
+When `--splitter-sidecar-inherit-collections` is enabled, each sidecar document will receive the collections of its source document. If `--splitter-sidecar-collections` is also specified, the resulting collections will be the deduplicated union of the inherited collections and the explicitly specified collections. If the source document has no collections, only the explicit collections (if any) are applied.
+
+To have sidecar chunk documents inherit the permissions of their source document, include:
+
+    --splitter-sidecar-inherit-permissions
+
+When `--splitter-sidecar-inherit-permissions` is enabled, each sidecar document will receive the permissions of its source document. If `--splitter-sidecar-permissions` is also specified, the resulting permissions will be the union of the inherited permissions and the explicitly specified permissions. If the source document has no permissions, only the explicit permissions (if any) are applied.
 

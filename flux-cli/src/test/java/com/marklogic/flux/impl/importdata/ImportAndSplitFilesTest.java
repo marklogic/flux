@@ -5,12 +5,13 @@ package com.marklogic.flux.impl.importdata;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.PermissionsTester;
 import com.marklogic.junit5.XmlNode;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImportAndSplitFilesTest extends AbstractTest {
 
@@ -174,5 +175,145 @@ class ImportAndSplitFilesTest extends AbstractTest {
             "--splitter-custom-class", "com.marklogic.flux.impl.importdata.splitter.CustomSplitter",
             "--splitter-prop", "missing an equals"
         );
+    }
+
+    @Test
+    void sidecarInheritCollectionsOnly() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
+            "--collections", "source-c1,source-c2",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-inherit-collections"
+        );
+
+        // 1 source document + 2 sidecar chunk documents = 3 in each collection
+        assertCollectionSize("source-c1", 3);
+        assertCollectionSize("source-c2", 3);
+
+        DocumentMetadataHandle meta1 = getDatabaseClient().newDocumentManager().readMetadata("/java-client-intro.json-chunks-1.json", new DocumentMetadataHandle());
+        assertTrue(meta1.getCollections().contains("source-c1"));
+        assertTrue(meta1.getCollections().contains("source-c2"));
+
+        DocumentMetadataHandle meta2 = getDatabaseClient().newDocumentManager().readMetadata("/java-client-intro.json-chunks-2.json", new DocumentMetadataHandle());
+        assertTrue(meta2.getCollections().contains("source-c1"));
+        assertTrue(meta2.getCollections().contains("source-c2"));
+    }
+
+    @Test
+    void sidecarInheritCollectionsUnionWithExplicit() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
+            "--collections", "source-c1,shared-c",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-collections", "explicit-c,shared-c",
+            "--splitter-sidecar-inherit-collections"
+        );
+
+        // Source doc has source-c1 and shared-c (1 doc)
+        assertCollectionSize("source-c1", 3);
+        // shared-c has 1 source + 2 chunk docs = 3 docs
+        assertCollectionSize("shared-c", 3);
+        // explicit-c has 2 chunk docs only
+        assertCollectionSize("explicit-c", 2);
+
+        DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager().readMetadata("/java-client-intro.json-chunks-1.json", new DocumentMetadataHandle());
+        assertEquals(3, meta.getCollections().size(), "Should have deduplicated union of source and explicit collections");
+        assertTrue(meta.getCollections().contains("source-c1"));
+        assertTrue(meta.getCollections().contains("shared-c"));
+        assertTrue(meta.getCollections().contains("explicit-c"));
+    }
+
+    @Test
+    void sidecarInheritPermissionsOnly() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", "flux-test-role,read,flux-test-role,update",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-inherit-permissions"
+        );
+
+        PermissionsTester tester = readDocumentPermissions("/java-client-intro.json-chunks-1.json");
+        tester.assertReadPermissionExists("flux-test-role");
+        tester.assertUpdatePermissionExists("flux-test-role");
+
+        PermissionsTester tester2 = readDocumentPermissions("/java-client-intro.json-chunks-2.json");
+        tester2.assertReadPermissionExists("flux-test-role");
+        tester2.assertUpdatePermissionExists("flux-test-role");
+    }
+
+    @Test
+    void sidecarInheritPermissionsUnionWithExplicit() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", "flux-test-role,read",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-permissions", "flux-test-role,update,qconsole-user,read",
+            "--splitter-sidecar-inherit-permissions"
+        );
+
+        PermissionsTester tester = readDocumentPermissions("/java-client-intro.json-chunks-1.json");
+        tester.assertReadPermissionExists("flux-test-role");
+        tester.assertUpdatePermissionExists("flux-test-role");
+        tester.assertReadPermissionExists("qconsole-user");
+    }
+
+    @Test
+    void sidecarInheritCollectionsEmptySourceNoop() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2",
+            "--splitter-sidecar-inherit-collections"
+        );
+
+        DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager().readMetadata("/java-client-intro.json-chunks-1.json", new DocumentMetadataHandle());
+        assertTrue(meta.getCollections().isEmpty(), "When source has no collections, sidecar should have no collections");
+    }
+
+    @Test
+    void sidecarDefaultNoInheritancePreservesExisting() {
+        run(
+            "import-files",
+            "--path", "../flux-cli/src/test/resources/json-files/java-client-intro.json",
+            "--connection-string", makeConnectionString(),
+            "--permissions", AbstractTest.DEFAULT_PERMISSIONS,
+            "--collections", "source-only-col",
+            "--uri-replace", ".*/json-files,''",
+            "--splitter-json-pointer", "/text",
+            "--splitter-max-chunk-size", "500",
+            "--splitter-sidecar-max-chunks", "2"
+        );
+
+        // Without inheritance, chunks do not receive source-only-col
+        assertCollectionSize("source-only-col", 1);
+        DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager().readMetadata("/java-client-intro.json-chunks-1.json", new DocumentMetadataHandle());
+        assertFalse(meta.getCollections().contains("source-only-col"), "Default behavior must not inherit source collections");
     }
 }

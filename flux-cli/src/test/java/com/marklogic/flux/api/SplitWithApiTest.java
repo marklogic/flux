@@ -6,6 +6,7 @@ package com.marklogic.flux.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.junit5.XmlNode;
 import org.jdom2.Namespace;
@@ -159,4 +160,27 @@ class SplitWithApiTest extends AbstractTest {
             secondChunk, "Verifying that the text was split based on using a trivial regex.");
     }
 
+    @Test
+    void splitWithInheritedMetadata() {
+        Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from("../flux-cli/src/test/resources/json-files/java-client-intro.json")
+            .to(writeOptions -> writeOptions
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("source-api-col")
+                .uriTemplate("/split-api-test.json")
+                .splitter(splitterOptions -> splitterOptions
+                    .jsonPointers("/text")
+                    .maxChunkSize(500)
+                    .outputMaxChunks(2)
+                    .outputInheritCollections(true)
+                    .outputInheritPermissions(true)
+                )
+            ).execute();
+
+        DocumentMetadataHandle meta = getDatabaseClient().newDocumentManager()
+            .readMetadata("/split-api-test.json-chunks-1.json", new DocumentMetadataHandle());
+        assertTrue(meta.getCollections().contains("source-api-col"));
+        assertTrue(meta.getPermissions().containsKey("flux-test-role"));
+    }
 }

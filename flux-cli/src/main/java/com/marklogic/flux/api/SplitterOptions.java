@@ -36,7 +36,17 @@ public interface SplitterOptions {
 
     SplitterOptions outputCollections(String... collections);
 
+    /**
+     * @since 2.2.0
+     */
+    SplitterOptions outputInheritCollections(boolean inheritCollections);
+
     SplitterOptions outputPermissionsString(String rolesAndCapabilities);
+
+    /**
+     * @since 2.2.0
+     */
+    SplitterOptions outputInheritPermissions(boolean inheritPermissions);
 
     SplitterOptions outputRootName(String rootName);
 
