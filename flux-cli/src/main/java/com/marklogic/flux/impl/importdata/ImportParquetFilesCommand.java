@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.ColumnNameStrategy;
 import com.marklogic.flux.api.ParquetFilesImporter;
 import com.marklogic.flux.api.ReadTabularFilesOptions;
 import com.marklogic.flux.api.StructuredDataImporter;
@@ -110,6 +111,14 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
             structuredDataParams.drop(columns);
             return this;
         }
+
+        /**
+         * Package-private, intended solely for tests that verify how options like {@code --column-name-strategy}
+         * are parsed and applied.
+         */
+        StructuredDataParams getStructuredDataParams() {
+            return structuredDataParams;
+        }
     }
 
     @Override
@@ -156,6 +165,12 @@ public class ImportParquetFilesCommand extends AbstractImportFilesCommand<Parque
     public ParquetFilesImporter groupBy(String columnName, Consumer<StructuredDataImporter.GroupByOptions<?>> consumer) {
         readParams.structuredDataParams.setGroupBy(columnName);
         consumer.accept(readParams.structuredDataParams);
+        return this;
+    }
+
+    @Override
+    public ParquetFilesImporter columnNameStrategy(ColumnNameStrategy strategy) {
+        readParams.structuredDataParams.columnNameStrategy(strategy);
         return this;
     }
 }

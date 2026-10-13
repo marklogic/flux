@@ -102,6 +102,10 @@ subprojects {
       events = ['started', 'passed', 'skipped', 'failed']
       exceptionFormat = 'full'
     }
+    // Explicitly setting this instead of relying on JVM ergonomics, as Spark's tests (e.g. those involving
+    // broadcast serialization) can trigger a heap OOM when the default max heap ends up too small under
+    // memory pressure from other processes on the machine.
+    maxHeapSize = "4g"
     jvmArgs = [
       // Needed for all Java 17 testing.
       "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
