@@ -27,6 +27,7 @@ command reads. The following command line options offer further control over eac
 | `--uri-replace` | Comma-delimited list of regular expressions and replacement values, with each replacement value surrounded by single quotes. |
 | `--uri-template` | Template for each URI containing one or more column names. |
 | `--uri-template-warn-on-missing-field` | Added in 2.0.0; causes a warning if the template specified by `--uri-template` has an expression that returns null for a document. The expression will instead be replaced with the string "UNRESOLVED-" followed by a random UUID. |
+| `--uri-template-hash-values` | Added in 2.2.0; causes each expression value in the template specified by `--uri-template` to be hashed using SHA-256 (lowercase hex) before constructing the document URI. |
 
 ### Replacing URI contents
 
@@ -77,6 +78,18 @@ If an expression cannot be resolved to a field in a document, Flux will by defau
 As of Flux 2.0.0, you can instead use the `--uri-template-warn-on-missing-field` option to cause Flux to log a warning 
 and replace the expression with "UNRESOLVED-" followed by a random UUID. This option can be useful when you are not
 certain that your URI template will work for every document you intend to write to MarkLogic.
+
+Starting in Flux 2.2.0, you can use the `--uri-template-hash-values` option to hash each resolved expression value 
+using SHA-256 (lowercase hex) before constructing the document URI:
+
+    --uri-template "/employee/{id}/{last_name}.json" --uri-template-hash-values
+
+When specified, every expression in the template is individually replaced by its 64-character lowercase hex digest. 
+This is useful for preventing sensitive values (such as employee IDs or national IDs) from appearing verbatim in 
+document URIs, and for generating consistent, repeatable URIs from tabular datasets that lack file paths (which is 
+especially valuable when combined with [incremental write](incremental-write.md)). Note that this unsalted hashing 
+provides pseudonymization, not complete anonymization, as low-entropy inputs could potentially be recovered via dictionary 
+or brute-force attacks.
 
 The following techniques can assist you with writing a URI template:
 

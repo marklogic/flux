@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CopyOptionsTest extends AbstractOptionsTest {
@@ -82,6 +83,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--output-uri-suffix", ".xml",
             "--output-uri-template", "/{example}.xml",
             "--output-uri-template-warn-on-missing-field",
+            "--output-uri-template-hash-values",
             "--splitter-text",
             "--embedder", "doesnt-matter",
             "--embedder-prompt", "Hello: ",
@@ -121,6 +123,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_SUFFIX, ".xml",
             Options.WRITE_URI_TEMPLATE, "/{example}.xml",
             Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
+            Options.WRITE_URI_TEMPLATE_HASH_VALUES, "true",
             Options.WRITE_SPLITTER_TEXT, "true",
             Options.WRITE_EMBEDDER_MODEL_FUNCTION_CLASS_NAME, "doesnt-matter",
             Options.WRITE_EMBEDDER_PROMPT, "Hello: ",
@@ -286,5 +289,15 @@ class CopyOptionsTest extends AbstractOptionsTest {
         } finally {
             systemProps.keySet().forEach(System::clearProperty);
         }
+    }
+
+    @Test
+    void outputUriTemplateHashValuesNotSet() {
+        CopyCommand command = (CopyCommand) getCommand("copy",
+            "--connection-string", "test:test@host:8000"
+        );
+        Map<String, String> options = command.writeParams.makeOptions();
+        assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_HASH_VALUES),
+            "WRITE_URI_TEMPLATE_HASH_VALUES must not be present when --output-uri-template-hash-values is not specified.");
     }
 }
