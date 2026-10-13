@@ -42,6 +42,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             "--uri-suffix", ".suffix",
             "--uri-template", "/test/{value}.json",
             "--uri-template-warn-on-missing-field",
+            "--uri-template-hash-values",
             "--streaming",
             "--extract-text",
             "--extracted-text-document-type", "XML",
@@ -91,6 +92,7 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_URI_SUFFIX, ".suffix",
             Options.WRITE_URI_TEMPLATE, "/test/{value}.json",
             Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, "true",
+            Options.WRITE_URI_TEMPLATE_HASH_VALUES, "true",
             Options.STREAM_FILES, "true",
             Options.WRITE_EXTRACTED_TEXT, "true",
             Options.WRITE_EXTRACTED_TEXT_DOCUMENT_TYPE, "XML",
@@ -225,6 +227,9 @@ class ImportFilesOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD),
             "As a boolean option, this should not be present when the option is not set so that the feature " +
                 "defaults to false, as of Flux 2.0.0.");
+        assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_HASH_VALUES),
+            "As a boolean option, this should not be present when the option is not set so that the feature " +
+                "defaults to false, as of Flux 2.2.0.");
     }
 
     @Test

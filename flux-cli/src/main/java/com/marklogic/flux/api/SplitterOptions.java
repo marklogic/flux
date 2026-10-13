@@ -39,14 +39,14 @@ public interface SplitterOptions {
     /**
      * @since 2.2.0
      */
-    SplitterOptions outputInheritCollections(boolean inheritCollections);
+    SplitterOptions outputInheritCollections();
 
     SplitterOptions outputPermissionsString(String rolesAndCapabilities);
 
     /**
      * @since 2.2.0
      */
-    SplitterOptions outputInheritPermissions(boolean inheritPermissions);
+    SplitterOptions outputInheritPermissions();
 
     SplitterOptions outputRootName(String rootName);
 
