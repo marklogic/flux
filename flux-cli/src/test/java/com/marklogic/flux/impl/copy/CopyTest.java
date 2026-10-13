@@ -5,10 +5,12 @@ package com.marklogic.flux.impl.copy;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.ext.helper.ClientHelper;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.SearchHandle;
 import com.marklogic.client.query.QueryManager;
 import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.flux.AbstractTest;
+import com.marklogic.junit5.PermissionsTester;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -39,6 +41,35 @@ class CopyTest extends AbstractTest {
         assertCollectionSize("author", 15);
         assertCollectionSize("author-copies", 15);
         assertDirectoryCount("/copied/", 15);
+    }
+
+    @Test
+    void splitWithInheritedCollectionsAndPermissions() {
+        run(
+            "copy",
+            "--uris", "/author/author1.json",
+            "--connection-string", makeConnectionString(),
+            "--output-uri-prefix", "/copied",
+            // Replaces the source 'test-data' collection, which is preserved between tests and would affect other tests.
+            "--output-collections", "author-copies",
+            "--splitter-json-pointer", "/LastName",
+            "--splitter-sidecar-collections", "chunks,author-copies",
+            "--splitter-sidecar-permissions", "flux-test-role,update,qconsole-user,read",
+            "--splitter-sidecar-inherit-collections",
+            "--splitter-sidecar-inherit-permissions"
+        );
+
+        String chunkUri = "/copied/author/author1.json-chunks-1.json";
+        DocumentMetadataHandle metadata = getDatabaseClient().newDocumentManager().readMetadata(chunkUri, new DocumentMetadataHandle());
+        assertEquals(2, metadata.getCollections().size(), "Expecting the inherited 'author-copies' collection " +
+            "plus the explicit 'chunks' collection.");
+        assertTrue(metadata.getCollections().containsAll(List.of("author-copies", "chunks")));
+
+        PermissionsTester tester = readDocumentPermissions(chunkUri);
+        tester.assertReadPermissionExists("flux-test-role");
+        tester.assertUpdatePermissionExists("flux-test-role");
+        tester.assertUpdatePermissionExists("admin");
+        tester.assertReadPermissionExists("qconsole-user");
     }
 
     @Test

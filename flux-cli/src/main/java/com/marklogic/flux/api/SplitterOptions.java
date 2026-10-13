@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -36,7 +36,17 @@ public interface SplitterOptions {
 
     SplitterOptions outputCollections(String... collections);
 
+    /**
+     * @since 2.2.0
+     */
+    SplitterOptions outputInheritCollections(boolean inheritCollections);
+
     SplitterOptions outputPermissionsString(String rolesAndCapabilities);
+
+    /**
+     * @since 2.2.0
+     */
+    SplitterOptions outputInheritPermissions(boolean inheritPermissions);
 
     SplitterOptions outputRootName(String rootName);
 
