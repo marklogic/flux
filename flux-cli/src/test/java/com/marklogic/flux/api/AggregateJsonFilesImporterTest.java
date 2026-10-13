@@ -7,6 +7,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.flux.AbstractTest;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -84,5 +88,38 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
             ).execute();
 
         assertCollectionSize("json-lines", 2);
+    }
+
+    @Test
+    void uriTemplateHashValues() {
+        Flux.importAggregateJsonFiles()
+            .connectionString(makeConnectionString())
+            .from(options -> options
+                .paths("src/test/resources/delimited-files/custom-delimiter-json.txt")
+                .jsonLines()
+                .additionalOptions(Map.of("lineSep", ":\n")))
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("custom-delimiter-hashed")
+                .uriTemplate("/custom-delimiter/{firstName}.json")
+                .uriTemplateHashValues())
+            .execute();
+
+        assertCollectionSize("custom-delimiter-hashed", 3);
+        Stream.of("firstName-1", "firstName-2", "firstName-3").forEach(name -> {
+            byte[] hash = sha256Hex(name);
+            String expectedUri = String.format("/custom-delimiter/%s.json", HexFormat.of().formatHex(hash));
+            JsonNode doc = readJsonDocument(expectedUri);
+            assertEquals(name, doc.get("firstName").asText());
+            assertTrue(doc.has("lastName"));
+        });
+    }
+
+    private static byte[] sha256Hex(String value) {
+        try {
+            return MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

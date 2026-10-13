@@ -88,6 +88,11 @@ writing documents. Similar to the output connection options, each option for con
 is prefixed with `output`. For example, to specify collections for the documents, `--output-collections` is used instead
 of `--collections`.
 
+Similarly, to construct document URIs via a template, use `--output-uri-template`. As of Flux 2.2.0, you can use 
+`--output-uri-template-hash-values` to hash each resolved expression value in the template using SHA-256 (lowercase hex) 
+before constructing the document URI. You can also use `--output-uri-template-warn-on-missing-field` to log a warning and 
+replace missing expressions with a UUID instead of failing.
+
 ## Building a RAG data pipeline
 
 [Retrieval-augmented generation](https://www.progress.com/marklogic/solutions/generative-ai), or RAG, with MarkLogic depends on preparing data so that the most relevant

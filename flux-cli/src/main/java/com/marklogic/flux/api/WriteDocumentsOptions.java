@@ -63,6 +63,14 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T uriTemplateWarnOnMissingField();
 
     /**
+     * Causes Flux to hash each resolved expression value using SHA-256 before substituting it into the URI template.
+     *
+     * @return this options instance
+     * @since 2.2.0
+     */
+    T uriTemplateHashValues();
+
+    /**
      * @since 1.3.0
      */
     T classifier(Consumer<ClassifierOptions> consumer);
