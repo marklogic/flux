@@ -17,6 +17,9 @@ configurations {
 
       // Resolves a CVE in 1.11.0
       force "at.yawk.lz4:lz4-java:1.11.1"
+
+      // Resolves a CVE in 1.1.10.8
+      force "org.xerial.snappy:snappy-java:${snappyVersion}"
     }
   }
 }
