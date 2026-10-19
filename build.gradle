@@ -93,6 +93,11 @@ subprojects {
        details.useVersion "${janinoVersion}"
        details.because "Forces Janino to ${janinoVersion} to address CVE-2023-33546."
      }
+
+     if (details.requested.group.equals("org.apache.zookeeper")) {
+       details.useVersion "${zookeeperVersion}"
+       details.because "Forces ZooKeeper (including zookeeper-jute) to ${zookeeperVersion} to address BDSA-2026-33826, BDSA-2026-33824, BDSA-2026-33825, and BDSA-2026-33904."
+     }
    }
  }
 
