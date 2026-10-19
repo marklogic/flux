@@ -93,6 +93,11 @@ subprojects {
        details.useVersion "${janinoVersion}"
        details.because "Forces Janino to ${janinoVersion} to address CVE-2023-33546."
      }
+
+     if (details.requested.group.equals("org.hdrhistogram") && details.requested.name.equals("HdrHistogram") && details.requested.version.startsWith("2.1.")) {
+       details.useVersion "${hdrHistogramVersion}"
+       details.because "Forces the HdrHistogram 2.1.x that hadoop-azure brings in to the latest upstream release, ${hdrHistogramVersion}."
+     }
    }
  }
 
