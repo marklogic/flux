@@ -67,11 +67,6 @@ subprojects {
        details.because "Force all io.netty 4.x to ${nettyVersion} to address CVEs including CVE-2026-44249, CVE-2026-50010, and CVE-2026-45416 in netty-handler."
      }
 
-     if (details.requested.group.equals("org.bouncycastle") && details.requested.version.startsWith("1.85")) {
-       details.useVersion "${bouncyCastleVersion}"
-       details.because "Forces the Bouncy Castle 1.85 libraries brought in by Tika to ${bouncyCastleVersion} to eliminate known security advisories."
-     }
-
      if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.24")) {
        details.useVersion "2.26.0"
        details.because "Forces Spark 4.1.x to use latest log4j 2.x to eliminate CVEs."
