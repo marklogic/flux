@@ -91,7 +91,7 @@ of `--collections`.
 Similarly, to construct document URIs via a template, use `--output-uri-template`. As of Flux 2.2.0, you can use 
 `--output-uri-template-hash-values` to hash each resolved expression value in the template using SHA-256 (lowercase hex) 
 before constructing the document URI. You can also use `--output-uri-template-warn-on-missing-field` to log a warning and 
-replace missing expressions with a UUID instead of failing.
+replace missing expressions with "UNRESOLVED-" followed by a random UUID instead of failing.
 
 ## Building a RAG data pipeline
 

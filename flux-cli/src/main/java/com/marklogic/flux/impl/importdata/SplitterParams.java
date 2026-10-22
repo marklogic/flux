@@ -267,8 +267,8 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions outputInheritCollections(boolean inheritCollections) {
-        this.inheritCollections = inheritCollections;
+    public SplitterOptions outputInheritCollections() {
+        this.inheritCollections = true;
         return this;
     }
 
@@ -279,8 +279,8 @@ public class SplitterParams implements SplitterOptions {
     }
 
     @Override
-    public SplitterOptions outputInheritPermissions(boolean inheritPermissions) {
-        this.inheritPermissions = inheritPermissions;
+    public SplitterOptions outputInheritPermissions() {
+        this.inheritPermissions = true;
         return this;
     }
 

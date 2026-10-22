@@ -20,8 +20,8 @@ class SplitterOptionsTest extends AbstractOptionsTest {
             .to(options -> options.splitter(splitterOptions -> {
                 splitterOptions
                     .jsonPointers("/text")
-                    .outputInheritCollections(true)
-                    .outputInheritPermissions(true);
+                    .outputInheritCollections()
+                    .outputInheritPermissions();
                 reference.set(splitterOptions);
             }));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.api;
 
@@ -107,17 +107,16 @@ class AggregateJsonFilesImporterTest extends AbstractTest {
 
         assertCollectionSize("custom-delimiter-hashed", 3);
         Stream.of("firstName-1", "firstName-2", "firstName-3").forEach(name -> {
-            byte[] hash = sha256Hex(name);
-            String expectedUri = String.format("/custom-delimiter/%s.json", HexFormat.of().formatHex(hash));
+            String expectedUri = String.format("/custom-delimiter/%s.json", sha256Hex(name));
             JsonNode doc = readJsonDocument(expectedUri);
             assertEquals(name, doc.get("firstName").asText());
             assertTrue(doc.has("lastName"));
         });
     }
 
-    private static byte[] sha256Hex(String value) {
+    private static String sha256Hex(String value) {
         try {
-            return MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

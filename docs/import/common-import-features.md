@@ -84,7 +84,9 @@ using SHA-256 (lowercase hex) before constructing the document URI:
 
     --uri-template "/employee/{id}/{last_name}.json" --uri-template-hash-values
 
-When specified, every expression in the template is individually replaced by its 64-character lowercase hex digest. 
+When specified, every resolved expression in the template is individually replaced by its 64-character lowercase hex 
+digest. If `--uri-template-warn-on-missing-field` is also specified, unresolved expressions are still replaced with 
+"UNRESOLVED-" followed by a random UUID and are not hashed. 
 This is useful for preventing sensitive values (such as employee IDs or national IDs) from appearing verbatim in 
 document URIs, and for generating consistent, repeatable URIs from tabular datasets that lack file paths (which is 
 especially valuable when combined with [incremental write](incremental-write.md)). Note that this unsalted hashing 
