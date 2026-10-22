@@ -67,9 +67,9 @@ subprojects {
        details.because "Force all io.netty 4.x to ${nettyVersion} to address CVEs including CVE-2026-44249, CVE-2026-50010, and CVE-2026-45416 in netty-handler."
      }
 
-     if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.24")) {
-       details.useVersion "2.26.0"
-       details.because "Forces Spark 4.1.x to use latest log4j 2.x to eliminate CVEs."
+     if (details.requested.group.equals("org.apache.logging.log4j") && details.requested.version.startsWith("2.")) {
+       details.useVersion "${log4jVersion}"
+       details.because "Forces all log4j 2.x artifacts that Spark brings in to ${log4jVersion} to address BDSA-2026-22385 / CVE-2026-49844 and other CVEs."
      }
 
      if (details.requested.group.startsWith("com.fasterxml.jackson")) {
