@@ -41,6 +41,22 @@ class AzureStorageParamsTest {
 
         assertEquals("test-access-key",
             conf.get("fs.azure.account.key.teststorage.blob.core.windows.net"));
+        assertEquals("false",
+            conf.get("fs.azure.account.hns.enabled.teststorage.blob.core.windows.net"));
+    }
+
+    @Test
+    void blobStorageWithAccessKeyDoesNotOverrideUserHnsSetting() {
+        conf.set("fs.azure.account.hns.enabled.teststorage.blob.core.windows.net", "true");
+        options.azureStorage(azure -> azure
+            .storageAccount("teststorage")
+            .storageType(AzureStorageType.BLOB)
+            .accessKey("test-access-key"));
+
+        params.addToHadoopConfiguration(conf);
+
+        assertEquals("true",
+            conf.get("fs.azure.account.hns.enabled.teststorage.blob.core.windows.net"));
     }
 
     @Test
@@ -55,6 +71,7 @@ class AzureStorageParamsTest {
 
         assertEquals("test-sas-token",
             conf.get("fs.azure.sas.testcontainer.teststorage.blob.core.windows.net"));
+        assertNull(conf.get("fs.azure.account.hns.enabled.teststorage.blob.core.windows.net"));
     }
 
     @Test
@@ -94,6 +111,8 @@ class AzureStorageParamsTest {
             conf.get("fs.azure.account.auth.type.teststorage.dfs.core.windows.net"));
         assertEquals("test-shared-key",
             conf.get("fs.azure.account.key.teststorage.dfs.core.windows.net"));
+        assertNull(conf.get("fs.azure.account.hns.enabled.teststorage.blob.core.windows.net"));
+        assertNull(conf.get("fs.azure.account.hns.enabled.teststorage.dfs.core.windows.net"));
     }
 
     @Test
