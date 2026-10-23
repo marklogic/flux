@@ -68,6 +68,8 @@ public class AzureStorageParams implements AzureStorageOptions {
     private void configureBlobStorage(Configuration conf) {
         if (OptionsUtil.hasText(accessKey)) {
             conf.set(String.format("fs.azure.account.key.%s.blob.core.windows.net", storageAccount), accessKey);
+            // Hadoop's namespace auto-detection can misidentify a Blob account as HNS; a --spark-conf value still wins.
+            conf.setIfUnset(String.format("fs.azure.account.hns.enabled.%s.blob.core.windows.net", storageAccount), "false");
         } else if (OptionsUtil.hasText(sasToken)) {
             configureBlobStorageWithSasToken(conf);
         } else {
