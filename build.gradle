@@ -92,6 +92,17 @@ subprojects {
        details.because "Forces Spark 4.2.x to use the latest libthrift, which is needed to avoid CVEs."
      }
 
+     // reactor-core 3.7.x has no fix for BDSA-2026-31725 / CVE-2026-47857, so Azure's 3.7.x/1.2.x pair is moved to the
+     // matching Reactor 2025.0.8 release train (reactor-core 3.8.8 and reactor-netty 1.3.8, which uses Netty 4.2.19).
+     if (details.requested.group.equals("io.projectreactor") && details.requested.name.equals("reactor-core")) {
+       details.useVersion "${reactorCoreVersion}"
+       details.because "Forces reactor-core to ${reactorCoreVersion} to address BDSA-2026-31725 per MLE-33629."
+     }
+     if (details.requested.group.equals("io.projectreactor.netty")) {
+       details.useVersion "${reactorNettyVersion}"
+       details.because "Keeps reactor-netty aligned with reactor-core ${reactorCoreVersion} per MLE-33629."
+     }
+
      if (details.requested.group.equals("org.codehaus.janino")) {
        details.useVersion "${janinoVersion}"
        details.because "Forces Janino to ${janinoVersion} to address CVE-2023-33546."
