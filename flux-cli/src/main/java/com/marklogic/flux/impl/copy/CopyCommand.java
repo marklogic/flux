@@ -177,6 +177,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         private boolean uriTemplateWarnOnMissingField;
 
         @CommandLine.Option(
+            names = "--output-uri-template-hash-values",
+            description = "Hashes each resolved expression value in the URI template using SHA-256 before constructing the document URI."
+        )
+        private boolean uriTemplateHashValues;
+
+        @CommandLine.Option(
             names = {"--output-doc-metadata"},
             description = "Specify one or more metadata values to be added to each document; e.g. --output-doc-metadata param=value ."
         )
@@ -252,7 +258,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
                 Options.WRITE_URI_REPLACE, uriReplace,
                 Options.WRITE_URI_SUFFIX, uriSuffix,
                 Options.WRITE_URI_TEMPLATE, uriTemplate,
-                Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null
+                Options.WRITE_URI_TEMPLATE_WARN_ON_MISSING_FIELD, uriTemplateWarnOnMissingField ? "true" : null,
+                Options.WRITE_URI_TEMPLATE_HASH_VALUES, uriTemplateHashValues ? "true" : null
             );
 
             if (additionalWriteOptions != null) {
@@ -391,6 +398,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsOptions uriTemplateWarnOnMissingField() {
             this.uriTemplateWarnOnMissingField = true;
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions uriTemplateHashValues() {
+            this.uriTemplateHashValues = true;
             return this;
         }
 

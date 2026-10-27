@@ -197,3 +197,19 @@ To disable this behavior, include the `--incremental-write-disable-json-canonica
 know that the JSON documents you write to MarkLogic do not require any canonicalization, e.g. the order of keys in 
 each document is guaranteed to be the same, and thus you can avoid the cost of canonicalizing each JSON document.
 
+## Generating deterministic URIs with URI templates
+
+Incremental write relies on consistent, deterministic URIs across repeated import runs so that existing documents in 
+MarkLogic can be matched against incoming records. While file-based imports naturally produce consistent URIs based on 
+file paths, tabular data sources (such as JDBC, CSV, or JSON lines) often lack inherent file paths.
+
+In such cases, you can combine `--incremental-write` with `--uri-template` and `--uri-template-hash-values` (added in 
+Flux 2.2.0). Hashing expression values in the template produces consistent, deterministic URIs while preventing 
+sensitive primary keys (such as SSNs or account numbers) from appearing verbatim in document URIs:
+
+    --incremental-write \
+    --uri-template "/employee/{id}.json" \
+    --uri-template-hash-values
+
+Note that unsalted SHA-256 hashing provides pseudonymization rather than full anonymization, as low-entropy values 
+could potentially be recovered via dictionary or brute-force attacks.
