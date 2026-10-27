@@ -133,6 +133,11 @@ bin\flux export-files ^
 {% endtab %}
 {% endtabs %}
 
+> When using `--azure-access-key`, Flux tells the underlying Hadoop library that the storage account does not have
+> "Hierarchical namespace" enabled. Prior to this, exporting to an Azure Blob Storage account with "Hierarchical
+> namespace" disabled could fail with the error `Blob Endpoint Url Cannot be used to initialize filesystem for HNS Account`.
+> You can override this setting via `--spark-conf "spark.hadoop.fs.azure.account.hns.enabled.your-storage-account.blob.core.windows.net=true"`.
+
 **SAS Token Authentication**
 
 If you are using [SAS (Shared Access Signature) tokens](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview),
