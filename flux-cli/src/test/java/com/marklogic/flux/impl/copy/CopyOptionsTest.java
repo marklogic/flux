@@ -304,4 +304,60 @@ class CopyOptionsTest extends AbstractOptionsTest {
         assertFalse(options.containsKey(Options.WRITE_URI_TEMPLATE_HASH_VALUES),
             "WRITE_URI_TEMPLATE_HASH_VALUES must not be present when --output-uri-template-hash-values is not specified.");
     }
+
+    @Test
+    void incrementalWriteCliOptions() {
+        CopyCommand command = (CopyCommand) getCommand("copy",
+            "--connection-string", "test:test@host:8000",
+            "--incremental-write",
+            "--incremental-write-schema", "mySchema",
+            "--incremental-write-view", "myView",
+            "--incremental-write-hash-name", "customHash",
+            "--incremental-write-timestamp-name", "customTimestamp",
+            "--incremental-write-disable-json-canonicalization",
+            "--incremental-write-json-exclusion", "/json1",
+            "--incremental-write-xml-exclusion", "/xml1",
+            "--log-skipped", "789"
+        );
+
+        assertOptions(command.writeParams.makeOptions(),
+            Options.WRITE_INCREMENTAL, "true",
+            Options.WRITE_INCREMENTAL_SCHEMA, "mySchema",
+            Options.WRITE_INCREMENTAL_VIEW, "myView",
+            Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash",
+            Options.WRITE_INCREMENTAL_TIMESTAMP_KEY_NAME, "customTimestamp",
+            Options.WRITE_INCREMENTAL_CANONICALIZE_JSON, "false",
+            Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/json1",
+            Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, "/xml1",
+            Options.WRITE_LOG_SKIPPED_DOCUMENTS, "789"
+        );
+    }
+
+    @Test
+    void incrementalWriteApiOptions() {
+        CopyCommand command = new CopyCommand();
+        command.to(options -> options.incrementalWrite(iw -> iw
+            .enable()
+            .hashName("customHash")
+            .jsonExclusions("/a", "/b")
+            .logSkipped(0)));
+
+        Map<String, String> options = command.writeParams.makeOptions();
+        assertOptions(options,
+            Options.WRITE_INCREMENTAL, "true",
+            Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash",
+            Options.WRITE_INCREMENTAL_JSON_EXCLUSIONS, "/a\n/b"
+        );
+        assertFalse(options.containsKey(Options.WRITE_INCREMENTAL_SCHEMA));
+        assertFalse(options.containsKey(Options.WRITE_LOG_SKIPPED_DOCUMENTS),
+            "A value of 0 is omitted so that the connector's default of 0 - which disables logging - is used.");
+    }
+
+    @Test
+    void incrementalWriteNotEnabledByDefault() {
+        CopyCommand command = (CopyCommand) getCommand("copy",
+            "--connection-string", "test:test@host:8000"
+        );
+        assertFalse(command.writeParams.makeOptions().containsKey(Options.WRITE_INCREMENTAL));
+    }
 }

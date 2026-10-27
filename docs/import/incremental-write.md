@@ -9,7 +9,8 @@ Flux supports incremental writing, which skips writing a document to MarkLogic w
 changed since it was last written. This can significantly reduce load on MarkLogic and speed up repeated import runs
 when only a subset of your source data changes between runs.
 
-Incremental write can be applied to every import command regardless of the data source.
+Incremental write can be applied to every import command regardless of the data source, as well as to the `copy`
+command.
 
 ## Table of contents
 {: .no_toc .text-delta }
