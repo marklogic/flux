@@ -3,18 +3,20 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.IncrementalWriteOptions;
 import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.spark.Options;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Encapsulates all parameters related to incremental writing of documents.
  */
-class IncrementalWriteParams {
+public class IncrementalWriteParams implements IncrementalWriteOptions {
 
     @CommandLine.Option(
         names = "--incremental-write",
@@ -91,6 +93,10 @@ class IncrementalWriteParams {
         return hashKeyName;
     }
 
+    public void enable() {
+        this.enabled = true;
+    }
+
     public Map<String, String> makeOptions() {
         return OptionsUtil.makeOptions(
             Options.WRITE_INCREMENTAL, enabled ? "true" : null,
@@ -103,5 +109,49 @@ class IncrementalWriteParams {
             Options.WRITE_INCREMENTAL_XML_EXCLUSIONS, xmlExclusions.isEmpty() ? null : String.join("\n", xmlExclusions),
             Options.WRITE_LOG_SKIPPED_DOCUMENTS, OptionsUtil.integerOption(skippedInterval)
         );
+    }
+
+    @Override
+    public IncrementalWriteOptions schemaAndView(String schema, String view) {
+        this.schemaView = new SchemaViewGroup();
+        this.schemaView.schema = schema;
+        this.schemaView.view = view;
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions hashName(String hashName) {
+        this.hashKeyName = hashName;
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions timestampName(String timestampName) {
+        this.timestampKeyName = timestampName;
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions disableJsonCanonicalization() {
+        this.dontCanonicalizeJson = true;
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions jsonExclusions(String... jsonPointers) {
+        this.jsonExclusions = new ArrayList<>(Arrays.asList(jsonPointers));
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions xmlExclusions(String... xpathExpressions) {
+        this.xmlExclusions = new ArrayList<>(Arrays.asList(xpathExpressions));
+        return this;
+    }
+
+    @Override
+    public IncrementalWriteOptions logSkipped(int interval) {
+        this.skippedInterval = interval;
+        return this;
     }
 }

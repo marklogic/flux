@@ -37,6 +37,15 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
      */
     T embedder(Consumer<EmbedderOptions> consumer);
 
+    /**
+     * Enables incremental writing, which avoids writing documents that have not changed since they were last
+     * written to MarkLogic, and allows for customizing how it behaves.
+     *
+     * @param consumer for customizing incremental write behavior; use {@code options -> {}} to accept all defaults
+     * @since 2.2.0
+     */
+    T incrementalWrite(Consumer<IncrementalWriteOptions> consumer);
+
     T temporalCollection(String temporalCollection);
 
     T threadCount(int threadCount);

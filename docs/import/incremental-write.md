@@ -9,7 +9,8 @@ Flux supports incremental writing, which skips writing a document to MarkLogic w
 changed since it was last written. This can significantly reduce load on MarkLogic and speed up repeated import runs
 when only a subset of your source data changes between runs.
 
-Incremental write can be applied to every import command regardless of the data source.
+Incremental write can be applied to every import command regardless of the data source, as well as to the `copy`
+command.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -213,3 +214,42 @@ sensitive primary keys (such as SSNs or account numbers) from appearing verbatim
 
 Note that unsalted SHA-256 hashing provides pseudonymization rather than full anonymization, as low-entropy values 
 could potentially be recovered via dictionary or brute-force attacks.
+
+## Using the Flux API
+
+Starting with Flux 2.2.0, incremental write can be configured via the [Flux API](../api.md) by calling
+`incrementalWrite` on the write options of any import command, or on the write options of the `copy` command. Calling
+`incrementalWrite` enables incremental write; the lambda passed to it can optionally customize its behavior:
+
+```
+Flux.importGenericFiles()
+    .connectionString("flux-example-user:password@localhost:8004")
+    .from("path/to/files")
+    .to(options -> options
+        .permissionsString("flux-example-role,read,flux-example-role,update")
+        .incrementalWrite(incrementalWrite -> incrementalWrite
+            .schemaAndView("example", "incrementalWrite")
+            .hashName("myCustomHashKey")
+            .timestampName("myWriteTimestamp")
+            .jsonExclusions("/lastModified", "/internalAudit/timestamp")
+            .logSkipped(500)))
+    .execute();
+```
+
+To enable incremental write with all default settings, use `.incrementalWrite(incrementalWrite -> {})`.
+
+The following table maps each CLI option to its equivalent API method:
+
+| CLI option | API method |
+| --- | --- |
+| `--incremental-write` | `incrementalWrite(...)` |
+| `--incremental-write-schema` and `--incremental-write-view` | `schemaAndView(schema, view)` |
+| `--incremental-write-hash-name` | `hashName(name)` |
+| `--incremental-write-timestamp-name` | `timestampName(name)` |
+| `--incremental-write-disable-json-canonicalization` | `disableJsonCanonicalization()` |
+| `--incremental-write-json-exclusion` | `jsonExclusions(jsonPointers...)` |
+| `--incremental-write-xml-exclusion` | `xmlExclusions(xpathExpressions...)` |
+| `--log-skipped` | `logSkipped(interval)` |
+
+Namespace prefixes used in XML exclusions are registered via the splitter options -
+e.g. `.splitter(splitter -> splitter.xmlNamespaces("ex", "http://example.org/ns"))`.

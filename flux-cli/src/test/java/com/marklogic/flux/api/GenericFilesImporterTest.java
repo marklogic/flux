@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.api;
 
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.flux.AbstractTest;
 import com.marklogic.spark.ConnectorException;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,40 @@ class GenericFilesImporterTest extends AbstractTest {
 
         assertCollectionSize("api-files", 4);
         assertCollectionSize("second-collection", 4);
+    }
+
+    @Test
+    void incrementalWrite() {
+        Runnable importFiles = () -> Flux.importGenericFiles()
+            .connectionString(makeConnectionString())
+            .from(PATH)
+            .to(options -> options
+                .collections("api-files")
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .uriReplace(".*/mixed-files,''")
+                .incrementalWrite(iw -> iw
+                    .hashName("apiHash")
+                    .timestampName("apiTimestamp")))
+            .execute();
+
+        importFiles.run();
+        assertCollectionSize("api-files", 4);
+        DocumentMetadataHandle.DocumentMetadataValues firstValues = readMetadataValues("/hello.json");
+        assertNotNull(firstValues.get("apiHash"));
+        String firstTimestamp = firstValues.get("apiTimestamp");
+        assertNotNull(firstTimestamp);
+
+        importFiles.run();
+        DocumentMetadataHandle.DocumentMetadataValues secondValues = readMetadataValues("/hello.json");
+        assertEquals(firstValues.get("apiHash"), secondValues.get("apiHash"));
+        assertEquals(firstTimestamp, secondValues.get("apiTimestamp"),
+            "The unchanged document should have been skipped on the second import, so its timestamp should not change.");
+    }
+
+    private DocumentMetadataHandle.DocumentMetadataValues readMetadataValues(String uri) {
+        return getDatabaseClient().newDocumentManager()
+            .readMetadata(uri, new DocumentMetadataHandle())
+            .getMetadataValues();
     }
 
     @Test
