@@ -11,6 +11,7 @@ import com.marklogic.flux.impl.OptionsUtil;
 import com.marklogic.flux.impl.export.ReadDocumentParams;
 import com.marklogic.flux.impl.importdata.ClassifierParams;
 import com.marklogic.flux.impl.importdata.EmbedderParams;
+import com.marklogic.flux.impl.importdata.IncrementalWriteParams;
 import com.marklogic.flux.impl.importdata.NucliaParams;
 import com.marklogic.flux.impl.importdata.SplitterParams;
 import com.marklogic.spark.Options;
@@ -213,6 +214,9 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @CommandLine.Mixin
         private NucliaParams nucliaParams = new NucliaParams();
 
+        @CommandLine.Mixin
+        private IncrementalWriteParams incrementalWriteParams = new IncrementalWriteParams();
+
         protected Map<String, String> makeOptions() {
             Map<String, String> options = splitterParams != null ? splitterParams.makeOptions() : new HashMap<>();
 
@@ -227,6 +231,8 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
             if (nucliaParams != null) {
                 options.putAll(nucliaParams.makeOptions());
             }
+
+            options.putAll(incrementalWriteParams.makeOptions());
 
             if (metadataValues != null) {
                 metadataValues.entrySet().forEach(entry -> options.put(
@@ -332,6 +338,12 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
         @Override
         public CopyWriteDocumentsOptions classifier(Consumer<ClassifierOptions> consumer) {
             consumer.accept(classifierParams);
+            return this;
+        }
+
+        @Override
+        public CopyWriteDocumentsOptions incrementalWrite(Consumer<IncrementalWriteOptions> consumer) {
+            consumer.accept(incrementalWriteParams);
             return this;
         }
 
