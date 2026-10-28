@@ -12,6 +12,12 @@ package com.marklogic.flux.api;
 public interface IncrementalWriteOptions {
 
     /**
+     * Enables incremental writing. Equivalent to the {@code --incremental-write} CLI option. None of the other
+     * options have any effect unless this is called.
+     */
+    IncrementalWriteOptions enable();
+
+    /**
      * @param schema Name of the schema to use for detecting changes when performing incremental writes.
      * @param view   Name of the view to use for detecting changes when performing incremental writes.
      */

@@ -343,7 +343,6 @@ public class CopyCommand extends AbstractCommand<DocumentCopier> implements Docu
 
         @Override
         public CopyWriteDocumentsOptions incrementalWrite(Consumer<IncrementalWriteOptions> consumer) {
-            incrementalWriteParams.enable();
             consumer.accept(incrementalWriteParams);
             return this;
         }

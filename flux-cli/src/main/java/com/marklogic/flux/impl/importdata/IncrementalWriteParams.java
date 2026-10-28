@@ -93,8 +93,10 @@ public class IncrementalWriteParams implements IncrementalWriteOptions {
         return hashKeyName;
     }
 
-    public void enable() {
+    @Override
+    public IncrementalWriteOptions enable() {
         this.enabled = true;
+        return this;
     }
 
     public Map<String, String> makeOptions() {

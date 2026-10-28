@@ -337,6 +337,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
     void incrementalWriteApiOptions() {
         CopyCommand command = new CopyCommand();
         command.to(options -> options.incrementalWrite(iw -> iw
+            .enable()
             .hashName("customHash")
             .jsonExclusions("/a", "/b")
             .logSkipped(0)));

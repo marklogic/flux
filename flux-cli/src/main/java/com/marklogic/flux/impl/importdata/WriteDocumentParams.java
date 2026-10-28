@@ -313,7 +313,6 @@ public class WriteDocumentParams<T extends WriteDocumentsOptions> implements Wri
 
     @Override
     public T incrementalWrite(Consumer<IncrementalWriteOptions> consumer) {
-        incrementalWriteParams.enable();
         consumer.accept(incrementalWriteParams);
         return (T) this;
     }

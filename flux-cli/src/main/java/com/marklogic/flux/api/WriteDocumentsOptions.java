@@ -38,10 +38,10 @@ public interface WriteDocumentsOptions<T extends WriteDocumentsOptions> {
     T embedder(Consumer<EmbedderOptions> consumer);
 
     /**
-     * Enables incremental writing, which avoids writing documents that have not changed since they were last
-     * written to MarkLogic, and allows for customizing how it behaves.
+     * Configures incremental writing, which avoids writing documents that have not changed since they were last
+     * written to MarkLogic. Incremental writing must be enabled via {@link IncrementalWriteOptions#enable()}.
      *
-     * @param consumer for customizing incremental write behavior; use {@code options -> {}} to accept all defaults
+     * @param consumer for configuring incremental write behavior
      * @since 2.2.0
      */
     T incrementalWrite(Consumer<IncrementalWriteOptions> consumer);

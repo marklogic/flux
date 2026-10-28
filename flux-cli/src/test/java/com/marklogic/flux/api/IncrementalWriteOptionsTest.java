@@ -20,6 +20,7 @@ class IncrementalWriteOptionsTest extends AbstractOptionsTest {
     void allOptions() {
         Map<String, String> options = makeWriteOptions(writeOptions -> writeOptions
             .incrementalWrite(iw -> iw
+                .enable()
                 .schemaAndView("mySchema", "myView")
                 .hashName("customHash")
                 .timestampName("customTimestamp")
@@ -45,8 +46,7 @@ class IncrementalWriteOptionsTest extends AbstractOptionsTest {
 
     @Test
     void defaults() {
-        Map<String, String> options = makeWriteOptions(writeOptions -> writeOptions.incrementalWrite(iw -> {
-        }));
+        Map<String, String> options = makeWriteOptions(writeOptions -> writeOptions.incrementalWrite(IncrementalWriteOptions::enable));
 
         assertOptions(options,
             Options.WRITE_INCREMENTAL, "true",
@@ -65,6 +65,17 @@ class IncrementalWriteOptionsTest extends AbstractOptionsTest {
     void notEnabledByDefault() {
         Map<String, String> options = makeWriteOptions(writeOptions -> writeOptions.collections("anything"));
         assertFalse(options.containsKey(Options.WRITE_INCREMENTAL));
+    }
+
+    @Test
+    void notEnabledWithoutCallingEnable() {
+        Map<String, String> options = makeWriteOptions(writeOptions -> writeOptions
+            .incrementalWrite(iw -> iw.hashName("customHash")));
+
+        assertFalse(options.containsKey(Options.WRITE_INCREMENTAL),
+            "Mirroring the CLI, incremental write should only be enabled when enable() is called, just like " +
+                "--incremental-write-hash-name has no effect without --incremental-write.");
+        assertOptions(options, Options.WRITE_INCREMENTAL_HASH_KEY_NAME, "customHash");
     }
 
     private Map<String, String> makeWriteOptions(Consumer<GenericFilesImporter.WriteGenericDocumentsOptions> consumer) {

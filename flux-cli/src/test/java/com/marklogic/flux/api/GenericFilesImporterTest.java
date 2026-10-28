@@ -42,20 +42,20 @@ class GenericFilesImporterTest extends AbstractTest {
                 .permissionsString(DEFAULT_PERMISSIONS)
                 .uriReplace(".*/mixed-files,''")
                 .incrementalWrite(iw -> iw
-                    .hashName("apiHash")
+                    .enable()
                     .timestampName("apiTimestamp")))
             .execute();
 
         importFiles.run();
         assertCollectionSize("api-files", 4);
         DocumentMetadataHandle.DocumentMetadataValues firstValues = readMetadataValues("/hello.json");
-        assertNotNull(firstValues.get("apiHash"));
+        assertNotNull(firstValues.get("incrementalWriteHash"));
         String firstTimestamp = firstValues.get("apiTimestamp");
         assertNotNull(firstTimestamp);
 
         importFiles.run();
         DocumentMetadataHandle.DocumentMetadataValues secondValues = readMetadataValues("/hello.json");
-        assertEquals(firstValues.get("apiHash"), secondValues.get("apiHash"));
+        assertEquals(firstValues.get("incrementalWriteHash"), secondValues.get("incrementalWriteHash"));
         assertEquals(firstTimestamp, secondValues.get("apiTimestamp"),
             "The unchanged document should have been skipped on the second import, so its timestamp should not change.");
     }
