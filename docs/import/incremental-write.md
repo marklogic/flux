@@ -130,7 +130,7 @@ At the end of a run, Flux logs a `Skipped count: N` message when any documents w
 the usual `Success count` message. This gives you a final tally of how many documents were skipped during the run.
 
 During a run, Flux also logs periodic `Documents skipped: N` messages showing a running total of skipped documents.
-By default these are logged on every 10,000 skipped documents. You can customize this interval with `--log-skipped`.
+By default, these are logged on every 10,000 skipped documents. You can customize this interval with `--log-skipped`.
 For example, the following will log a progress message on every 500 skipped documents:
 
     --log-skipped 500
@@ -151,6 +151,21 @@ name you want the timestamp stored under:
     --incremental-write-timestamp-name myWriteTimestamp
 
 Documents that are skipped due to an unchanged hash will not have their timestamp updated.
+
+## Matching on a field instead of the URI
+
+In some cases, the URI of the document that an incoming document should be compared to has been altered such that 
+the original URI no longer exists. Starting with Flux 2.2.0, the `--incremental-write-source-uri-name` option can be used to 
+specify a document metadata key that contains the original URI of the document, which Flux will set when it writes the 
+document. You must then create a [MarkLogic field](https://docs.marklogic.com/12.0/admin-help/field) on this metadata 
+key, and Flux will retrieve hashes via this field instead of via the document URI. 
+
+Note that you can use this option when using a schema and a view as well. Flux will store the document URI using the
+given metadata key name. You can then use a view that projects the `uri` column value from the field instead of from 
+the document URI. For example, given an option of `--incremental-write-source-uri-name mySourceUriKey`, 
+the `uri` column definition in a TDE template would have the following expression:
+
+    xdmp:node-metadata-value(., 'mySourceUriKey')
 
 ## Controlling the hash calculation
 
