@@ -1,0 +1,36 @@
+---
+# Iron Bank functional tests (pipeline README: "Functional testing"). Container tests run each
+# command in the built image with podman; Kubernetes tests start one pod in a KIND cluster and
+# expect it to reach Completed or Running within 180 seconds.
+#
+# Every Flux command, including `version`, starts Spark and therefore needs the writable /tmp the
+# test containers provide by default.
+docker:
+  - name: Flux version
+    description: Flux starts Spark in local mode and reports its version.
+    commands:
+      - command: flux version
+        timeout_seconds: 120
+        expected_output: "Flux version"
+  - name: Runs as non-root
+    description: The container user is uid 1000.
+    commands:
+      - command: sh -c "id -u"
+        timeout_seconds: 30
+        expected_output: "1000"
+  - name: Installation is read-only
+    description: The flux user cannot write under /opt/flux.
+    commands:
+      - command: sh -c "touch /opt/flux/should-fail 2>&1 || echo WRITE-DENIED"
+        timeout_seconds: 30
+        expected_output: "WRITE-DENIED"
+  - name: Help exits 2
+    description: Flux prints its usage and, like the desktop CLI, exits with code 2.
+    commands:
+      - command: sh -c "flux help >/dev/null 2>&1; echo exit=$?"
+        timeout_seconds: 120
+        expected_output: "exit=2"
+
+kubernetes:
+  command: ["/usr/local/bin/flux-entrypoint"]
+  args: ["version"]

@@ -14,3 +14,9 @@ flux-version.properties
 docker/sonarqube
 optionsExperiments
 dep.txt
+
+# Inputs staged into the Iron Bank build context by `./gradlew ironbankStage`, and local test output.
+ironbank/marklogic-flux.zip
+ironbank/ext-opt/*.jar
+ironbank-local/ext/*.jar
+ironbank-local/export

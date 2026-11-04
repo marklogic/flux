@@ -1,0 +1,105 @@
+MarkLogic Flux (CLI for ingestion, embeddings, etc.) is not available as an IronBank-certified container image, blocking full compliance for MarkLogic-based solutions in DoD environments. As we move toward a unified PDP SKU, customers expect *all key components*—including Flux—to be IronBank-compliant, not just MarkLogic Server.
+
+Check Mark h3. Persona
+
+ 
+
+DoD DevSecOps Engineers / Platform Teams
+
+Application Developers on Defense Programs (using Flux for ingestion & embeddings)
+
+Cybersecurity / ATO / RMF Teams
+
+System Integrators & Solution Architects (Federal)
+
+Progress Federal Sales & SEs
+Check Mark h3. Outcome (Customer Success)
+
+MarkLogic Flux CLI is available as an IronBank-hardened container image, starting with Flux 2.1.
+
+DevSecOps teams can invoke Flux via an ephemeral container (runs a command, then exits) from IronBank in both classified and unclassified environments.
+
+Customers can assemble a fully IronBank-compliant stack: MarkLogic Server + Flux + (in future) Data Hub/FastTrack.
+
+Future Flux versions continue to ship with corresponding IronBank images.
+Check Mark h3. Acceptance Criteria
+
+IronBank Image Availability
+
+An IronBank repository for MarkLogic Flux exists in Repo1 with tags starting from Flux 2.1.
+
+The image:
+
+Uses an IronBank-approved base image, aligned with MarkLogic Server’s IronBank image strategy.
+
+Conforms to IronBank Dockerfile Requirements and passes IronBank’s hardening & vulnerability scanning pipeline.
+
+Is digitally signed and approved in IronBank.
+
+From a DoD-like environment, a user can:
+
+Pull the image from IronBank.
+
+Run a Flux command (e.g., ingestion list / ingestion run / embeddings operation)
+
+Observe that the container executes the command and exits cleanly (no long-running process).
+
+A CI/CD or job example is validated and documented where:
+
+The pipeline spins up the Flux container.
+
+Runs a real ingestion or embeddings command against a MarkLogic environment.
+
+The job completes successfully and the container terminates automatically.
+
+Integration & Documentation
+
+A reference example (doc or architecture snippet) shows a fully IronBank-based stack: MarkLogic Server + Flux (and optionally Data Hub/FastTrack).
+
+Flux 2.1 documentation (release notes or product docs) includes:
+
+IronBank image coordinates and usage examples for ephemeral invocation.
+
+Any config/volume/env patterns required to connect Flux to MarkLogic in secure environments.
+
+Ownership & Lifecycle
+
+Maintaining Flux IronBank Dockerfile & repo.
+
+Handling IronBank scan findings and rebuilds.
+
+Publishing images for future Flux releases (2.2+ etc.).
+
+A simple internal note describes the versioning policy (which Flux versions get IronBank images and for how long they’ll be supported).
+Check Mark h3. Value (for Progress)
+
+Enables/expands DoD and Federal deals that require IronBank across the full stack.
+
+Strengthens the unified PDP / MarkLogic platform story for secure, compliant deployments.
+
+Increases stickiness and competitiveness vs. vendors that only harden core databases.
+
+Reuses the existing IronBank process and bases from MarkLogic Server, improving operational efficiency.
+Check Mark h3. Notes and Assumptions
+
+Please reach out to the kube ninjas team to coordinate the development and publishing of a flux container. They have all of the proceedures captured for building and publishing to dockerhub as well as IronBank.
+
+Scope is MarkLogic Flux CLI only (not server/Data Hub/FastTrack images—handled separately).
+
+The same IronBank base images and hardening pattern used for MarkLogic Server will be reused for Flux; Architecture (James) will finalize specifics.
+
+The image aims for functional parity with standard Flux 2.1+ CLI.
+
+IronBank references for implementation details:
+
+Overview: https://docs-ironbank.dso.mil/overview/
+
+Dockerfile Requirements: https://docs-ironbank.dso.mil/hardening/dockerfile-requirements/
+
+Choosing Base Images: https://docs-ironbank.dso.mil/hardening/choosing-base-image/
+
+Contributor Onboarding: https://docs-ironbank.dso.mil/quickstart/contributor-onboarding/
+
+Pipeline Details: https://docs-ironbank.dso.mil/quickstart/pipeline/
+
+FAQ: https://docs-ironbank.dso.mil/faq/

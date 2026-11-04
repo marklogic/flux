@@ -1,0 +1,8 @@
+# Allow-list: only what the Dockerfile COPYs reaches the build context, both locally and in
+# the Iron Bank pipeline (which stages marklogic-flux.zip from hardening_manifest.yaml).
+*
+!Dockerfile
+!scripts/
+!config/
+!ext-opt/
+!marklogic-flux.zip

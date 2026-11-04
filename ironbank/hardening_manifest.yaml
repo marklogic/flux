@@ -1,0 +1,52 @@
+---
+# Iron Bank hardening manifest for the MarkLogic Flux CLI image.
+# Schema: https://repo1.dso.mil/ironbank-tools/ironbank-pipeline/-/raw/master/schema/hardening_manifest.schema.json
+#
+# Values marked TODO are settled during Iron Bank onboarding (phase 2); everything else is final.
+# `./gradlew ironbankManifestResources` prints the `resources` block (URL + sha256) for a Flux release.
+apiVersion: v1
+
+# Registry path under registry1.dso.mil/ironbank/ (the `ironbank/` namespace is implied).
+# TODO: confirm the group with the Iron Bank onboarding team; this follows the existing
+# progress/marklogicserver/marklogicserver12 image.
+name: progress/marklogicserver/flux
+
+# The most specific tag first; `latest` last.
+tags:
+  - "2.2.0"
+  - "latest"
+
+# Only BASE_IMAGE and BASE_TAG belong here; the pipeline injects BASE_REGISTRY.
+args:
+  BASE_IMAGE: redhat/openjdk/openjdk17-runtime-ubi9-slim
+  BASE_TAG: "1.17"
+
+# Labels are set here, never in the Dockerfile.
+labels:
+  org.opencontainers.image.title: MarkLogic Flux
+  org.opencontainers.image.description: >-
+    MarkLogic Flux is a command-line tool for importing, exporting, copying and reprocessing data
+    in MarkLogic Server. Each container invocation runs one Flux command and exits.
+  org.opencontainers.image.licenses: Apache-2.0
+  org.opencontainers.image.url: https://github.com/marklogic/flux
+  org.opencontainers.image.vendor: Progress Software Corporation
+  org.opencontainers.image.version: "2.2.0"
+  mil.dso.ironbank.image.keywords: marklogic,flux,spark,etl,cli,import,export,nosql,database
+  mil.dso.ironbank.image.type: opensource
+  mil.dso.ironbank.product.name: MarkLogic Server
+
+# Every file the build needs. The pipeline downloads each one, verifies the checksum and places it
+# in the build context under `filename`. The Dockerfile only ever refers to the version-less
+# filename, so a Flux release changes just `url`, `value`, `tags` and the version label.
+resources:
+  - url: https://github.com/marklogic/flux/releases/download/2.2.0/marklogic-flux-2.2.0.zip
+    filename: marklogic-flux.zip
+    validation:
+      type: sha256
+      value: "TODO-run-gradlew-ironbankManifestResources-against-the-release-zip"
+
+# TODO: Repo1 (GitLab) usernames of the Progress maintainers.
+maintainers:
+  - name: TODO Maintainer name
+    username: TODO-repo1-username
+    email: TODO@progress.com

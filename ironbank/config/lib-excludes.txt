@@ -1,0 +1,18 @@
+# Jars removed from /opt/flux/lib when the image is built. One shell glob per line; lines that
+# are blank or start with '#' are ignored. Every entry must carry the reason it is safe to drop,
+# because this list doubles as the evidence for Iron Bank (VAT) justifications.
+#
+# Phase 1 only removes platform payloads that can never load on linux/amd64. Phase 2 may extend
+# the list with jars that scanners flag and that Flux provably does not use.
+
+# Netty native transports and BoringSSL builds for other operating systems / CPU architectures.
+# Flux additionally starts the JVM with -Dio.netty.handler.ssl.noOpenSsl=true, so even the
+# linux-x86_64 tcnative jar is never used; it is kept in phase 1 to stay byte-identical to the
+# desktop distribution's behaviour and can be removed in phase 2.
+netty-tcnative-boringssl-static-*-osx-*.jar
+netty-tcnative-boringssl-static-*-windows-*.jar
+netty-tcnative-boringssl-static-*-linux-aarch_64.jar
+netty-transport-native-epoll-*-linux-aarch_64.jar
+netty-transport-native-epoll-*-linux-riscv64.jar
+netty-transport-native-kqueue-*.jar
+netty-resolver-dns-native-macos-*.jar

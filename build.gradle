@@ -122,6 +122,124 @@ subprojects {
   }
 }
 
+// ---------------------------------------------------------------------------------------------
+// Iron Bank container image. The ./ironbank directory is the Repo1 project (Dockerfile,
+// hardening_manifest.yaml, README, LICENSE, scripts, config); ./ironbank-local holds the local
+// validation harness. See ironbank/README.md and docs/ironbank/container-design.md.
+// ---------------------------------------------------------------------------------------------
+def ironbankDir = layout.projectDirectory.dir("ironbank")
+def ironbankLocalDir = layout.projectDirectory.dir("ironbank-local")
+def embedderModules = ["minilm", "ollama", "azure-open-ai"]
+def ironbankWithEmbedders = (findProperty("ironbankWithEmbedders") ?: "false").toString().toBoolean()
+
+// Building the distribution from `develop` needs the internal Artifactory (SNAPSHOT connector). Off the
+// Progress network, stage a downloaded release zip instead: -PironbankFluxZip=path/to/marklogic-flux-2.1.2.zip
+def ironbankFluxZip = findProperty("ironbankFluxZip")
+
+tasks.register("ironbankStageZip", Copy) {
+  group = "ironbank"
+  description = "Copies the Flux distribution zip into ./ironbank as marklogic-flux.zip (gitignored). Use -PironbankFluxZip=<file> to stage a downloaded release zip instead of building one."
+  if (ironbankFluxZip) {
+    from ironbankFluxZip
+  } else {
+    // Subprojects are evaluated after the root script, so their tasks are looked up lazily.
+    dependsOn ":flux-cli:distZip"
+    from { project(":flux-cli").tasks.named("distZip") }
+  }
+  rename { "marklogic-flux.zip" }
+  into ironbankDir
+}
+
+tasks.register("ironbankStageEmbedders", Copy) {
+  group = "ironbank"
+  description = "Copies the embedder shadow jars into ./ironbank-local/ext for the mounted-jar smoke tests."
+  embedderModules.each { name ->
+    dependsOn ":flux-embedding-model-${name}:shadowJar"
+    from({ project(":flux-embedding-model-${name}").tasks.named("shadowJar") }) {
+      rename { "flux-embedding-model-${name}.jar" }
+    }
+  }
+  into ironbankLocalDir.dir("ext")
+}
+
+tasks.register("ironbankStage") {
+  group = "ironbank"
+  description = "Stages the image build inputs. Add -PironbankWithEmbedders=true to bake the embedder jars into /opt/flux/ext."
+  dependsOn "ironbankStageZip", "ironbankStageEmbedders"
+  doLast {
+    def extOpt = ironbankDir.dir("ext-opt").asFile
+    extOpt.mkdirs()
+    fileTree(extOpt) { include "*.jar" }.each { it.delete() }
+    if (ironbankWithEmbedders) {
+      copy {
+        from ironbankLocalDir.dir("ext")
+        include "*.jar"
+        into extOpt
+      }
+    }
+  }
+}
+
+tasks.register("ironbankBuild", Exec) {
+  group = "ironbank"
+  description = "Builds the Iron Bank-style image locally. Override the base with -PironbankBaseRegistry, -PironbankBaseImage and -PironbankBaseTag."
+  dependsOn "ironbankStage"
+  workingDir ironbankDir
+  def baseRegistry = findProperty("ironbankBaseRegistry") ?: "registry.access.redhat.com"
+  def baseImage = findProperty("ironbankBaseImage") ?: "ubi9/openjdk-17-runtime"
+  def baseTag = findProperty("ironbankBaseTag") ?: "1.21"
+  def imageName = findProperty("ironbankImageName") ?: "marklogic-flux-ironbank"
+  doFirst {
+    // Scripts and config end up inside a Linux image; CRLF endings would break them silently.
+    fileTree(ironbankDir) { include "Dockerfile", "scripts/**", "config/**" }.each { f ->
+      if (f.text.contains("\r")) {
+        throw new GradleException("${f} has CRLF line endings; run 'git add --renormalize ironbank' (see .gitattributes).")
+      }
+    }
+  }
+  commandLine "docker", "build", "--pull",
+    "--build-arg", "BASE_REGISTRY=${baseRegistry}",
+    "--build-arg", "BASE_IMAGE=${baseImage}",
+    "--build-arg", "BASE_TAG=${baseTag}",
+    "-t", "${imageName}:${version}",
+    "-t", "${imageName}:local",
+    "."
+}
+
+tasks.register("ironbankManifestResources") {
+  group = "ironbank"
+  description = "Prints the hardening_manifest.yaml 'resources' entry (GitHub release URL and sha256) for the staged Flux zip."
+  dependsOn "ironbankStageZip"
+  doLast {
+    def zip = ironbankDir.file("marklogic-flux.zip").asFile
+    def digest = java.security.MessageDigest.getInstance("SHA-256")
+    zip.withInputStream { stream ->
+      byte[] buffer = new byte[1 << 16]
+      int read
+      while ((read = stream.read(buffer)) > 0) { digest.update(buffer, 0, read) }
+    }
+    def sha256 = digest.digest().encodeHex().toString()
+    println """
+resources:
+  - url: https://github.com/marklogic/flux/releases/download/${version}/marklogic-flux-${version}.zip
+    filename: marklogic-flux.zip
+    validation:
+      type: sha256
+      value: "${sha256}"
+
+(sha256 of the locally staged ${zip.name}; for a submission, compute it against the published release asset)
+"""
+  }
+}
+
+tasks.register("ironbankSmokeTest", Exec) {
+  group = "ironbank"
+  description = "Runs ironbank-local/smoke-test.sh against the locally built image. Requires the docker compose test stack and the deployed test-app."
+  dependsOn "ironbankBuild"
+  workingDir layout.projectDirectory
+  commandLine "bash", "ironbank-local/smoke-test.sh"
+}
+
 tasks.register("gettingStartedZip", Zip) {
   description = "Creates a zip of the getting-started project that is intended to be included as a downloadable file " +
     "on the GitHub release page."

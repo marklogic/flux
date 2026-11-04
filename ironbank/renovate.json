@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^hardening_manifest\\.yaml$"],
+      "matchStrings": [
+        "https://github\\.com/marklogic/flux/releases/download/(?<currentValue>[^/\\s]+)/marklogic-flux-[^/\\s]+\\.zip"
+      ],
+      "depNameTemplate": "marklogic/flux",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": ["marklogic/flux"],
+      "groupName": "MarkLogic Flux release"
+    }
+  ]
+}

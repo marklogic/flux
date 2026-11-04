@@ -1,0 +1,5 @@
+# Files that end up inside Linux containers must keep LF line endings regardless of the
+# developer's OS, and shell scripts anywhere in the repo must as well.
+ironbank/**        text eol=lf
+ironbank-local/**  text eol=lf
+*.sh               text eol=lf

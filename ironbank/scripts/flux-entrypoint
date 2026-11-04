@@ -1,0 +1,28 @@
+#!/bin/bash
+# Container entrypoint for the MarkLogic Flux image.
+#
+#   docker run IMG import-files --path /workspace/data ...   -> flux import-files ...
+#   docker run IMG @/run/secrets/flux/options.txt            -> flux @/run/secrets/flux/options.txt
+#   docker run IMG --help                                    -> flux --help
+#   docker run IMG sh /workspace/batch.sh                    -> sh /workspace/batch.sh
+#   docker run IMG                                           -> flux help (exit code 2)
+#
+# Anything whose first argument resolves to an executable on PATH (sh, bash, java, a mounted
+# script) runs as-is, so a batch script can invoke `flux ...` as many times as it needs, in
+# sequence or in parallel. Everything else is handed to Flux, which also covers abbreviated
+# command names such as `imp-f`; an unknown command makes Flux print its usage and exit 2.
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+  exec flux help
+fi
+
+case "$1" in
+  -*|@*) exec flux "$@" ;;
+esac
+
+if command_path="$(command -v -- "$1" 2>/dev/null)" && [[ -x "$command_path" ]]; then
+  exec "$@"
+fi
+
+exec flux "$@"

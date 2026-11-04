@@ -1,0 +1,40 @@
+# Adds the locally built Flux container image to the test stack in ../docker-compose.yml, with the
+# same runtime restrictions a hardened Kubernetes cluster applies (non-root, read-only root
+# filesystem, all capabilities dropped, no privilege escalation, a single writable tmpfs at /tmp).
+#
+#   ./gradlew ironbankBuild
+#   docker compose -f docker-compose.yml -f ironbank-local/docker-compose.ironbank.yml \
+#       run --rm flux import-files @/run/secrets/flux/test-app.txt --path /workspace/data/mixed-files
+#
+# The `flux` profile keeps the service out of a plain `docker compose up -d`.
+services:
+  flux:
+    image: ${FLUX_IMAGE:-marklogic-flux-ironbank:local}
+    profiles: ["flux"]
+    depends_on:
+      - marklogic
+    user: "1000:0"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      FLUX_LOG_LEVEL: ${FLUX_LOG_LEVEL:-INFO}
+      FLUX_LOG_FORMAT: ${FLUX_LOG_FORMAT:-text}
+    volumes:
+      # Spark temp/spill and native-library extraction. A `type: tmpfs` mount is created without
+      # the noexec flag that `docker run --tmpfs` adds by default.
+      - type: tmpfs
+        target: /tmp
+        tmpfs:
+          size: 2147483648
+      # Options files play the role of a Kubernetes Secret mounted at /run/secrets/flux.
+      - ./ironbank-local/options:/run/secrets/flux:ro
+      # Test fixtures from the Flux test suite.
+      - ./flux-cli/src/test/resources:/workspace/data:ro
+      # Export target.
+      - ./ironbank-local/export:/export
+      # Optional extension jars (embedders, JDBC drivers): `./gradlew ironbankStage` places the
+      # embedder jars here. Comment this out to test the image without any extensions.
+      - ./ironbank-local/ext:/opt/flux/ext:ro

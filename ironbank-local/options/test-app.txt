@@ -1,0 +1,4 @@
+--connection-string
+"admin:admin@marklogic:8003"
+--spark-master-url
+local[2]

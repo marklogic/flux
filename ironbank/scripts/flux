@@ -1,0 +1,64 @@
+#!/bin/bash
+# Wrapper around /opt/flux/bin/flux (the Gradle-generated launcher) that applies the image's
+# runtime defaults. It is on PATH so batch scripts can simply call `flux ...`.
+#
+# Environment variables understood here (all optional):
+#   FLUX_DEFAULT_JVM_OPTS  image defaults, prepended to JAVA_OPTS (set in the Dockerfile)
+#   JAVA_OPTS / FLUX_OPTS  extra JVM options; applied after the defaults, so they win
+#   FLUX_LOG_FORMAT        "json" switches the console log layout to JSON (ECS field names)
+#   FLUX_LOG_LEVEL         log level for the com.marklogic.* loggers (default INFO)
+#   FLUX_LOG_DIR           if set, stdout/stderr are also written to one file per invocation
+#   TMPDIR                 checked for writability; Spark and native libraries need it
+set -euo pipefail
+
+FLUX_HOME="${FLUX_HOME:-/opt/flux}"
+
+# bin/flux only falls back to `which java` when JAVA_HOME is unset, and ubi9-minimal has no
+# `which`, so derive JAVA_HOME from the java on PATH if the base image did not set it.
+if [[ -z "${JAVA_HOME:-}" ]]; then
+  JAVA_HOME="$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")"
+  export JAVA_HOME
+fi
+
+jvm_opts="${FLUX_DEFAULT_JVM_OPTS:-}"
+# Under an arbitrary uid with no passwd entry the JDK reports user.home as "?", which breaks
+# anything that resolves "~" (AWS profiles, DJL); pin it to the HOME the image provides.
+if [[ -n "${HOME:-}" ]]; then
+  jvm_opts+=" -Duser.home=${HOME}"
+fi
+if [[ "${FLUX_LOG_FORMAT:-text}" == "json" ]]; then
+  jvm_opts+=" -Dlog4j2.configurationFile=${FLUX_HOME}/conf/log4j2-json.properties"
+fi
+export JAVA_OPTS="${jvm_opts} ${JAVA_OPTS:-}"
+
+tmp_dir="${TMPDIR:-/tmp}"
+if [[ ! -w "$tmp_dir" ]]; then
+  echo "flux: WARNING: ${tmp_dir} is not writable. Spark and the snappy/zstd/netty native libraries need a writable, exec-capable temp directory (Kubernetes: an emptyDir mounted at /tmp; docker: --tmpfs /tmp:rw,exec)." >&2
+fi
+
+if [[ -z "${FLUX_LOG_DIR:-}" ]]; then
+  # java replaces this shell and becomes PID 1; the JVM handles SIGTERM via Spark's shutdown hook.
+  exec "${FLUX_HOME}/bin/flux" "$@"
+fi
+
+# Optional per-invocation log file. Flux keeps writing to the container's stdout (the Iron Bank
+# requirement) and the same stream is appended to a timestamped file. Flux's exit code is
+# preserved and SIGTERM/SIGINT are forwarded to the JVM.
+mkdir -p "${FLUX_LOG_DIR}"
+log_file="${FLUX_LOG_DIR}/flux-$(date -u +%Y%m%dT%H%M%SZ)-$$.log"
+echo "flux: logging to ${log_file}" >&2
+
+"${FLUX_HOME}/bin/flux" "$@" > >(tee -a "${log_file}") 2>&1 &
+child=$!
+trap 'kill -TERM "${child}" 2>/dev/null || true' TERM
+trap 'kill -INT "${child}" 2>/dev/null || true' INT
+
+rc=0
+wait "${child}" || rc=$?
+# `wait` returns early when a trapped signal arrives; keep waiting until the JVM is really gone.
+while kill -0 "${child}" 2>/dev/null; do
+  wait "${child}" || rc=$?
+done
+# Let tee flush before exiting.
+wait || true
+exit "${rc}"
