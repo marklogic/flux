@@ -240,6 +240,13 @@ tasks.register("ironbankSmokeTest", Exec) {
   commandLine "bash", "ironbank-local/smoke-test.sh"
 }
 
+tasks.register("ironbankK8sSmokeTest", Exec) {
+  group = "ironbank"
+  description = "Runs ironbank-local/k8s-smoke.sh: a throw-away MarkLogic pod plus two Flux Jobs on the cluster kubectl points at (the image must be visible to its runtime)."
+  workingDir layout.projectDirectory
+  commandLine "bash", "ironbank-local/k8s-smoke.sh"
+}
+
 tasks.register("gettingStartedZip", Zip) {
   description = "Creates a zip of the getting-started project that is intended to be included as a downloadable file " +
     "on the GitHub release page."

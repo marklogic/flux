@@ -191,7 +191,12 @@ never overlap on the same data.
 
 Run one Flux command per container. Several containers (a Job with `parallelism`, or several `docker run`s) can
 run at the same time against the same MarkLogic cluster; bound each one with `--spark-master-url local[N]`,
-`--thread-count` and `--batch-size` so the cluster is not overwhelmed.
+`--thread-count` and `--batch-size` so the cluster is not overwhelmed. Concurrent imports that read the same
+file paths produce the same document URIs and overwrite each other: give each Job its own `--uri-prefix` or
+`--uri-template`.
+
+Input mounted from a ConfigMap works (Flux follows the `..data` symlinks and uses the mount path in the URI), but a
+PersistentVolumeClaim or object storage (`s3a://`, Azure) is the normal choice for real data volumes.
 
 ## Configuration
 

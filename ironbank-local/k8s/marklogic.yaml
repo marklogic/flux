@@ -1,0 +1,94 @@
+# A single-node MarkLogic 12 (ubi9, rootless) for the Kubernetes smoke test. Test-only: admin/admin,
+# ephemeral data, no TLS. The Flux Jobs reach it as http://marklogic:8000 inside the namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flux-smoke
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: marklogic-admin
+  namespace: flux-smoke
+stringData:
+  username: admin
+  password: admin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marklogic
+  namespace: flux-smoke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: marklogic
+  template:
+    metadata:
+      labels:
+        app: marklogic
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: marklogic
+          image: ${MARKLOGIC_IMAGE}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MARKLOGIC_INIT
+              value: "true"
+            - name: MARKLOGIC_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: marklogic-admin
+                  key: username
+            - name: MARKLOGIC_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: marklogic-admin
+                  key: password
+          ports:
+            - containerPort: 7997
+            - containerPort: 8000
+            - containerPort: 8001
+            - containerPort: 8002
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 7997
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 60
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              memory: 4Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/opt/MarkLogic
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: marklogic
+  namespace: flux-smoke
+spec:
+  selector:
+    app: marklogic
+  ports:
+    - name: health
+      port: 7997
+    - name: app
+      port: 8000
+    - name: admin
+      port: 8001
+    - name: manage
+      port: 8002
