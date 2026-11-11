@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 2024-2025 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
+ * Copyright (c) 2024-2026 Progress Software Corporation and/or its subsidiaries or affiliates. All Rights Reserved.
  */
 package com.marklogic.flux.impl.importdata;
 
 import com.marklogic.flux.impl.AbstractOptionsTest;
 import com.marklogic.spark.Options;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
 
@@ -21,6 +23,7 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             "--classifier-path", "cls-endpoint",
             "--classifier-api-key", "secret key",
             "--classifier-token-path", "token-endpoint",
+            "--classifier-skip-document",
             "--classifier-prop", "threshold=17",
             "--classifier-prop", "somethingElse=can-be-anything"
         );
@@ -32,9 +35,22 @@ class ImportAndClassifyFilesOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_PATH, "cls-endpoint",
             Options.WRITE_CLASSIFIER_APIKEY, "secret key",
             Options.WRITE_CLASSIFIER_TOKEN_PATH, "token-endpoint",
+            Options.WRITE_CLASSIFIER_SKIP_DOCUMENT, "true",
             Options.WRITE_CLASSIFIER_OPTION_PREFIX + "threshold", "17",
             Options.WRITE_CLASSIFIER_OPTION_PREFIX + "somethingElse", "can-be-anything"
         );
+    }
+
+    @Test
+    void skipDocumentWithoutHostIsIgnored() {
+        ImportFilesCommand command = (ImportFilesCommand) getCommand(
+            "import-files",
+            "--connection-string", "user:password@host:8001",
+            "--path", "anywhere",
+            "--classifier-skip-document"
+        );
+
+        assertFalse(command.getWriteParams().makeOptions().containsKey(Options.WRITE_CLASSIFIER_SKIP_DOCUMENT));
     }
 
     @Test
