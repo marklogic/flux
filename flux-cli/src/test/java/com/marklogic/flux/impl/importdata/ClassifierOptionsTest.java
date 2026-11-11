@@ -30,7 +30,8 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
                     .tokenPath("token/endpoint")
                     .batchSize(30)
                     .socketTimeout(30)
-                    .connectionTimeout(15);
+                    .connectionTimeout(15)
+                    .skipDocument(true);
                 reference.set(classifierOptions);
             }));
 
@@ -44,8 +45,24 @@ class ClassifierOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_TOKEN_PATH, "token/endpoint",
             Options.WRITE_CLASSIFIER_BATCH_SIZE, "30",
             Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "30",
-            Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "15"
+            Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "15",
+            Options.WRITE_CLASSIFIER_SKIP_DOCUMENT, "true"
         );
+    }
+
+    @Test
+    void skipDocumentNotIncludedWhenFalseOrNotSet() {
+        AtomicReference<ClassifierOptions> reference = new AtomicReference<>();
+
+        Flux.importGenericFiles()
+            .to(options -> options.classifier(classifierOptions -> {
+                classifierOptions.host("h");
+                reference.set(classifierOptions);
+            }));
+
+        ClassifierParams params = (ClassifierParams) reference.get();
+        assertFalse(params.makeOptions().containsKey(Options.WRITE_CLASSIFIER_SKIP_DOCUMENT),
+            "When skipDocument is not enabled, the option key should be absent so the Spark connector uses its default.");
     }
 
     @Test
