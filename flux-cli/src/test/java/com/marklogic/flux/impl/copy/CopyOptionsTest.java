@@ -105,6 +105,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             "--classifier-batch-size", "50",
             "--classifier-socket-timeout", "60",
             "--classifier-connection-timeout", "30",
+            "--classifier-skip-document",
             "--classifier-prop", "key1=value1"
         );
 
@@ -147,6 +148,7 @@ class CopyOptionsTest extends AbstractOptionsTest {
             Options.WRITE_CLASSIFIER_BATCH_SIZE, "50",
             Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, "60",
             Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, "30",
+            Options.WRITE_CLASSIFIER_SKIP_DOCUMENT, "true",
             Options.WRITE_CLASSIFIER_OPTION_PREFIX + "key1", "value1"
         );
     }

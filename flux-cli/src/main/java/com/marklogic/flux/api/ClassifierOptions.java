@@ -61,4 +61,11 @@ public interface ClassifierOptions {
      * @param additionalOptions Additional options for configuring the behavior of the classifier service.
      */
     ClassifierOptions additionalOptions(Map<String, String> additionalOptions);
+
+    /**
+     * @param skipDocument true to classify only chunks and skip whole-document classification. Requires text splitting
+     *                     to be configured; otherwise no text is classified.
+     * @since 2.2.0
+     */
+    ClassifierOptions skipDocument(boolean skipDocument);
 }
