@@ -328,7 +328,7 @@ Components:
 | json4s-jackson 4.0.7                   |                                       | Apache License 2.0                       |
 | json4s-jackson-core 4.0.7              |                                       | Apache License 2.0                       |
 | json4s-scalap 4.0.7                    |                                       | Apache License 2.0                       |
-| jsoup 1.22.2                           | http://jsoup.org                      | MIT License                              |
+| jsoup 1.23.2                           | http://jsoup.org                      | MIT License                              |
 | JSpecify annotations 1.0.0             |                                       | Apache License 2.0                       |
 | JSR 374 (JSON Processing) Default      |                                       | Eclipse Public License 2.0               |
 |   Provider 2.0.1                       |                                       |                                          |
@@ -1886,7 +1886,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 MIT License
-(azure-storage-blob 12.35.0, Bouncy Castle 1.85, Bouncy Castle ASN.1 Extension and Utility APIs 1.85, Bouncy Castle Jakarta S/MIME API 1.85, Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs 1.85, Checker Qual 3.33.0, dexx 0.7, jsoup 1.22.2, JTokkit 1.1.0, JUL to SLF4J bridge 2.0.17, Microsoft Azure client library for File Storage Data Lake 12.28.0, Microsoft Azure common module for Storage 12.34.0, Microsoft Azure internal Avro module for Storage 12.20.0, Microsoft Azure Java Core Library 1.58.1, Microsoft Azure Java JSON Library 1.5.1, Microsoft Azure Java XML Library 1.2.1, Microsoft Azure Netty HTTP Client Library 1.16.5, Microsoft Azure SDK for Key Vault 1.0.0, Microsoft Azure SDK for OpenAI Management 1.0.0-beta.16, onnx-runtime 1.20.0, pickle 1.5, SLF4J API Module 2.0.17, SLF4J API Module 2.0.18)
+(azure-storage-blob 12.35.0, Bouncy Castle 1.85, Bouncy Castle ASN.1 Extension and Utility APIs 1.85, Bouncy Castle Jakarta S/MIME API 1.85, Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs 1.85, Checker Qual 3.33.0, dexx 0.7, jsoup 1.23.2, JTokkit 1.1.0, JUL to SLF4J bridge 2.0.17, Microsoft Azure client library for File Storage Data Lake 12.28.0, Microsoft Azure common module for Storage 12.34.0, Microsoft Azure internal Avro module for Storage 12.20.0, Microsoft Azure Java Core Library 1.58.1, Microsoft Azure Java JSON Library 1.5.1, Microsoft Azure Java XML Library 1.2.1, Microsoft Azure Netty HTTP Client Library 1.16.5, Microsoft Azure SDK for Key Vault 1.0.0, Microsoft Azure SDK for OpenAI Management 1.0.0-beta.16, onnx-runtime 1.20.0, pickle 1.5, SLF4J API Module 2.0.17, SLF4J API Module 2.0.18)
 
 The MIT License
 ===============

@@ -5436,17 +5436,17 @@
 				},
 				{
 					"referenceCategory": "SECURITY",
-					"referenceLocator": "cpe:2.3:a:jsoup:jsoup:1.22.2:*:*:*:*:*:*:*",
+					"referenceLocator": "cpe:2.3:a:jsoup:jsoup:1.23.2:*:*:*:*:*:*:*",
 					"referenceType": "cpe23Type"
 				},
 				{
 					"referenceCategory": "PACKAGE-MANAGER",
-					"referenceLocator": "pkg:maven/org.jsoup/jsoup@1.22.2",
+					"referenceLocator": "pkg:maven/org.jsoup/jsoup@1.23.2",
 					"referenceType": "purl"
 				},
 				{
 					"referenceCategory": "SECURITY",
-					"referenceLocator": "cpe:2.3:a:maven_package:org.jsoup\\:jsoup:1.22.2:*:*:*:*:*:*:*",
+					"referenceLocator": "cpe:2.3:a:maven_package:org.jsoup\\:jsoup:1.23.2:*:*:*:*:*:*:*",
 					"referenceType": "cpe23Type"
 				},
 				{
@@ -5461,7 +5461,7 @@
 			"name": "jsoup",
 			"originator": "Organization: org.jsoup",
 			"supplier": "Organization: org.jsoup",
-			"versionInfo": "1.22.2"
+			"versionInfo": "1.23.2"
 		},
 		{
 			"SPDXID": "SPDXRef-package-c66fdd03-8679-46a4-9ae8-a4a6c3cf65a0---5e422190-48cf-4c7d-8a04-96b430801c79",
