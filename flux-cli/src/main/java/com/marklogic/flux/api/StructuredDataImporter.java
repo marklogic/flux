@@ -77,4 +77,22 @@ public interface StructuredDataImporter<T extends StructuredDataImporter<T>> ext
      * @since 2.1.0
      */
     T groupBy(String columnName, Consumer<GroupByOptions<?>> consumer);
+
+    /**
+     * Specify a strategy for sanitizing the top-level column names in the Dataset read from the data source before
+     * documents are constructed. Applied after any {@link #where(String)} filtering and any grouping/aggregation
+     * configured via {@link #groupBy(String, Consumer)}, and before documents are constructed and written.
+     * <p>
+     * Only top-level column names are sanitized; names of fields nested within struct or array columns - such as
+     * those created via {@link GroupByOptions#aggregateColumns(String, String...)} - are not affected.
+     * </p>
+     *
+     * @param strategy the strategy to use for sanitizing column names; defaults to {@link ColumnNameStrategy#NONE}
+     * @return this importer instance
+     * @since 2.2.0
+     */
+    default T columnNameStrategy(ColumnNameStrategy strategy) {
+        // Default implementation for backwards compatibility with implementations of this interface created before 2.2.0.
+        throw new UnsupportedOperationException("columnNameStrategy is not supported by this importer");
+    }
 }

@@ -3,6 +3,7 @@
  */
 package com.marklogic.flux.impl.importdata;
 
+import com.marklogic.flux.api.ColumnNameStrategy;
 import com.marklogic.flux.api.FluxException;
 import com.marklogic.flux.api.JdbcImporter;
 import com.marklogic.flux.api.StructuredDataImporter;
@@ -27,6 +28,14 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
 
     @CommandLine.Mixin
     private WriteStructuredDocumentParams writeParams = new WriteStructuredDocumentParams();
+
+    /**
+     * Package-private, intended solely for tests that verify how options like {@code --column-name-strategy}
+     * are parsed and applied.
+     */
+    ReadJdbcParams getReadParams() {
+        return readParams;
+    }
 
     @Override
     protected void validateDuringApiUsage() {
@@ -94,6 +103,12 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         return this;
     }
 
+    @Override
+    public JdbcImporter columnNameStrategy(ColumnNameStrategy strategy) {
+        readParams.structuredDataParams.columnNameStrategy(strategy);
+        return this;
+    }
+
     public static class ReadJdbcParams extends JdbcParams<JdbcImporter.ReadJdbcOptions> implements JdbcImporter.ReadJdbcOptions {
 
         static class QueryOptions {
@@ -157,6 +172,14 @@ public class ImportJdbcCommand extends AbstractCommand<JdbcImporter> implements 
         public ReadJdbcOptions drop(String... columns) {
             this.structuredDataParams.drop(columns);
             return this;
+        }
+
+        /**
+         * Package-private, intended solely for tests that verify how options like {@code --column-name-strategy}
+         * are parsed and applied.
+         */
+        StructuredDataParams getStructuredDataParams() {
+            return structuredDataParams;
         }
     }
 }

@@ -21,6 +21,7 @@ When working with structured data sources, Flux offers several powerful features
 - **[Filtering data](filtering-data.md)** - Filter rows with WHERE expressions or drop specific columns
 - **[Aggregating rows](aggregating-rows.md)** - Combine related rows to create hierarchical JSON or XML documents
 - **[Generating TDE templates](tde-generation.md)** - Automatically create Template Driven Extraction templates to make imported data available for relational queries
+- **[Sanitizing column names](sanitizing-column-names.md)** - Automatically replace problematic characters in column names before documents are constructed
 
 These features work consistently across all structured data sources, allowing you to apply the same transformation patterns whether you're importing from CSV files, databases, or other formats.
 
