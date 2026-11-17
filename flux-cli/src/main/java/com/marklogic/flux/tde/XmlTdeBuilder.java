@@ -16,6 +16,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Builds an XML TDE template from a set of columns.
+ * <p>
+ * This class is <strong>not thread-safe</strong>, as it reuses a single {@link DocumentBuilderFactory}, which JAXP
+ * does not guarantee to be thread-safe. Each thread that generates a TDE template must create its own instance.
+ * </p>
+ */
 public class XmlTdeBuilder implements TdeBuilder {
 
     private static final String NAMESPACE = "http://marklogic.com/xdmp/tde";
