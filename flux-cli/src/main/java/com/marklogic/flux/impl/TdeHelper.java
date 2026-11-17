@@ -45,6 +45,7 @@ public class TdeHelper {
     public Result logOrLoadTemplate(StructType sparkSchema, ConnectionParams connectionParams) {
         if (tdeParams.hasSchemaAndView()) {
             TdeInputs tdeInputs = buildTdeInputs();
+            // A new builder is created per call, as XmlTdeBuilder is not thread-safe.
             TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
             Iterator<TdeBuilder.Column> columns = new SparkColumnIterator(sparkSchema, tdeInputs);
             if (includeIncrementalWriteColumns) {
