@@ -238,6 +238,10 @@ also use a [MarkLogic REST transform](https://docs.marklogic.com/guide/rest-dev/
 embeddings are stored in your documents. See the [guide on common import options](../common-import-features.md) for more
 information on transforms. 
 
+Flux records the model name reported by the selected embedding model on each chunk as a `model-name` property in JSON
+or a `model-name` element in XML. For Ollama, this is the name configured with `--embedder-prop model-name`. If an
+integration does not report a specific name, the value is `unknown`.
+
 ### JSON documents
 
 By default, Flux will store an embedding in an array named `_vector` that is added to the chunk object. Each value in 
