@@ -327,7 +327,7 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
                 "Aggregate order-by references unknown aggregation '%s'", aggregationName)));
 
         Column sortedAggregationColumn = aggregation.columnNamesToGroup.size() == 1 ?
-            functions.sort_array(functions.col(ColumnReferences.quote(aggregationName)), !orderBy.isAscending()) :
+            functions.sort_array(functions.col(ColumnReferences.quote(aggregationName)), orderBy.isAscending()) :
             sortArrayColumn(ColumnReferences.quote(aggregationName), fieldToSortBy, orderBy.isAscending());
 
         // withColumn replaces the existing aggregation column with the just-sorted aggregation column.

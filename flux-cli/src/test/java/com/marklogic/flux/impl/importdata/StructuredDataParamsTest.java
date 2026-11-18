@@ -83,9 +83,22 @@ class StructuredDataParamsTest {
             .orderAggregation("amounts", AMOUNT, false)
             .applyTransformations(readFile());
 
-        List<String> amounts = getAmounts(dataset);
-        assertEquals(2, amounts.size());
-        assertTrue(amounts.containsAll(List.of("12.5", "18.75")), "Unexpected amounts: " + amounts);
+        assertEquals(List.of("18.75", "12.5"), getAmounts(dataset));
+    }
+
+    @Test
+    void orderSingleColumnAggregation() {
+        Dataset<Row> ascending = groupBy(TRANSACTION)
+            .aggregateColumns("amounts", AMOUNT)
+            .orderAggregation("amounts", AMOUNT, true)
+            .applyTransformations(readFile());
+        assertEquals(List.of("12.5", "18.75"), getAmounts(ascending));
+
+        Dataset<Row> descending = groupBy(TRANSACTION)
+            .aggregateColumns("amounts", AMOUNT)
+            .orderAggregation("amounts", AMOUNT, false)
+            .applyTransformations(readFile());
+        assertEquals(List.of("18.75", "12.5"), getAmounts(descending));
     }
 
     @Test
