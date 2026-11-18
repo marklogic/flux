@@ -62,6 +62,32 @@ class DelimitedFilesImporterTest extends AbstractTest {
     }
 
     @Test
+    void aggregateWithColumnNameStrategy() {
+        Flux.importDelimitedFiles()
+            .connectionString(makeConnectionString())
+            .columnNameStrategy(ColumnNameStrategy.SIMPLE)
+            .from("src/test/resources/delimited-files/special-column-names.csv")
+            .groupBy("Transaction Number", options -> options
+                .aggregateColumns("items", "Item Name", "Contribution Amount (Net Alt. Sales)")
+                .orderAggregation("items", "Item Name", true)
+            )
+            .to(options -> options
+                .permissionsString(DEFAULT_PERMISSIONS)
+                .collections("sanitized-api-aggregate")
+                .uriTemplate("/sanitized-api/{Transaction_Number}.json")
+            )
+            .execute();
+
+        assertCollectionSize("sanitized-api-aggregate", 2);
+        JsonNode doc = readJsonDocument("/sanitized-api/1001.json");
+        ArrayNode items = (ArrayNode) doc.get("items");
+        assertEquals(2, items.size());
+        assertEquals("Gadget", items.get(0).get("Item_Name").asText(), "A column can be referenced by its original " +
+            "name, but the names in the document should be sanitized; doc: " + doc);
+        assertEquals(18.75, items.get(0).get("Contribution_Amount_Net_Alt_Sales").asDouble());
+    }
+
+    @Test
     void aggregate() {
         Flux.importDelimitedFiles()
             .connectionString(makeConnectionString())
