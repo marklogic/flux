@@ -5430,11 +5430,6 @@
 					"referenceType": "BlackDuck-ComponentOrigin"
 				},
 				{
-					"referenceCategory": "OTHER",
-					"referenceLocator": "29115555-8abc-4d67-932c-2666e31b4fdb",
-					"referenceType": "BlackDuck-ComponentVersion"
-				},
-				{
 					"referenceCategory": "SECURITY",
 					"referenceLocator": "cpe:2.3:a:jsoup:jsoup:1.23.2:*:*:*:*:*:*:*",
 					"referenceType": "cpe23Type"
