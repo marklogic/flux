@@ -65,6 +65,35 @@ For example, to filter by a numeric range:
 
 For complete SQL expression syntax and additional examples, see the [Apache Spark SQL WHERE clause reference](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-where.html).
 
+### Column names with special characters
+
+Because `--where` accepts a SQL expression, a column name containing a space, a period, or another special character
+must be wrapped in backticks so that it is read as a single name. In a Unix shell, a backtick within double quotes
+has a special meaning and thus must be escaped with a backslash:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+--where "\`Item Name\` = 'Widget'"
+```
+{% endtab %}
+{% tab log Windows %}
+```
+--where "`Item Name` = 'Widget'"
+```
+{% endtab %}
+{% endtabs %}
+
+The Windows example above is for the Command Prompt. In PowerShell, the backtick is an escape character, so each
+backtick within double quotes must be doubled:
+
+```
+--where "``Item Name`` = 'Widget'"
+```
+
+No escaping is needed when the option is defined in an [options file](../../common-options.md). This is only required
+for `--where`; other options such as `--group-by` and `--drop` accept a column name as-is.
+
 ## Combining with other features
 
 The `--where` filter is applied before [row aggregation](aggregating-rows.md), allowing you to filter data before grouping. This is useful when you want to aggregate only a subset of your source data.
