@@ -73,6 +73,14 @@ public class ClassifierParams implements ClassifierOptions {
     )
     private Map<String, String> additionalOptions = new HashMap<>();
 
+    @CommandLine.Option(
+        names = "--classifier-skip-document",
+        description = "Classify only chunks of text and skip classifying each whole document. Avoids one classifier " +
+            "request per document and omits the document-level classification. Requires --splitter-* options; " +
+            "otherwise no text is classified."
+    )
+    private boolean skipDocument;
+
     public Map<String, String> makeOptions() {
         Map<String, String> options = new HashMap<>();
         if (host != null) {
@@ -87,6 +95,9 @@ public class ClassifierParams implements ClassifierOptions {
                 Options.WRITE_CLASSIFIER_SOCKET_TIMEOUT, OptionsUtil.integerOption(socketTimeoutSeconds),
                 Options.WRITE_CLASSIFIER_CONNECTION_TIMEOUT, OptionsUtil.integerOption(connectionTimeoutSeconds)
             );
+            if (skipDocument) {
+                options.put(Options.WRITE_CLASSIFIER_SKIP_DOCUMENT, "true");
+            }
             if (additionalOptions != null) {
                 additionalOptions.entrySet().forEach(entry -> options.put(
                     Options.WRITE_CLASSIFIER_OPTION_PREFIX + entry.getKey(), entry.getValue()));
@@ -152,6 +163,12 @@ public class ClassifierParams implements ClassifierOptions {
     @Override
     public ClassifierOptions additionalOptions(Map<String, String> additionalOptions) {
         this.additionalOptions = additionalOptions;
+        return this;
+    }
+
+    @Override
+    public ClassifierOptions skipDocument(boolean skipDocument) {
+        this.skipDocument = skipDocument;
         return this;
     }
 }
