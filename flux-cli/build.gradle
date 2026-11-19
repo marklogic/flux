@@ -15,7 +15,6 @@ configurations {
       // Resolves a medium CVE that comes from json-unit-assertj .
       force "net.minidev:json-smart:2.5.2"
 
-      // Resolves a CVE in 1.11.0
       force "at.yawk.lz4:lz4-java:1.12.1"
     }
   }
