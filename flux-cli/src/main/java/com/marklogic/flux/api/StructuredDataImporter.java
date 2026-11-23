@@ -80,11 +80,15 @@ public interface StructuredDataImporter<T extends StructuredDataImporter<T>> ext
 
     /**
      * Specify a strategy for sanitizing the top-level column names in the Dataset read from the data source before
-     * documents are constructed. Applied after any {@link #where(String)} filtering and any grouping/aggregation
-     * configured via {@link #groupBy(String, Consumer)}, and before documents are constructed and written.
+     * documents are constructed. Applied before any {@link #where(String)} filtering and any grouping/aggregation
+     * configured via {@link #groupBy(String, Consumer)}. A {@link #where(String)} expression can therefore refer
+     * to the sanitized column names without wrapping them in backticks, while {@link #groupBy(String, Consumer)}
+     * and its options accept either the sanitized or the original name of a column.
      * <p>
-     * Only top-level column names are sanitized; names of fields nested within struct or array columns - such as
-     * those created via {@link GroupByOptions#aggregateColumns(String, String...)} - are not affected.
+     * Only the top-level column names in the data source are sanitized. The fields in an aggregation created via
+     * {@link GroupByOptions#aggregateColumns(String, String...)} are named after the sanitized columns they are
+     * built from, while the name of the aggregation itself is used as given. Names of fields nested within a struct
+     * or array column in the data source are not affected.
      * </p>
      *
      * @param strategy the strategy to use for sanitizing column names; defaults to {@link ColumnNameStrategy#NONE}

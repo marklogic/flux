@@ -89,18 +89,57 @@ instead replaced with an underscore, along with any other unsupported characters
 
 ## Combining with other features
 
-Column name sanitization is applied last, after [`--where`](filtering-data.md), [`--drop`](filtering-data.md#dropping-columns),
-and [`--group-by` / `--aggregate` / `--aggregate-order-by`](aggregating-rows.md). This means that `--where`, `--drop`,
-`--group-by`, `--aggregate`, and `--aggregate-order-by` must all reference column names **as they exist before
-sanitization** - that is, source column names, plus any aggregation names you define via `--aggregate`, which can be
-referenced by `--drop` and `--aggregate-order-by`. Aggregation names are themselves sanitized along with the other
-top-level column names. Only features that operate on the final set of documents - such as `--uri-template` and
-[TDE template generation](tde-generation.md) - see the sanitized column names.
+Column name sanitization is applied first, before [`--where`](filtering-data.md), [`--drop`](filtering-data.md#dropping-columns),
+and [`--group-by` / `--aggregate` / `--aggregate-order-by`](aggregating-rows.md). Every other option therefore sees
+the sanitized column names:
+
+- A `--where` expression should reference the sanitized column names. As those names contain no special characters,
+  they do not need to be wrapped in backticks.
+- `--group-by`, `--aggregate`, `--aggregate-order-by`, and `--drop` can reference a column by either its sanitized
+  name or its original name, including in a path to a field in a struct column. The sanitized name is useful when the
+  original name contains a character that is part of the syntax of these options, such as a comma or an equals sign.
+- The fields within a column produced by `--aggregate` are named after the sanitized columns they are built from.
+- The name of an aggregation that you define via `--aggregate` is used as given and is not sanitized.
+- Features that operate on the final set of documents - such as `--uri-template` and
+  [TDE template generation](tde-generation.md), including its options for customizing a column - must reference the
+  sanitized column names.
+
+For example, given a source with columns named `Transaction Number`, `Item Name`, and `Amount (Net. Sales)`:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-delimited-files \
+    --path transactions.csv \
+    --column-name-strategy simple \
+    --where "Item_Name = 'Widget'" \
+    --group-by Transaction_Number \
+    --aggregate "items=Item_Name,Amount_Net_Sales" \
+    --uri-template "/transaction/{Transaction_Number}.json" \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path transactions.csv ^
+    --column-name-strategy simple ^
+    --where "Item_Name = 'Widget'" ^
+    --group-by Transaction_Number ^
+    --aggregate "items=Item_Name,Amount_Net_Sales" ^
+    --uri-template "/transaction/{Transaction_Number}.json" ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
 
 ## Limitations
 
-- Only top-level column names are sanitized. Field names nested inside a struct or array - such as the fields within
-  a column produced by `--aggregate` - are not modified.
+- Only the top-level column names in the data source are sanitized. Field names nested inside a struct or array
+  column in the data source - which can occur with Avro, ORC, and Parquet files - are not modified. Using
+  `--group-by` on such a field therefore produces a column with the name of that field as-is.
 - The `simple` strategy only preserves ASCII letters, digits, and underscores, after first folding Western European
   Latin letters as described above. Characters with no ASCII equivalent, including non-Latin scripts, are replaced,
   so a column name consisting entirely of such characters sanitizes to an empty name and results in an error.
@@ -110,7 +149,15 @@ top-level column names. Only features that operate on the final set of documents
   name of `123abc` sanitizes to `123abc`, which is not a valid XML element name because it starts with a digit. If
   you are generating XML documents, ensure your source column names will not sanitize to a name starting with a
   digit.
+- The `simple` strategy also does not guarantee that a resulting name is a valid
+  [TDE](tde-generation.md) column name. MarkLogic requires a TDE column name to comply with the naming rules for SQL
+  identifiers, so a sanitized name that starts with a digit, or that is very long, can still be rejected when the
+  template is loaded.
+- Column names are matched regardless of letter case by default. If two sanitized names differ only by case - for
+  example, `Item Name` and `item_name` become `Item_Name` and `item_name` - then `--group-by` fails because the two
+  columns cannot be told apart. Rename one of the columns in the data source.
 - If the `simple` strategy would produce an empty column name (for example, a column named `...`) or would produce
   the same name for two different columns (a collision), Flux raises an error rather than writing documents with
-  ambiguous or missing field names. Rename the offending source columns, or use `--drop` to remove them, before
-  reapplying the strategy.
+  ambiguous or missing field names. Because column names are sanitized first, using `--drop` to remove an offending
+  column does not avoid the error. Rename the offending columns in the data source instead - for example, via the
+  SQL `AS` keyword when using `import-jdbc`.
