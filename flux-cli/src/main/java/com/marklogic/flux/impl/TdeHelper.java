@@ -46,7 +46,7 @@ public class TdeHelper {
         if (tdeParams.hasSchemaAndView()) {
             TdeInputs tdeInputs = buildTdeInputs();
             TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
-            Iterator<TdeBuilder.Column> columns = new SparkColumnIterator(sparkSchema, tdeInputs);
+            Iterator<TdeBuilder.Column> columns = new SparkColumnIterator(sparkSchema, tdeInputs, tdeParams.isSanitizeColumnNames());
             if (includeIncrementalWriteColumns) {
                 columns = new IncrementalWriteColumnIterator(columns, incrementalWriteHashName);
             }

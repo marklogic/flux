@@ -41,6 +41,12 @@ public class TdeParams implements TdeOptions {
     private boolean preview;
 
     @CommandLine.Option(
+        names = "--sanitize-tde-column-names",
+        description = "Replace invalid characters in generated TDE column names with underscores."
+    )
+    private boolean sanitizeColumnNames;
+
+    @CommandLine.Option(
         names = "--tde-permissions",
         description = "Comma-delimited sequence of MarkLogic role names and capabilities to add to the generated TDE template - e.g. role1,read,role2,update,role3,execute."
     )
@@ -236,6 +242,10 @@ public class TdeParams implements TdeOptions {
 
     public boolean isPreview() {
         return preview;
+    }
+
+    public boolean isSanitizeColumnNames() {
+        return sanitizeColumnNames;
     }
 
     @Override

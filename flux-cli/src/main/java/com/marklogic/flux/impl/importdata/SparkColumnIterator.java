@@ -18,10 +18,16 @@ public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
 
     private final Iterator<StructField> fields;
     private final TdeInputs tdeInputs;
+    private final boolean sanitizeColumnNames;
 
     public SparkColumnIterator(StructType schema, TdeInputs tdeInputs) {
+        this(schema, tdeInputs, false);
+    }
+
+    public SparkColumnIterator(StructType schema, TdeInputs tdeInputs, boolean sanitizeColumnNames) {
         this.fields = Arrays.stream(schema.fields()).iterator();
         this.tdeInputs = tdeInputs;
+        this.sanitizeColumnNames = sanitizeColumnNames;
     }
 
     @Override
@@ -31,34 +37,36 @@ public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
 
     @Override
     public TdeBuilder.Column next() {
-        return new SparkColumn(fields.next(), tdeInputs);
+        return new SparkColumn(fields.next(), tdeInputs, sanitizeColumnNames);
     }
 
     private static class SparkColumn implements TdeBuilder.Column {
 
         private final StructField field;
         private final TdeInputs tdeInputs;
+        private final boolean sanitizeColumnNames;
 
-        public SparkColumn(StructField field, TdeInputs tdeInputs) {
+        public SparkColumn(StructField field, TdeInputs tdeInputs, boolean sanitizeColumnNames) {
             this.field = field;
             this.tdeInputs = tdeInputs;
+            this.sanitizeColumnNames = sanitizeColumnNames;
         }
 
         @Override
         public String getName() {
-            return field.name();
+            return sanitizeColumnNames ? TdeColumnNameSanitizer.sanitize(field.name()) : field.name();
         }
 
         @Override
         public String getVal() {
-            String name = getName();
+            String name = field.name();
             return tdeInputs.getColumnVals() != null && tdeInputs.getColumnVals().containsKey(name) ?
-                tdeInputs.getColumnVals().get(name) : getName();
+                tdeInputs.getColumnVals().get(name) : name;
         }
 
         @Override
         public String getScalarType() {
-            String name = getName();
+            String name = field.name();
             if (tdeInputs.getColumnTypes() != null && tdeInputs.getColumnTypes().containsKey(name)) {
                 return tdeInputs.getColumnTypes().get(name);
             }
@@ -67,57 +75,57 @@ public class SparkColumnIterator implements Iterator<TdeBuilder.Column> {
 
         @Override
         public boolean isNullable() {
-            return tdeInputs.getNullableColumns() != null && tdeInputs.getNullableColumns().contains(getName());
+            return tdeInputs.getNullableColumns() != null && tdeInputs.getNullableColumns().contains(field.name());
         }
 
         @Override
         public String getDefaultValue() {
-            return tdeInputs.getColumnDefaultValues() != null ? tdeInputs.getColumnDefaultValues().get(getName()) : null;
+            return tdeInputs.getColumnDefaultValues() != null ? tdeInputs.getColumnDefaultValues().get(field.name()) : null;
         }
 
         @Override
         public String getInvalidValues() {
-            return tdeInputs.getColumnInvalidValues() != null ? tdeInputs.getColumnInvalidValues().get(getName()) : null;
+            return tdeInputs.getColumnInvalidValues() != null ? tdeInputs.getColumnInvalidValues().get(field.name()) : null;
         }
 
         @Override
         public String getReindexing() {
-            return tdeInputs.getColumnReindexing() != null ? tdeInputs.getColumnReindexing().get(getName()) : null;
+            return tdeInputs.getColumnReindexing() != null ? tdeInputs.getColumnReindexing().get(field.name()) : null;
         }
 
         @Override
         public Set<String> getPermissions() {
-            return tdeInputs.getColumnPermissions() != null ? tdeInputs.getColumnPermissions().get(getName()) : null;
+            return tdeInputs.getColumnPermissions() != null ? tdeInputs.getColumnPermissions().get(field.name()) : null;
         }
 
         @Override
         public String getCollation() {
-            return tdeInputs.getColumnCollations() != null ? tdeInputs.getColumnCollations().get(getName()) : null;
+            return tdeInputs.getColumnCollations() != null ? tdeInputs.getColumnCollations().get(field.name()) : null;
         }
 
         @Override
         public boolean isVirtual() {
-            return tdeInputs.getVirtualColumns() != null && tdeInputs.getVirtualColumns().contains(getName());
+            return tdeInputs.getVirtualColumns() != null && tdeInputs.getVirtualColumns().contains(field.name());
         }
 
         @Override
         public Integer getDimension() {
-            return tdeInputs.getColumnDimensions() != null ? tdeInputs.getColumnDimensions().get(getName()) : null;
+            return tdeInputs.getColumnDimensions() != null ? tdeInputs.getColumnDimensions().get(field.name()) : null;
         }
 
         @Override
         public Float getAnnCompression() {
-            return tdeInputs.getColumnAnnCompressions() != null ? tdeInputs.getColumnAnnCompressions().get(getName()) : null;
+            return tdeInputs.getColumnAnnCompressions() != null ? tdeInputs.getColumnAnnCompressions().get(field.name()) : null;
         }
 
         @Override
         public String getAnnDistance() {
-            return tdeInputs.getColumnAnnDistances() != null ? tdeInputs.getColumnAnnDistances().get(getName()) : null;
+            return tdeInputs.getColumnAnnDistances() != null ? tdeInputs.getColumnAnnDistances().get(field.name()) : null;
         }
 
         @Override
         public Boolean isAnnIndexed() {
-            return tdeInputs.getColumnAnnIndexed() != null ? tdeInputs.getColumnAnnIndexed().get(getName()) : null;
+            return tdeInputs.getColumnAnnIndexed() != null ? tdeInputs.getColumnAnnIndexed().get(field.name()) : null;
         }
 
         private String convertSparkTypeToTdeType(DataType sparkType) {
