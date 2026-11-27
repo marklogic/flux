@@ -248,6 +248,19 @@ Flux provides options for customizing individual columns in the generated TDE te
 Please see the [MarkLogic documentation](https://docs.progress.com/bundle/marklogic-server-model-relational-data-12/page/topics/creating-template-views.html#columns)
 for further details on column definitions. 
 
+#### Sanitizing column names
+
+The optional `--sanitize-tde-column-names` flag changes names generated from Spark schema fields to satisfy
+MarkLogic's unquoted TDE column-name character rules. For example, `First/Last Name` becomes `First_Last_Name`,
+`it's-valid` becomes `it_s_valid`, and `1stPlace` becomes `_1stPlace`. A leading `$`, `#`, or `@` is also
+prefixed with `_`, while these characters are preserved in later positions. Valid quoted TDE names are preserved.
+
+The flag changes only the TDE column `name`, not its `val` expression or the source document. Column customization
+options continue to use the original field name. If the original name is not a suitable path expression, supply an
+appropriate `--tde-column-val` explicitly. The flag does not rename incremental-write columns or resolve duplicate,
+empty, or overlength names; MarkLogic may reject a template containing these names. Without the flag, existing behavior
+is unchanged.
+
 Each option can be specified multiple times and has a value of the form `(column name)=(value)`. The values includes
 in the table below are examples only and should be altered based on your own column names and requirements.
 

@@ -28,6 +28,7 @@ dependencies {
 
   implementation "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   implementation "info.picocli:picocli:${picocliVersion}"
+  implementation "com.ibm.icu:icu4j:78.3"
 
   // Need this for compilation as it's not an API dependency of the Spark connector.
   compileOnly "com.marklogic:marklogic-client-api:8.3-SNAPSHOT"
@@ -38,6 +39,7 @@ dependencies {
   // with spark-submit via its support for downloading dependencies expressed by Maven coordinates.
   shadowDependencies "com.marklogic:marklogic-spark-connector:${connectorVersion}"
   shadowDependencies "info.picocli:picocli:${picocliVersion}"
+  shadowDependencies "com.ibm.icu:icu4j:78.3"
 
   implementation("org.apache.hadoop:hadoop-aws:${hadoopVersion}") {
     // Excluded because it's a single 558mb that balloons the Flux distribution in size.

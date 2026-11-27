@@ -47,7 +47,7 @@ public class TdeHelper {
             TdeInputs tdeInputs = buildTdeInputs();
             // A new builder is created per call, as XmlTdeBuilder is not thread-safe.
             TdeBuilder tdeBuilder = "xml".equalsIgnoreCase(tdeParams.getDocumentType()) ? new XmlTdeBuilder() : new JsonTdeBuilder();
-            Iterator<TdeBuilder.Column> columns = new SparkColumnIterator(sparkSchema, tdeInputs);
+            Iterator<TdeBuilder.Column> columns = new SparkColumnIterator(sparkSchema, tdeInputs, tdeParams.isSanitizeColumnNames());
             if (includeIncrementalWriteColumns) {
                 columns = new IncrementalWriteColumnIterator(columns, incrementalWriteHashName);
             }
