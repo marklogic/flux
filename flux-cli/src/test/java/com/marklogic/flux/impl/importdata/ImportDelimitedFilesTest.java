@@ -310,6 +310,65 @@ class ImportDelimitedFilesTest extends AbstractTest {
     }
 
     @Test
+    void aggregateColumnsWithSpecialCharacters() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/special-column-names.csv",
+            "--group-by", "Transaction Number",
+            "--aggregate", "items=Item Name,Contribution Amount (Net Alt. Sales)",
+            "--aggregate-order-by", "items=Item Name:asc",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "special-columns",
+            "--uri-template", "/special/{Transaction Number}.json"
+        );
+
+        assertCollectionSize("special-columns", 2);
+        JsonNode doc = readJsonDocument("/special/1001.json");
+        assertEquals(1001, doc.get("Transaction Number").asInt());
+        assertEquals("Jane", doc.get("Customer Name").asText());
+        assertTrue(doc.has("Contribution %"), "A column that is not aggregated should be kept, even though the " +
+            "source has a column with a period in its name; doc: " + doc);
+
+        ArrayNode items = (ArrayNode) doc.get("items");
+        assertEquals(2, items.size());
+        assertEquals("Gadget", items.get(0).get("Item Name").asText());
+        assertEquals(18.75, items.get(0).get("Contribution Amount (Net Alt. Sales)").asDouble());
+        assertEquals("Widget", items.get(1).get("Item Name").asText());
+        assertEquals(12.5, items.get(1).get("Contribution Amount (Net Alt. Sales)").asDouble());
+    }
+
+    @Test
+    void aggregateWithSanitizedColumnNames() {
+        run(
+            "import-delimited-files",
+            "--path", "src/test/resources/delimited-files/special-column-names.csv",
+            "--column-name-strategy", "simple",
+            "--where", "Customer_Name = 'Jane'",
+            "--group-by", "Transaction_Number",
+            "--aggregate", "items=Item_Name,Contribution_Amount_Net_Alt_Sales",
+            "--aggregate-order-by", "items=Item_Name:desc",
+            "--drop", "Contribution",
+            "--connection-string", makeConnectionString(),
+            "--permissions", DEFAULT_PERMISSIONS,
+            "--collections", "sanitized-columns",
+            "--uri-template", "/sanitized/{Transaction_Number}.json"
+        );
+
+        assertCollectionSize("Only the transaction for Jane should have been imported.", "sanitized-columns", 1);
+        JsonNode doc = readJsonDocument("/sanitized/1001.json");
+        assertEquals(3, doc.size(), "Expecting Transaction_Number, Customer_Name, and items; doc: " + doc);
+        assertEquals("Jane", doc.get("Customer_Name").asText());
+
+        ArrayNode items = (ArrayNode) doc.get("items");
+        assertEquals(2, items.size());
+        assertEquals("Widget", items.get(0).get("Item_Name").asText(), "Column names are sanitized first, so " +
+            "the fields in an aggregation should have sanitized names as well; doc: " + doc);
+        assertEquals(12.5, items.get(0).get("Contribution_Amount_Net_Alt_Sales").asDouble());
+        assertEquals("Gadget", items.get(1).get("Item_Name").asText());
+    }
+
+    @Test
     void emptyValuesIncluded() {
         run(
             "import-delimited-files",

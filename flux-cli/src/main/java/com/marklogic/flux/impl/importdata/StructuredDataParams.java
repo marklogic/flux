@@ -193,7 +193,14 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
     }
 
     public Dataset<Row> applyTransformations(Dataset<Row> dataset) {
-        // Apply where filter first, before groupBy. This allows the user to filter out rows that would otherwise be
+        // Sanitize column names first so that every other transformation can refer to the sanitized names, and so
+        // that the fields in an aggregation - which are named after the columns they are built from - are sanitized.
+        final String[] originalColumnNames = dataset.schema().names();
+        dataset = sanitizeColumnNames(dataset);
+        final boolean caseSensitive = Boolean.parseBoolean(dataset.sparkSession().conf().get("spark.sql.caseSensitive", "false"));
+        final ColumnReferences references = new ColumnReferences(dataset.schema().names(), originalColumnNames, caseSensitive);
+
+        // Apply where filter before groupBy. This allows the user to filter out rows that would otherwise be
         // included in the groupBy and thus end up in the aggregated arrays.
         if (where != null && !where.trim().isEmpty()) {
             try {
@@ -205,13 +212,21 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         }
 
         if (groupBy == null || groupBy.trim().isEmpty()) {
-            return sanitizeColumnNames(applyDrop(dataset));
+            return applyDrop(dataset, references);
         }
 
-        final RelationalGroupedDataset groupedDataset = dataset.groupBy(this.groupBy);
+        final Column groupByColumn = functions.col(references.toExpression(this.groupBy));
+        try {
+            // Spark does not check the column to group by until the aggregation is performed, at which point a problem
+            // with it cannot be told apart from a problem with an aggregated column. So check it now.
+            dataset.select(groupByColumn);
+        } catch (Exception e) {
+            throw new FluxException("Unable to group by '%s'; cause: %s".formatted(groupBy, getErrorMessage(e)), e);
+        }
+        final RelationalGroupedDataset groupedDataset = dataset.groupBy(groupByColumn);
 
-        List<Column> columns = getColumnsNotInAggregation(dataset);
-        List<Column> aggregationColumns = makeAggregationColumns();
+        List<Column> columns = getColumnsNotInAggregation(dataset, references);
+        List<Column> aggregationColumns = makeAggregationColumns(references);
         columns.addAll(aggregationColumns);
         final Column aliasColumn = columns.get(0);
         final Column[] columnsToGroup = columns.subList(1, columns.size()).toArray(new Column[]{});
@@ -221,14 +236,14 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         } catch (Exception e) {
             String columnNames = aggregations.stream().map(agg -> agg.columnNamesToGroup.toString()).collect(Collectors.joining(", "));
             throw new FluxException(String.format("Unable to aggregate columns: %s; please ensure that each column " +
-                "name will be present in the data read from the data source.", columnNames), e);
+                "name will be present in the data read from the data source. Cause: %s", columnNames, getErrorMessage(e)), e);
         }
 
         Dataset<Row> sorted = aggregationOrderings != null && !aggregationOrderings.isEmpty() ?
-            applySortToAggregatedArrays(result) :
+            applySortToAggregatedArrays(result, references) :
             result;
 
-        return sanitizeColumnNames(applyDrop(sorted));
+        return applyDrop(sorted, references);
     }
 
     /**
@@ -237,14 +252,16 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
      * "groupBy" column. These columns are assumed to have the same value in every row, and thus only the first value
      * is needed for each column.
      */
-    private List<Column> getColumnsNotInAggregation(Dataset<Row> dataset) {
-        Set<String> aggregatedColumnNames = new HashSet<>();
-        aggregations.forEach(agg -> aggregatedColumnNames.addAll(agg.columnNamesToGroup));
+    private List<Column> getColumnsNotInAggregation(Dataset<Row> dataset, ColumnReferences references) {
+        Set<String> excludedColumnNames = new HashSet<>();
+        excludedColumnNames.add(references.resolve(groupBy));
+        aggregations.forEach(agg -> agg.columnNamesToGroup.forEach(name -> excludedColumnNames.add(references.resolve(name))));
 
         List<Column> columns = new ArrayList<>();
         for (String name : dataset.schema().names()) {
-            if (!aggregatedColumnNames.contains(name) && !groupBy.equals(name)) {
-                columns.add(functions.first(name).alias(name));
+            if (!excludedColumnNames.contains(name)) {
+                // The name must be quoted so that Spark does not parse e.g. a period in it as a path to a nested field.
+                columns.add(functions.first(functions.col(ColumnReferences.quote(name))).alias(name));
             }
         }
         return columns;
@@ -253,17 +270,19 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
     /**
      * @return a list of columns, one per aggregation.
      */
-    private List<Column> makeAggregationColumns() {
+    private List<Column> makeAggregationColumns(ColumnReferences references) {
         List<Column> columns = new ArrayList<>();
         aggregations.forEach(aggregation -> {
             final List<String> columnNames = aggregation.columnNamesToGroup;
             Column resultColumn;
 
             if (columnNames.size() == 1) {
-                Column column = new Column(columnNames.get(0));
+                Column column = functions.col(references.toExpression(columnNames.get(0)));
                 resultColumn = functions.collect_list(functions.concat(column));
             } else {
-                Column[] structColumns = columnNames.stream().map(functions::col).toArray(Column[]::new);
+                Column[] structColumns = columnNames.stream()
+                    .map(name -> functions.col(references.toExpression(name)))
+                    .toArray(Column[]::new);
                 Column arrayColumn = functions.collect_list(functions.struct(structColumns));
                 // array_distinct removes duplicate objects that can result from 2+ joins existing in the query.
                 // See https://www.sparkreference.com/reference/array_distinct/ for performance considerations.
@@ -274,7 +293,7 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
             if (aggregationOrderings != null) {
                 aggregationOrderings.stream()
                     .filter(orderBy -> orderBy.getAggregationName().equals(aggregation.newColumnName))
-                    .forEach(orderBy -> validateAggregateOrderBy(aggregation, columnNames, orderBy));
+                    .forEach(orderBy -> validateAggregateOrderBy(aggregation, columnNames, orderBy, references));
             }
 
             columns.add(resultColumn.alias(aggregation.newColumnName));
@@ -282,8 +301,10 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         return columns;
     }
 
-    private void validateAggregateOrderBy(Aggregation aggregation, List<String> columnNames, AggregationOrdering orderBy) {
-        if (!columnNames.contains(orderBy.getColumnName())) {
+    private void validateAggregateOrderBy(Aggregation aggregation, List<String> columnNames, AggregationOrdering orderBy,
+                                          ColumnReferences references) {
+        final String columnToSortBy = references.resolve(orderBy.getColumnName());
+        if (columnNames.stream().map(references::resolve).noneMatch(name -> Objects.equals(name, columnToSortBy))) {
             throw new FluxException(String.format(
                 "Invalid aggregate order-by for '%s': column '%s' is not in the aggregation. " +
                     "Available columns: %s",
@@ -293,17 +314,18 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         }
     }
 
-    private Dataset<Row> applySortToAggregatedArrays(Dataset<Row> dataset) {
+    private Dataset<Row> applySortToAggregatedArrays(Dataset<Row> dataset, ColumnReferences references) {
         Dataset<Row> result = dataset;
         for (AggregationOrdering orderBy : aggregationOrderings) {
-            result = applySortToSingleAggregation(result, orderBy);
+            result = applySortToSingleAggregation(result, orderBy, references);
         }
         return result;
     }
 
-    private Dataset<Row> applySortToSingleAggregation(Dataset<Row> dataset, AggregationOrdering orderBy) {
+    private Dataset<Row> applySortToSingleAggregation(Dataset<Row> dataset, AggregationOrdering orderBy, ColumnReferences references) {
         final String aggregationName = orderBy.getAggregationName();
-        final String columnToSortBy = orderBy.getColumnName();
+        // Each field in an aggregated struct is named after the column it was built from.
+        final String fieldToSortBy = references.toExpression(orderBy.getColumnName());
 
         // Find the aggregation to determine if it's single or multi-column
         Aggregation aggregation = aggregations.stream()
@@ -313,8 +335,8 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
                 "Aggregate order-by references unknown aggregation '%s'", aggregationName)));
 
         Column sortedAggregationColumn = aggregation.columnNamesToGroup.size() == 1 ?
-            functions.sort_array(functions.col(aggregationName), !orderBy.isAscending()) :
-            sortArrayColumn(aggregationName, columnToSortBy, orderBy.isAscending());
+            functions.sort_array(functions.col(ColumnReferences.quote(aggregationName)), orderBy.isAscending()) :
+            sortArrayColumn(ColumnReferences.quote(aggregationName), fieldToSortBy, orderBy.isAscending());
 
         // withColumn replaces the existing aggregation column with the just-sorted aggregation column.
         return dataset.withColumn(aggregationName, sortedAggregationColumn);
@@ -322,7 +344,8 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
 
     private Column sortArrayColumn(String aggregationName, String columnToSortBy, boolean ascending) {
         // Generated by Copilot.
-        // For struct arrays, use array_sort with SQL expression
+        // For struct arrays, use array_sort with SQL expression. Both names are inserted into that expression as-is,
+        // so the caller must have already quoted them where necessary.
         // In array_sort lambda: return -1 if left should come before right, 1 if after, 0 if equal
         int whenLessThan = ascending ? -1 : 1;
         int whenGreaterThan = ascending ? 1 : -1;
@@ -336,9 +359,19 @@ class StructuredDataParams implements StructuredDataImporter.GroupByOptions<Stru
         ));
     }
 
-    private Dataset<Row> applyDrop(Dataset<Row> dataset) {
+    /**
+     * @return the message of the given exception, without the query plan that Spark appends to an analysis error.
+     */
+    private String getErrorMessage(Exception e) {
+        return e instanceof AnalysisException analysisException ? analysisException.getSimpleMessage() : e.getMessage();
+    }
+
+    private Dataset<Row> applyDrop(Dataset<Row> dataset, ColumnReferences references) {
         if (columnsToDrop != null && !columnsToDrop.isEmpty()) {
-            dataset = dataset.drop(columnsToDrop.toArray(new String[]{}));
+            // The references are those of the columns read from the data source, even when this is called after
+            // grouping. That is intentional: it is what allows a column to be dropped via its original name. Any
+            // other name, such as that of an aggregation, is not a known reference and is passed to Spark as-is.
+            dataset = dataset.drop(columnsToDrop.stream().map(references::resolve).toArray(String[]::new));
         }
         return dataset;
     }

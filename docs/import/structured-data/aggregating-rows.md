@@ -198,4 +198,50 @@ bin\flux import-jdbc ^
 - The ordering is applied after the aggregation is complete, ensuring consistent results across all documents.
 - For single-column aggregations (arrays of simple values rather than objects), the array will be sorted by those
   values directly.
-- If a column name contains a colon character, you can use the SQL `AS` keyword to alias it to a name without a colon.
+
+## Column names with special characters
+
+Column names often contain spaces, periods, parentheses, and other special characters - e.g. `Item Name` or
+`Amount (Net. Sales)`. Such names can be used as-is with `--group-by`, `--aggregate`, and `--aggregate-order-by`; you
+only need to quote the option value so that your shell treats it as a single value:
+
+{% tabs log %}
+{% tab log Unix %}
+```
+./bin/flux import-delimited-files \
+    --path transactions.csv \
+    --group-by "Transaction Number" \
+    --aggregate "items=Item Name,Amount (Net. Sales)" \
+    --aggregate-order-by "items=Item Name:asc" \
+    --connection-string "flux-example-user:password@localhost:8004" \
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% tab log Windows %}
+```
+bin\flux import-delimited-files ^
+    --path transactions.csv ^
+    --group-by "Transaction Number" ^
+    --aggregate "items=Item Name,Amount (Net. Sales)" ^
+    --aggregate-order-by "items=Item Name:asc" ^
+    --connection-string "flux-example-user:password@localhost:8004" ^
+    --permissions flux-example-role,read,flux-example-role,update
+```
+{% endtab %}
+{% endtabs %}
+
+The fields in each document, including those in an aggregated array, keep the names of the columns they were built
+from. To instead produce names free of special characters, see [Sanitizing column names](sanitizing-column-names.md).
+
+A column name is matched regardless of letter case, unless Spark has been configured to be case-sensitive. The column
+is always written under its name in the data source, so an option such as `--uri-template` must use that name.
+
+A few characters cannot be used because they are part of the syntax of these options:
+
+- A column name in `--aggregate` cannot contain a comma or an equals sign.
+- A column name in `--aggregate-order-by` cannot contain an equals sign and cannot end with `:asc` or `:desc`.
+
+For a JDBC source, you can use the SQL `AS` keyword in your query to alias such a column to a different name. For any
+source, you can use `--column-name-strategy simple` and then reference the column by its
+[sanitized name](sanitizing-column-names.md). These restrictions do not apply when using the Flux API, as column names
+are passed as separate arguments.
